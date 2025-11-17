@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ produit.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f3f3;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Image produit */
+        .product-image img {
+            border-radius: 10px;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-image img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Badge qualité */
+        .badge-quality {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+            color: #fff;
+        }
+
+        .badge-quality.neuf { background-color: #28a745; }
+        .badge-quality.reconditionne { background-color: #ffc107; color: #212529; }
+        .badge-quality.occasion { background-color: #17a2b8; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Bouton commander */
+        .btn-order {
+            background: #ff9900;
+            color: #fff;
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-order:hover {
+            background: #e68a00;
+            transform: scale(1.05);
+        }
+
+        /* Date publication */
+        .product-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        /* Produits similaires */
+        .related-products .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 10px;
+        }
+
+        .related-products .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .related-products h3 {
+            margin-bottom: 25px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row mb-5">
+        <!-- Image produit -->
+        <div class="col-md-6 product-image mb-4 mb-md-0">
+            <img src="{{ produit.image.url }}" alt="{{ produit.title }}">
+        </div>
+
+        <!-- Détails produit -->
+        <div class="col-md-6">
+            <h1 class="fw-bold">{{ produit.title }}</h1>
+
+            <!-- Badge qualité -->
+            <span class="badge-quality {{ produit.quality }}">
+                {% if produit.quality == "neuf" %}Neuf{% elif produit.quality == "reconditionne" %}Reconditionné{% else %}Occasion{% endif %}
+            </span>
+
+            <!-- Date publication -->
+            {% if produit.published_at %}
+            <p class="product-date">Publié le : {{ produit.published_at|date:"d M Y" }}</p>
+            {% endif %}
+
+            <!-- Prix -->
+            <p class="fs-4 text-success mb-4">{{ produit.price }} $</p>
+
+            <!-- Description -->
+            <p>{{ produit.description }}</p>
+
+            <!-- Bouton commander -->
+            <a href="{% url 'passer_commande' produit.id %}" class="btn btn-order btn-lg mt-3">Commander</a>
+        </div>
+    </div>
+
+    <!-- Produits similaires -->
+    <h3 class="mb-4">Produits similaires</h3>
+    <div class="row related-products">
+        {% for p in produits %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 text-center p-2">
+                <img src="{{ p.image.url }}" class="card-img-top mb-2" alt="{{ p.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ p.title }}</h5>
+                    <span class="badge-quality {{ p.quality }}">
+                        {% if p.quality == "neuf" %}Neuf{% elif p.quality == "reconditionne" %}Reconditionné{% else %}Occasion{% endif %}
+                    </span>
+                    <p class="text-success">{{ p.price }} $</p>
+                    <a href="{% url 'product_detail' p.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

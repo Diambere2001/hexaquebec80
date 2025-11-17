@@ -1,0 +1,79 @@
+
+{% block content %}
+<style>
+  /* Effet fade-in et slide-up pour la page */
+  .confirmation-container {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeSlideIn 1s forwards;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 60px 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    max-width: 700px;
+    margin: 80px auto;
+  }
+
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  h2 {
+    color: #28a745;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    animation: fadeSlideIn 1s forwards 0.2s;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 15px;
+    animation: fadeSlideIn 1s forwards 0.4s;
+  }
+
+  /* Bouton Retour animé */
+  .btn-home {
+    background: #28a745;
+    color: #fff;
+    font-weight: bold;
+    padding: 12px 35px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+    animation: fadeSlideIn 1s forwards 0.6s;
+  }
+
+  .btn-home:hover {
+    background: #218838;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+</style>
+
+<div class="confirmation-container text-center">
+  <h2>Merci {{ order.prenom }} !</h2>
+  <p>Votre commande pour <strong>{{ order.product.nom }}</strong> a bien été enregistrée.</p>
+  <p>Nous vous contacterons bientôt à <strong>{{ order.courriel }}</strong>.</p>
+  <a href="{% url 'home' %}" class="btn-home mt-4">Retour à l'accueil</a>
+</div>
+
+<script>
+  // Animation d'apparition progressive
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.querySelector('.confirmation-container');
+    container.style.opacity = 0;
+    container.style.transform = "translateY(30px)";
+    setTimeout(() => {
+      container.style.transition = "all 1s ease";
+      container.style.opacity = 1;
+      container.style.transform = "translateY(0)";
+    }, 100);
+  });
+</script>
+{% endblock %}

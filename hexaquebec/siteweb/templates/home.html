@@ -1,0 +1,851 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HexaQuébec - Développement Web & Solutions Numériques</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+
+    /* ===== NAVBAR ===== */
+    .navbar { background: transparent !important; transition: all 0.6s ease; padding: 1rem 0; z-index: 1000; }
+    .navbar.scrolled { background: rgba(11,19,43,0.95) !important; backdrop-filter: blur(10px); box-shadow: 0 4px 25px rgba(0,0,0,0.4); padding: 0.7rem 0; }
+    .logo-hero { height: 120px; filter: drop-shadow(0 0 15px rgba(198,168,125,0.8)) brightness(1.2); transition: transform 0.6s ease, filter 0.6s ease; }
+    .logo-hero:hover { transform: scale(1.1); filter: drop-shadow(0 0 30px rgba(198,168,125,1)) brightness(1.4); }
+    .nav-modern .nav-link { color: #f7f3ec !important; font-size: 1.15rem; font-weight: 600; text-transform: uppercase; margin: 0 18px; letter-spacing: 0.5px; position: relative; transition: all 0.4s ease; }
+    .navbar.scrolled .nav-link { color: #f7f3ec !important; }
+    .nav-modern .nav-link::after { content: ''; width: 0%; height: 3px; background: #c6a87d; position: absolute; left: 0; bottom: -6px; transition: width 0.4s ease; }
+    .nav-modern .nav-link:hover::after, .nav-modern .nav-link.active::after { width: 100%; }
+    .nav-modern .nav-link:hover { color: #c6a87d !important; transform: translateY(-2px); }
+
+    /* ===== HERO ===== */
+    .hero { height: 100vh; background: linear-gradient(to bottom right, rgba(15,15,15,0.6), rgba(0,0,0,0.85)), url("{% static 'images/accuiel.jpg' %}") center/cover no-repeat; display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden; animation: animateBG 20s ease-in-out infinite alternate; }
+    .hero-content { z-index:2; animation: fadeInUp 1.5s ease-out; }
+    .hero h1 { font-size:4rem; font-weight:800; color:#eeeae2; text-shadow:0 0 25px rgba(255,255,255,0.5); letter-spacing:1px; }
+    .hero p { font-size:1.5rem; margin-bottom:40px; color:#f2f2f2; opacity:0.9; }
+    .btn-primary { background:#c6a87d; border:none; padding:14px 42px; font-size:1.2rem; border-radius:50px; color:#fff; font-weight:600; letter-spacing:0.5px; transition:0.4s ease; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
+    .btn-primary:hover { background:#b3916b; transform:scale(1.08); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
+
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes animateBG { 0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;} }
+
+    /* ===== POST-LOGOUT AVEC LION ===== */
+    #post-logout { position:fixed; top:0; left:0; width:100%; height:100%; z-index:2000; display:flex; align-items:center; justify-content:center; flex-direction:column; background: url('{% static "images/forest-bg.png" %}') center/cover no-repeat; }
+    .lion-sleep svg { width: 180px; height:180px; transform-origin: center center; animation: breath 3s ease-in-out infinite; }
+    .eyelid-left, .eyelid-right { animation: blink 4s infinite; }
+    @keyframes breath { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes blink { 0%,95%,100% { opacity:0; } 97%,98% { opacity:1; } }
+
+    /* ===== TEXTE TYPING ===== */
+    #typing-text {
+      color: #fff;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-top: 30px;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.4);
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 4px solid #c6a87d;
+      width: auto;
+      display: inline-block;
+      animation: blinkCursor 0.7s steps(1) infinite;
+    }
+    @keyframes blinkCursor { 0%,50%,100% { border-color: #c6a87d; } 25%,75% { border-color: transparent; } }
+
+    /* ===== CHATBOT ===== */
+    #ai-bubble { position: fixed; bottom: 30px; right: 30px; background: #c6a87d; color: white; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.8rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; z-index: 9999; }
+    #ai-bubble:hover { transform: scale(1.1); }
+    #ai-chat { position: fixed; bottom: 120px; right: 30px; width: 340px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; flex-direction: column; overflow: hidden; z-index: 9999; }
+    #chat-header { background: #0b132b; color: #fff; padding: 15px; text-align: center; font-weight: 600; }
+    #chat-body { padding: 15px; height: 300px; overflow-y: auto; font-size: 0.95rem; }
+    #chat-footer { display: flex; border-top: 1px solid #ddd; }
+    #user-input { flex: 1; border: none; padding: 10px; outline: none; }
+    #send-btn { background: #c6a87d; color: #fff; border: none; padding: 10px 15px; cursor: pointer; }
+
+.footer {
+  background: linear-gradient(135deg, #0a0a0f, #151521);
+  color: #ccc;
+  position: relative;
+  overflow: hidden;
+}
+.footer .social-train {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  animation: trainMove 6s linear infinite;
+}
+@keyframes trainMove {
+  0% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(-10px); }
+}
+.social-link {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+.social-link:hover {
+  background: #00bcd4;
+  color: #fff;
+  transform: scale(1.2);
+  box-shadow: 0 0 20px #00bcd4;
+}
+.footer {
+  background: rgba(11, 19, 43, 0.98); /* même couleur que la navbar scrolled */
+  color: #f7f3ec;
+  position: relative;
+  overflow: hidden;
+  padding-top: 60px;
+  padding-bottom: 30px;
+  border-top: 3px solid #c6a87d;
+}
+
+.footer-title {
+  color: #c6a87d;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-text {
+  color: #ddd;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-contact {
+  display: inline-block;
+  margin-top: 8px;
+  color: #c6a87d;
+  font-weight: 600;
+}
+
+.footer-copy {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.social-train {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  animation: trainMove 6s linear infinite;
+}
+
+@keyframes trainMove {
+  0% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(-10px); }
+}
+
+.social-link {
+  background: rgba(255,255,255,0.08);
+  color: #c6a87d;
+  border: 2px solid #c6a87d;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: 0 0 12px rgba(198,168,125,0.2);
+}
+.social-link:hover {
+  background: #c6a87d;
+  color: #0b132b;
+  transform: scale(1.2);
+  box-shadow: 0 0 25px #c6a87d;
+}
+
+.owner-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.owner-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 20px;
+  transition: all 0.4s ease-in-out;
+  box-shadow: 0 0 20px rgba(198,168,125,0.1);
+}
+
+.owner-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px rgba(198,168,125,0.3);
+}
+
+.owner-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #c6a87d;
+  animation: pulseGlow 6s ease-in-out infinite;
+  box-shadow: 0 0 25px rgba(198,168,125,0.2);
+  transition: all 0.4s ease-in-out;
+}
+
+/* Effet lumineux doux sur le contour */
+@keyframes pulseGlow {
+  0% { transform: scale(1); box-shadow: 0 0 20px rgba(198,168,125,0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(198,168,125,0.5); }
+  100% { transform: scale(1); box-shadow: 0 0 20px rgba(198,168,125,0.3); }
+}
+
+/* Survol de l'image : effet doré + halo */
+.owner-img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(198,168,125,0.7);
+  border-color: #f0d49d;
+  filter: brightness(1.1);
+}
+
+.owner-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.owner-title {
+  color: #c6a87d;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+
+.owner-role {
+  color: #ddd;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.owner-desc {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+ <a href="#" class="navbar-brand d-flex align-items-center justify-content-center logo-hexa">
+  <img src="{% static 'images/logoHexa.png' %}" 
+       alt="HexaQuébec" 
+       class="logo-img">
+</a>
+
+<style>
+.logo-hexa {
+  background: radial-gradient(circle at 30% 30%, #f0d49d, #c6a87d);
+  padding: 10px;
+  border-radius: 50%;
+  border: 2.5px solid #c6a87d;
+  box-shadow: 0 0 20px rgba(198,168,125,0.4), inset 0 0 10px rgba(255,255,255,0.25);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Bordure lumineuse animée */
+.logo-hexa::before {
+  content: "";
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: conic-gradient(
+    from 0deg,
+    #c6a87d,
+    #f0d49d,
+    #ffffff,
+    #c6a87d
+  );
+  animation: rotateBorder 4s linear infinite;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+@keyframes rotateBorder {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.logo-hexa:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(198,168,125,0.55), inset 0 0 12px rgba(255,255,255,0.3);
+}
+
+.logo-img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+ #annonces .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(198,168,125,0.3);
+  }
+  #ai-bubble {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #0077b6;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+#ai-bubble:hover { transform: scale(1.1); }
+
+#ai-chat {
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  width: 350px;
+  height: 480px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#ai-header {
+  background: linear-gradient(45deg, #0077b6, #0096c7);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+#chat-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #f8f9fa;
+}
+
+#chat-footer {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#user-input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+}
+
+#send-btn {
+  background: #0077b6;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+#send-btn:hover { background: #0096c7; }
+
+/* Messages */
+#chat-body p {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 80%;
+  line-height: 1.4;
+}
+#chat-body p strong {
+  display: block;
+  font-size: 12px;
+  color: #555;
+}
+#chat-body p.user {
+  background: #d1ecf1;
+  align-self: flex-end;
+  margin-left: auto;
+}
+#chat-body p.ai {
+  background: #e0f7fa;
+  color: #004b63;
+}
+
+</style>
+
+
+
+
+
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto nav-modern">
+        <li class="nav-item"><a href="#" class="nav-link active">Accueil</a></li>
+        <li class="nav-item"><a href="{% url 'services' %}" class="nav-link">Services</a></li>
+       <a href="{% url 'produits_list' %}" class="nav-link">Produits</a>
+        <li class="nav-item"><a href="#portfolio" class="nav-link">Projets</a></li>
+        <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-content">
+    <h1>HexaQuébec</h1>
+    <p>L’innovation au cœur du numérique québécois</p>
+    <a href="{% url 'services' %}" class="btn btn-primary btn-lg">Découvrir nos services</a>
+
+  </div>
+</header>
+
+
+{% load static %}
+
+<section id="annonces" class="py-5" style="background: #0b132b; color: #f7f3ec;">
+  <div class="container text-center">
+    <h2 class="mb-5" style="color:#c6a87d; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+      Nos Annonces
+    </h2>
+
+    {% if annonces %}
+    <div class="row g-4">
+      {% for annonce in annonces %}
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-lg"
+             style="background: rgba(255,255,255,0.05); border-radius: 15px; transition: transform 0.4s ease;">
+          
+          {% if annonce.image %}
+            <img src="{{ annonce.image.url }}" class="card-img-top" alt="{{ annonce.title }}" 
+                 style="height:230px; object-fit:cover; border-top-left-radius:15px; border-top-right-radius:15px;">
+          {% else %}
+            <img src="{% static 'images/default-annonce.jpg' %}" class="card-img-top" alt="Annonce"
+                 style="height:230px; object-fit:cover; border-top-left-radius:15px; border-top-right-radius:15px;">
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title" style="color:#c6a87d; font-weight:700;">
+              {{ annonce.title }}
+            </h5>
+            <p class="card-text" style="color:#ddd;">
+              {{ annonce.content|truncatewords:25 }}
+            </p>
+            {% if annonce.published_at %}
+              <p class="text-muted small">{{ annonce.published_at|date:"d M Y" }}</p>
+            {% endif %}
+          </div>
+
+          <div class="card-footer bg-transparent border-0">
+            <a href="{% url 'annonce_detail' annonce.id %}" 
+               class="btn btn-outline-light px-4 py-2"
+               style="border-color:#c6a87d; color:#c6a87d; border-radius:30px; transition:0.3s;">
+              Lire plus
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p class="text-center text-light">Aucune annonce disponible pour le moment.</p>
+    {% endif %}
+  </div>
+</section>
+
+
+
+
+
+<!-- ===== POST-LOGOUT AVEC LION ===== -->
+<div id="post-logout">
+  <div class="lion-sleep">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <circle cx="256" cy="256" r="200" fill="#c6a87d" stroke="#b3916b" stroke-width="8"/>
+      <circle cx="180" cy="220" r="20" fill="#fff"/>
+      <circle cx="332" cy="220" r="20" fill="#fff"/>
+      <circle cx="180" cy="220" r="10" fill="#000"/>
+      <circle cx="332" cy="220" r="10" fill="#000"/>
+      <path d="M180 320 Q256 370 332 320" stroke="#000" stroke-width="8" fill="transparent" stroke-linecap="round"/>
+      <path d="M220 370 Q256 390 292 370" stroke="#000" stroke-width="6" fill="transparent" stroke-linecap="round"/>
+      <line x1="220" y1="370" x2="292" y2="370" stroke="#000" stroke-width="6"/>
+      <path class="eyelid-left" d="M160 220 Q180 200 200 220" stroke="#c6a87d" stroke-width="8" fill="none"/>
+      <path class="eyelid-right" d="M312 220 Q332 200 352 220" stroke="#c6a87d" stroke-width="8" fill="none"/>
+    </svg>
+  </div>
+  <h2 id="typing-text"></h2>
+</div>
+
+<!-- ===== CHATBOT ===== -->
+<div id="ai-bubble">💬</div>
+
+<div id="ai-chat" style="display: none;">
+  <div id="ai-header">🤖 Assistant HexaQuébec</div>
+  <div id="chat-body"></div>
+  <div id="chat-footer">
+    <input type="text" id="user-input" placeholder="Écrivez votre message..." />
+    <button id="send-btn">Envoyer</button>
+  </div>
+</div>
+
+<section id="urgence-technique" class="py-5" style="background: rgba(11,19,43,0.97); color: #fff;">
+  <div class="container">
+
+    <!-- Message de confirmation -->
+    <div id="confirmation-card" class="card shadow-lg border-0 mx-auto mt-4"
+         style="max-width: 600px; border-radius: 20px; background: rgba(255,255,255,0.1); display: none; opacity: 0; transition: opacity 1s;">
+      <div class="card-body text-center">
+        <div class="mb-3">
+          <i class="fa-solid fa-circle-check fa-3x" style="color:#c6a87d;"></i>
+        </div>
+        <h4 style="color:#c6a87d;">Message envoyé avec succès !</h4>
+        <p class="text-light mt-2">
+          Merci pour votre confiance 💛<br>
+          Notre équipe vous contactera dans les plus brefs délais.
+        </p>
+      </div>
+    </div>
+
+    <!-- Formulaire d’urgence -->
+    <div id="urgence-form" class="card shadow-lg border-0 mx-auto"
+         style="max-width: 600px; border-radius: 20px; background: rgba(255,255,255,0.08); opacity: 0; display: block; transition: opacity 0.5s;">
+      <div class="card-body text-center">
+        <h3 class="mb-3" style="color: #c6a87d; font-weight: 700;">
+          ⚠️ Problème technique urgent ?
+        </h3>
+        <p class="text-light mb-4">
+          Remplissez ce formulaire et notre équipe vous contactera immédiatement.
+        </p>
+
+        <form id="urgence-form-inner" method="POST" action="{% url 'urgence' %}">
+          {% csrf_token %}
+          <div class="mb-3 text-start">
+            {{ form.nom.label_tag }}
+            {{ form.nom }}
+          </div>
+          <div class="mb-3 text-start">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+          </div>
+          <div class="mb-3 text-start">
+            {{ form.telephone.label_tag }}
+            {{ form.telephone }}
+          </div>
+          <div class="mb-3 text-start">
+            {{ form.message.label_tag }}
+            {{ form.message }}
+          </div>
+          <div class="text-center">
+            <button type="submit"
+                    class="btn btn-outline-warning mt-3 px-4 py-2"
+                    style="border-radius:30px;">
+              <i class="fa-solid fa-paper-plane me-2"></i> Envoyer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+<footer class="footer py-5">
+  <div class="container">
+    <div class="row text-center text-md-start align-items-center">
+
+      <!-- Présentation -->
+      <div class="col-md-3 mb-4">
+        <h4 class="footer-title">HexaQuébec</h4>
+        <p class="footer-text">
+          HexaQuébec est votre partenaire en développement web et solutions numériques professionnelles.
+          Nous transformons vos idées en projets digitaux performants et innovants.
+        </p>
+      </div>
+
+      <!-- Adresse -->
+      <div class="col-md-3 mb-4">
+        <h5 class="footer-title">Adresse</h5>
+        <p class="footer-text">
+          1249 rue d'Angoulême<br>
+          Chicoutimi, Saguenay, Qc<br>
+          Canada<br>
+          <span class="footer-contact"><i class="fa-solid fa-phone"></i> 514 467 7377</span>
+        </p>
+      </div>
+
+      <!-- Réseaux sociaux -->
+      <div class="col-md-3 mb-4 text-center">
+        <h5 class="footer-title">Suivez-nous</h5>
+        <div class="social-train">
+          <a href="https://www.facebook.com/diambere.kamara.2025/" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+
+      <!-- Propriétaire -->
+     <div class="col-md-3 mb-4 text-center owner-section">
+  <div class="owner-card">
+    <img src="{% static 'images/proprietaire.png' %}" 
+         alt="Propriétaire HexaQuébec" 
+         class="owner-img">
+    <h6 class="owner-name mt-3 mb-1">Diambere Kamara</h6>
+    <p class="owner-title mb-2">Fondateur & Directeur Technique</p>
+    <p class="owner-role mb-3">Développeur Backend spécialisé en Django, Flask & Node.js</p>
+    <p class="owner-desc">
+      Passionné par la conception de solutions numériques performantes et sécurisées,
+      il dirige HexaQuébec avec une vision axée sur l’innovation et la qualité.
+    </p>
+  </div>
+</div>
+
+    <hr style="border-color: rgba(198,168,125,0.4); margin-top: 30px;">
+    <p class="text-center mt-3 mb-0 footer-copy">&copy; 2025 HexaQuébec — Tous droits réservés.</p>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  
+</script>
+<script>
+  // ===== Navbar scroll =====
+  window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ===== Retour accueil au clic ou touche clavier =====
+  function restoreHome() {
+    const postLogout = document.getElementById('post-logout');
+    const navbar = document.querySelector('.navbar');
+    if (postLogout) postLogout.style.display = 'none';
+    if (navbar) navbar.style.display = 'flex';
+  }
+  document.addEventListener('keydown', restoreHome);
+  document.addEventListener('click', restoreHome);
+
+  // Masquer navbar initialement
+  const navbar = document.querySelector('.navbar');
+  if (navbar) navbar.style.display = 'none';
+
+  // ===== Animation texte typing =====
+  const text = "Bienvenue sur le territoire de HexaQuébec";
+  const typingText = document.getElementById("typing-text");
+  let index = 0;
+  function typeEffect() {
+    if (typingText && index < text.length) {
+      typingText.innerHTML += text.charAt(index);
+      index++;
+      setTimeout(typeEffect, 120);
+    }
+  }
+  setTimeout(typeEffect, 1000);
+
+  // ===== Chatbot toggle et interactions =====
+  const bubble = document.getElementById('ai-bubble');
+  const chatBox = document.getElementById('ai-chat');
+  const sendBtn = document.getElementById('send-btn');
+  const input = document.getElementById('user-input');
+  const chatBody = document.getElementById('chat-body');
+
+  if (bubble && chatBox) {
+    bubble.onclick = () => {
+      chatBox.style.display = (chatBox.style.display === 'none' ? 'flex' : 'none');
+    };
+  }
+
+  if (sendBtn && input && chatBody) {
+    sendBtn.onclick = async () => {
+      const text = input.value.trim();
+      if (!text) return;
+
+      chatBody.innerHTML += `<p class="user"><strong>Vous:</strong> ${text}</p>`;
+      input.value = '';
+      chatBody.innerHTML += `<p><em>Assistant HexaQuébec réfléchit...</em></p>`;
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      try {
+        const response = await fetch("/chatbot_ai/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await response.json();
+        chatBody.innerHTML = chatBody.innerHTML.replace("<p><em>Assistant HexaQuébec réfléchit...</em></p>", "");
+
+        if (data.reply) {
+          chatBody.innerHTML += `<p class="ai"><strong>Assistant HexaQuébec:</strong> ${data.reply}</p>`;
+        } else {
+          chatBody.innerHTML += `<p style="color:orange;"><strong>Assistant HexaQuébec:</strong> Désolé, je n'ai pas compris 😅</p>`;
+        }
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+      } catch (err) {
+        chatBody.innerHTML += `<p style="color:red;"><strong>Erreur:</strong> Impossible de contacter l’assistant 😢</p>`;
+      }
+    };
+  }
+document.addEventListener('DOMContentLoaded', () => {
+  const formCard = document.getElementById('urgence-form');
+  const confirmationCard = document.getElementById('confirmation-card');
+  const formInner = document.getElementById('urgence-form-inner');
+
+  if (!formCard || !confirmationCard || !formInner) return;
+
+  // Initialisation
+  formCard.style.opacity = 0;
+  confirmationCard.style.opacity = 0;
+  formCard.style.display = 'block';
+  setTimeout(() => { formCard.style.opacity = 1; }, 50);
+
+  // Gestion de la soumission via AJAX
+  formInner.addEventListener('submit', async (e) => {
+    e.preventDefault(); // empêche le rechargement
+
+    const formData = new FormData(formInner);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch(formInner.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData
+      });
+
+      if (response.ok) {
+        // Cache le formulaire et affiche le message de confirmation
+        formCard.style.opacity = 0;
+        setTimeout(() => { formCard.style.display = 'none'; }, 500);
+
+        confirmationCard.style.display = 'block';
+        setTimeout(() => { confirmationCard.style.opacity = 1; }, 50);
+
+        // Après 5 secondes, fade-out et réaffiche le formulaire
+        setTimeout(() => {
+          confirmationCard.style.opacity = 0;
+          setTimeout(() => {
+            confirmationCard.style.display = 'none';
+            formCard.style.display = 'block';
+            formCard.style.opacity = 0;
+            setTimeout(() => { formCard.style.opacity = 1; }, 50);
+          }, 1000);
+        }, 5000);
+
+        // Réinitialise le formulaire
+        formInner.reset();
+      } else {
+        alert("Erreur : impossible d'envoyer le message.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur réseau : impossible de contacter le serveur.");
+    }
+  });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const formCard = document.getElementById('urgence-form');
+  const confirmationCard = document.getElementById('confirmation-card');
+  const formInner = document.getElementById('urgence-form-inner');
+
+  // Fade-in du formulaire
+  setTimeout(() => { formCard.style.opacity = 1; }, 50);
+
+  // Soumission AJAX
+  formInner.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(formInner);
+
+    try {
+      const response = await fetch(formInner.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData
+      });
+
+      if (response.ok) {
+        // Cacher formulaire et afficher confirmation
+        formCard.style.opacity = 0;
+        setTimeout(() => { formCard.style.display = 'none'; }, 500);
+
+        confirmationCard.style.display = 'block';
+        setTimeout(() => { confirmationCard.style.opacity = 1; }, 50);
+
+        // Retour du formulaire après 5s
+        setTimeout(() => {
+          confirmationCard.style.opacity = 0;
+          setTimeout(() => {
+            confirmationCard.style.display = 'none';
+            formCard.style.display = 'block';
+            setTimeout(() => { formCard.style.opacity = 1; }, 50);
+          }, 500);
+        }, 5000);
+
+        formInner.reset();
+      } else {
+        alert("Erreur : impossible d'envoyer le message.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur réseau : impossible de contacter le serveur.");
+    }
+  });
+});
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
