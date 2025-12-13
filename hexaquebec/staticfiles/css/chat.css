@@ -1,0 +1,104 @@
+/* ---------- MODE SOMBRE AUTOMATIQUE ---------- */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #111;
+        color: white;
+    }
+
+    .chat-container {
+        background: #222;
+        border-color: #333;
+    }
+
+    .message.user {
+        background: #075e54;
+        color: white;
+    }
+
+    .message.bot {
+        background: #c6a87d;
+        color: black;
+    }
+}
+
+/* ---------- STYLE GÉNÉRAL ---------- */
+
+.chat-container {
+    width: 100%;
+    max-width: 450px;
+    height: 90vh;
+    margin: auto;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+    background: white;
+    padding: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #bbb;
+}
+
+.chat-input button {
+    margin-left: 10px;
+    padding: 10px 18px;
+    background: #c6a87d;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* ---------- BULLES STYLE WHATSAPP ---------- */
+
+.message {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    animation: slideIn 0.25s ease-out;
+}
+
+.message.user {
+    align-self: flex-end;
+    background: #dcf8c6; /* vert WhatsApp */
+}
+
+.message.bot {
+    align-self: flex-start;
+    background: #c6a87d; /* Or HexaQuébec */
+    color: black;
+}
+
+/* ---------- ANIMATION ---------- */
+@keyframes slideIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
