@@ -179,9 +179,9 @@ DEBUG = False
 
 
 
-
 ALLOWED_HOSTS = [
-    "hexaquebec.com",
-    "www.hexaquebec.com",
-    ".up.railway.app",
+    "hexaquebec80.onrender.com",
+    "localhost",
+    "127.0.0.1",
 ]
+

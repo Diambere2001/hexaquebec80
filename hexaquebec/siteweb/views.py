@@ -56,13 +56,13 @@ from django.core.mail import EmailMessage
 
 
 # 🔹 Charger la clé API depuis .env
-load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    raise ValueError("La clé OPENAI_API_KEY n'est pas définie dans le fichier .env")
-openai.api_key = OPENAI_API_KEY
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+def home(request):
+    if not OPENAI_API_KEY:
+        return HttpResponse("Service temporairement indisponible", status=503)
+
+    return HttpResponse("Site HexaQuebec en ligne ✅")
 
 
 # ===================== CHATBOT =====================
