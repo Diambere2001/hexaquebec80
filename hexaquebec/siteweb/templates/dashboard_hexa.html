@@ -3,6 +3,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+
+    <!-- ✅ OBLIGATOIRE POUR MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dashboard HexaQuébec</title>
 
     <!-- Bootstrap + Icons + AOS -->
@@ -11,7 +15,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* ----------- GLOBAL ----------- */
         body {
             background: #0b132b;
             color: #f1f5f9;
@@ -20,6 +23,7 @@
 
         .dashboard-container {
             padding-top: 40px;
+            padding-bottom: 40px;
         }
 
         /* ----------- CARDS ----------- */
@@ -84,57 +88,48 @@
         }
 
         /* ----------- MODAL ----------- */
-        .modal {
-            z-index: 1055 !important;
-        }
-
-        .modal-backdrop {
-            z-index: 1050 !important;
-            background-color: rgba(0,0,0,0.6) !important;
-        }
-
         .modal-content {
-            background: #1e293b !important;
-            color: white !important;
-            border-radius: 15px !important;
-            border: 1px solid #c6a87d55 !important;
-            box-shadow: 0 0 25px rgba(0,0,0,0.6);
-        }
-
-        .modal-header .btn-close {
-            filter: invert(1) !important;
+            background: #1e293b;
+            color: white;
+            border-radius: 15px;
+            border: 1px solid #c6a87d55;
         }
 
         .modal textarea {
-            background: #0b132b !important;
-            color: white !important;
-            border: 1px solid #c6a87d55 !important;
-            border-radius: 10px !important;
-            padding: 10px;
+            background: #0b132b;
+            color: white;
+            border-radius: 10px;
         }
 
-        /* ----------- TEXTES SUPPLEMENTAIRES ----------- */
-        .text-light {
-            color: #f1f5f9 !important;
-        }
-        .text-success {
-            color: #4ade80 !important;
-        }
-        .text-warning {
-            color: #facc15 !important;
-        }
-        .text-secondary {
-            color: #94a3b8 !important;
+        /* ================= MOBILE ================= */
+        @media (max-width: 768px) {
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .dashboard-card {
+                padding: 18px;
+            }
+
+            .btn-hexa {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
+
 <div class="container dashboard-container">
 
     <!-- TITRE -->
     <div class="text-center mb-5" data-aos="fade-down">
-        <img src="{% static 'images/logoHexa.png' %}" width="120" class="mb-3">
+        <img src="{% static 'images/logoHexa.png' %}" width="110" class="mb-3 img-fluid">
         <h1 class="fw-bold">Dashboard HexaQuébec</h1>
         <p class="text-light">Gestion — Messages — Clients</p>
     </div>
@@ -142,11 +137,11 @@
     <!-- BOUTON ENVOYER MESSAGE -->
     <div class="text-center mb-4" data-aos="zoom-in">
         <a href="{% url 'envoyer_message' %}" class="btn btn-hexa">
-            <i class="fa-solid fa-paper-plane"></i> Envoyer un Message
+            <i class="fa-solid fa-paper-plane"></i> Envoyer un message
         </a>
     </div>
 
-    <!-- LISTE DES CLIENTS -->
+    <!-- CLIENTS -->
     <div class="dashboard-card" data-aos="fade-right">
         <h3 class="section-title">
             <i class="fa-solid fa-users"></i> Clients inscrits
@@ -160,14 +155,14 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p class="text-light">Aucun client inscrit pour le moment.</p>
+            <p class="text-light">Aucun client inscrit.</p>
         {% endif %}
     </div>
 
-    <!-- MESSAGES CLIENTS -->
+    <!-- MESSAGES -->
     <div class="dashboard-card" data-aos="fade-left">
         <h3 class="section-title">
-            <i class="fa-solid fa-envelope"></i> Tous les messages des clients
+            <i class="fa-solid fa-envelope"></i> Messages clients
         </h3>
 
         {% if messages %}
@@ -178,49 +173,54 @@
                         <i class="fa-solid fa-user"></i> {{ m.client.user.username }}
                     </p>
 
-                    <p class="text-light">{{ m.message }}</p>
+                    <p>{{ m.message }}</p>
 
                     {% if m.reponse %}
-                        <p class="text-success mt-2"><strong>Réponse :</strong><br>{{ m.reponse }}</p>
+                        <p class="text-success"><strong>Réponse :</strong><br>{{ m.reponse }}</p>
                     {% else %}
                         <p class="text-warning"><em>En attente de réponse…</em></p>
 
-                        <!-- BOUTON RÉPONDRE -->
-                        <button class="btn btn-repondre mt-2" data-bs-toggle="modal" data-bs-target="#modalReponse{{ m.id }}">
+                        <button class="btn btn-repondre mt-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalReponse{{ m.id }}">
                             <i class="fa-solid fa-reply"></i> Répondre
                         </button>
 
                         <!-- MODAL -->
-                        <div class="modal fade" id="modalReponse{{ m.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade" id="modalReponse{{ m.id }}" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
+
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Répondre à {{ m.client.user.username }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        <h5 class="modal-title">
+                                            Répondre à {{ m.client.user.username }}
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white"
+                                                data-bs-dismiss="modal"></button>
                                     </div>
 
                                     <form method="POST" action="{% url 'repondre_message' m.id %}">
                                         {% csrf_token %}
                                         <div class="modal-body">
-                                            <label class="mb-2">Votre réponse :</label>
-                                            <textarea name="reponse" class="form-control" rows="4" required></textarea>
+                                            <textarea name="reponse" rows="4" class="form-control" required></textarea>
                                         </div>
-
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="submit" class="btn btn-hexa">Envoyer la réponse</button>
+                                            <button type="submit" class="btn btn-hexa w-100">
+                                                Envoyer
+                                            </button>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
                     {% endif %}
 
-                    <small class="text-secondary d-block mt-2">{{ m.date }}</small>
+                    <small class="text-secondary">{{ m.date }}</small>
                 </div>
             {% endfor %}
         {% else %}
-            <p class="text-light">Aucun message pour le moment.</p>
+            <p class="text-light">Aucun message.</p>
         {% endif %}
     </div>
 
@@ -232,5 +232,6 @@
 <script>
     AOS.init({ duration: 800 });
 </script>
+
 </body>
 </html>

@@ -1,254 +1,194 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
+
+    <!-- ✅ OBLIGATOIRE POUR MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Profil Client | HexaQuébec</title>
 
-    <!-- Bootstrap & AOS & FontAwesome -->
+    <!-- Bootstrap / AOS / FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-    <style>
-        :root {
-            --bg: #0f172a;
-            --card-bg: #0f172a;
-            --text: #fff;
-            --text-light: #475569;
-        }
-        .dark-mode {
-            --bg: #0b132b;
-            --card-bg: #1f2937;
-            --text: #f1f5f9;
-            --text-light: #cbd5e1;
-        }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Montserrat', sans-serif;
-            transition: 0.3s;
-        }
+<style>
+:root{
+    --bg:#0f172a;
+    --card:#1f2937;
+    --gold:#c6a87d;
+}
+body{
+    background:var(--bg);
+    color:#fff;
+    font-family:Montserrat,sans-serif;
+}
 
-        /* --- Cards --- */
-        .profile-card, .form-card, .last-message-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-        .profile-card:hover, .form-card:hover, .last-message-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(198,168,125,0.3);
-        }
+/* CARDS */
+.card-box{
+    background:var(--card);
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
 
-        h2 { color: #c6a87d; font-weight: 700; margin-bottom:10px; }
-        .welcome-msg { font-size: 1.2rem; margin-bottom: 20px; color: #f0d49d; }
+/* TOP BAR */
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
 
-        .info-box {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: left;
-        }
-        .label { color: #c6a87d; font-weight: 600; }
+/* BUTTON */
+.btn-hexa{
+    background:var(--gold);
+    border:none;
+    color:#0b132b;
+    border-radius:30px;
+    padding:8px 20px;
+    font-weight:700;
+}
+.btn-hexa:hover{opacity:.9}
 
-        /* Top bar */
-        .top-bar-profile { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 15px; background: var(--card-bg); border-radius: 15px;
-            margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-        }
-        .status-dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:8px; }
-        .user-status { display:flex; align-items:center; font-weight:600; color: var(--text); }
-        .notif-icon { position: relative; font-size:22px; color: var(--text-light); cursor:pointer; }
-        .notif-badge { position:absolute; top:-6px; right:-6px; background:#ef4444; padding:3px 7px; font-size:11px; border-radius:50%; color:white; font-weight:bold; }
+/* MESSAGES */
+.bulle-client{
+    background:#1c2a48;
+    padding:12px;
+    border-radius:15px;
+}
+.bulle-hexa{
+    background:rgba(198,168,125,.2);
+    border:1px solid var(--gold);
+    padding:12px;
+    border-radius:15px;
+}
 
-        .btn-hexa { background:#c6a87d; color:#0b132b; border-radius:30px; padding:8px 20px; font-weight:700; transition:0.3s; }
-        .btn-hexa:hover { transform:scale(1.05); background:#d1b87d; }
-
-        /* Messages */
-        .bulle-client { background:#1c2a48; color:white; padding:12px 15px; border-radius:15px; max-width:90%; margin-bottom:10px; animation: slideIn 0.45s ease-out; }
-        .bulle-hexa { background:rgba(198,168,125,0.25); border:1px solid #c6a87d; color:#c6a87d; padding:12px 15px; border-radius:15px; max-width:90%; margin-left:auto; margin-bottom:10px; animation: slideInRight 0.45s ease-out; }
-        .msg-date { font-size: 11px; opacity: 0.65; }
-
-        input, textarea, select {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid #c6a87d;
-            border-radius: 10px;
-            padding: 10px 12px;
-            width: 100%;
-            color: var(--text);
-            transition: all 0.3s;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #f0d49d;
-            box-shadow: 0 0 5px rgba(198,168,125,0.5);
-        }
-
-        @keyframes slideIn { from { transform:translateX(-25px); opacity:0; } to { transform:translateX(0); opacity:1; } }
-        @keyframes slideInRight { from { transform:translateX(25px); opacity:0; } to { transform:translateX(0); opacity:1; } }
-    </style>
+/* RESPONSIVE */
+@media(max-width:768px){
+    .top-bar{
+        flex-direction:column;
+        text-align:center;
+    }
+    h2{font-size:1.4rem}
+    .btn-hexa{width:100%}
+}
+</style>
 </head>
 
 <body>
-<div class="container py-5">
 
-    <!-- 💬 Messages de confirmation -->
-    {% if messages %}
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                {% for message in messages %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="border-radius:10px;">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
+<div class="container py-4">
 
-    <!-- 🟢 TOP BAR PROFIL -->
-    <div class="top-bar-profile">
-        <div class="user-status d-flex align-items-center gap-2">
-            <span class="status-dot" id="onlineDot"></span>
-            <span id="statusText">Statut...</span>
-        </div>
+<!-- TOP BAR -->
+<div class="card-box mb-4 top-bar">
+    <div>
+        <i class="fa fa-circle text-success"></i> En ligne
+    </div>
 
-        <div class="notif-icon position-relative me-3">
-            <i class="fa fa-bell"></i>
-            {% if notif_count > 0 %}
-            <span class="notif-badge">{{ notif_count }}</span>
-            {% endif %}
-        </div>
-
-        {% if request.user.is_authenticated %}
-        <div class="d-flex align-items-center gap-2">
-            <span>Bonjour {{ request.user.first_name }}</span>
-            <a href="{% url 'client_logout' %}" class="btn btn-hexa btn-sm">Déconnexion</a>
-        </div>
+    <div>
+        <i class="fa fa-bell"></i>
+        {% if notif_count > 0 %}
+            <span class="badge bg-danger">{{ notif_count }}</span>
         {% endif %}
     </div>
 
-    <!-- 👤 Profil Client -->
-    <div class="row justify-content-center">
-        <div class="col-md-7 profile-card" data-aos="fade-up">
+    {% if request.user.is_authenticated %}
+    <div>
+        Bonjour {{ request.user.first_name }}
+        <a href="{% url 'client_logout' %}" class="btn btn-hexa btn-sm ms-2">Déconnexion</a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- PROFIL -->
+<div class="row justify-content-center">
+    <div class="col-12 col-md-7" data-aos="fade-up">
+        <div class="card-box text-center">
             <h2>Profil Client</h2>
-            <p class="welcome-msg">Bienvenue, <strong>{{ client.user.first_name }}</strong></p>
+            <p class="mb-3">Bienvenue <strong>{{ client.user.first_name }}</strong></p>
 
-            <button class="btn btn-hexa mb-3" id="toggleProfile">Afficher le profil</button>
+            <button class="btn btn-hexa mb-3" onclick="toggleProfile()">Afficher le profil</button>
 
-            <div class="info-box" id="profileInfo" style="display: none;">
-                <p><span class="label">Entreprise :</span> {{ client.entreprise }}</p>
-                <p><span class="label">Adresse :</span> {{ client.adresse }}</p>
-                <p><span class="label">Contact :</span> {{ client.contact }}</p>
-                <p><span class="label">Courriel :</span> {{ client.user.email }}</p>
-                <p><span class="label">Numéro client :</span>
-                    <strong style="color:#f0d49d;">{{ client.numero_client }}</strong>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Liste des messages -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-8" data-aos="fade-up">
-            {% if messages_recu %}
-                {% for msg in messages_recu %}
-                    <div class="bulle-client">
-                        <strong>Vous :</strong><br>{{ msg.message }}
-                    </div>
-                    <p class="msg-date text-start">{{ msg.date }}</p>
-
-                    {% if msg.reponse %}
-                        <div class="bulle-hexa">
-                            <strong>HexaQuébec :</strong><br>{{ msg.reponse }}
-                        </div>
-                        <p class="msg-date text-end">{{ msg.date_reponse }}</p>
-                    {% else %}
-                        <p class="text-muted"><em>En attente de réponse...</em></p>
-                    {% endif %}
-                    <hr style="border-color: rgba(255,255,255,0.08);">
-                {% endfor %}
-            {% else %}
-                <p class="text-muted">Aucun message pour le moment.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- 📝 Formulaires -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-4 mb-4" data-aos="fade-up">
-            <div class="form-card">
-                <h5>Envoyer un message</h5>
-                <form method="POST" action="">
-                    {% csrf_token %}
-                    {{ message_form.as_p }}
-                    <button type="submit" name="send_message" value="1" class="btn btn-hexa mt-2 w-100">Envoyer</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="form-card">
-                <h5>Demande de rendez-vous</h5>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ rdv_form.as_p }}
-                    <button type="submit" name="send_rdv" class="btn btn-hexa mt-2 w-100">Envoyer</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="400">
-            <div class="form-card">
-                <h5>Demande de partenariat</h5>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ partenaire_form.as_p }}
-                    <button type="submit" name="send_partenaire" class="btn btn-hexa mt-2 w-100">Envoyer</button>
-                </form>
+            <div id="profileInfo" style="display:none">
+                <p><strong>Entreprise :</strong> {{ client.entreprise }}</p>
+                <p><strong>Adresse :</strong> {{ client.adresse }}</p>
+                <p><strong>Email :</strong> {{ client.user.email }}</p>
+                <p><strong>N° Client :</strong> {{ client.numero_client }}</p>
             </div>
         </div>
     </div>
 </div>
 
+<!-- MESSAGES -->
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-md-8" data-aos="fade-up">
+        {% for msg in messages_recu %}
+            <div class="bulle-client mb-2">
+                <strong>Vous :</strong><br>{{ msg.message }}
+            </div>
+
+            {% if msg.reponse %}
+            <div class="bulle-hexa mb-3">
+                <strong>HexaQuébec :</strong><br>{{ msg.reponse }}
+            </div>
+            {% endif %}
+        {% empty %}
+            <p class="text-muted text-center">Aucun message</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- FORMULAIRES -->
+<div class="row mt-4">
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card-box">
+            <h5>Message</h5>
+            <form method="POST">
+                {% csrf_token %}
+                {{ message_form.as_p }}
+                <button class="btn btn-hexa w-100">Envoyer</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card-box">
+            <h5>Rendez-vous</h5>
+            <form method="POST">
+                {% csrf_token %}
+                {{ rdv_form.as_p }}
+                <button class="btn btn-hexa w-100">Envoyer</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card-box">
+            <h5>Partenariat</h5>
+            <form method="POST">
+                {% csrf_token %}
+                {{ partenaire_form.as_p }}
+                <button class="btn btn-hexa w-100">Envoyer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
-    AOS.init();
-
-    // Mode sombre automatique
-    const hour = new Date().getHours();
-    if (hour >= 19 || hour <= 6) document.body.classList.add("dark-mode");
-
-    // Statut en ligne / hors ligne
-    function updateStatus() {
-        const dot = document.getElementById("onlineDot");
-        const text = document.getElementById("statusText");
-        if (navigator.onLine) { dot.style.background = "#22c55e"; text.textContent = "En ligne"; }
-        else { dot.style.background = "#ef4444"; text.textContent = "Hors ligne"; }
-    }
-    updateStatus();
-    window.addEventListener("online", updateStatus);
-    window.addEventListener("offline", updateStatus);
-
-    // Afficher / cacher profil
-    const toggleBtn = document.getElementById("toggleProfile");
-    const profileInfo = document.getElementById("profileInfo");
-    toggleBtn.addEventListener("click", () => {
-        if (profileInfo.style.display === "none") {
-            profileInfo.style.display = "block";
-            toggleBtn.textContent = "Cacher le profil";
-        } else {
-            profileInfo.style.display = "none";
-            toggleBtn.textContent = "Afficher le profil";
-        }
-    });
+AOS.init();
+function toggleProfile(){
+    const el=document.getElementById("profileInfo");
+    el.style.display=el.style.display==="none"?"block":"none";
+}
 </script>
+
 </body>
 </html>

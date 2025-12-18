@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
+
+    <!-- ✅ OBLIGATOIRE POUR RESPONSIVE MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Portfolio | HexaQuébec</title>
 
-    <!-- Bootstrap + AOS + FontAwesome + Chart.js -->
+    <!-- Bootstrap / AOS / FontAwesome / Chart.js -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -16,7 +19,6 @@
             --bg: #0b132b;
             --card-bg: #1e293b;
             --text: #f1f5f9;
-            --text-light: #cbd5e1;
             --accent: #c6a87d;
         }
 
@@ -24,75 +26,99 @@
             background: var(--bg);
             color: var(--text);
             font-family: 'Montserrat', sans-serif;
-            transition: 0.3s;
         }
 
+        /* NAVBAR */
         .navbar {
-            background: transparent !important;
-            transition: all 0.6s ease;
-            padding: 1rem 0;
-            z-index: 1000;
+            background: rgba(11,19,43,0.95);
         }
 
-        .navbar.scrolled {
-            background: rgba(11, 19, 43, 0.95) !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 25px rgba(0,0,0,0.4);
-            padding: 0.6rem 0;
+        .navbar-brand {
+            font-weight: 800;
+            color: white !important;
         }
 
-        .navbar .nav-link {
-            color: #fff !important;
-            font-weight: 600;
-            margin-left: 18px;
-        }
-
-        .navbar .nav-link:hover {
-            color: var(--accent) !important;
-        }
-
+        /* TITRE */
         .section-title {
             color: var(--accent);
-            font-size: 2.4rem;
+            font-size: 2.6rem;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
+        /* CARDS */
         .chart-card {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             margin-bottom: 40px;
         }
 
-        .chart-title {
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
         .chart-section {
             display: flex;
-            flex-wrap: wrap;
+            gap: 30px;
             align-items: center;
-            justify-content: space-around;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .chart-img {
-            width: 300px;
-            border-radius: 20px;
-            margin: 10px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            width: 320px;
+            max-width: 100%;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
         }
-        footer a:hover {
-    color: #c6a87d !important;
-    transition: 0.3s;
-    transform: scale(1.1);
-}
 
+        footer {
+            background: #0a0f1f;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        footer h4 {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 700px;
+            margin: auto;
+            color: #cbd5e1;
+        }
+
+        .social-icon {
+            font-size: 1.6rem;
+            margin: 0 10px;
+            color: white;
+        }
+
+        .social-icon:hover {
+            color: var(--accent);
+        }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 768px) {
+
+            .section-title {
+                font-size: 1.9rem;
+            }
+
+            .chart-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .chart-img {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            footer p {
+                font-size: 0.95rem;
+                padding: 0 15px;
+            }
+        }
     </style>
 </head>
 
@@ -101,238 +127,117 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-        <a class="navbar-brand fw-bold text-white" href="{% url 'home' %}">HexaQuébec</a>
+        <a class="navbar-brand" href="{% url 'home' %}">HexaQuébec</a>
     </div>
 </nav>
 
-<div style="height: 120px;"></div>
+<div style="height:90px;"></div>
 
 <div class="container py-5">
 
-   <!-- Section Titre avec gradient et animation -->
-<h2 class="section-title gradient-text" data-aos="fade-up" data-aos-delay="50"
-    style="font-size:2.8rem; font-weight:800; letter-spacing:1.5px; text-align:center; margin-bottom:1rem;">
-    Nos Réalisations & Succès
-</h2>
+    <h2 class="section-title" data-aos="fade-up">
+        Nos Réalisations & Succès
+    </h2>
 
-<!-- Paragraphe descriptif -->
-<p class="text-center mx-auto" 
-   data-aos="fade-up" data-aos-delay="150"
-   style="max-width:720px; color:rgba(255,255,255,0.9); font-size:1.15rem; line-height:1.8; font-weight:400;">
-    Explorez les projets marquants et les succès remarquables de 
-    <strong class="highlight">HexaQuébec</strong> à travers nos chiffres, images et réalisations.
-</p>
+    <p class="text-center mb-5" data-aos="fade-up" data-aos-delay="150">
+        Découvrez les projets et performances de <strong>HexaQuébec</strong>
+    </p>
 
-<!-- CSS à ajouter dans votre fichier ou <style> -->
-<style>
-/* Gradient animé pour le titre */
-.gradient-text {
-    background: linear-gradient(90deg, #FF7A18, #AF002D, #319197);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientAnimation 3s ease infinite;
-    background-size: 300% 300%;
-}
-
-/* Animation du gradient */
-@keyframes gradientAnimation {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
-
-/* Mise en valeur du nom HexaQuébec */
-.highlight {
-    color: #FFD700; /* doré */
-    font-weight:700;
-}
-/* ===== FOOTER ANIMÉ HEXAQUÉBEC ===== */
-.footer-hexa {
-    background: linear-gradient(180deg, #0b132b, #0a0f1f);
-    padding: 50px 0;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Lueur subtile moderne */
-.footer-hexa::before {
-    content: "";
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    background: rgba(198,168,125,0.15);
-    filter: blur(70px);
-    transform: translateX(-50%);
-    animation: floatGlow 6s ease-in-out infinite alternate;
-}
-
-@keyframes floatGlow {
-    0% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
-    100% { transform: translateX(-50%) translateY(20px); opacity: 0.7; }
-}
-
-/* Titre */
-.footer-title {
-    color: #c6a87d;
-    font-size: 1.9rem;
-    letter-spacing: 1px;
-    margin-bottom: 18px;
-}
-
-/* Texte */
-.footer-text {
-    max-width: 760px;
-    margin: auto;
-    color: #cbd5e1;
-    line-height: 1.8;
-    font-size: 1.05rem;
-    opacity: 0.9;
-}
-
-/* Icônes sociales */
-.social-icon {
-    color: #ffffff;
-    font-size: 1.7rem;
-    margin: 0 12px;
-    transition: 0.3s ease;
-}
-
-/* Effet hover premium doré */
-.social-icon:hover {
-    color: #c6a87d;
-    transform: scale(1.25) rotate(5deg);
-    text-shadow: 0px 0px 15px rgba(198,168,125,0.6);
-}
-
-/* Ligne */
-.footer-line {
-    width: 70%;
-    height: 1px;
-    background: #444;
-    margin: 30px auto;
-    opacity: 0.5;
-}
-
-/* Copyright */
-.footer-copy {
-    color: #94a3b8;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-}
-
-</style>
-
-
-    <!-- ================= Chart + Image ================= -->
+    <!-- ================= SECTION 1 (TA PARTIE CONSERVÉE) ================= -->
     <div class="chart-card chart-section" data-aos="fade-up">
         <div>
-            <h4 class="chart-title">Projets réalisés par secteur</h4>
-            <canvas id="secteurChart" height="200"></canvas>
+            <h5 class="text-center mb-3">Projets réalisés par secteur</h5>
+            <canvas id="secteurChart"></canvas>
         </div>
-        <img src="https://fokustalent.com/wp-content/uploads/2022/10/josh-beech-tXJhAFVOHVk-unsplash-scaled.jpg" 
-             alt="Secteur industriel" class="chart-img" data-aos="fade-left">
+
+        <img src="https://fokustalent.com/wp-content/uploads/2022/10/josh-beech-tXJhAFVOHVk-unsplash-scaled.jpg"
+             alt="Secteur industriel"
+             class="chart-img"
+             data-aos="fade-left">
     </div>
 
+    <!-- ================= SECTION 2 ================= -->
     <div class="chart-card chart-section" data-aos="fade-up" data-aos-delay="100">
         <div>
-            <h4 class="chart-title">Satisfaction client (100%)</h4>
-            <canvas id="satisfactionChart" height="200"></canvas>
+            <h5 class="text-center mb-3">Satisfaction client</h5>
+            <canvas id="satisfactionChart"></canvas>
         </div>
-        <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=500&q=80" 
-             alt="Clients satisfaits" class="chart-img" data-aos="fade-right">
+
+        <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=500&q=80"
+             alt="Clients satisfaits"
+             class="chart-img"
+             data-aos="fade-right">
     </div>
 
+    <!-- ================= SECTION 3 ================= -->
     <div class="chart-card chart-section" data-aos="fade-up" data-aos-delay="200">
         <div>
-            <h4 class="chart-title">Croissance annuelle (90%)</h4>
-            <canvas id="croissanceChart" height="200"></canvas>
-        </div>
-        <img src="https://renewablewatch.in/wp-content/uploads/2022/01/RW-30.jpg" 
-             alt="Croissance HexaQuébec" class="chart-img" data-aos="fade-left">
-    </div>
-
-</div><footer class="footer-hexa mt-5" data-aos="fade-up">
-    <div class="container text-center">
-
-        <!-- Titre -->
-        <h4 class="footer-title fw-bold">HexaQuébec</h4>
-
-        <!-- Texte -->
-        <p class="footer-text">
-            HexaQuébec accompagne les entreprises industrielles et commerciales 
-            dans tous leurs projets informatiques.  
-            Nous développons des centaines de sites web, applications et solutions
-            digitales pour nos clients et partenaires.
-        </p>
-
-        <!-- Réseaux sociaux -->
-        <div class="social-links mt-3">
-            <a href="https://m.facebook.com/p/HexaQuebec-61578598457506/?deoia=1&wtsid=rdr_0QJab4d0DoCHtrW4n" class="social-icon"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.tiktok.com/@hexaquebec.ca?_r=1&_t=ZS-91qqwvDvYXd" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            <h5 class="text-center mb-3">Croissance annuelle</h5>
+            <canvas id="croissanceChart"></canvas>
         </div>
 
-        <div class="footer-line"></div>
-
-        <p class="footer-copy">© 2025 HexaQuébec — Tous droits réservés.</p>
+        <img src="https://renewablewatch.in/wp-content/uploads/2022/01/RW-30.jpg"
+             alt="Croissance"
+             class="chart-img"
+             data-aos="fade-left">
     </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer data-aos="fade-up">
+    <h4>HexaQuébec</h4>
+    <p>
+        HexaQuébec accompagne les entreprises industrielles et commerciales dans tous leurs projets informatiques. Nous développons des centaines de sites web, applications et solutions digitales pour nos clients et partenaires.
+    </p>
+
+    <div class="mt-3">
+        <a href="https://m.facebook.com/p/HexaQuebec-61578598457506/?deoia=1&wtsid=rdr_0QJab4d0DoCHtrW4n" class="social-icon"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.tiktok.com/@hexaquebec.ca?_r=1&_t=ZS-91qqwvDvYXd" class="social-icon"><i class="fab fa-tiktok"></i></a>
+    </div>
+
+    <p class="mt-4" style="font-size:0.9rem;">© 2025 HexaQuébec</p>
 </footer>
-
 
 <!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
 <script>
     AOS.init({ duration: 800 });
 
-    // NAVBAR SCROLL
-    document.addEventListener("scroll", function () {
-        const navbar = document.querySelector(".navbar");
-        navbar.classList.toggle("scrolled", window.scrollY > 50);
-    });
-
-    // ====== Chart.js ======
-    const secteurCtx = document.getElementById('secteurChart').getContext('2d');
-    new Chart(secteurCtx, {
+    new Chart(document.getElementById('secteurChart'), {
         type: 'bar',
         data: {
             labels: ['Industriel', 'Commercial', 'IA'],
             datasets: [{
-                label: 'Nombre de projets',
                 data: [12, 8, 5],
-                backgroundColor: ['#c6a87d', '#f1c40f', '#3498db']
+                backgroundColor: '#c6a87d'
             }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-        }
-    });
-
-    const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
-    new Chart(satisfactionCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Satisfaits', 'Neutres', 'Insatisfaits'],
-            datasets: [{ data: [85, 10, 5], backgroundColor: ['#c6a87d', '#3498db', '#e74c3c'] }]
         },
         options: { responsive: true }
     });
 
-    const croissanceCtx = document.getElementById('croissanceChart').getContext('2d');
-    new Chart(croissanceCtx, {
+    new Chart(document.getElementById('satisfactionChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Satisfaits', 'Autres'],
+            datasets: [{
+                data: [90, 10],
+                backgroundColor: ['#c6a87d', '#374151']
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    new Chart(document.getElementById('croissanceChart'), {
         type: 'line',
         data: {
-            labels: ['2024', '2025', '2026', '2027', '2028'],
+            labels: ['2024','2025','2026','2027','2028'],
             datasets: [{
-                label: 'Croissance annuelle',
-                data: [15, 25, 40, 55, 70],
-                fill: false,
+                data: [15, 30, 45, 60, 75],
                 borderColor: '#c6a87d',
-                tension: 0.4,
-                pointBackgroundColor: '#c6a87d'
+                tension: 0.4
             }]
         },
         options: { responsive: true }
