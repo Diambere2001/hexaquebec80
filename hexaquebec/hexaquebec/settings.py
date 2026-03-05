@@ -119,7 +119,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'hexaquebec80@gmail.com'
-EMAIL_HOST_PASSWORD = 'f x b n j i t h o p v d p n s p'
+EMAIL_HOST_PASSWORD = 'l h x m u y z g a x t a k s q v'
 
 
 # ========================

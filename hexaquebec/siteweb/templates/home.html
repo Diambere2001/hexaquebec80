@@ -47,7 +47,7 @@
 
     /* ===== TEXTE TYPING ===== */
     #typing-text {
-      color: #fff;
+      color: #c6a87d;
       font-size: 2.5rem;
       text-align: center;
       margin-top: 30px;
@@ -727,27 +727,61 @@
     #hexa-logo { width: 150px; }
 }
 
+/* icone blanche */
+.navbar-toggler {
+    border-color:  #c6a87d;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
+
+/* menu mobile */
+@media (max-width: 991px) {
+
+.nav-modern {
+    background: linear-gradient(135deg, #0a0a0f, #1a1714 , #155c8b);
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 30px;
+
+}
+
+/* texte menu */
+.nav-modern .nav-link {
+    color: white;
+    font-size: 18px;
+    text-align: left;
+    padding: 10px 0;
+}
+
+/* hover */
+.nav-modern .nav-link:hover {
+    color: #ffd700;
+}
+
+}
+
 </style>
 
 
 
 
 
-    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto nav-modern">
-        <li class="nav-item"><a href="#" class="nav-link active">Accueil</a></li>
-        <li class="nav-item"><a href="{% url 'services' %}" class="nav-link">Services</a></li>
-       <a href="{% url 'produits_list' %}" class="nav-link">Articles</a>
-        <li class="nav-item">
-    <a href="{% url 'portfolio' %}" class="nav-link">Projets</a>
-</li>
+<button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
 
-        <li class="nav-item"><a href="{% url 'client_login' %}" class="nav-link">Clients</a></li>
-         
-        <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-      </ul>
-    </div>
+<div class="collapse navbar-collapse" id="navbarNav">
+  <ul class="navbar-nav ms-auto nav-modern">
+    <li class="nav-item"><a href="#" class="nav-link active">Accueil</a></li>
+    <li class="nav-item"><a href="{% url 'services' %}" class="nav-link">Services</a></li>
+    <li class="nav-item"><a href="{% url 'produits_list' %}" class="nav-link">Articles</a></li>
+    <li class="nav-item"><a href="{% url 'portfolio' %}" class="nav-link">Projets</a></li>
+    <li class="nav-item"><a href="{% url 'client_login' %}" class="nav-link">Clients</a></li>
+    <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+  </ul>
+</div>
   </div>
 </nav>
 
