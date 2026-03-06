@@ -248,4 +248,22 @@ class CommentPro(models.Model):
 
 
 
+class VideoAnnonce(models.Model):
+    titre = models.CharField(max_length=200)
+    video = models.FileField(upload_to="videos_annonces/")
+    date_pub = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titre
+
+
+class Affiche(models.Model):
+    titre = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='affiches/')
+    actif = models.BooleanField(default=True)
+    date_pub = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titre
+
 

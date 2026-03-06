@@ -5,7 +5,7 @@ from django.utils import timezone
 from .models import Client, MessageClient
 from .models import MessageClient, RendezVous, Partenaire
 from django.utils.html import format_html
-
+from .models import VideoAnnonce, Affiche
 
 
 @admin.register(Product)
@@ -164,3 +164,10 @@ class CommentProAdmin(admin.ModelAdmin):
     def note_display(self, obj):
         return "⭐" * obj.note
     note_display.short_description = "Note"
+
+
+
+
+
+admin.site.register(VideoAnnonce)
+admin.site.register(Affiche)

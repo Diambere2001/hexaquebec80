@@ -93,7 +93,7 @@ def chatbot_ai(request):
         print("Erreur API:", e)
         return JsonResponse({"error": str(e)}, status=500)
 
-
+from .models import VideoAnnonce, Affiche
 # ===================== HOME =====================
 def home_view(request):
     annonces = Announcement.objects.filter(
@@ -103,7 +103,13 @@ def home_view(request):
 
     products = Product.objects.filter(published=True)
     portfolio = PortfolioItem.objects.all()
-    partenaires = Partenaire.objects.all()  # 🔥 On récupère les partenaires en DB
+    partenaires = Partenaire.objects.all()
+
+    # 🔥 VIDEO PUB
+    videos = VideoAnnonce.objects.all().order_by('-date_pub')[:1]
+
+    # 🔥 AFFICHES PUB
+    affiches = Affiche.objects.filter(actif=True).order_by('-date_pub')[:3]
 
     form = UrgenceForm()
 
@@ -128,7 +134,11 @@ def home_view(request):
         'portfolio': portfolio,
         'services': services,
         'form': form,
-        'partenaires': partenaires,   # 🔥 AJOUT AU CONTEXTE
+        'partenaires': partenaires,
+
+        # 🔥 AJOUTS
+        'videos': videos,
+        'affiches': affiches,
     }
 
     return render(request, 'home.html', context)
