@@ -21,7 +21,7 @@ urlpatterns = [
     # Page détaillée (celle que tu as montrée)
     path('services/detail/', views.services_view, name='services_detail'),
     path("paiement/<int:produit_id>/", views.paiement_stripe, name="paiement_stripe"),
-    path("paiement/success/", views.paiement_success, name="paiement_success"),
+    
     path("paiement/cancel/", views.paiement_cancel, name="paiement_cancel"),
     path('produits/', views.produits_list, name='produits_list'),
     path('produit/<int:produit_id>/', views.product_detail, name='product_detail'),  # <- virgule ici !

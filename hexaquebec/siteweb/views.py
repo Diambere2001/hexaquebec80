@@ -307,42 +307,8 @@ def paiement_stripe(request, produit_id):
 from django.core.mail import EmailMessage
 
 
-def paiement_success(request, order_id):
 
-    order = Order.objects.get(id=order_id)
 
-    order.paid = True
-    order.save()
-
-    email = EmailMessage(
-
-        "Confirmation de commande HexaQuébec",
-
-        f"""
-Merci pour votre commande.
-
-Numéro : {order.code}
-
-Produit : {order.product.title}
-
-Total payé : {order.total}$
-
-Votre facture est jointe.
-""",
-
-        "contact@hexaquebec.com",
-
-        [order.courriel],
-
-    )
-
-    invoice = generate_invoice(order)
-
-    email.attach(f"facture_{order.code}.pdf", invoice.content, "application/pdf")
-
-    email.send()
-
-    return render(request, "success.html", {"order": order})
 
 
 def paiement_cancel(request):
@@ -415,90 +381,10 @@ def passer_commande(request, product_id):
 
     return render(request, "passer_commande.html", {"product": product})
     
-def paiement_success(request):
-
-    product_id = request.GET.get("product_id")
-
-    product = Product.objects.get(id=product_id)
-
-    price = Decimal(product.price)
-
-    tps = price * Decimal("0.05")
-    tvq = price * Decimal("0.09975")
-
-    total = price + tps + tvq
-
-    order = Order.objects.create(
-        user=request.user,
-        product=product,
-        price=price,
-        tps=tps,
-        tvq=tvq,
-        total=total
-    )
-
-    pdf = generate_invoice(order)
-
-    email = EmailMessage(
-        "Facture - HexaQuebec",
-        f"""
-Merci pour votre commande.
-
-Produit : {product.title}
-
-Numéro de commande : {order.order_number}
-
-TOTAL payé : {total} CAD
-
-Votre facture est attachée à cet email.
-
-HexaQuebec
-""",
-        "noreply@hexaquebec.com",
-        [request.user.email],
-    )
-
-    email.attach(f"facture_{order.order_number}.pdf", pdf.read(), "application/pdf")
-
-    email.send()
-
-    return render(request, "paiement_success.html", {"order": order})
 
 
 
-def generate_invoice(order):
 
-    buffer = BytesIO()
-
-    pdf = SimpleDocTemplate(buffer, pagesize=letter) # type: ignore
-
-    styles = getSampleStyleSheet() # type: ignore
-    elements = []
-
-    logo = "static/logo.png"
-    elements.append(Image(logo, width=120, height=60))
-
-    elements.append(pager(1,20))
-
-    elements.append(Paragraph("Facture - HexaQuebec", styles['Title'])) # type: ignore
-
-    elements.append(Spacer(1,20)) # type: ignore
-
-    elements.append(Paragraph(f"Commande #: {order.order_number}", styles['Normal'])) # type: ignore
-    elements.append(Paragraph(f"Produit: {order.product.title}", styles['Normal'])) # type: ignore
-
-    elements.append(Spacer(1,20)) # type: ignore
-
-    elements.append(Paragraph(f"Prix: {order.price} CAD", styles['Normal'])) # type: ignore
-    elements.append(Paragraph(f"TPS (5%): {order.tps} CAD", styles['Normal'])) # type: ignore
-    elements.append(Paragraph(f"TVQ (9.975%): {order.tvq} CAD", styles['Normal'])) # type: ignore
-    elements.append(Paragraph(f"TOTAL: {order.total} CAD", styles['Heading2'])) # type: ignore
-
-    pdf.build(elements)
-
-    buffer.seek(0)
-
-    return buffer
 
 
 
