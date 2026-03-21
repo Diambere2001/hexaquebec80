@@ -127,7 +127,16 @@ body {
     .btn-order { width: 100%; }
     .related-products img { height: 150px; }
 }
+.btn-outline-dark{
+    border-radius:10px;
+    font-weight:600;
+    transition:0.3s;
+}
 
+.btn-outline-dark:hover{
+    background:#111;
+    color:white;
+}
 </style>
 </head>
 
@@ -163,8 +172,15 @@ body {
             <p>{{ produit.description }}</p>
 
             <!-- Bouton commander -->
-            <a href="{% url 'passer_commande' produit.id %}" class="btn btn-order btn-lg mt-3">Commander</a>
+            <div class="d-flex gap-2 mt-3">
 
+    <a href="{% url 'passer_commande' produit.id %}" 
+       class="btn btn-order btn-lg w-50">
+        ⚡ Commander
+    </a>
+
+
+</div>
             <!-- Informations commande -->
             {% if commande %}
             <div class="command-info">

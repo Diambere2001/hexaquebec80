@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payer - {{ product.nom }}</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    background:#f3f4f6;
+    font-family: Arial, sans-serif;
+}
+
+/* CONTENEUR */
+.order-container{
+    max-width:1100px;
+    margin:40px auto;
+    padding:10px;
+}
+
+/* BOX */
+.product-box, .form-box{
+    background:white;
+    border-radius:12px;
+    padding:25px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.product-image{
+    text-align:center;
+}
+.product-image img{
+    max-height:280px;
+    width:100%;
+    object-fit:contain;
+}
+
+/* TEXTE */
+.product-title{
+    font-size:22px;
+    font-weight:600;
+    margin-top:10px;
+}
+
+.product-price{
+    font-size:26px;
+    font-weight:bold;
+    color:#28a745;
+    margin:10px 0;
+}
+
+/* BADGE */
+.badge-quality{
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:10px;
+    font-weight:600;
+    font-size:13px;
+    margin-top:5px;
+}
+.neuf{background:#28a745;color:white;}
+.reconditionne{background:#ffc107;color:black;}
+.occasion{background:#17a2b8;color:white;}
+
+/* FORM */
+.form-control{
+    border-radius:8px;
+    padding:10px;
+}
+
+/* STRIPE */
+#card-element{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:white;
+}
+
+/* BUTTON */
+.btn-order{
+    background:#ff9900;
+    border:none;
+    color:white;
+    font-weight:600;
+    padding:14px;
+    border-radius:8px;
+    transition:0.3s;
+}
+
+.btn-order:hover{
+    background:#e68a00;
+}
+
+/* TEXTE CONFIANCE */
+.security-box{
+    margin-top:20px;
+    font-size:14px;
+    color:#555;
+    background:#fff8e1;
+    padding:15px;
+    border-radius:8px;
+    border-left:4px solid #ff9900;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    .product-title{text-align:center;}
+    .product-price{text-align:center;}
+}
+
+.btn-outline-secondary,
+.btn-outline-danger{
+    padding:12px;
+    font-weight:600;
+    border-radius:8px;
+    transition:0.2s;
+}
+
+.btn-outline-secondary:hover{
+    background:#e5e7eb;
+}
+
+.btn-outline-danger:hover{
+    background:#dc3545;
+    color:white;
+}
+</style>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+</head>
+<body>
+
+<div class="container order-container">
+<div class="row g-4">
+
+<!-- PRODUIT -->
+<div class="col-lg-6">
+<div class="product-box">
+
+<div class="product-image">
+<img src="{{ product.image.url }}" alt="">
+</div>
+
+<div class="product-title">
+{{ product.nom }}
+</div>
+
+<div class="product-price">
+{{ total }} CAD
+</div>
+
+<div class="badge-quality
+{% if product.quality == 'neuf' %}neuf
+{% elif product.quality == 'reconditionne' %}reconditionne
+{% else %}occasion{% endif %}">
+{{ product.quality }}
+</div>
+
+<p style="color:#666; margin-top:10px;">
+Produit vérifié et testé par HexaQuébec ✔
+</p>
+
+</div>
+</div>
+
+<!-- FORMULAIRE -->
+<div class="col-lg-6">
+<div class="form-box">
+
+<h4 class="mb-3">Paiement sécurisé</h4>
+
+<form id="payment-form">
+{% csrf_token %}
+
+<div class="mb-3">
+<label>Nom</label>
+<input type="text" id="nom" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Prénom</label>
+<input type="text" id="prenom" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Adresse complète</label>
+<textarea id="adresse" class="form-control" required></textarea>
+</div>
+
+<div class="mb-3">
+<label>Téléphone</label>
+<input type="text" id="telephone" class="form-control">
+</div>
+
+<div class="mb-3">
+<label>Courriel</label>
+<input type="email" id="courriel" class="form-control" required>
+</div>
+
+<div id="card-element" class="mb-3"></div>
+<div id="card-errors" class="text-danger mb-3"></div>
+
+<button type="submit" class="btn btn-order w-100">
+Payer maintenant
+</button>
+<div class="d-flex gap-2 mt-3">
+    <a href="/" class="btn btn-outline-secondary w-50">
+        ⬅ Retour accueil
+    </a>
+
+    <button type="button" class="btn btn-outline-danger w-50" onclick="annulerCommande()">
+        ❌ Annuler commande
+    </button>
+</div>
+</form>
+
+<!-- TEXTE CONFIANCE -->
+<div class="security-box">
+<strong>Commande et facturation validées ✔</strong><br>
+Veuillez vérifier vos informations avant de confirmer votre paiement.<br>
+Toutes vos données sont protégées et sécurisées par HexaQuébec.
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const ORDER_ID = "{{ order_id|default:'0' }}";
+
+const stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
+const elements = stripe.elements();
+const card = elements.create('card', {hidePostalCode: true});
+card.mount('#card-element');
+
+card.on('change', function(event) {
+    document.getElementById('card-errors').textContent = event.error ? event.error.message : '';
+});
+
+const form = document.getElementById('payment-form');
+
+form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const {error, paymentIntent} = await stripe.confirmCardPayment(
+        '{{ client_secret }}',
+        {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    name: document.getElementById('nom').value + ' ' + document.getElementById('prenom').value,
+                    email: document.getElementById('courriel').value,
+                    address: {
+                        line1: document.getElementById('adresse').value
+                    },
+                    phone: document.getElementById('telephone').value
+                }
+            }
+        }
+    );
+
+    if (error) {
+        document.getElementById('card-errors').textContent = error.message;
+        return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+
+        await fetch('/sauvegarder-client/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                order_id: ORDER_ID,
+                nom: document.getElementById('nom').value,
+                prenom: document.getElementById('prenom').value,
+                email: document.getElementById('courriel').value,
+                adresse: document.getElementById('adresse').value,
+                telephone: document.getElementById('telephone').value
+            })
+        });
+
+        window.location.href = `/paiement-reussi/${ORDER_ID}/`;
+    }
+});
+</script>
+<script>
+function annulerCommande(){
+    if(confirm("Voulez-vous vraiment annuler la commande ?")){
+        window.location.href = "/";
+    }
+}
+</script>
+</body>
+</html>

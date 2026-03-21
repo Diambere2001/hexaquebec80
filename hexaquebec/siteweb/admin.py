@@ -6,6 +6,7 @@ from .models import Client, MessageClient
 from .models import MessageClient, RendezVous, Partenaire
 from django.utils.html import format_html
 from .models import VideoAnnonce, Affiche
+from .models import Panier, PanierItem
 
 
 @admin.register(Product)
@@ -29,34 +30,92 @@ class ProductAdmin(admin.ModelAdmin):
 # -----------------------
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+
     list_display = (
-        "code",        # numéro de commande unique
-        "nom",
-        "prenom",
-        "product",
-        "telephone",
-        "courriel",
-        "date_created",
-    )
-    search_fields = ("nom", "prenom", "courriel", "product__nom", "code")
-    list_filter = ("date_created", "product")
-    ordering = ("-date_created",)
-    list_display_links = ("code", "nom", "prenom")
-    list_per_page = 25
-    fields = (
         "code",
         "nom",
         "prenom",
-        "courriel",
-        "telephone",
         "product",
-        "adresse",
+        "total",
+        "payment_status",
+        "adresse_courte",
         "date_created",
     )
-    readonly_fields = ("code", "date_created")  # pour ne pas pouvoir modifier manuellement
 
+    search_fields = (
+        "nom",
+        "prenom",
+        "courriel",
+        "telephone",
+        "code",
+    )
 
+    list_filter = (
+        "paid",
+        "date_created",
+        "product",
+    )
 
+    ordering = ("-date_created",)
+
+    list_display_links = (
+        "code",
+        "nom",
+        "prenom",
+    )
+
+    list_per_page = 25
+
+    fields = (
+        "code",
+        "product",
+
+        "nom",
+        "prenom",
+        "courriel",
+        "telephone",
+
+        "adresse",
+
+        "price",
+        "tps",
+        "tvq",
+        "total",
+
+        "payment_status",
+        "stripe_payment_id",
+
+        "date_created",
+    )
+
+    readonly_fields = (
+        "code",
+        "price",
+        "tps",
+        "tvq",
+        "total",
+        "payment_status",
+        "stripe_payment_id",
+        "date_created",
+    )
+
+    # Badge paiement couleur
+    def payment_status(self, obj):
+        if obj.paid:
+            return format_html(
+                '<span style="color:white;background:green;padding:4px 8px;border-radius:5px;">PAYÉ</span>'
+            )
+        return format_html(
+            '<span style="color:white;background:red;padding:4px 8px;border-radius:5px;">NON PAYÉ</span>'
+        )
+
+    payment_status.short_description = "Paiement"
+
+    # Adresse courte
+    def adresse_courte(self, obj):
+        return obj.adresse[:40] + "..." if len(obj.adresse) > 40 else obj.adresse
+
+    adresse_courte.short_description = "Adresse livraison"
 # -----------------------
 # ADMIN : Annonce
 # -----------------------
@@ -171,3 +230,38 @@ class CommentProAdmin(admin.ModelAdmin):
 
 admin.site.register(VideoAnnonce)
 admin.site.register(Affiche)
+
+
+class PanierItemInline(admin.TabularInline):
+    model = PanierItem
+    extra = 0
+    readonly_fields = ('produit', 'quantite', 'total_item')
+
+    def total_item(self, obj):
+        return obj.total()
+    total_item.short_description = "Total"
+
+
+# 🔹 Admin Panier
+@admin.register(Panier)
+class PanierAdmin(admin.ModelAdmin):
+    list_display = ('id', 'session_id', 'created_at', 'total_panier')
+    search_fields = ('session_id',)
+    list_filter = ('created_at',)
+    inlines = [PanierItemInline]
+
+    def total_panier(self, obj):
+        return obj.total()
+    total_panier.short_description = "Total panier"
+
+
+# 🔹 Admin PanierItem
+@admin.register(PanierItem)
+class PanierItemAdmin(admin.ModelAdmin):
+    list_display = ('panier', 'produit', 'quantite', 'total_item')
+    list_filter = ('panier',)
+    search_fields = ('produit__title',)
+
+    def total_item(self, obj):
+        return obj.total()
+    total_item.short_description = "Total"

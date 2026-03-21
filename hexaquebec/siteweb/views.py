@@ -19,7 +19,8 @@ from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 from django.views.decorators.http import require_POST
 import mimetypes  # <-- Ajoute cette ligne
-
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product, Cart, CartItem
 
 
 
@@ -48,7 +49,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .models import Client, Message
 from .forms import MessageForm
-from django.template.loader import render_to_string  
+from django.template.loader import get_template, render_to_string  
 from django.core.mail import EmailMessage
 
 
@@ -296,8 +297,45 @@ def paiement_stripe(request, produit_id):
     return redirect(session.url, code=303)
 
 
-def paiement_success(request):
-    return render(request, "success.html")
+from django.core.mail import EmailMessage
+
+
+def paiement_success(request, order_id):
+
+    order = Order.objects.get(id=order_id)
+
+    order.paid = True
+    order.save()
+
+    email = EmailMessage(
+
+        "Confirmation de commande HexaQuébec",
+
+        f"""
+Merci pour votre commande.
+
+Numéro : {order.code}
+
+Produit : {order.product.title}
+
+Total payé : {order.total}$
+
+Votre facture est jointe.
+""",
+
+        "contact@hexaquebec.com",
+
+        [order.courriel],
+
+    )
+
+    invoice = generate_invoice(order)
+
+    email.attach(f"facture_{order.code}.pdf", invoice.content, "application/pdf")
+
+    email.send()
+
+    return render(request, "success.html", {"order": order})
 
 
 def paiement_cancel(request):
@@ -327,20 +365,134 @@ def paiement_panier(request):
 
 
 # ===================== COMMANDES =====================
-def passer_commande(request, id):  # correspond à <int:id> dans l'URL
-    product = get_object_or_404(Product, id=id)
-    
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+def passer_commande(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
     if request.method == "POST":
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            order.product = product
-            order.save()
-            return render(request, "confirmation_commande.html", {"order": order})
-    else:
-        form = OrderForm()
+        nom = request.POST.get("nom")
+        prenom = request.POST.get("prenom")
+        adresse = request.POST.get("adresse")
+        telephone = request.POST.get("telephone")
+        courriel = request.POST.get("courriel")
+
+        # ✅ Validation simple obligatoire
+        if not all([nom, prenom, adresse, telephone, courriel]):
+            return render(request, "passer_commande.html", {
+                "product": product,
+                "error": "Veuillez remplir tous les champs."
+            })
+
+        # Vérification email simple
+        import re
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", courriel):
+            return render(request, "passer_commande.html", {
+                "product": product,
+                "error": "Adresse e-mail invalide."
+            })
+
+        # Créer la commande
+        order = Order.objects.create(
+            product=product,
+            nom=nom,
+            prenom=prenom,
+            adresse=adresse,
+            telephone=telephone,
+            courriel=courriel
+        )
+
+        # Redirection vers checkout avec product_id
+        return redirect('checkout', product_id=product.id)
+
+    return render(request, "passer_commande.html", {"product": product})
     
-    return render(request, "passer_commande.html", {"form": form, "product": product})
+def paiement_success(request):
+
+    product_id = request.GET.get("product_id")
+
+    product = Product.objects.get(id=product_id)
+
+    price = Decimal(product.price)
+
+    tps = price * Decimal("0.05")
+    tvq = price * Decimal("0.09975")
+
+    total = price + tps + tvq
+
+    order = Order.objects.create(
+        user=request.user,
+        product=product,
+        price=price,
+        tps=tps,
+        tvq=tvq,
+        total=total
+    )
+
+    pdf = generate_invoice(order)
+
+    email = EmailMessage(
+        "Facture - HexaQuebec",
+        f"""
+Merci pour votre commande.
+
+Produit : {product.title}
+
+Numéro de commande : {order.order_number}
+
+TOTAL payé : {total} CAD
+
+Votre facture est attachée à cet email.
+
+HexaQuebec
+""",
+        "noreply@hexaquebec.com",
+        [request.user.email],
+    )
+
+    email.attach(f"facture_{order.order_number}.pdf", pdf.read(), "application/pdf")
+
+    email.send()
+
+    return render(request, "paiement_success.html", {"order": order})
+
+
+
+def generate_invoice(order):
+
+    buffer = BytesIO()
+
+    pdf = SimpleDocTemplate(buffer, pagesize=letter)
+
+    styles = getSampleStyleSheet()
+    elements = []
+
+    logo = "static/logo.png"
+    elements.append(Image(logo, width=120, height=60))
+
+    elements.append(Spacer(1,20))
+
+    elements.append(Paragraph("Facture - HexaQuebec", styles['Title'])) # type: ignore
+
+    elements.append(Spacer(1,20)) # type: ignore
+
+    elements.append(Paragraph(f"Commande #: {order.order_number}", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"Produit: {order.product.title}", styles['Normal'])) # type: ignore
+
+    elements.append(Spacer(1,20)) # type: ignore
+
+    elements.append(Paragraph(f"Prix: {order.price} CAD", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"TPS (5%): {order.tps} CAD", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"TVQ (9.975%): {order.tvq} CAD", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"TOTAL: {order.total} CAD", styles['Heading2'])) # type: ignore
+
+    pdf.build(elements)
+
+    buffer.seek(0)
+
+    return buffer
+
 
 
 # ===================== URGENCE AJAX =====================
@@ -657,7 +809,6 @@ def login_hexa(request):
             return redirect("dashboard_hexa")
     return render(request, "login_hexa.html")
 
-# --- Tableau de bord HexaQuébec ---
 @login_required
 def dashboard_hexa(request):
 
@@ -667,10 +818,26 @@ def dashboard_hexa(request):
     # Tous les clients
     clients = Client.objects.all()
 
+    # Toutes les factures
+    factures = Facture.objects.all().order_by('date')
+
+    # Toutes les commandes
+    orders = Order.objects.select_related('product').all().order_by('-id')
+
+    # Données pour Chart.js
+    factures_labels = [f.date.strftime('%b %Y') for f in factures]
+    factures_data = [float(f.prix) for f in factures]
+
     return render(request, "dashboard_hexa.html", {
         "messages": messages_clients,
-        "clients": clients
+        "clients": clients,
+        "factures": factures,
+        "orders": orders,   # 🔥 important pour ton tableau commandes
+
+        "factures_labels": json.dumps(factures_labels),
+        "factures_data": json.dumps(factures_data),
     })
+
 def repondre_message(request, message_id):
     # Récupère le message
     message_obj = get_object_or_404(MessageClient, id=message_id)
@@ -687,7 +854,10 @@ def repondre_message(request, message_id):
             messages.error(request, "Veuillez écrire une réponse avant d'envoyer.")
 
     # Redirige vers le dashboard
-    return redirect('dashboard')  # remplace 'dashboard' par le nom réel de ta page
+    return redirect('dashboard')
+    
+    
+     # remplace 'dashboard' par le nom réel de ta page
 @login_required
 def envoyer_message(request):
     message_envoye = False
@@ -772,71 +942,146 @@ def _generate_qrcode_base64(text):
 # ---------- Vue création / affichage commande ----------
 
 def order_view(request, produit_id):
+
     product = get_object_or_404(Product, id=produit_id)
 
     if request.method == 'POST':
-        form = OrderForm(request.POST) if 'OrderForm' in globals() else None
 
-        if form is not None and form.is_valid():
-            order = form.save(commit=False)
-            order.product = product
-            order.save()
-            return redirect('order_receipt', order_id=order.id)
-        else:
-            # Création simplifiée sans formulaire
-            nom = request.POST.get('nom') or 'Client'
-            prenom = request.POST.get('prenom') or ''
-            adresse = request.POST.get('adresse', '')
-            telephone = request.POST.get('telephone', '')
-            courriel = request.POST.get('courriel') or (request.user.email if request.user.is_authenticated else '')
+        nom = request.POST.get('nom')
+        prenom = request.POST.get('prenom')
+        adresse = request.POST.get('adresse')
+        telephone = request.POST.get('telephone')
+        courriel = request.POST.get('courriel')
 
-            order = Order.objects.create(
-                product=product,
-                nom=nom,
-                prenom=prenom,
-                adresse=adresse,
-                telephone=telephone,
-                courriel=courriel
-            )
-            return redirect('order_receipt', order_id=order.id)
-    else:
-        form = OrderForm() if 'OrderForm' in globals() else None
+        # Vérifier champs obligatoires
+        if not all([nom, prenom, adresse, telephone, courriel]):
+            messages.error(request, "Tous les champs sont obligatoires.")
+            return render(request, 'order_page.html', {'product': product})
 
-    # Vérifier dernière commande de cet utilisateur pour ce produit
-    last_order = None
-    if request.user.is_authenticated:
-        last_order = Order.objects.filter(courriel=request.user.email, product=product).last()
+        # Vérifier email
+        try:
+            validate_email(courriel)
+        except ValidationError:
+            messages.error(request, "Email invalide.")
+            return render(request, 'order_page.html', {'product': product})
 
-    barcode_base64 = None
-    qrcode_base64 = None
-    if last_order:
-        barcode_base64 = _generate_code128_base64(last_order.code)
-        qrcode_base64 = _generate_qrcode_base64(f"COMMANDE#{last_order.code} - {product.title}")
+        order = Order.objects.create(
+            product=product,
+            nom=nom,
+            prenom=prenom,
+            adresse=adresse,
+            telephone=telephone,
+            courriel=courriel
+        )
 
-    context = {
-        'product': product,
-        'form': form,
-        'order': last_order,
-        'barcode_base64': barcode_base64,
-        'qrcode_base64': qrcode_base64,
-    }
-    return render(request, 'order_page.html', context)
+        return redirect('checkout', product_id=order.product.id)
+
+    return render(request, 'order_page.html', {'product': product})
 
 
-# ---------- Vue reçu de commande ----------
-def order_receipt(request, order_id):
+
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+def checkout(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    price = float(product.price)
+    tps = price * 0.05
+    tvq = price * 0.09975
+    total = round(price + tps + tvq, 2)
+
+    amount_cents = int(total * 100)
+
+    # ✅ créer la commande
+    order = Order.objects.create(
+        product=product,
+        price=price,
+        tps=tps,
+        tvq=tvq,
+        total=total,
+        paid=False
+    )
+
+    # ✅ Stripe avec metadata
+    intent = stripe.PaymentIntent.create(
+        amount=amount_cents,
+        currency="cad",
+        description=f"Achat de {product.title}",
+        metadata={
+            "order_id": order.id
+        }
+    )
+
+    return render(request, "checkout.html", {
+        "product": product,
+        "client_secret": intent.client_secret,
+        "STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY,
+        "total": total,
+        "order_id": order.id  # 🔥 important
+    })
+
+def payment_success(request, order_id):
+
     order = get_object_or_404(Order, id=order_id)
-    
-    prix = order.product.price
+
+    prix = float(order.product.price)
+
+    tps = round(prix * 0.05, 2)
+    tvq = round(prix * 0.09975, 2)
+    total = round(prix + tps + tvq, 2)
+
+    # Générer tracking simple
+    order.tracking_number = f"HEX-{order.id}{order.code[:4]}"
+    order.save()
+
+    # Email client
+    send_mail(
+
+        "Commande confirmée - HexaQuébec",
+
+        f"""
+Merci pour votre commande !
+
+Produit : {order.product.title}
+
+Total payé : {total} CAD
+
+Numéro de commande : {order.code}
+
+Tracking livraison : {order.tracking_number}
+
+Merci de votre confiance.
+HexaQuébec
+""",
+
+        settings.EMAIL_HOST_USER,
+        [order.courriel],
+        fail_silently=True
+    )
+
+    return redirect('order_receipt', order_id=order.id)
+
+def order_receipt(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id)
+
+    prix = float(order.product.price)
 
     TPS = round(prix * 0.05, 2)
     TVQ = round(prix * 0.09975, 2)
+
     total = round(prix + TPS + TVQ, 2)
 
     barcode_base64 = _generate_code128_base64(order.code)
-    qrcode_base64 = _generate_qrcode_base64(f"COMMANDE#{order.code} - {order.product.title}")
+    qrcode_base64 = _generate_qrcode_base64(
+        f"COMMANDE#{order.code} - {order.product.title}"
+    )
 
     return render(request, 'order_receipt.html', {
+
         'order': order,
         'TPS': TPS,
         'TVQ': TVQ,
@@ -845,104 +1090,46 @@ def order_receipt(request, order_id):
         'qrcode_base64': qrcode_base64,
     })
 
-
 def download_order_pdf(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
 
-    # Génération barcode et QR code
-    barcode_b64 = _generate_code128_base64(order.code)
-    qr_b64 = _generate_qrcode_base64(f"COMMANDE#{order.code} - {order.product.title}")
-    barcode_bytes = base64.b64decode(barcode_b64)
-    qr_bytes = base64.b64decode(qr_b64)
+    order = Order.objects.get(id=order_id)
 
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="facture_{order.id}.pdf"'
 
-    # === LOGO ===
-    try:
-        logo_path = os.path.join(settings.BASE_DIR, "static/img/hexa_logo.png")
-        logo = ImageReader(logo_path)
-        p.drawImage(logo, 40, height - 120, width=120, height=80, preserveAspectRatio=True, mask='auto')
-    except Exception as e:
-        print("Erreur logo :", e)
+    pdf = SimpleDocTemplate(response, pagesize=letter)
 
-    # === TITRE ===
-    p.setFont("Helvetica-Bold", 18)
-    p.drawString(180, height - 80, "FACTURE DE COMMANDE — HEXAQUÉBEC")
+    styles = getSampleStyleSheet()
+    elements = []
 
-    # === INFOS CLIENT ===
-    p.setFont("Helvetica", 12)
-    p.drawString(40, height - 140, f"Commande : #{order.code}")
-    p.drawString(40, height - 160, f"Client : {order.nom} {order.prenom}")
-    p.drawString(40, height - 180, f"Courriel : {order.courriel}")
-    p.drawString(40, height - 200, f"Téléphone : {order.telephone}")
+    elements.append(Paragraph("FACTURE - HexaQuebec", styles['Title']))
+    elements.append(Spacer(1,20))
 
-    # === BARCODE + QR ===
-    barcode_img = ImageReader(BytesIO(barcode_bytes))
-    qr_img = ImageReader(BytesIO(qr_bytes))
-    p.drawImage(barcode_img, 40, height - 300, width=300, height=70, preserveAspectRatio=True, mask='auto')
-    p.drawImage(qr_img, width - 160, height - 300, width=120, height=120, preserveAspectRatio=True, mask='auto')
+    elements.append(Paragraph(f"Commande #: {order.id}", styles['Normal']))
+    elements.append(Paragraph(f"Client: {order.client.email}", styles['Normal']))
+    elements.append(Paragraph(f"Produit: {order.product.title}", styles['Normal']))
+    elements.append(Paragraph(f"Prix: {order.total}$ CAD", styles['Normal']))
 
-    # === TABLEAU PRODUITS ===
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(40, height - 340, "Détails de la commande :")
+    elements.append(Spacer(1,20))
 
-    table_top = height - 360
-    table_left = 40
-    row_height = 25
+    data = [
+        ["Produit", "Prix"],
+        [order.product.title, f"{order.total}$"]
+    ]
 
-    # Entêtes
-    p.setFont("Helvetica-Bold", 11)
-    p.drawString(table_left, table_top, "Produit")
-    p.drawString(table_left + 250, table_top, "Quantité")
-    p.drawString(table_left + 340, table_top, "Prix unitaire")
-    p.drawString(table_left + 450, table_top, "Sous-total")
+    table = Table(data)
+    elements.append(table)
 
-    # Ligne de séparation
-    p.setStrokeColor(colors.grey)
-    p.line(table_left, table_top - 5, width - 40, table_top - 5)
+    elements.append(Spacer(1,30))
 
-    # === PRODUIT ===
-    prix_unitaire = float(order.product.price)  # <-- corrigé ici
-    quantite = getattr(order, 'quantity', 1)   # si tu as un champ quantity, sinon 1
-    sous_total = round(prix_unitaire * quantite, 2)
+    elements.append(Paragraph(
+        "Paiement validé. Votre commande sera envoyée dans quelques jours. Merci pour votre confiance.",
+        styles['Normal']
+    ))
 
-    p.setFont("Helvetica", 11)
-    y = table_top - row_height
-    p.drawString(table_left, y, order.product.title)
-    p.drawString(table_left + 250, y, str(quantite))
-    p.drawString(table_left + 340, y, f"${prix_unitaire:.2f}")
-    p.drawString(table_left + 450, y, f"${sous_total:.2f}")
+    pdf.build(elements)
 
-    # === TAXES ===
-    tps = round(sous_total * 0.05, 2)
-    tvq = round(sous_total * 0.09975, 2)
-    total = round(sous_total + tps + tvq, 2)
-
-    y -= row_height + 10
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(table_left, y, f"TPS (5%) : ${tps:.2f}")
-    y -= row_height
-    p.drawString(table_left, y, f"TVQ (9.975%) : ${tvq:.2f}")
-    y -= row_height
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(table_left, y, f"Total à payer : ${total:.2f}")
-
-    # === SIGNATURE AUTOMATIQUE ===
-    p.setFont("Helvetica-Oblique", 10)
-    p.drawString(40, 60, "Document généré automatiquement par HexaQuébec — Aucun traitement manuel requis.")
-    p.drawString(40, 45, "Merci pour votre confiance.")
-
-    p.showPage()
-    p.save()
-
-    buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="facture_commande_{order.code}.pdf"'
     return response
-
-
 # ---------- Vue simple pour order_product ----------
 
 def order_product(request, product_id):
@@ -953,7 +1140,7 @@ def order_product(request, product_id):
 from django.http import JsonResponse
 
 def like_produit(request, pk):
-    produit = Produit.objects.get(id=pk)
+    produit = produit.objects.get(id=pk)
     produit.likes += 1
     produit.save()
     return JsonResponse({"likes": produit.likes})
@@ -1011,3 +1198,512 @@ def service_maintenance(request):
 
 def service_ai(request):
     return render(request, "service_ai.html")
+
+
+
+
+from .models import Facture
+
+def generer_numero():
+
+    last = Facture.objects.last()
+
+    if not last:
+        return "HEXA-0001"
+
+    number = int(last.numero.split("-")[1]) + 1
+
+    return f"HEXA-{number:04d}"
+
+
+def creer_facture(request):
+
+    if request.method == "POST":
+
+        vendeur = request.POST.get("vendeur")
+        acheteur = request.POST.get("acheteur")
+        produit = request.POST.get("produit")
+        prix = request.POST.get("prix")
+        date = request.POST.get("date")
+        signature = request.POST.get("signature")
+
+        # compter les factures existantes
+        total = Facture.objects.count() + 1
+
+        numero_facture = f"HEX-{total}"
+
+        facture = Facture.objects.create(
+            numero=numero_facture,
+            vendeur_nom=vendeur,
+            acheteur_nom=acheteur,
+            produit=produit,
+            prix=prix,
+            date=date,
+            signature_vendeur=signature
+        )
+
+        return redirect("facture_detail", id=facture.id)
+
+    return render(request, "facture_form.html")
+
+
+
+
+import qrcode
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.lib.colors import HexColor
+from .models import Facture
+from reportlab.lib.utils import ImageReader
+import base64
+from io import BytesIO
+
+def fact_pdf(request, facture_id):
+
+    facture = Facture.objects.get(id=facture_id)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="facture_{facture.numero}.pdf"'
+
+    # ton code PDF ici...
+
+
+
+    p = canvas.Canvas(response, pagesize=A4)
+
+    width, height = A4
+
+    # ======================
+    # HEADER
+    # ======================
+
+    p.setFillColor(HexColor("#2c3e50"))
+    p.setFont("Helvetica-Bold", 24)
+    p.drawString(40, height-50, "HexaQuebec")
+
+    p.setFont("Helvetica-Bold", 18)
+    p.drawRightString(width-40, height-50, f"FACTURE #{facture.numero}")
+
+    p.line(40, height-60, width-40, height-60)
+
+    # ======================
+    # INFO ENTREPRISE
+    # ======================
+
+    p.setFont("Helvetica", 10)
+    p.drawString(40, height-90, "HexaQuebec")
+    p.drawString(40, height-105, "Entreprise de développement Web et Mobile")
+    p.drawString(40, height-120, "Vente de services informatiques")
+    p.drawString(40, height-135, "Maintenance et réparation d'ordinateurs")
+    p.drawString(40, height-150, "Saguenay, Québec, Canada")
+
+    # ======================
+    # DESCRIPTION
+    # ======================
+
+    p.drawString(40, height-180, "Cette facture est établie lorsque l'entreprise achète un ordinateur")
+    p.drawString(40, height-195, "ou tout autre service informatique auprès d'une personne.")
+    p.drawString(40, height-210, "Avant toute revente, chaque équipement est soigneusement vérifié")
+    p.drawString(40, height-225, "afin de garantir la qualité et d'éviter tout matériel défectueux.")
+    p.drawString(40, height-240, "Tous nos services sont garantis et les taxes applicables")
+    p.drawString(40, height-255, "sont incluses dans le montant total.")
+
+    # ======================
+    # CLIENT / VENDEUR
+    # ======================
+
+    client_y = height - 300
+
+    p.setFont("Helvetica-Bold", 11)
+    p.drawString(40, client_y, "Facturé à :")
+
+    p.setFont("Helvetica", 11)
+    p.drawString(40, client_y-15, facture.acheteur_nom)
+
+    p.setFont("Helvetica-Bold", 11)
+    p.drawString(width/2, client_y, "Vendeur :")
+
+    p.setFont("Helvetica", 11)
+    p.drawString(width/2, client_y-15, facture.vendeur_nom)
+
+    p.drawString(width/2, client_y-35, f"Date : {facture.date}")
+
+    # ======================
+    # TABLEAU FACTURE
+    # ======================
+
+    table_top = height - 350
+
+    p.setFillColor(HexColor("#2c3e50"))
+    p.rect(40, table_top, width-80, 25, fill=1)
+
+    p.setFillColor("white")
+    p.setFont("Helvetica-Bold", 11)
+
+    p.drawString(50, table_top+7, "Description")
+    p.drawString(300, table_top+7, "Quantité")
+    p.drawString(380, table_top+7, "Prix")
+    p.drawString(460, table_top+7, "Total")
+
+    # ligne produit
+
+    p.setFillColor("black")
+    p.setFont("Helvetica", 11)
+
+    y = table_top - 25
+
+    p.drawString(50, y, facture.produit)
+    p.drawString(300, y, "1")
+    p.drawString(380, y, f"{facture.prix} $")
+    p.drawString(460, y, f"{facture.prix} $")
+
+    p.line(40, y-10, width-40, y-10)
+
+    # ======================
+    # TOTAL
+    # ======================
+
+    total_y = y - 60
+
+    p.setFont("Helvetica", 12)
+    p.drawRightString(width-150, total_y, "Sous-total :")
+    p.drawRightString(width-40, total_y, f"{facture.prix} $")
+
+    p.drawRightString(width-150, total_y-20, "Taxes :")
+    p.drawRightString(width-40, total_y-20, "0 $")
+
+    p.setFont("Helvetica-Bold", 14)
+    p.drawRightString(width-150, total_y-45, "TOTAL :")
+    p.drawRightString(width-40, total_y-45, f"{facture.prix} $")
+
+    # ======================
+    # SIGNATURE
+    # ======================
+
+    p.setFont("Helvetica", 11)
+    p.drawString(40, total_y - 90, "Signature :")
+
+    signature = facture.signature_vendeur
+
+    if signature and "base64" in signature:
+
+        format, imgstr = signature.split(';base64,')
+        img_data = base64.b64decode(imgstr)
+
+        image = ImageReader(BytesIO(img_data))
+
+        p.drawImage(
+            image,
+            120, total_y - 110,
+            width=150,
+            height=50,
+            mask='auto'
+        )
+
+    # ======================
+    # FOOTER
+    # ======================
+
+    p.line(40, 120, width-40, 120)
+
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(40, 100, "Facture originale - HexaQuebec")
+
+    p.setFont("Helvetica", 9)
+
+    p.drawString(40, 80, "HexaQuebec - Solutions numériques professionnelles")
+    p.drawString(40, 65, "Développement Web | Développement Mobile | Services informatiques")
+    p.drawString(40, 50, "Maintenance et réparation d’ordinateurs")
+
+    p.showPage()
+    p.save()
+
+    return response
+
+
+def facture_detail(request, id):
+    facture = get_object_or_404(Facture, id=id)
+    
+    context = {
+        "facture": facture
+    }
+    
+    return render(request, "facture_detail.html", context)
+
+
+def facture_list(request):
+    # Récupérer toutes les factures ou celles liées à l'utilisateur
+    factures = Facture.objects.all()
+    return render(request, "facture_list.html", {"factures": factures})
+
+
+def facture_edit(request, id):
+
+    facture = Facture.objects.get(id=id)
+
+    if request.method == "POST":
+        facture.vendeur_nom = request.POST.get("vendeur_nom")
+        facture.acheteur_nom = request.POST.get("acheteur_nom")
+        facture.produit = request.POST.get("produit")
+        facture.prix = request.POST.get("prix")
+        facture.date = request.POST.get("date")
+
+        facture.save()
+
+        return redirect("facture_list")
+
+    return render(request,"facture_edit.html",{"facture":facture})
+
+
+@login_required
+def facture_delete(request, facture_id):
+    # Vérifie si la facture existe
+    try:
+        facture = Facture.objects.get(id=facture_id)
+    except Facture.DoesNotExist:
+        messages.error(request, "Cette facture n'existe pas.")
+        return redirect('facture_list')  # ou dashboard
+
+    if request.method == "POST":
+        facture.delete()
+        messages.success(request, "Facture supprimée avec succès !")
+    return redirect('facture_list')  # ou dashboard
+
+
+
+def add_to_cart(request, product_id):
+
+    product = get_object_or_404(Product, id=product_id)
+
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    if not created:
+        item.quantity += 1
+
+    item.save()
+
+    return redirect("view_cart")
+
+
+def view_cart(request):
+
+    cart = Cart.objects.get(user=request.user)
+
+    total = 0
+
+    for item in cart.items.all():
+        total += item.product.price * item.quantity
+
+    return render(request, "cart.html", {
+        "cart": cart,
+        "total": total
+    })
+
+
+def remove_from_cart(request, item_id):
+
+    item = CartItem.objects.get(id=item_id)
+
+    item.delete()
+
+    return redirect("view_cart")
+
+
+from django.core.mail import send_mail
+
+
+
+
+
+
+def merci(request):
+    return render(request, "merci.html")
+
+
+from xhtml2pdf import pisa
+
+
+
+def facture_pdf(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    template_path = 'facture_template.html'  # ton template PDF
+    context = {'order': order}
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="facture_{order.code}.pdf"'
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Erreur lors de la génération du PDF <pre>' + html + '</pre>')
+    return response
+
+
+
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
+def envoyer_email_commande(order):
+
+    subject = "Confirmation de paiement - HexaQuébec"
+    from_email = "HexaQuébec <tonemail@gmail.com>"
+    to = [order.courriel]
+
+    html_content = f"""
+    <div style="font-family:Arial; background:#f4f6f8; padding:30px;">
+        <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:10px;">
+            
+            <h2 style="color:#e67e22;">Paiement confirmé ✅</h2>
+
+            <p>Bonjour <strong>{order.prenom}</strong>,</p>
+
+            <p>Votre paiement a été validé avec succès.</p>
+
+            <p>📦 Votre commande sera envoyée dans quelques jours.</p>
+
+            <p style="background:#f8f9fa; padding:10px; border-radius:6px;">
+                🛡 <strong>Garantie :</strong> Votre produit est garanti 1 an par HexaQuébec.
+            </p>
+
+            <hr>
+
+            <h3>Détails de votre commande</h3>
+            <p><strong>Produit :</strong> {order.product.title}</p>
+            <p><strong>Montant :</strong> {order.total} $</p>
+
+            <hr>
+
+            <p style="font-size:12px; color:#888;">
+                Merci pour votre confiance 🙏<br>
+                HexaQuébec - Solutions informatiques<br>
+                www.hexaquebec.com
+            </p>
+
+        </div>
+    </div>
+    """
+
+    msg = EmailMultiAlternatives(subject, "", from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+
+    msg.send()
+
+
+
+
+
+def generer_facture_pdf(order):
+    html = render_to_string('facture.html', {'order': order})
+    
+    result = BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=result)
+
+    if pisa_status.err:
+        return None
+
+    return result.getvalue()
+
+
+def envoyer_email_commande(order):
+
+    subject = "Facture et confirmation - HexaQuébec"
+    from_email = "HexaQuébec <tonemail@gmail.com>"
+    to = [order.courriel]
+
+    html_content = f"""
+    <h2>Paiement confirmé ✅</h2>
+    <p>Bonjour {order.prenom},</p>
+    <p>Votre commande sera envoyée dans quelques jours.</p>
+    <p><strong>Garantie 1 an par HexaQuébec</strong></p>
+    """
+
+    pdf = generer_facture_pdf(order)
+
+    msg = EmailMultiAlternatives(subject, "", from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+
+    # joindre PDF
+    msg.attach(f"facture_{order.code}.pdf", pdf, "application/pdf")
+
+    msg.send()
+
+
+
+
+def paiement_reussi(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if not order.paid:
+        order.paid = True
+        order.save()
+
+        # 🔥 ENVOI EMAIL ICI
+        envoyer_email_commande(order)
+
+    return redirect('merci')
+
+
+import json
+from django.http import JsonResponse
+
+def sauvegarder_client(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        order = Order.objects.get(id=data['order_id'])
+
+        order.nom = data['nom']
+        order.prenom = data['prenom']
+        order.courriel = data['email']
+        order.adresse = data['adresse']
+        order.telephone = data['telephone']
+
+        order.save()
+
+        return JsonResponse({"status": "ok"})
+    
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Product, Panier, PanierItem
+
+def panier_view(request):
+    session_id = request.session.session_key
+    if not session_id:
+        request.session.create()
+        session_id = request.session.session_key
+
+    panier, _ = Panier.objects.get_or_create(session_id=session_id)
+
+    return render(request, 'panier.html', {'panier': panier})
+
+
+def ajouter_au_panier(request, produit_id):
+    session_id = request.session.session_key
+    if not session_id:
+        request.session.create()
+        session_id = request.session.session_key
+
+    panier, _ = Panier.objects.get_or_create(session_id=session_id)
+    produit = get_object_or_404(Product, id=produit_id)
+
+    item, created = PanierItem.objects.get_or_create(panier=panier, produit=produit)
+    if not created:
+        item.quantite += 1
+        item.save()
+
+    return redirect('panier')
+
+
+def supprimer_du_panier(request, item_id):
+    item = get_object_or_404(PanierItem, id=item_id)
+    item.delete()
+    return redirect('panier')

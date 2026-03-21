@@ -1,0 +1,112 @@
+<!-- templates/merci.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Merci pour votre commande</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset rapide */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-50px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0);}
+            50% { transform: translateY(-15px);}
+        }
+
+        .checkmark {
+            font-size: 80px;
+            color: #4BB543;
+            margin-bottom: 20px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #4BB543;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #3e9e3e;
+            transform: scale(1.05);
+        }
+
+        /* Bulles flottantes pour animation arrière-plan */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(75, 181, 67, 0.2);
+            animation: bubbleMove 10s linear infinite;
+            bottom: -100px;
+        }
+
+        @keyframes bubbleMove {
+            0% { transform: translateY(0) scale(1);}
+            50% { transform: translateY(-300px) scale(1.2);}
+            100% { transform: translateY(-600px) scale(1);}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="checkmark">&#10004;</div>
+        <h1>Merci pour votre commande !</h1>
+        <p>Votre commande a été enregistrée avec succès. Elle sera livrée à votre adresse.</p>
+        <a href="{% url 'home' %}">Retour à l'accueil</a>
+
+        <!-- Bulles décoratives -->
+        <div class="bubble" style="width:50px; height:50px; left:10%; animation-delay: 0s;"></div>
+        <div class="bubble" style="width:30px; height:30px; left:30%; animation-delay: 2s;"></div>
+        <div class="bubble" style="width:40px; height:40px; left:50%; animation-delay: 4s;"></div>
+        <div class="bubble" style="width:25px; height:25px; left:70%; animation-delay: 1s;"></div>
+        <div class="bubble" style="width:60px; height:60px; left:90%; animation-delay: 3s;"></div>
+    </div>
+
+</body>
+</html>

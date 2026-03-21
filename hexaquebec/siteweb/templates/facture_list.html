@@ -1,0 +1,165 @@
+
+
+{% block content %}
+
+<style>
+
+.container-factures{
+max-width:1000px;
+margin:auto;
+margin-top:40px;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+.title{
+font-size:28px;
+font-weight:bold;
+color:#2c3e50;
+margin-bottom:25px;
+}
+
+.facture-table{
+width:100%;
+border-collapse:collapse;
+background:white;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+border-radius:8px;
+overflow:hidden;
+}
+
+.facture-table th{
+background:#2c3e50;
+color:white;
+padding:12px;
+text-align:left;
+font-size:14px;
+}
+
+.facture-table td{
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
+.facture-table tr:hover{
+background:#f8f9fa;
+}
+
+.price{
+font-weight:bold;
+color:#27ae60;
+}
+
+.actions{
+display:flex;
+gap:8px;
+}
+
+.btn-view{
+padding:6px 14px;
+background:#3498db;
+color:white;
+text-decoration:none;
+border-radius:5px;
+font-size:13px;
+}
+
+.btn-view:hover{
+background:#2980b9;
+}
+
+.btn-edit{
+padding:6px 14px;
+background:#f39c12;
+color:white;
+text-decoration:none;
+border-radius:5px;
+font-size:13px;
+}
+
+.btn-edit:hover{
+background:#d68910;
+}
+.btn-delete{
+    padding:6px 14px;
+    background:#e74c3c;
+    color:white;
+    text-decoration:none;
+    border:none;
+    border-radius:5px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.btn-delete:hover{
+    background:#c0392b;
+}
+</style>
+
+<div class="container-factures">
+
+<h2 class="title">📄 Liste des factures</h2>
+
+<table class="facture-table">
+
+<tr>
+<th>ID</th>
+<th>Vendeur</th>
+<th>Date</th>
+<th>Prix</th>
+<th>Actions</th>
+</tr>
+
+{% for facture in factures %}
+
+<tr>
+
+<td>#{{ facture.id }}</td>
+
+<td>{{ facture.nom_vendeur }}</td>
+
+<td>{{ facture.date }}</td>
+
+<td class="price">{{ facture.prix }} $</td>
+
+<td class="actions">
+
+    <a href="{% url 'facture_detail' facture.id %}" class="btn-view">
+        Voir
+    </a>
+
+    <a href="{% url 'facture_edit' facture.id %}" class="btn-edit">
+        Modifier
+    </a>
+
+    <form action="{% url 'facture_delete' facture.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cette facture ?');">
+            Supprimer
+        </button>
+    </form>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="5" style="text-align:center;padding:20px;">
+Aucune facture trouvée
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+

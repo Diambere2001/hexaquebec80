@@ -2,74 +2,264 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Commander - {{ product.nom|default:product.title }}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* (ton CSS existant) */
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Commander - {{ product.nom|default:product.title }}</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    background:#f3f4f6;
+    font-family: Arial, sans-serif;
+}
+
+/* CONTENEUR */
+.order-container{
+    max-width:1100px;
+    margin:40px auto;
+    padding:10px;
+}
+
+/* BOX */
+.product-box, .form-box{
+    background:white;
+    border-radius:12px;
+    padding:25px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.product-image{
+    text-align:center;
+}
+.product-image img{
+    max-height:300px;
+    width:100%;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+/* TEXTE */
+.product-title{
+    font-size:24px;
+    font-weight:600;
+    margin-top:15px;
+}
+
+.product-price{
+    font-size:26px;
+    font-weight:bold;
+    color:#28a745;
+    margin:15px 0;
+}
+
+/* FORM */
+.form-control{
+    border-radius:8px;
+    padding:10px;
+    font-size:14px;
+}
+
+/* BUTTON */
+.btn-order{
+    background:#ff9900;
+    border:none;
+    color:white;
+    font-weight:600;
+    padding:14px;
+    border-radius:8px;
+    transition:0.3s;
+    font-size:16px;
+}
+
+.btn-order:hover{
+    background:#e68a00;
+}
+
+/* SECURITY */
+.security-box{
+    margin-top:20px;
+    font-size:13px;
+    color:#555;
+    background:#fff8e1;
+    padding:15px;
+    border-radius:8px;
+    border-left:4px solid #ff9900;
+}
+
+/* LAST ORDER */
+.last-order{
+    margin-top:20px;
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:8px;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px){
+
+    .order-container{
+        margin:20px auto;
+    }
+
+    .product-title{
+        font-size:20px;
+        text-align:center;
+    }
+
+    .product-price{
+        font-size:22px;
+        text-align:center;
+    }
+
+    .product-box, .form-box{
+        padding:20px;
+    }
+
+    .btn-order{
+        font-size:18px;
+        padding:16px;
+    }
+
+    .product-image img{
+        max-height:220px;
+    }
+}
+
+/* 📲 PETIT TELEPHONE */
+@media (max-width: 480px){
+
+    .product-title{
+        font-size:18px;
+    }
+
+    .product-price{
+        font-size:20px;
+    }
+
+    .form-control{
+        font-size:13px;
+    }
+
+    .btn-order{
+        font-size:17px;
+    }
+}
+</style>
 </head>
+
 <body>
-<div class="container">
-  <div class="order-container row align-items-center">
-    <div class="col-md-5 product-image text-center mb-4 mb-md-0">
-      <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.nom|default:product.title }}">
-    </div>
 
-    <div class="col-md-7">
-      <h2 class="mb-3">{{ product.nom|default:product.title }}</h2>
-      <p class="fs-4 text-success mb-4">{{ product.prix|default:product.price }} $</p>
+<div class="container order-container">
+<div class="row g-4">
 
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {% if form %}
-          {% for field in form %}
-            <div class="mb-3">
-              <label class="form-label">{{ field.label }}</label>
-              {{ field }}
-              {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
-            </div>
-          {% endfor %}
-        {% else %}
-          <!-- Form minimal si tu n'as pas de form class -->
-          <div class="mb-3"><label class="form-label">Nom</label><input name="nom" class="form-control" required></div>
-          <div class="mb-3"><label class="form-label">Prénom</label><input name="prenom" class="form-control"></div>
-          <div class="mb-3"><label class="form-label">Adresse</label><textarea name="adresse" class="form-control"></textarea></div>
-          <div class="mb-3"><label class="form-label">Téléphone</label><input name="telephone" class="form-control"></div>
-          <div class="mb-3"><label class="form-label">Courriel</label><input name="courriel" class="form-control" value="{{ request.user.email }}"></div>
-        {% endif %}
+<!-- PRODUIT -->
+<div class="col-lg-6">
+<div class="product-box">
 
-        <button type="submit" class="btn btn-order btn-lg w-100">Commander</button>
-      </form>
-
-      <!-- Si il y a une commande existante, afficher code-barres / QR et téléchargement PDF -->
-      {% if order %}
-        <hr class="my-4">
-        <h5>Dernière commande : #{{ order.id }}</h5>
-        <p>Passée le : {{ order.date_commande }}</p>
-
-        {% if barcode_base64 %}
-          <div class="mb-3">
-            <strong>Code-barres :</strong><br>
-            <img src="data:image/png;base64,{{ barcode_base64 }}" alt="code-barres" class="img-fluid" style="max-width:320px;">
-          </div>
-        {% endif %}
-
-        {% if qrcode_base64 %}
-          <div class="mb-3">
-            <strong>QR Code :</strong><br>
-            <img src="data:image/png;base64,{{ qrcode_base64 }}" alt="qr" class="img-fluid" style="max-width:120px;">
-          </div>
-        {% endif %}
-
-        <a href="{% url 'download_order_pdf' order.id %}" class="btn btn-secondary">Télécharger le reçu (PDF)</a>
-      {% endif %}
-
-    </div>
-  </div>
+<div class="product-image">
+{% if product.image %}
+<img src="{{ product.image.url }}" alt="">
+{% else %}
+<img src="{% static 'img/no-image.png' %}" alt="">
+{% endif %}
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<div class="product-title">
+{{ product.nom|default:product.title }}
+</div>
+
+<div class="product-price">
+{{ product.prix|default:product.price }} $
+</div>
+
+<p style="color:#666; text-align:center;">
+Produit vérifié par HexaQuébec ✔
+</p>
+
+</div>
+</div>
+
+<!-- FORM -->
+<div class="col-lg-6">
+<div class="form-box">
+
+<h4 class="mb-3 text-center text-md-start">Informations de livraison</h4>
+
+<form method="post">
+{% csrf_token %}
+
+<div class="mb-3">
+<label>Nom *</label>
+<input type="text" name="nom" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Prénom</label>
+<input type="text" name="prenom" class="form-control">
+</div>
+
+<div class="mb-3">
+    <label><strong>Adresse de livraison *</strong></label>
+
+    <textarea 
+        name="adresse" 
+        class="form-control" 
+        rows="3"
+        placeholder="Ex : 123 Rue Sainte-Catherine Ouest&#10;Appartement 4B&#10;Montréal, QC, H3B 1E3&#10;Canada"
+        required></textarea>
+
+    <small style="color:#6c757d;">
+        Format recommandé : Rue, appartement (si applicable), ville, province, code postal, pays
+    </small>
+</div>
+
+<div class="mb-3">
+<label>Téléphone</label>
+<input type="text" name="telephone" class="form-control">
+</div>
+
+<div class="mb-3">
+<label>Courriel *</label>
+<input type="email" name="courriel" class="form-control" required>
+</div>
+
+<button type="submit" class="btn btn-order w-100">
+Commander le produit
+</button>
+
+</form>
+
+<!-- TEXTE -->
+<div class="security-box">
+<strong>Commande sécurisée ✔</strong><br>
+Veuillez vérifier vos informations avant d’envoyer.<br>
+Toutes vos données sont protégées par HexaQuébec.
+</div>
+
+{% if order %}
+<div class="last-order">
+Commande #{{ order.id }}<br>
+{{ order.date_commande }}
+
+{% if qrcode_base64 %}
+<div class="mt-2 text-center">
+<img src="data:image/png;base64,{{ qrcode_base64 }}" style="max-width:100px;">
+</div>
+{% endif %}
+
+<a href="{% url 'download_order_pdf' order.id %}" class="btn btn-sm btn-secondary mt-2 w-100">
+Télécharger le reçu
+</a>
+</div>
+{% endif %}
+
+</div>
+</div>
+
+</div>
+</div>
+
 </body>
 </html>

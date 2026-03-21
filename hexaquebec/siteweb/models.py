@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import random
 import uuid
+from decimal import Decimal
 
 
 
@@ -53,27 +54,70 @@ class Product(models.Model):
 # Modèle : Commande
 # ------------------------class Order(models.Model):
 class Order(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
+
     adresse = models.TextField()
+
     telephone = models.CharField(max_length=20, blank=True)
+
     courriel = models.EmailField()
+
     date_created = models.DateTimeField(default=timezone.now)
+
     code = models.CharField(max_length=12, unique=True, editable=False, null=True, blank=True)
 
+    # prix produit
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    # taxes Québec
+    tps = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tvq = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    # total
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    status = models.CharField(
+    max_length=20,
+    choices=[
+        ("pending", "En attente"),
+        ("paid", "Payé"),
+        ("shipped", "Expédié"),
+    ],
+    default="pending"
+    )
+
+    # paiement
+    paid = models.BooleanField(default=False)
+
+    stripe_payment_id = models.CharField(max_length=255, blank=True, null=True)
+
     def save(self, *args, **kwargs):
+
         if not self.code:
-            # Générer un code unique de 12 chiffres
             while True:
                 new_code = str(uuid.uuid4().int)[:12]
                 if not Order.objects.filter(code=new_code).exists():
                     self.code = new_code
                     break
+
+        # calcul prix et taxes
+        if self.product:
+
+            self.price = self.product.price
+
+            self.tps = self.price * Decimal('0.05')        # TPS corrigé
+            self.tvq = self.price * Decimal('0.09975') 
+
+            self.total = self.price + self.tps + self.tvq
+
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"COMMANDE#{self.code}"
+        return f"COMMANDE #{self.code}"
 
 # ------------------------
 # Modèle : Annonce
@@ -124,16 +168,25 @@ class ContactMessage(models.Model):
         return f"{self.prenom} {self.nom} — {self.email}"
 
 
+class Cart(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Panier de {self.user.username}"
+
+
 class CartItem(models.Model):
-    produit = models.ForeignKey('Product', on_delete=models.CASCADE)  # Utiliser Product ici
+
+    cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
     quantity = models.PositiveIntegerField(default=1)
 
     def total_price(self):
-        return self.produit.prix * self.quantity
-
-    def __str__(self):
-        return f"{self.quantity} x {self.produit.titre}"
-
+        return self.product.price * self.quantity
 
 
 class Commentaire(models.Model):
@@ -267,3 +320,52 @@ class Affiche(models.Model):
         return self.titre
 
 
+
+
+class Facture(models.Model):
+
+    numero = models.CharField(max_length=20, unique=True)
+
+    vendeur_nom = models.CharField(max_length=200)
+    acheteur_nom = models.CharField(max_length=200)
+
+    produit = models.CharField(max_length=200)
+
+    prix = models.DecimalField(max_digits=10, decimal_places=2)
+
+    date = models.DateField()
+
+    
+    signature_vendeur = models.TextField(blank=True, null=True) 
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.numero
+    
+
+
+
+
+class Panier(models.Model):
+    session_id = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
+
+    def total(self):
+        return sum(item.total() for item in self.items.all())
+
+    def __str__(self):
+        return f"Panier {self.id} - {self.session_id}"
+
+
+class PanierItem(models.Model):
+    panier = models.ForeignKey(Panier, related_name='items', on_delete=models.CASCADE)
+    produit = models.ForeignKey('Product', on_delete=models.CASCADE)
+    quantite = models.PositiveIntegerField(default=1)
+
+    def total(self):
+        return self.produit.price * self.quantite
+
+    def __str__(self):
+        return f"{self.produit.title} x {self.quantite}"
