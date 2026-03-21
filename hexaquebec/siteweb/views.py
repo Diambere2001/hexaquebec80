@@ -1,3 +1,7 @@
+from decimal import Decimal
+from pydoc import pager
+from tkinter import Image
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import send_mail
 from django.contrib import messages
@@ -7,6 +11,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import os, json
 from dotenv import load_dotenv
+from sqlalchemy import Table
 import stripe
 import openai
 import barcode
@@ -463,15 +468,15 @@ def generate_invoice(order):
 
     buffer = BytesIO()
 
-    pdf = SimpleDocTemplate(buffer, pagesize=letter)
+    pdf = SimpleDocTemplate(buffer, pagesize=letter) # type: ignore
 
-    styles = getSampleStyleSheet()
+    styles = getSampleStyleSheet() # type: ignore
     elements = []
 
     logo = "static/logo.png"
     elements.append(Image(logo, width=120, height=60))
 
-    elements.append(Spacer(1,20))
+    elements.append(pager(1,20))
 
     elements.append(Paragraph("Facture - HexaQuebec", styles['Title'])) # type: ignore
 
@@ -983,6 +988,9 @@ def order_view(request, produit_id):
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
+import stripe
+from django.conf import settings
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def checkout(request, product_id):
@@ -1097,20 +1105,20 @@ def download_order_pdf(request, order_id):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="facture_{order.id}.pdf"'
 
-    pdf = SimpleDocTemplate(response, pagesize=letter)
+    pdf = SimpleDocTemplate(response, pagesize=letter) # type: ignore
 
-    styles = getSampleStyleSheet()
+    styles = getSampleStyleSheet() # type: ignore
     elements = []
 
-    elements.append(Paragraph("FACTURE - HexaQuebec", styles['Title']))
-    elements.append(Spacer(1,20))
+    elements.append(Paragraph("FACTURE - HexaQuebec", styles['Title'])) # type: ignore
+    elements.append(pager(1,20))
 
-    elements.append(Paragraph(f"Commande #: {order.id}", styles['Normal']))
-    elements.append(Paragraph(f"Client: {order.client.email}", styles['Normal']))
-    elements.append(Paragraph(f"Produit: {order.product.title}", styles['Normal']))
-    elements.append(Paragraph(f"Prix: {order.total}$ CAD", styles['Normal']))
+    elements.append(Paragraph(f"Commande #: {order.id}", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"Client: {order.client.email}", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"Produit: {order.product.title}", styles['Normal'])) # type: ignore
+    elements.append(Paragraph(f"Prix: {order.total}$ CAD", styles['Normal'])) # type: ignore
 
-    elements.append(Spacer(1,20))
+    elements.append(Spacer(1,20)) # type: ignore
 
     data = [
         ["Produit", "Prix"],
@@ -1120,9 +1128,9 @@ def download_order_pdf(request, order_id):
     table = Table(data)
     elements.append(table)
 
-    elements.append(Spacer(1,30))
+    elements.append(pager(1,30))
 
-    elements.append(Paragraph(
+    elements.append(Paragraph( # type: ignore
         "Paiement validé. Votre commande sera envoyée dans quelques jours. Merci pour votre confiance.",
         styles['Normal']
     ))
