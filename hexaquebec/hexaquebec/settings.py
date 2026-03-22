@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 
 
+
+
 load_dotenv()
 
 # ========================
@@ -17,9 +19,7 @@ SECRET_KEY = 'django-insecure-change-me'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "hexaquebec80.onrender.com",
+    ".onrender.com",
     "hexaquebec.com",
     "www.hexaquebec.com",
 ]
