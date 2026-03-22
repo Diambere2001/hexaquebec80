@@ -19,6 +19,8 @@ SECRET_KEY = 'django-insecure-change-me'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
     ".onrender.com",
     "hexaquebec.com",
     "www.hexaquebec.com",
