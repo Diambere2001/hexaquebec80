@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HexaQuébec - Espace</title>
+
+<!-- Bootstrap & Font Awesome & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<!-- Vanilla Tilt -->
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
+
+<style>
+/* BODY */
+body {
+    background: linear-gradient(135deg, #0b132b, #1c2541);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER ANIMÉ */
+.header-animated {
+    position: relative;
+    text-align: center;
+    padding: 60px 20px;
+    margin: 20px auto;
+    max-width: 900px;
+    border-radius: 30px;
+    border: 2px solid rgba(224,192,151,0.5);
+    background: rgba(11,19,43,0.6);
+    box-shadow: 0 0 30px rgba(224,192,151,0.3);
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+.header-animated:hover { 
+    box-shadow: 0 0 50px rgba(224,192,151,0.6), 0 0 80px rgba(198,168,125,0.4); 
+}
+.header-animated h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #e0c097;
+    margin-bottom: 15px;
+    animation: titleGlow 3s ease-in-out infinite alternate;
+    text-shadow: 0 0 5px rgba(224,192,151,0.7), 0 0 10px rgba(224,192,151,0.5);
+}
+.header-line {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #e0c097, #c6a87d, #e0c097);
+    margin: 0 auto 20px auto;
+    border-radius: 2px;
+    animation: lineMove 2s ease-in-out infinite;
+}
+.header-animated p { font-size: 1.2rem; color: #cbd5e1; opacity: 0.9; }
+
+/* ANIMATION TITRE & LIGNE */
+@keyframes titleGlow {
+    0% { transform: translateY(0) scale(1); text-shadow: 0 0 5px rgba(224,192,151,0.7), 0 0 10px rgba(224,192,151,0.5);}
+    50% { transform: translateY(-5px) scale(1.02); text-shadow: 0 0 10px rgba(224,192,151,0.9), 0 0 20px rgba(224,192,151,0.7);}
+    100% { transform: translateY(0) scale(1); text-shadow: 0 0 5px rgba(224,192,151,0.7), 0 0 10px rgba(224,192,151,0.5);}
+}
+@keyframes lineMove {
+    0% { transform: translateX(-20px); opacity: 0.3; }
+    50% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(20px); opacity: 0.3; }
+}
+
+/* BOUTON RETOUR */
+.btn-return {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 2px solid #e0c097;
+    color: #e0c097;
+    background: rgba(11,19,43,0.5);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.btn-return:hover {
+    background: #e0c097;
+    color: #0b132b;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(224,192,151,0.6);
+}
+
+/* CHOICES */
+.container-choices {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 60px 20px;
+}
+.choice {
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    width: 220px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+.choice:hover { transform: translateY(-10px) scale(1.05); background: rgba(255,255,255,0.15); box-shadow: 0 25px 50px #1c2541; }
+.choice i { color: #e0c097; transition: 0.4s; }
+.choice:hover i { transform: scale(1.3) rotate(5deg); text-shadow: 0 0 10px rgba(224,192,151,0.8),0 0 20px rgba(224,192,151,0.6),0 0 40px rgba(224,192,151,0.4); }
+.choice a { margin-top: 15px; display: inline-block; padding: 10px 20px; border-radius: 10px; border: 2px solid #e0c097; color: #e0c097; text-decoration: none; transition: 0.3s; font-weight: 600;}
+.choice a:hover { background: #e0c097; color: #0b132b; transform: scale(1.05); box-shadow: 0 8px 20px rgba(224,192,151,0.6); }
+
+/* FOOTER */
+.footer-animated {
+  background: linear-gradient(135deg, #0b132b, #1c2541, #1c2541, #0b132b);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+  padding: 40px 20px;
+}
+@keyframes gradientMove { 0% {background-position:0% 50%;} 50% {background-position:100% 50%;} 100% {background-position:0% 50%;} }
+
+footer .service-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 25px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+footer .service-card:hover { transform: translateY(-10px) scale(1.05); background: rgba(255,255,255,0.15); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+footer .service-card i { color: #e0c097; transition: 0.4s; }
+footer .service-card:hover i { transform: scale(1.3) rotate(5deg); text-shadow: 0 0 10px rgba(224,192,151,0.8),0 0 20px rgba(224,192,151,0.6),0 0 40px rgba(224,192,151,0.4); }
+
+/* RESPONSIVE */
+@media(max-width:576px){
+    .header-animated h1 { font-size: 2rem; }
+    .header-line { width: 60px; }
+    .header-animated p { font-size: 1rem; }
+    .choice { width: 180px; padding: 30px 20px; }
+}
+.btn-cancel {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 18px;
+    border-radius: 10px;
+    border: 2px solid #ff4d4d;
+    color: #ff4d4d;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-cancel:hover {
+    background: #ff4d4d;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(255,77,77,0.6);
+}
+/* HEADER GLOBAL */
+.header-animated {
+    padding: 100px 20px 60px;
+    text-align: center;
+}
+
+/* TITRE */
+.header-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    animation: fadeDown 1s ease;
+}
+
+/* HIGHLIGHT BRAND */
+.header-title span {
+    color: #c6a87d;
+    text-shadow: 0 0 15px rgba(198,168,125,0.5);
+}
+
+/* LIGNE */
+.header-line {
+    width: 80px;
+    height: 3px;
+    margin: 15px auto;
+    background: linear-gradient(90deg, transparent, #c6a87d, transparent);
+    border-radius: 10px;
+    animation: expandLine 1.2s ease;
+}
+
+/* TEXTE */
+.header-subtitle {
+    color: #cbd5e1;
+    font-size: 1.05rem;
+    margin-top: 10px;
+    animation: fadeUp 1.4s ease;
+}
+
+/* ANIMATIONS */
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes expandLine {
+    from { width: 0; opacity: 0; }
+    to { width: 80px; opacity: 1; }
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .header-title {
+        font-size: 1.8rem;
+    }
+
+    .header-subtitle {
+        font-size: 0.95rem;
+    }
+}
+
+/* HEADER GLOBAL */
+.header-modern {
+    padding: 60px 20px;
+    position: relative;
+    background: radial-gradient(circle at top, #1c2541, #0b132b);
+    border-radius: 0 0 30px 30px;
+    overflow: hidden;
+}
+
+/* EFFET LUMIÈRE */
+.header-modern::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(224,192,151,0.15);
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: blur(80px);
+}
+
+/* CONTENU */
+.header-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* BADGE */
+.header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.08);
+    color: #e0c097;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
+}
+
+/* TITRE */
+.header-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.header-title span {
+    background: linear-gradient(135deg, #e0c097, #c49a6c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* TEXTE */
+.header-subtitle {
+    color: #cbd5e1;
+    margin-top: 10px;
+    font-size: 0.95rem;
+}
+
+/* LIGNE DESIGN */
+.header-line {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #e0c097, transparent);
+    margin: 20px auto 0;
+    border-radius: 10px;
+}
+
+/* ANIMATION */
+.header-title {
+    animation: fadeUp 1s ease;
+}
+
+.header-subtitle {
+    animation: fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 1.5rem;
+    }
+
+    .header-modern {
+        padding: 40px 15px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="header-modern text-center">
+
+    <div class="header-content">
+
+        <!-- Badge -->
+        <div class="header-badge">
+            🚀 Plateforme digitale
+        </div>
+
+        <!-- TITRE -->
+        <h1 class="header-title">
+            Bienvenue sur <span>HexaQuébec</span>
+        </h1>
+
+        <!-- TEXTE -->
+        <p class="header-subtitle">
+            Accédez à votre espace et gérez vos services en toute simplicité
+        </p>
+
+        <!-- Ligne design -->
+        <div class="header-line"></div>
+
+    </div>
+
+</header>
+<div class="container-choices">
+    <div class="choice" data-tilt>
+        <i class="fas fa-user-graduate fa-3x mb-3"></i>
+        <h4>Espace Stagiaire</h4>
+        <a href="{% url 'login_stagiaire' %}">Accéder</a>
+         <a href="/" class="btn-cancel">Annuler</a>
+    </div>
+    <div class="choice" data-tilt>
+        <i class="fas fa-user-tie fa-3x mb-3"></i>
+        <h4>Espace Client</h4>
+        <a href="{% url 'client_login' %}">Accéder</a>
+         <a href="/" class="btn-cancel">Annuler</a>
+    </div>
+</div>
+
+<footer class="footer-animated">
+  <div class="container">
+    <div class="row justify-content-center g-4">
+      <div class="col-12 col-sm-6 col-md-3 text-center">
+        <div class="service-card">
+          <i class="bi bi-code-slash display-3 mb-3"></i>
+          <h6 class="text-warning mb-2">Développement Web</h6>
+          <p class="text-light small">Création de sites & applications web modernes.</p>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3 text-center">
+        <div class="service-card">
+          <i class="bi bi-phone display-3 mb-3"></i>
+          <h6 class="text-warning mb-2">Développement Mobile</h6>
+          <p class="text-light small">Apps Android & iOS performantes.</p>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3 text-center">
+        <div class="service-card">
+          <i class="bi bi-tools display-3 mb-3"></i>
+          <h6 class="text-warning mb-2">Maintenance Informatique</h6>
+          <p class="text-light small">Réparation, optimisation & vente de matériel.</p>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3 text-center">
+        <div class="service-card">
+          <i class="bi bi-server display-3 mb-3"></i>
+          <h6 class="text-warning mb-2">Services IT</h6>
+          <p class="text-light small">Solutions informatiques complètes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+VanillaTilt.init(document.querySelectorAll(".choice, footer .service-card"), {
+    max: 15,
+    speed: 400,
+    glare: true,
+    "max-glare": 0.25,
+});
+</script>
+
+</body>
+</html>

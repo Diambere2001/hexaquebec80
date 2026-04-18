@@ -1,247 +1,549 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio | HexaQuébec</title>
 
-    <!-- ✅ OBLIGATOIRE POUR RESPONSIVE MOBILE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- LIBS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <title>Portfolio | HexaQuébec</title>
+<style>
+:root {
+    --bg:#0b132b;
+    --card-bg:rgba(30,41,59,0.6);
+    --text:#f1f5f9;
+    --accent:#c6a87d;
+}
 
-    <!-- Bootstrap / AOS / FontAwesome / Chart.js -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+/* GLOBAL */
+body {
+    background: linear-gradient(135deg,#0b132b,#1e293b);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    scroll-behavior: smooth;
+}
 
-    <style>
-        :root {
-            --bg: #0b132b;
-            --card-bg: #1e293b;
-            --text: #f1f5f9;
-            --accent: #c6a87d;
-        }
+/* NAVBAR */
+.navbar {
+    backdrop-filter: blur(12px);
+    background: rgba(11,19,43,0.7);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.navbar-brand { color: var(--accent); font-weight:900; font-size:1.4rem; }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Montserrat', sans-serif;
-        }
+/* HERO */
+.hero { text-align:center; padding:120px 20px 60px; }
+.hero h1 { font-size:3rem; font-weight:800; margin-bottom:20px; }
+.hero p { color:#cbd5e1; max-width:600px; margin:auto; font-size:1.1rem; }
 
-        /* NAVBAR */
-        .navbar {
-            background: rgba(11,19,43,0.95);
-        }
+/* SECTION TITLE */
+.section-title {
+    color: var(--accent);
+    text-align:center;
+    margin-bottom:30px;
+    font-weight:800;
+    font-size:2rem;
+}
 
-        .navbar-brand {
-            font-weight: 800;
-            color: white !important;
-        }
+/* PORTFOLIO BOX */
+.portfolio-details .portfolio-box {
+    background: rgba(255,255,255,0.03);
+    padding: 30px 20px;
+    border-radius: 18px;
+    transition: 0.4s;
+    border: 1px solid rgba(255,255,255,0.05);
+    height: 100%;
+    text-align:center;
+}
+.portfolio-details .portfolio-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.portfolio-details .icon { font-size:2.5rem; color: var(--accent); margin-bottom:15px; }
+.portfolio-details h5 { font-weight:700; margin-bottom:10px; }
+.portfolio-details p { color:#cbd5e1; font-size:0.95rem; }
 
-        /* TITRE */
-        .section-title {
-            color: var(--accent);
-            font-size: 2.6rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+/* GALERIE PROJETS */
+.gallery {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+    margin-top:30px;
+}
+.project-card {
+    position:relative;
+    overflow:hidden;
+    border-radius:15px;
+}
+.project-card img { width:100%; transition:0.5s; }
+.project-overlay {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding:20px;
+    background:linear-gradient(transparent,rgba(0,0,0,0.9));
+    transform:translateY(100%);
+    transition:0.4s;
+    color:#fff;
+}
+.project-card:hover img { transform:scale(1.1); }
+.project-card:hover .project-overlay { transform:translateY(0); }
+.project-overlay h5 { font-weight:700; margin-bottom:5px; }
+.project-overlay p { margin-bottom:5px; }
+.project-overlay .price { color: var(--accent); font-weight:bold; font-size:1rem; }
 
-        /* CARDS */
-        .chart-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            margin-bottom: 40px;
-        }
+/* WHATSAPP */
+.whatsapp {
+    position:fixed;
+    left:20px;
+    bottom:20px;
+    background:#25D366;
+    color:white;
+    padding:15px;
+    border-radius:50%;
+    font-size:22px;
+    z-index:9999;
+}
 
-        .chart-section {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+/* BACK TOP */
+#backTop {
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:var(--accent);
+    color:#000;
+    padding:12px;
+    border-radius:50%;
+    cursor:pointer;
+    display:none;
+    z-index:9999;
+}
 
-        .chart-img {
-            width: 320px;
-            max-width: 100%;
-            border-radius: 18px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-        }
+/* MODALS */
+.modal-content { border-radius: 1rem; }
 
-        footer {
-            background: #0a0f1f;
-            padding: 50px 0;
-            text-align: center;
-        }
+/* RESPONSIVE */
+@media(max-width:768px){
+    .hero h1 { font-size:2rem; }
+    .portfolio-details .portfolio-box { padding:20px 15px; }
+}
+/* ===== FOOTER MODERNE ===== */
+.footer-modern {
+    background:  linear-gradient(135deg,#0b132b,#1e293b);
+    color: #fff;
+    padding: 60px 20px 30px;
+    border-top: 1px solid rgba(224,192,151,0.2);
+}
 
-        footer h4 {
-            color: var(--accent);
-        }
+/* LOGO */
+.footer-logo {
+    font-weight: bold;
+    color: #e0c097;
+}
 
-        footer p {
-            max-width: 700px;
-            margin: auto;
-            color: #cbd5e1;
-        }
+/* TITRES */
+.footer-title {
+    color: #e0c097;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
 
-        .social-icon {
-            font-size: 1.6rem;
-            margin: 0 10px;
-            color: white;
-        }
+/* TEXT */
+.footer-text {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
 
-        .social-icon:hover {
-            color: var(--accent);
-        }
+/* LINKS */
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
 
-        /* ================= MOBILE RESPONSIVE ================= */
-        @media (max-width: 768px) {
+.footer-links li {
+    margin-bottom: 8px;
+    color: #cbd5e1;
+    transition: 0.3s;
+    cursor: pointer;
+}
 
-            .section-title {
-                font-size: 1.9rem;
-            }
+.footer-links li:hover {
+    color: #e0c097;
+    transform: translateX(5px);
+}
 
-            .chart-section {
-                flex-direction: column;
-                text-align: center;
-            }
+/* DIVIDER */
+.footer-divider {
+    border-color: rgba(255,255,255,0.1);
+    margin: 20px 0;
+}
 
-            .chart-img {
-                width: 100%;
-                max-width: 300px;
-            }
+/* COPYRIGHT */
+.footer-copy {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+/* ===== FOOTER MODERNE ANIMÉ ===== */
 
-            footer p {
-                font-size: 0.95rem;
-                padding: 0 15px;
-            }
-        }
-    </style>
+.footer-modern {
+background: linear-gradient(135deg, #0b132b, #1c2541);
+color: #fff;
+padding: 60px 20px 30px;
+border-top: 1px solid rgba(224,192,151,0.2);
+position: relative;
+overflow: hidden;
+}
+
+/* LOGO */
+.footer-logo {
+color: #e0c097;
+font-weight: bold;
+transition: 0.3s ease;
+}
+.footer-logo:hover {
+text-shadow: 0 0 15px rgba(224,192,151,0.8);
+}
+
+/* TITRES */
+.footer-title {
+color: #e0c097;
+margin-bottom: 15px;
+font-weight: 600;
+}
+
+/* TEXT */
+.footer-text {
+color: #cbd5e1;
+font-size: 0.9rem;
+}
+
+/* LINKS */
+.footer-links {
+list-style: none;
+padding: 0;
+}
+.footer-links li {
+margin-bottom: 8px;
+color: #cbd5e1;
+transition: 0.3s ease;
+cursor: pointer;
+}
+.footer-links li:hover {
+color: #e0c097;
+transform: translateX(6px);
+}
+
+/* ANIMATION FLOAT DOUCE */
+.footer-anim {
+animation: floatSoft 4s ease-in-out infinite;
+}
+.footer-anim:nth-child(2) {
+animation-delay: 0.5s;
+}
+.footer-anim:nth-child(3) {
+animation-delay: 1s;
+}
+
+@keyframes floatSoft {
+0% { transform: translateY(0); }
+50% { transform: translateY(-6px); }
+100% { transform: translateY(0); }
+}
+
+/* LIGNE ANIMÉE */
+.footer-line {
+width: 0%;
+height: 2px;
+background: linear-gradient(to right, transparent, #e0c097, transparent);
+margin: 25px auto;
+animation: lineGrow 2s ease forwards;
+}
+
+@keyframes lineGrow {
+to { width: 80%; }
+}
+
+/* COPYRIGHT */
+.footer-copy {
+font-size: 0.8rem;
+color: #94a3b8;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+.footer-modern {
+text-align: center;
+}
+}
+
+</style>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav class="navbar fixed-top">
     <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">HexaQuébec</a>
     </div>
 </nav>
-
 <div style="height:90px;"></div>
 
-<div class="container py-5">
-
-    <h2 class="section-title" data-aos="fade-up">
-        Nos Réalisations & Succès
-    </h2>
-
-    <p class="text-center mb-5" data-aos="fade-up" data-aos-delay="150">
-        Découvrez les projets et performances de <strong>HexaQuébec</strong>
+<!-- HERO -->
+<section class="hero" data-aos="fade-up">
+    <h1>Nos Réalisations Digitales</h1>
+    <p>
+        HexaQuébec transforme vos idées en solutions numériques performantes :
+        sites web, applications, intelligence artificielle.
     </p>
+</section>
 
-    <!-- ================= SECTION 1 (TA PARTIE CONSERVÉE) ================= -->
-    <div class="chart-card chart-section" data-aos="fade-up">
-        <div>
-            <h5 class="text-center mb-3">Projets réalisés par secteur</h5>
-            <canvas id="secteurChart"></canvas>
+<!-- PORTFOLIO DETAILS -->
+<section class="portfolio-details container" data-aos="fade-up">
+    <div class="row text-center g-4">
+        <div class="col-md-4">
+            <div class="portfolio-box">
+                <i class="fas fa-laptop-code icon"></i>
+                <h5>Développement Web & Apps</h5>
+                <p>Sites web modernes et applications performantes adaptés aux besoins des entreprises.</p>
+            </div>
         </div>
-
-        <img src="https://fokustalent.com/wp-content/uploads/2022/10/josh-beech-tXJhAFVOHVk-unsplash-scaled.jpg"
-             alt="Secteur industriel"
-             class="chart-img"
-             data-aos="fade-left">
-    </div>
-
-    <!-- ================= SECTION 2 ================= -->
-    <div class="chart-card chart-section" data-aos="fade-up" data-aos-delay="100">
-        <div>
-            <h5 class="text-center mb-3">Satisfaction client</h5>
-            <canvas id="satisfactionChart"></canvas>
+        <div class="col-md-4">
+            <div class="portfolio-box">
+                <i class="fas fa-mobile-alt icon"></i>
+                <h5>Applications & Publication</h5>
+                <p>Nous développons et publions nos applications pour répondre aux besoins de nos clients et abonnés.</p>
+            </div>
         </div>
-
-        <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=500&q=80"
-             alt="Clients satisfaits"
-             class="chart-img"
-             data-aos="fade-right">
-    </div>
-
-    <!-- ================= SECTION 3 ================= -->
-    <div class="chart-card chart-section" data-aos="fade-up" data-aos-delay="200">
-        <div>
-            <h5 class="text-center mb-3">Croissance annuelle</h5>
-            <canvas id="croissanceChart"></canvas>
+        <div class="col-md-4">
+            <div class="portfolio-box">
+                <i class="fas fa-building icon"></i>
+                <h5>Solutions Entreprises</h5>
+                <p>Collaboration avec entreprises commerciales et industrielles pour solutions sur mesure.</p>
+            </div>
         </div>
-
-        <img src="https://renewablewatch.in/wp-content/uploads/2022/01/RW-30.jpg"
-             alt="Croissance"
-             class="chart-img"
-             data-aos="fade-left">
+        <div class="col-md-6">
+            <div class="portfolio-box">
+                <i class="fas fa-rocket icon"></i>
+                <h5>Performance & Qualité</h5>
+                <p>Solutions modernes, rapides et optimisées pour une excellente UX et haute performance.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="portfolio-box">
+                <i class="fas fa-code icon"></i>
+                <h5>Technologies Modernes</h5>
+                <p>Python, Django, UI/UX design, frontend & backend pour transformer vos idées en digital puissant.</p>
+            </div>
+        </div>
     </div>
+</section>
 
+<!-- GALERIE PROJETS -->
+<div class="container py-5">
+    <h2 class="section-title">Nos Projets & Tarifs</h2>
+    <div class="gallery">
+
+        <!-- WEB -->
+<div class="project-card" data-aos="zoom-in-up">
+    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="img-fluid rounded">
+    <div class="project-overlay d-flex flex-column justify-content-end p-3">
+        <h5 class="d-flex align-items-center">
+            <i class="fas fa-laptop-code me-2"></i> Développement Web
+        </h5>
+        <p class="mb-1">Site vitrine / e-commerce</p>
+        <div class="price mb-2">À partir de 1000$</div>
+        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#webModal">
+            <i class="fas fa-eye me-1"></i> Voir détails
+        </button>
+    </div>
 </div>
 
-<!-- FOOTER -->
-<footer data-aos="fade-up">
-    <h4>HexaQuébec</h4>
-    <p>
-        HexaQuébec accompagne les entreprises industrielles et commerciales dans tous leurs projets informatiques. Nous développons des centaines de sites web, applications et solutions digitales pour nos clients et partenaires.
-    </p>
+<!-- MOBILE -->
+<div class="project-card" data-aos="zoom-in-up" data-aos-delay="100">
+    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" class="img-fluid rounded">
+    <div class="project-overlay d-flex flex-column justify-content-end p-3">
+        <h5 class="d-flex align-items-center">
+            <i class="fas fa-mobile-alt me-2"></i> Application Mobile
+        </h5>
+        <p class="mb-1">Android & iOS</p>
+        <div class="price mb-2">À partir de 3000$</div>
+        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#mobileModal">
+            <i class="fas fa-eye me-1"></i> Voir détails
+        </button>
+    </div>
+</div>
 
-    <div class="mt-3">
-        <a href="https://m.facebook.com/p/HexaQuebec-61578598457506/?deoia=1&wtsid=rdr_0QJab4d0DoCHtrW4n" class="social-icon"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.tiktok.com/@hexaquebec.ca?_r=1&_t=ZS-91qqwvDvYXd" class="social-icon"><i class="fab fa-tiktok"></i></a>
+<style>
+.project-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.4s;
+}
+.project-card:hover {
+    transform: scale(1.05);
+}
+.project-card img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s;
+}
+.project-card:hover img {
+    transform: scale(1.1);
+}
+.project-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(11,19,43,0.9), transparent);
+    color: #fff;
+    transform: translateY(100%);
+    transition: transform 0.4s;
+    border-radius: 0 0 20px 20px;
+}
+.project-card:hover .project-overlay {
+    transform: translateY(0);
+}
+.project-overlay h5 i {
+    color: #c6a87d;
+}
+.project-overlay .price {
+    color: #c6a87d;
+    font-weight: bold;
+    font-size: 1rem;
+}
+</style>
+
+<script>
+AOS.init({ duration: 800, once: true });
+</script>
+
+    </div>
+</div>
+
+<!-- MODAL WEB -->
+<div class="modal fade" id="webModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-0 rounded-4 shadow">
+            <div class="modal-header border-0">
+                <h5 class="fw-bold">💻 Développement Web</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled mb-3">
+                    <li>✔ Site vitrine professionnel</li>
+                    <li>✔ E-commerce complet</li>
+                    <li>✔ SEO optimisé Google</li>
+                    <li>✔ Design UI/UX moderne</li>
+                </ul>
+                <p class="text-warning fw-bold fs-5">1000$ - 12000$</p>
+               <a href="https://wa.me/15144677377" target="_blank" class="btn btn-success w-100">
+    <i class="fab fa-whatsapp"></i> Commander maintenant
+</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MOBILE -->
+<div class="modal fade" id="mobileModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-0 rounded-4 shadow">
+            <div class="modal-header border-0">
+                <h5 class="fw-bold">📱 Application Mobile</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled mb-3">
+                    <li>✔ Android & iOS</li>
+                    <li>✔ Backend API sécurisé</li>
+                    <li>✔ Interface moderne</li>
+                    <li>✔ Performance optimisée</li>
+                </ul>
+                <p class="text-warning fw-bold fs-5">3000$ - 40000$</p>
+                <a href="https://wa.me/123456789" class="btn btn-success w-100">
+                    <i class="fab fa-whatsapp"></i> Commander maintenant
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/15144677377" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+
+<!-- BACK TO TOP -->
+<div id="backTop"><i class="fas fa-chevron-up"></i></div>
+
+<!-- FOOTER -->
+<footer class="footer-modern mt-5">
+
+    <div class="container">
+
+        <div class="row text-center text-md-start">
+
+            <!-- LOGO / DESCRIPTION -->
+            <div class="col-md-4 mb-4 footer-animate">
+                <h4 class="footer-logo">HexaQuébec</h4>
+                <p class="footer-text">
+                    Nous accompagnons les entreprises industrielles, commerciales et gouvernementales
+                    dans la conception de solutions numériques performantes : sites web, applications
+                    et systèmes digitaux sur mesure.
+                </p>
+            </div>
+
+            <!-- SERVICES -->
+            <div class="col-md-4 mb-4 footer-animate delay-1">
+                <h6 class="footer-title">Services</h6>
+                <ul class="footer-links">
+                    <li>Développement web</li>
+                    <li>Applications mobiles</li>
+                    <li>Maintenance informatique</li>
+                    <li>Solutions sur mesure</li>
+                </ul>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="col-md-4 mb-4 footer-animate delay-2">
+                <h6 class="footer-title">Contact</h6>
+                <p class="footer-text mb-1">📍 Québec, Canada</p>
+                <p class="footer-text mb-1">📧 hexaquebec80@gmail.com</p>
+                <p class="footer-text">📞 +1 514 467 7377</p>
+            </div>
+
+        </div>
+
+        <hr class="footer-divider">
+
+        <!-- COPYRIGHT -->
+        <div class="text-center footer-animate delay-3">
+            <p class="footer-copy">
+                © 2026 HexaQuébec — Tous droits réservés
+            </p>
+        </div>
+
     </div>
 
-    <p class="mt-4" style="font-size:0.9rem;">© 2025 HexaQuébec</p>
 </footer>
-
 <!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
 <script>
-    AOS.init({ duration: 800 });
+AOS.init();
 
-    new Chart(document.getElementById('secteurChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Industriel', 'Commercial', 'IA'],
-            datasets: [{
-                data: [12, 8, 5],
-                backgroundColor: '#c6a87d'
-            }]
-        },
-        options: { responsive: true }
-    });
-
-    new Chart(document.getElementById('satisfactionChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Satisfaits', 'Autres'],
-            datasets: [{
-                data: [90, 10],
-                backgroundColor: ['#c6a87d', '#374151']
-            }]
-        },
-        options: { responsive: true }
-    });
-
-    new Chart(document.getElementById('croissanceChart'), {
-        type: 'line',
-        data: {
-            labels: ['2024','2025','2026','2027','2028'],
-            datasets: [{
-                data: [15, 30, 45, 60, 75],
-                borderColor: '#c6a87d',
-                tension: 0.4
-            }]
-        },
-        options: { responsive: true }
-    });
+// Back to top
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+    backTop.style.display = (window.scrollY > 300) ? 'block' : 'none';
+});
+backTop.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
 </script>
 
 </body>

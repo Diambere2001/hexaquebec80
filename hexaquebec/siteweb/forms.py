@@ -86,13 +86,41 @@ class ClientLoginForm(forms.Form):
 
 
 class MessageClientForm(forms.ModelForm):
+    # 📷 Image (optionnelle)
+    image = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+            'accept': 'image/*'
+        }),
+        label="📷 Joindre une image"
+    )
+
+    # 📎 Fichier (optionnel)
+    fichier = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'form-control'
+        }),
+        label="📎 Joindre un fichier"
+    )
+
     class Meta:
         model = MessageClient
-        fields = ['message']  # tu peux ajouter 'reponse' si tu veux que l'admin puisse répondre via le formulaire
+        fields = ['message', 'image', 'fichier']  # ✅ IMPORTANT
+
         widgets = {
-            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Écris ton message ici...'}),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': '✍️ Écris ton message ici...',
+                'rows': 3,
+                'style': 'resize:none;'
+            }),
         }
 
+        labels = {
+            'message': 'Message'
+        }
 
 
 class RendezVousForm(forms.ModelForm):
@@ -191,3 +219,13 @@ class CommentProForm(forms.ModelForm):
                 'placeholder': 'Écrire un commentaire...'
             })
         }
+
+
+from django import forms
+from .models import ProfilStagiaire
+
+class ProfilStagiaireForm(forms.ModelForm):
+    class Meta:
+        model = ProfilStagiaire
+        fields = ['photo']
+

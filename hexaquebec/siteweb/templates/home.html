@@ -740,7 +740,7 @@
 @media (max-width: 991px) {
 
 .nav-modern {
-    background: linear-gradient(135deg, #0a0a0f, #1a1714 , #155c8b);
+    background: linear-gradient(135deg,  #0b132b);
     padding: 20px;
     border-radius: 20px;
     margin-top: 30px;
@@ -856,6 +856,187 @@ margin-top:6px;
     max-width: none;
   }
 }
+.hero {
+    height: 90vh;
+    background: linear-gradient(rgba(11,19,43,0.8), rgba(11,19,43,0.9)),
+                url('https://images.unsplash.com/photo-1519389950473-47ba0277781c') center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #cbd5e1;
+}
+
+/* Bouton hover pro */
+.btn {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+/* ===== HERO RESPONSIVE PRO ===== */
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+}
+
+/* Boutons */
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Boutons style */
+.hero-buttons .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 12px;
+}
+
+/* Texte info */
+.hero-info {
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+}
+
+/* ===== TABLETTE ===== */
+@media (max-width: 992px) {
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 576px) {
+
+    .hero {
+        height: auto;
+        padding: 170px 0 60px; /* 🔥 espace en haut ajouté */
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.95rem;
+    }
+
+    .hero-info {
+        font-size: 0.85rem;
+        padding: 0 10px;
+    }
+}
+/* DESKTOP NORMAL */
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* BOUTONS */
+.btn-hero {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    color: white;
+    background: linear-gradient(135deg, #3a86ff, #4361ee);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+/* VARIANTS */
+.btn-hero.warning {
+    background: linear-gradient(135deg, #ffbe0b, #fb8500);
+    color: #0b132b;
+}
+
+.btn-hero.outline {
+    background: transparent;
+    border: 1px solid #e0c097;
+    color: #e0c097;
+}
+
+/* ========================= */
+/* 📱 MOBILE HORIZONTAL */
+/* ========================= */
+@media (max-width: 768px) {
+
+    .hero-buttons {
+        flex-direction: row;     /* 🔥 horizontal */
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-hero {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;      /* 🔥 rond */
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-hero i {
+        font-size: 1.3rem;
+    }
+
+    .btn-hero .label {
+        display: none;           /* 🔥 cache texte */
+    }
+
+    /* effet premium */
+    .btn-hero:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 12px rgba(255,255,255,0.4);
+    }
+}
+
 </style>
 
 
@@ -881,10 +1062,37 @@ margin-top:6px;
 
 <!-- ===== HERO ===== -->
 <header class="hero">
-  <div class="hero-content">
-    <h1>HexaQuébec</h1>
-    <p>L’innovation au cœur du numérique québécois</p>
-    <a href="{% url 'services' %}" class="btn btn-primary btn-lg">Découvrir nos services</a>
+  <div class="hero-content text-center px-3">
+
+    <h1 class="hero-title">HexaQuébec</h1>
+    <p class="hero-subtitle">
+      L’innovation au cœur du numérique québécois
+    </p>
+<div class="hero-buttons">
+
+    <a href="{% url 'services' %}" class="btn-hero">
+        <i class="fas fa-laptop-code"></i>
+        <span class="label">Services</span>
+    </a>
+
+    <a href="{% url 'demande_stage' %}" class="btn-hero warning">
+        <i class="fas fa-user-graduate"></i>
+        <span class="label">Stage</span>
+    </a>
+
+    <a href="{% url 'space' %}" class="btn-hero outline">
+        <i class="fas fa-sign-in-alt"></i>
+        <span class="label">Espace</span>
+    </a>
+
+</div>
+    <!-- Info -->
+    <div class="hero-info">
+      🎓 <strong>Stages :</strong> Web • Mobile • Design • Infographie • Maintenance <br>
+      ❌ Réseau & Cybersécurité non acceptés
+    </div>
+    
+   
 
   </div>
 </header>
@@ -1274,6 +1482,7 @@ document.addEventListener("DOMContentLoaded", function() {
           Nous transformons vos idées en projets digitaux performants et innovants.
         </p>
       </div>
+      
 
       <!-- Adresse -->
       <div class="col-md-3 mb-4">

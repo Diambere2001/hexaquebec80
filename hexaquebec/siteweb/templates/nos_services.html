@@ -170,6 +170,83 @@
       0% { opacity: 0; transform: translateY(30px); }
       100% { opacity: 1; transform: translateY(0); }
     }
+    /* ===== SERVICES ===== */
+.service-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(198,168,125,0.3);
+    border-radius: 20px;
+    padding: 20px; /* réduit un peu le padding */
+    text-align: center;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 10px rgba(198,168,125,0.1);
+    height: 100%; /* assure alignement égal en grid */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 25px rgba(198,168,125,0.3);
+    border-color: #c6a87d;
+}
+
+.service-card i {
+    font-size: 2.5rem; /* un peu plus petit pour mobile */
+    color: #c6a87d;
+    margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+.service-card:hover i {
+    transform: rotate(10deg) scale(1.1);
+    color: #f0d49d;
+}
+
+.service-card h5 {
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 10px; /* réduit espace avec texte */
+    font-size: 1.05rem;
+}
+
+.service-card p {
+    color: #ccc;
+    font-size: 0.9rem;
+    flex-grow: 1;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+    .service-card {
+        padding: 18px;
+    }
+    .service-card i { font-size: 2.3rem; }
+    .service-card h5 { font-size: 1rem; }
+    .service-card p { font-size: 0.88rem; }
+}
+
+@media (max-width: 768px) {
+    .service-card {
+        padding: 15px;
+    }
+    .service-card i { font-size: 2rem; margin-bottom: 12px; }
+    .service-card h5 { font-size: 0.95rem; }
+    .service-card p { font-size: 0.85rem; }
+}
+
+@media (max-width: 576px) {
+    #services {
+        padding: 50px 15px;
+    }
+    .service-card {
+        padding: 12px 10px;
+        border-radius: 15px;
+    }
+    .service-card i { font-size: 1.8rem; margin-bottom: 10px; }
+    .service-card h5 { font-size: 0.9rem; }
+    .service-card p { font-size: 0.8rem; }
+}
   </style>
 </head>
 <body>
@@ -233,6 +310,66 @@
   position: relative;
   z-index: 2;
 }
+
+/* ===== HERO MOBILE ===== */
+@media (max-width: 576px) {
+    .hero {
+        padding-top: 120px; /* descend le hero depuis la navbar */
+        padding-bottom: 40px;
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 1.8rem; /* texte plus petit */
+        line-height: 1.2;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem; /* texte plus petit */
+        margin-top: 10px;
+    }
+
+    .hero-content .btn {
+        font-size: 0.85rem;
+        padding: 8px 18px;
+        width: 100%;
+    }
+}
+.nav-modern {
+    background: linear-gradient(135deg,  #0b132b);
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 30px;
+
+}
+.btn-modern{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: 0.3s ease;
+  white-space: nowrap;
+  max-width: fit-content;
+}
+
+/* hover moderne */
+.btn-modern:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.1);
+  border-color: #c6a87d;
+  color: #c6a87d;
+}
+
+/* 📱 MOBILE FIX */
+@media (max-width: 576px){
+  .btn-modern{
+    width: auto;          /* ❌ pas full width */
+    font-size: 0.9rem;
+    padding: 8px 14px;
+  }
+}
 </style>
       <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -254,7 +391,7 @@
     <div class="hero-content">
       <h1>Découvrez Nos Services</h1>
       <p>Des solutions numériques sur mesure pour propulser votre entreprise</p>
-    <a href="{% url 'services_detail' %}" class="btn btn-outline-light mt-3">
+   <a href="{% url 'services_detail' %}" class="btn btn-outline-light btn-modern mt-3">
   Voir nos services en détail
 </a>
 

@@ -47,7 +47,7 @@ from .models import Client
 from .forms import ClientRegisterForm, ClientLoginForm, MessageClientForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Client, MessageClient, RendezVous, Partenaire
+from .models import Client, MessageClient, RendezVous, Partenaire,Service
 from .forms import MessageForm, RendezVousForm, PartenaireForm
 from .forms import AdminSendMailForm, ContactClientForm
 from .models import MessageContact
@@ -525,26 +525,37 @@ def client_login(request):
             messages.error(request, "Email ou code client incorrect.")
 
     return render(request, "login.html")
+
+
+
 @login_required
 def client_profile(request):
-    client = get_object_or_404(Client, user=request.user)
-
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return render(request, "session_expiree.html")
     messages_recu = MessageClient.objects.filter(client=client).order_by('-date')
 
+    # Forms (toujours initialisés)
     message_form = MessageClientForm()
     rdv_form = RendezVousForm()
     partenaire_form = PartenaireForm()
 
-    # Récupérer tous les partenaires (ou filtrer selon ton modèle)
     partenaires = Partenaire.objects.all()
-
-    # Vérifier si le client est déjà partenaire
     client_est_partenaire = partenaires.filter(id=client.id).exists()
 
+    # ===================== POST =====================
     if request.method == "POST":
 
-        if "send_message" in request.POST:
-            message_form = MessageClientForm(request.POST)
+        # 📷 PHOTO PROFIL (priorité 1)
+        if "photo" in request.FILES:
+            client.photo = request.FILES.get("photo")
+            client.save()
+            messages.success(request, "📸 Photo de profil mise à jour !")
+            return redirect("client_profile")
+
+        # 📩 MESSAGE (avec image/fichier)
+        elif "send_message" in request.POST:
+            message_form = MessageClientForm(request.POST, request.FILES)
             if message_form.is_valid():
                 msg = message_form.save(commit=False)
                 msg.client = client
@@ -553,6 +564,7 @@ def client_profile(request):
                 messages.success(request, "📩 Votre message a été envoyé.")
                 return redirect("client_profile")
 
+        # 📅 RENDEZ-VOUS
         elif "send_rdv" in request.POST:
             rdv_form = RendezVousForm(request.POST)
             if rdv_form.is_valid():
@@ -562,6 +574,7 @@ def client_profile(request):
                 messages.success(request, "📅 Votre demande de rendez-vous a été envoyée.")
                 return redirect("client_profile")
 
+        # 🤝 PARTENARIAT
         elif "send_partenaire" in request.POST:
             partenaire_form = PartenaireForm(request.POST)
             if partenaire_form.is_valid():
@@ -571,6 +584,10 @@ def client_profile(request):
                 messages.success(request, "🤝 Votre demande partenaire a été envoyée.")
                 return redirect("client_profile")
 
+    # ===================== SERVICES =====================
+    services = Service.objects.all()
+
+    # ===================== CONTEXT =====================
     context = {
         "client": client,
         "messages_recu": messages_recu,
@@ -578,14 +595,11 @@ def client_profile(request):
         "rdv_form": rdv_form,
         "partenaire_form": partenaire_form,
         "partenaires": partenaires,
-        "client_est_partenaire": client_est_partenaire,  # pour template
+        "client_est_partenaire": client_est_partenaire,
+        "services": services,
     }
 
     return render(request, "profile.html", context)
-
-
-
-
 
 
 @login_required
@@ -1144,17 +1158,16 @@ def creer_facture(request):
 
 
 
-
 import qrcode
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
-from .models import Facture
 from reportlab.lib.utils import ImageReader
+from .models import Facture
 import base64
 from io import BytesIO
+
 
 def fact_pdf(request, facture_id):
 
@@ -1163,18 +1176,12 @@ def fact_pdf(request, facture_id):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="facture_{facture.numero}.pdf"'
 
-    # ton code PDF ici...
-
-
-
     p = canvas.Canvas(response, pagesize=A4)
-
     width, height = A4
 
     # ======================
     # HEADER
     # ======================
-
     p.setFillColor(HexColor("#2c3e50"))
     p.setFont("Helvetica-Bold", 24)
     p.drawString(40, height-50, "HexaQuebec")
@@ -1187,30 +1194,51 @@ def fact_pdf(request, facture_id):
     # ======================
     # INFO ENTREPRISE
     # ======================
-
+    y_info = height - 90
     p.setFont("Helvetica", 10)
-    p.drawString(40, height-90, "HexaQuebec")
-    p.drawString(40, height-105, "Entreprise de développement Web et Mobile")
-    p.drawString(40, height-120, "Vente de services informatiques")
-    p.drawString(40, height-135, "Maintenance et réparation d'ordinateurs")
-    p.drawString(40, height-150, "Saguenay, Québec, Canada")
+
+    p.drawString(40, y_info, "HexaQuebec")
+    p.drawString(40, y_info-15, "Entreprise de développement Web et Mobile")
+    p.drawString(40, y_info-30, "Services informatiques professionnels")
+    p.drawString(40, y_info-45, "Maintenance et support technique")
+    p.drawString(40, y_info-60, "Saguenay, Québec, Canada")
 
     # ======================
     # DESCRIPTION
     # ======================
+    y_desc = y_info - 90
+    line = 15
 
-    p.drawString(40, height-180, "Cette facture est établie lorsque l'entreprise achète un ordinateur")
-    p.drawString(40, height-195, "ou tout autre service informatique auprès d'une personne.")
-    p.drawString(40, height-210, "Avant toute revente, chaque équipement est soigneusement vérifié")
-    p.drawString(40, height-225, "afin de garantir la qualité et d'éviter tout matériel défectueux.")
-    p.drawString(40, height-240, "Tous nos services sont garantis et les taxes applicables")
-    p.drawString(40, height-255, "sont incluses dans le montant total.")
+    p.setFont("Helvetica", 10)
+
+    p.drawString(40, y_desc,
+        "Cette facture est établie dans le cadre d'une transaction commerciale.")
+
+    p.drawString(40, y_desc-line,
+        "Elle peut concerner l'achat d'un produit ou d'un service professionnel.")
+
+    p.drawString(40, y_desc-line*2,
+        "Tous les produits sont vérifiés avant livraison pour garantir leur qualité.")
+
+    p.drawString(40, y_desc-line*3,
+        "Services possibles :")
+
+    p.drawString(60, y_desc-line*4,
+        "- Vente ou achat de matériel informatique")
+
+    p.drawString(60, y_desc-line*5,
+        "- Développement de site web ou application mobile")
+
+    p.drawString(60, y_desc-line*6,
+        "- Maintenance et support technique")
+
+    p.drawString(40, y_desc-line*7,
+        "TPS (5%) et TVQ (9,975%) appliquées selon la loi du Québec.")
 
     # ======================
     # CLIENT / VENDEUR
     # ======================
-
-    client_y = height - 300
+    client_y = y_desc - 130
 
     p.setFont("Helvetica-Bold", 11)
     p.drawString(40, client_y, "Facturé à :")
@@ -1227,28 +1255,26 @@ def fact_pdf(request, facture_id):
     p.drawString(width/2, client_y-35, f"Date : {facture.date}")
 
     # ======================
-    # TABLEAU FACTURE
+    # TABLE
     # ======================
-
-    table_top = height - 350
+    table_y = client_y - 70
 
     p.setFillColor(HexColor("#2c3e50"))
-    p.rect(40, table_top, width-80, 25, fill=1)
+    p.rect(40, table_y, width-80, 25, fill=1)
 
     p.setFillColor("white")
     p.setFont("Helvetica-Bold", 11)
 
-    p.drawString(50, table_top+7, "Description")
-    p.drawString(300, table_top+7, "Quantité")
-    p.drawString(380, table_top+7, "Prix")
-    p.drawString(460, table_top+7, "Total")
+    p.drawString(50, table_y+7, "Description")
+    p.drawString(300, table_y+7, "Qté")
+    p.drawString(380, table_y+7, "Prix")
+    p.drawString(460, table_y+7, "Total")
 
-    # ligne produit
-
+    # PRODUIT
     p.setFillColor("black")
     p.setFont("Helvetica", 11)
 
-    y = table_top - 25
+    y = table_y - 25
 
     p.drawString(50, y, facture.produit)
     p.drawString(300, y, "1")
@@ -1258,41 +1284,52 @@ def fact_pdf(request, facture_id):
     p.line(40, y-10, width-40, y-10)
 
     # ======================
-    # TOTAL
+    # TOTAL + TAXES QC
     # ======================
+    subtotal = float(facture.prix)
+
+    tps = subtotal * 0.05
+    tvq = subtotal * 0.09975
+    taxes = tps + tvq
+    total = subtotal + taxes
 
     total_y = y - 60
 
-    p.setFont("Helvetica", 12)
-    p.drawRightString(width-150, total_y, "Sous-total :")
-    p.drawRightString(width-40, total_y, f"{facture.prix} $")
+    p.setFont("Helvetica", 11)
 
-    p.drawRightString(width-150, total_y-20, "Taxes :")
-    p.drawRightString(width-40, total_y-20, "0 $")
+    p.drawRightString(width-150, total_y, "Sous-total :")
+    p.drawRightString(width-40, total_y, f"{subtotal:.2f} $")
+
+    p.drawRightString(width-150, total_y-18, "TPS (5%) :")
+    p.drawRightString(width-40, total_y-18, f"{tps:.2f} $")
+
+    p.drawRightString(width-150, total_y-36, "TVQ (9.975%) :")
+    p.drawRightString(width-40, total_y-36, f"{tvq:.2f} $")
+
+    p.drawRightString(width-150, total_y-54, "Taxes :")
+    p.drawRightString(width-40, total_y-54, f"{taxes:.2f} $")
 
     p.setFont("Helvetica-Bold", 14)
-    p.drawRightString(width-150, total_y-45, "TOTAL :")
-    p.drawRightString(width-40, total_y-45, f"{facture.prix} $")
+    p.drawRightString(width-150, total_y-80, "TOTAL :")
+    p.drawRightString(width-40, total_y-80, f"{total:.2f} $")
 
     # ======================
     # SIGNATURE
     # ======================
-
     p.setFont("Helvetica", 11)
     p.drawString(40, total_y - 90, "Signature :")
 
     signature = facture.signature_vendeur
 
     if signature and "base64" in signature:
-
-        format, imgstr = signature.split(';base64,')
+        _, imgstr = signature.split(';base64,')
         img_data = base64.b64decode(imgstr)
-
         image = ImageReader(BytesIO(img_data))
 
         p.drawImage(
             image,
-            120, total_y - 110,
+            120,
+            total_y - 110,
             width=150,
             height=50,
             mask='auto'
@@ -1301,23 +1338,20 @@ def fact_pdf(request, facture_id):
     # ======================
     # FOOTER
     # ======================
-
     p.line(40, 120, width-40, 120)
 
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(40, 100, "Facture originale - HexaQuebec")
+    p.drawString(40, 100, "Facture officielle - HexaQuebec")
 
     p.setFont("Helvetica", 9)
-
     p.drawString(40, 80, "HexaQuebec - Solutions numériques professionnelles")
-    p.drawString(40, 65, "Développement Web | Développement Mobile | Services informatiques")
-    p.drawString(40, 50, "Maintenance et réparation d’ordinateurs")
+    p.drawString(40, 65, "Web | Mobile | Maintenance informatique")
+    p.drawString(40, 50, "Canada - Québec")
 
     p.showPage()
     p.save()
 
     return response
-
 
 def facture_detail(request, id):
     facture = get_object_or_404(Facture, id=id)
@@ -1603,3 +1637,670 @@ def supprimer_du_panier(request, item_id):
     item = get_object_or_404(PanierItem, id=item_id)
     item.delete()
     return redirect('panier')
+
+
+
+import random
+from datetime import datetime
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.conf import settings
+from .models import Stagiaire
+
+
+## ================= DEMANDE DE STAGE =================
+def demande_stage(request):
+    if request.method == "POST":
+
+        # 🔹 Récupération données
+        nom = request.POST.get("nom")
+        email = request.POST.get("email")
+        niveau = request.POST.get("niveau")
+        specialite = request.POST.get("specialite")
+        programme = request.POST.get("programme_info")
+        date_naissance = request.POST.get("date_naissance")
+        lieu_naissance = request.POST.get("lieu_naissance")
+        commentaire = request.POST.get("commentaire")
+        cv = request.FILES.get("cv")
+        lettre_convention = request.FILES.get("lettre_convention")
+        date_debut_str = request.POST.get("date_debut")
+
+        # 🔴 Vérification champs obligatoires
+        if not nom or not email or not cv:
+            messages.error(request, "❌ Veuillez remplir tous les champs obligatoires.")
+            return render(request, "demande_stage.html")
+
+        # 🔴 Vérifier email déjà utilisé
+        if Stagiaire.objects.filter(email=email).exists():
+            messages.error(
+                request,
+                "❌ Cet email est déjà enregistré ou une demande est en cours."
+            )
+            return render(request, "demande_stage.html")
+
+        # 🔴 Vérification date début
+        if not date_debut_str:
+            messages.error(request, "❌ Veuillez sélectionner la date de début du stage.")
+            return render(request, "demande_stage.html")
+
+        try:
+            date_debut = datetime.strptime(date_debut_str, "%Y-%m-%d").date()
+        except ValueError:
+            messages.error(request, "❌ Format de date invalide.")
+            return render(request, "demande_stage.html")
+
+        # 🔢 Code interne
+        code = str(random.randint(1000, 9999))
+
+        try:
+            # ✅ Création stagiaire
+            Stagiaire.objects.create(
+                nom=nom,
+                email=email,
+                niveau=niveau,
+                specialite=specialite,
+                programme=programme,
+                date_naissance=date_naissance,
+                lieu_naissance=lieu_naissance,
+                date_debut=date_debut,
+                commentaire=commentaire,
+                cv=cv,
+                lettre_convention=lettre_convention,
+                code=code
+            )
+
+            # ================= EMAIL =================
+            subject = "Demande de stage reçue - HexaQuébec"
+
+            html_message = render_to_string("email.html", {
+                "nom": nom,
+            })
+
+            plain_message = strip_tags(html_message)
+
+            send_mail(
+                subject,
+                plain_message,
+                settings.EMAIL_HOST_USER,
+                [email],
+                html_message=html_message,
+                fail_silently=False,
+            )
+
+            # ✅ Message succès
+            messages.success(
+                request,
+                "✅ Votre demande a été envoyée avec succès. Vérifiez votre email."
+            )
+
+            return redirect("home")
+
+        except Exception as e:
+            messages.error(
+                request,
+                "❌ Une erreur est survenue lors de l'envoi. Réessayez."
+            )
+            return render(request, "demande_stage.html")
+
+    return render(request, "demande_stage.html")
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Stagiairelogin, ProfilStagiaire
+from .models import Stagiairelogin, ProfilStagiaire
+
+
+# ================= LOGIN =================
+def login_stagiaire(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        code = request.POST.get("code")
+
+        try:
+            login = Stagiairelogin.objects.get(email=email)
+
+            # ❌ REFUS
+            if login.refuse:
+                messages.error(request, "Votre demande a été refusée.")
+                return redirect("login_stagiaire")
+
+            # ⏳ EN ATTENTE
+            if not login.accepte:
+                messages.error(request, "Votre demande est en cours de validation.")
+                return redirect("login_stagiaire")
+
+            # 🔐 CODE
+            if login.code != code:
+                messages.error(request, "Code incorrect.")
+                return redirect("login_stagiaire")
+
+            # ✅ SESSION
+            request.session["stagiaire_id"] = login.id
+
+            return redirect("dashboard_stagiaire")
+
+        except Stagiairelogin.DoesNotExist:
+            messages.error(request, "Email introuvable.")
+            return redirect("login_stagiaire")
+
+    return render(request, "login_stagiaire.html")
+
+
+# ================= DASHBOARD =================
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Stagiairelogin, ProfilStagiaire
+from .forms import ProfilStagiaireForm
+from datetime import datetime
+
+
+def dashboard_stagiaire(request):
+    stagiaire_id = request.session.get("stagiaire_id")
+    if not stagiaire_id:
+        return redirect("login_stagiaire")
+
+    login = Stagiairelogin.objects.get(id=stagiaire_id)
+    stagiaire = login.stagiaire
+    profil, created = ProfilStagiaire.objects.get_or_create(stagiaire=stagiaire)
+
+    if request.method == "POST":
+
+        # 📅 RDV
+        if "send_rdv" in request.POST:
+            date = request.POST.get("date")
+            heure = request.POST.get("heure")
+
+            if date and heure:
+                datetime_str = f"{date} {heure}"
+                profil.date_rdv = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+                profil.statut_rdv = "en_attente"
+                profil.save()
+
+                messages.success(request, "📅 Demande de rendez-vous envoyée")
+            else:
+                messages.error(request, "Veuillez choisir date et heure")
+
+            return redirect("dashboard_stagiaire")
+
+        # 💬 MESSAGE STAGIAIRE → ADMIN
+        if "send_message" in request.POST:
+            msg = request.POST.get("message_stagiaire")
+
+            if msg:
+                profil.message_stagiaire = msg
+                profil.save()
+                messages.success(request, "💬 Message envoyé à l'administration")
+            else:
+                messages.error(request, "Veuillez écrire un message")
+
+            return redirect("dashboard_stagiaire")
+
+        # 📷 PHOTO (ton code existant)
+        form = ProfilStagiaireForm(request.POST, request.FILES, instance=profil)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Photo mise à jour avec succès !")
+            return redirect("dashboard_stagiaire")
+        else:
+            messages.error(request, "Erreur lors de l'envoi de la photo.")
+
+    else:
+        form = ProfilStagiaireForm(instance=profil)
+
+    return render(request, "dashboard_stagiaire.html", {
+        "stagiaire": stagiaire,
+        "profil": profil,
+        "form": form
+    })
+# ================= LOGOUT =================
+def logout_stagiaire(request):
+    request.session.flush()
+    return redirect("login_stagiaire")
+
+
+
+def space(request):
+    return render(request, "space.html")
+
+
+
+from django.contrib import messages
+from .models import Stagiairelogin
+
+def accepter_stagiaire(request, id):
+    stagiaire = get_object_or_404(Stagiairelogin, id=id)
+
+    stagiaire.accepte = True
+    stagiaire.generer_code()
+
+    messages.success(request, f"Stagiaire accepté. Code : {stagiaire.code}")
+
+    return redirect("liste_stagiaires")
+
+
+
+
+def envoyer_email_acceptation(self):
+    subject = "Demande de stage acceptée - HexaQuébec"
+    message = f"""
+Bonjour {self.email},
+
+Votre demande de stage a été acceptée par HexaQuébec.
+
+Voici vos informations pour accéder à votre compte stagiaire :
+Email : {self.email}
+Code d'accès : {self.code}
+
+Nous vous enverrons bientôt votre programme et le responsable de votre stage.
+
+Merci !
+"""
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [self.email], fail_silently=False)
+    except Exception as e:
+        print(f"Erreur email acceptation: {e}")
+
+def envoyer_email_refus(self):
+    subject = "Demande de stage refusée - HexaQuébec"
+    message = f"""
+Bonjour {self.email},
+
+Nous sommes désolés de vous informer que votre demande de stage a été refusée.
+
+Merci pour votre intérêt et à bientôt.
+"""
+    try:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [self.email], fail_silently=False)
+    except Exception as e:
+        print(f"Erreur email refus: {e}")
+
+
+
+    
+from io import BytesIO
+from django.core.files.base import ContentFile
+from reportlab.lib.pagesizes import LETTER
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib import colors
+import os
+def generer_attestation(self):
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=LETTER,
+                            rightMargin=50, leftMargin=50,
+                            topMargin=50, bottomMargin=50)
+
+    styles = getSampleStyleSheet()
+    
+    # Styles personnalisés
+    title_style = ParagraphStyle(
+        name="Title",
+        fontSize=20,
+        leading=24,
+        alignment=TA_CENTER,
+        textColor=colors.HexColor("#0b132b"),
+        spaceAfter=20
+    )
+    subtitle_style = ParagraphStyle(
+        name="Subtitle",
+        fontSize=14,
+        leading=18,
+        alignment=TA_CENTER,
+        textColor=colors.HexColor("#1c2541"),
+        spaceAfter=15
+    )
+    normal_style = ParagraphStyle(
+        name="Normal",
+        fontSize=12,
+        leading=16,
+        alignment=TA_LEFT,
+        textColor=colors.HexColor("#0b132b"),
+        spaceAfter=10
+    )
+
+    elements = []
+
+    # Logo
+    logo_path = os.path.join('static', 'images', 'logo.png')
+    if os.path.exists(logo_path):
+        elements.append(Image(logo_path, width=120, height=60))
+        elements.append(Spacer(1, 20))
+
+    # Titre principal
+    elements.append(Paragraph("ATTESTATION DE STAGE", title_style))
+    elements.append(Paragraph("Conforme aux normes professionnelles du Québec", subtitle_style))
+    elements.append(Spacer(1, 20))
+
+    # Contenu
+    date_debut = getattr(self.stagiaire, 'date_debut', 'Non défini')
+    date_fin = getattr(self.stagiaire, 'date_fin', 'Non défini')
+    specialite = getattr(self.stagiaire, 'specialite', 'Non défini')
+
+    texte = f"""
+    <b>Nom du stagiaire :</b> {self.stagiaire.nom}<br/>
+    <b>Spécialité :</b> {specialite}<br/>
+    <b>Période :</b> du {date_debut} au {date_fin}<br/>
+    <b>Code stagiaire :</b> {self.code_stagiaire}
+    """
+    elements.append(Paragraph(texte, normal_style))
+    elements.append(Spacer(1, 30))
+
+    # Signature
+    elements.append(Paragraph("Fait à Québec, le " + str(self.date_debut), normal_style))
+    elements.append(Spacer(1, 20))
+    elements.append(Paragraph("<b>HexaQuébec</b>", subtitle_style))
+    elements.append(Spacer(1, 10))
+    elements.append(Paragraph("__________________________", normal_style))
+    elements.append(Paragraph("Signature autorisée", normal_style))
+
+    doc.build(elements)
+    pdf = buffer.getvalue()
+    buffer.close()
+    return ContentFile(pdf, name=f"attestation_{self.code_stagiaire}.pdf")
+
+
+
+import io
+import qrcode
+import os
+
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table, TableStyle, Spacer
+from reportlab.lib.units import mm
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+
+
+@login_required
+def carte_affaire_pdf(request):
+
+    client = getattr(request.user, "client", None)
+    if not client:
+        return HttpResponse("Client introuvable", status=404)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="carte_client.pdf"'
+
+    width, height = (85 * mm, 55 * mm)
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=(width, height),
+        leftMargin=3,
+        rightMargin=3,
+        topMargin=3,
+        bottomMargin=3
+    )
+
+    styles = getSampleStyleSheet()
+    gold = colors.HexColor("#C6A87D")
+
+    # ======================
+    # 🔐 SECURE TEXT
+    # ======================
+    def safe(text, max_len=30):
+        return str(text)[:max_len] if text else ""
+
+    # ======================
+    # 🎨 STYLES (réduits)
+    # ======================
+    header_style = ParagraphStyle(
+        "header",
+        parent=styles["Normal"],
+        fontSize=7,  # 🔥 réduit
+        textColor=gold,
+        alignment=1,
+        spaceAfter=2
+    )
+
+    title_style = ParagraphStyle(
+        "title",
+        parent=styles["Normal"],
+        fontSize=9,
+        textColor=colors.white,
+        fontName="Helvetica-Bold",
+        alignment=1,
+        spaceAfter=2
+    )
+
+    subtitle_style = ParagraphStyle(
+        "subtitle",
+        parent=styles["Normal"],
+        fontSize=6,
+        textColor=gold,
+        alignment=1,
+        spaceAfter=2
+    )
+
+    info_style = ParagraphStyle(
+        "info",
+        parent=styles["Normal"],
+        fontSize=6,
+        textColor=colors.HexColor("#E5E7EB"),
+        alignment=1,
+        leading=7
+    )
+
+    id_style = ParagraphStyle(
+        "id",
+        parent=styles["Normal"],
+        fontSize=5.5,
+        textColor=gold,
+        alignment=1,
+        spaceBefore=2
+    )
+
+    # ======================
+    # 🖼️ LOGO (petit)
+    # ======================
+    logo_path = os.path.join(settings.STATIC_ROOT, "images/logoHexa.png")
+
+    if os.path.exists(logo_path):
+        logo = Image(logo_path, 20*mm, 20*mm)
+    else:
+        logo = Spacer(1, 12*mm)
+
+    # ======================
+    # 🔳 QR CODE (petit)
+    # ======================
+    qr_data = f"{client.entreprise} | {client.contact}"
+    qr = qrcode.make(qr_data)
+
+    buf = io.BytesIO()
+    qr.save(buf, format="PNG")
+    buf.seek(0)
+
+    qr_img = Image(buf, 12*mm, 12*mm)
+
+    qr_box = Table([
+        [qr_img],
+        [Paragraph("SCAN", id_style)]
+    ], colWidths=[16*mm])
+
+    qr_box.setStyle(TableStyle([
+        ("ALIGN", (0,0), (-1,-1), "CENTER"),
+        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ("BOX", (0,0), (-1,0), 0.5, gold),
+        ("TOPPADDING", (0,0), (-1,-1), 1),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 1),
+    ]))
+
+    # ======================
+    # 📄 CONTENU
+    # ======================
+    content = [
+        [logo],
+        [Paragraph("<b>HexaQuébec</b>", title_style)],
+        [Paragraph("Solutions digitales", subtitle_style)],
+        [Paragraph(safe(client.entreprise), info_style)],
+        [Paragraph(safe(client.contact), info_style)],
+        [Paragraph(safe(client.user.email), info_style)],
+        [Paragraph(safe(client.adresse), info_style)],
+        [Paragraph(f"ID : {safe(client.numero_client)}", id_style)],
+    ]
+
+    center_table = Table(content, colWidths=[48*mm])
+    center_table.setStyle(TableStyle([
+        ("ALIGN", (0,0), (-1,-1), "CENTER"),
+        ("LEFTPADDING", (0,0), (-1,-1), 0),
+        ("RIGHTPADDING", (0,0), (-1,-1), 0),
+        ("TOPPADDING", (0,0), (-1,-1), 0.5),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 0.5),
+    ]))
+
+    # ======================
+    # 🧾 CARTE (réduite pour header)
+    # ======================
+    card = Table(
+        [[center_table, qr_box]],
+        colWidths=[54*mm, 18*mm],
+        rowHeights=[40*mm]  # 🔥 réduit pour laisser place au titre
+    )
+
+    card.setStyle(TableStyle([
+        ("LEFTPADDING", (0,0), (-1,-1), 2),
+        ("RIGHTPADDING", (0,0), (-1,-1), 2),
+        ("TOPPADDING", (0,0), (-1,-1), 1),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 1),
+        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+    ]))
+
+    # ======================
+    # 📌 ELEMENTS (1 seule page)
+    # ======================
+    elements = [
+        Paragraph("CARTE D’AFFAIRE CLIENT", header_style),
+        Spacer(1, 1),  # 🔥 très petit
+        card
+    ]
+
+    # ======================
+    # 🎨 DESIGN
+    # ======================
+    def draw(canvas, doc):
+
+        canvas.setFillColor(colors.HexColor("#0B0F19"))
+        canvas.rect(0, 0, width, height, fill=1)
+
+        canvas.setFillColor(colors.HexColor("#111827"))
+        canvas.rect(0, 0, 5, height, fill=1)
+
+        canvas.setFillColor(gold)
+        canvas.rect(5, height-4, width-10, 1.2, fill=1)
+
+        canvas.setStrokeColor(gold)
+        canvas.setLineWidth(0.8)
+        canvas.roundRect(2, 2, width-4, height-4, 5)
+
+    doc.build(elements, onFirstPage=draw)
+
+    return response
+
+
+
+
+
+
+
+from django.shortcuts import render, redirect
+from django.core.mail import EmailMultiAlternatives
+from .models import Devis
+
+def devis_view(request):
+    if request.method == "POST":
+        nom = request.POST.get("nom")
+        email = request.POST.get("email")
+        service = request.POST.get("service")
+        type_projet = request.POST.get("type_projet")
+        description = request.POST.get("description")
+        fichier = request.FILES.get("fichier")
+
+        # 🔹 Sauvegarde DB
+        Devis.objects.create(
+            nom=nom,
+            email=email,
+            service=service,
+            type_projet=type_projet,
+            description=description,
+            fichier=fichier
+        )
+
+        # 🔹 Traduction service
+        services_dict = {
+            "web": "Développement Web",
+            "mobile": "Application Mobile",
+            "ia": "Intelligence Artificielle",
+            "maintenance": "Maintenance"
+        }
+        service_label = services_dict.get(service, service)
+
+        # 🔥 EMAIL MODERNE HTML
+        subject = "🚀 Confirmation de votre demande - HexaQuébec"
+
+        html_content = f"""
+        <div style="font-family:Arial;background:#f4f6f9;padding:20px;">
+            <div style="max-width:600px;margin:auto;background:white;border-radius:15px;overflow:hidden;box-shadow:0 5px 20px rgba(0,0,0,0.1);">
+                
+                <div style="background:#0b132b;color:white;padding:20px;text-align:center;">
+                    <h2 style="margin:0;color:#c6a87d;">HexaQuébec</h2>
+                    <p style="margin:0;font-size:14px;">Solutions digitales modernes</p>
+                </div>
+
+                <div style="padding:25px;">
+                    <h3>Bonjour {nom} 👋</h3>
+
+                    <p>Merci pour votre demande de devis. Voici les informations :</p>
+
+                    <div style="background:#f9fafb;padding:15px;border-radius:10px;">
+                        <p><strong>Email :</strong> {email}</p>
+                        <p><strong>Service :</strong> {service_label}</p>
+                        <p><strong>Type de projet :</strong> {type_projet}</p>
+                        <p><strong>Description :</strong> {description}</p>
+                    </div>
+
+                    <p style="margin-top:20px;">
+                        ⏱️ Notre équipe vous répond sous 24h.
+                    </p>
+
+                    <div style="text-align:center;margin-top:20px;">
+                        <a href="https://hexaquebec.com" 
+                        style="background:#c6a87d;color:black;padding:12px 20px;border-radius:25px;text-decoration:none;">
+                        🌐 Visiter notre site
+                        </a>
+                    </div>
+                </div>
+
+                <div style="background:#0b132b;color:#aaa;text-align:center;padding:15px;font-size:12px;">
+                    © 2026 HexaQuébec
+                </div>
+            </div>
+        </div>
+        """
+
+        email_message = EmailMultiAlternatives(
+            subject,
+            "",
+            "hexaquebec80@gmail.com",
+            [email],
+        )
+
+        email_message.attach_alternative(html_content, "text/html")
+        email_message.send()
+
+        return redirect('devissucc')
+
+    # ⚠️ CORRECTION ICI
+    return render(request, "devis.html")
+
+
+
+def devissucc(request):
+    return render(request, 'devissucc.html')

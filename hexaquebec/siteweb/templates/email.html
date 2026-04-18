@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Demande de stage reçue</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f8;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(135deg, #0b132b, #1c2541);
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* CONTENT */
+.content {
+    padding: 30px;
+    color: #333;
+}
+
+.content h2 {
+    margin-top: 0;
+    color: #0b132b;
+}
+
+.content p {
+    line-height: 1.6;
+    margin: 12px 0;
+}
+
+/* INFO BOX */
+.info-box {
+    background: #f8f9fa;
+    border-left: 4px solid #c6a87d;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 6px;
+}
+
+/* BUTTON */
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #c6a87d, #e0c097);
+    color: #0b132b;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    padding: 20px;
+    background: #f4f6f8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">HexaQuébec</div>
+        <div class="subtitle">Développement Web & Solutions Numériques</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+        <h2>Bonjour {{ nom }},</h2>
+
+        <p>
+            Nous avons bien reçu votre demande de stage 👨‍💻.
+        </p>
+
+        <div class="info-box">
+            📌 Votre dossier est actuellement en cours de traitement par notre équipe.
+        </div>
+
+        <p>
+            Nous analyserons votre profil et nous vous contacterons dans les plus brefs délais.
+        </p>
+
+        <p>
+            Merci pour votre confiance envers <strong>HexaQuébec</strong>.
+        </p>
+
+        <a href="https://hexaquebec.com" class="btn">
+            Visiter notre site
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        © 2026 HexaQuébec — Tous droits réservés<br>
+        Saguenay,QC, Canada 🇨🇦
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -2,239 +2,407 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Détails des Services | HexaQuébec</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services | HexaQuébec</title>
 
-  <!-- Liens CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- LIBS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
-  <style>
-    body {
-      background: linear-gradient(180deg, #0b132b 0%, #1c2541 100%);
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
-    }
+<style>
+:root {
+  --bg:#0b132b;
+  --card:rgba(255,255,255,0.05);
+  --accent:#c6a87d;
+  --text:#f1f5f9;
+}
 
-    section.full-scroll {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 80px 0;
-      position: relative;
-      overflow: hidden;
-    }
+/* GLOBAL */
+body{
+  background:linear-gradient(135deg,#0b132b,#1c2541);
+  color:var(--text);
+  font-family:'Poppins',sans-serif;
+}
 
-    section.full-scroll::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url("{% static 'images/forest-bg.jpg' %}") center/cover no-repeat;
-      opacity: 0.25;
-      z-index: 0;
-      animation: bgMove 25s infinite alternate ease-in-out;
-    }
+/* HERO */
+.hero{
+  text-align:center;
+  padding:100px 20px 60px;
+}
+.hero h1{
+  font-size:clamp(1.8rem,5vw,3rem);
+  font-weight:800;
+  background: linear-gradient(90deg,#c6a87d,#ffffff,#c6a87d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 3s infinite alternate;
+}
+.hero p{
+  max-width:600px;
+  margin:auto;
+  color:#cbd5e1;
+}
 
-    @keyframes bgMove {
-      from { transform: scale(1) translateY(0); }
-      to { transform: scale(1.05) translateY(-25px); }
-    }
+/* GLOW */
+@keyframes glow {
+  from { text-shadow: 0 0 10px rgba(198,168,125,0.3); }
+  to { text-shadow: 0 0 25px rgba(198,168,125,0.8); }
+}
 
-    .content {
-      z-index: 2;
-      width: 90%;
-      max-width: 900px;
-      text-align: center;
-      position: relative;
-    }
+/* TYPING */
+.typing{
+  border-right:2px solid #c6a87d;
+  white-space:nowrap;
+  overflow:hidden;
+  display:inline-block;
+  animation:typing 4s steps(40,end), blink .7s infinite;
+}
+@keyframes typing { from{width:0} to{width:100%} }
+@keyframes blink { 50%{border-color:transparent} }
 
-    .content h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      color: #c6a87d;
-      text-shadow: 0 0 25px rgba(198,168,125,0.6);
-      margin-bottom: 30px;
-      animation: fadeDown 1.2s ease;
-    }
+/* BTN HOME */
+.btn-home{
+  margin-top:25px;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  border-radius:30px;
+  padding:10px 25px;
+  transition:0.3s;
+}
+.btn-home:hover{
+  background:var(--accent);
+  color:#0b132b;
+}
 
-    .content p {
-      color: #ddd;
-      max-width: 700px;
-      margin: 0 auto 40px;
-      font-size: 1.1rem;
-    }
+/* SERVICES */
+.services{
+  padding:60px 0;
+}
+.service-card{
+  background:var(--card);
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
+  transition:0.4s;
+  border:1px solid rgba(255,255,255,0.08);
+  height:100%;
+}
+.service-card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 15px 40px rgba(0,0,0,0.5);
+}
+.service-card i{
+  font-size:2.5rem;
+  color:var(--accent);
+  margin-bottom:15px;
+}
+.service-card h4{
+  font-weight:700;
+}
+.service-card p{
+  color:#cbd5e1;
+  font-size:0.95rem;
+}
 
-    /* ===== CARDS ===== */
-    .card-container {
-      position: relative;
-      width: 100%;
-      height: 420px;
-    }
+.price{
+  color:var(--accent);
+  font-weight:700;
+  margin:15px 0;
+}
 
-    .service-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(198,168,125,0.3);
-      border-radius: 20px;
-      padding: 40px 25px;
-      text-align: center;
-      box-shadow: 0 0 25px rgba(198,168,125,0.15);
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translate(-50%, 60px);
-      width: 90%;
-      max-width: 400px;
-      opacity: 0;
-      transition: all 0.8s ease;
-      backdrop-filter: blur(6px);
-    }
+/* BTN */
+.btn-main{
+  background:var(--accent);
+  color:#0b132b;
+  border-radius:30px;
+  font-weight:600;
+}
+.btn-main:hover{
+  background:#f0d49d;
+}
 
-    .service-card.active {
-      opacity: 1;
-      transform: translate(-50%, 0);
-      z-index: 2;
-      box-shadow: 0 0 40px rgba(198,168,125,0.4);
-      border-color: #f0d49d;
-    }
+/* CTA */
+.cta{
+  text-align:center;
+  padding:80px 20px;
+}
+.cta h2{
+  color:var(--accent);
+}
 
-    .service-card i {
-      font-size: 3rem;
-      color: #c6a87d;
-      margin-bottom: 20px;
-    }
+/* WHATSAPP */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  background:#25D366;
+  color:white;
+  padding:15px;
+  border-radius:50%;
+}
 
-    .service-card h4 {
-      color: #fff;
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:30px;
+  background:#0b132b;
+  color:#aaa;
+}
 
-    .service-card p {
-      color: #ccc;
-      font-size: 0.95rem;
-      margin-bottom: 25px;
-      line-height: 1.6;
-    }
+/* MOBILE */
+@media(max-width:768px){
+  .service-card{
+    padding:20px;
+    max-width:320px;
+    margin:auto;
+  }
+}
+.devis-section{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:60px 20px;
+}
 
-    .service-card a {
-      display: inline-block;
-      color: #c6a87d;
-      border: 1px solid #c6a87d;
-      border-radius: 25px;
-      padding: 8px 20px;
-      text-decoration: none;
-      transition: 0.3s;
-      font-weight: 500;
-    }
+.devis-box{
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  border-radius:20px;
+  padding:40px;
+  max-width:520px;
+  width:100%;
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.1);
+}
 
-    .service-card a:hover {
-      background: #c6a87d;
-      color: #0b132b;
-    }
+.devis-box h3{
+  text-align:center;
+  font-weight:700;
+  margin-bottom:5px;
+}
 
-    /* ===== RETOUR ===== */
-    .btn-retour {
-      margin-top: 60px;
-      background: #c6a87d;
-      color: #0b132b;
-      border-radius: 50px;
-      padding: 12px 28px;
-      font-weight: 600;
-      transition: 0.3s;
-      border: none;
-      text-decoration: none;
-    }
+.subtitle{
+  text-align:center;
+  color:#aaa;
+  margin-bottom:25px;
+}
 
-    .btn-retour:hover {
-      background: #f0d49d;
-      box-shadow: 0 0 20px rgba(198,168,125,0.6);
-      transform: scale(1.05);
-    }
+.devis-box label{
+  font-size:0.85rem;
+  margin-bottom:5px;
+  display:block;
+  color:#cbd5e1;
+}
 
-    footer {
-      background: #0b132b;
-      border-top: 2px solid #c6a87d;
-      padding: 25px 0;
-      text-align: center;
-      color: #ccc;
-    }
+.devis-box input,
+.devis-box select,
+.devis-box textarea{
+  width:100%;
+  padding:12px 15px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  background:rgba(255,255,255,0.07);
+  color:#141413;
+  font-size:0.9rem;
+  transition:0.3s;
+}
 
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+.devis-box input:focus,
+.devis-box select:focus,
+.devis-box textarea:focus{
+  border:1px solid #c6a87d;
+  background:rgba(255,255,255,0.1);
+}
+
+.devis-box textarea{
+  min-height:100px;
+  resize:none;
+}
+
+.btn-send{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(90deg,#c6a87d,#f0d49d);
+  color:#0b132b;
+  font-weight:700;
+  transition:0.3s;
+}
+
+.btn-send:hover{
+  transform:scale(1.03);
+  box-shadow:0 10px 30px rgba(198,168,125,0.5);
+}
+</style>
 </head>
 
 <body>
-  <section class="full-scroll">
-    <div class="content">
-      <h1>Détails de nos Services</h1>
-      <p>Découvrez l’expertise complète d’HexaQuébec dans le développement, la maintenance, l’intelligence artificielle et plus encore.</p>
 
-      <div class="card-container">
-        <div class="service-card active">
-          <i class="fa-solid fa-laptop-code"></i>
-          <h4>Développement Web & Mobile</h4>
-          <p>Sites vitrines, e-commerce et applications mobiles modernes avec Laravel, React, Django et Flutter.</p>
-         <a href="{% url 'service_web_mobile' %}">Découvrir</a>
-        </div>
+<!-- HERO -->
+<section class="hero">
 
-        <div class="service-card">
-          <i class="fa-solid fa-screwdriver-wrench"></i>
-          <h4>Maintenance Informatique</h4>
-          <p>Surveillance, mises à jour et sécurité de vos systèmes informatiques 24/7.</p>
-          <a href="{% url 'service_maintenance' %}">Découvrir</a>
-        </div>
+<h1 data-aos="fade-down">
+<span class="typing">Nos Services Digitaux</span>
+</h1>
 
-        <div class="service-card">
-          <i class="fa-solid fa-robot"></i>
-          <h4>Intelligence Artificielle</h4>
-          <p>Solutions IA, chatbots, automatisation et analyse prédictive pour entreprises innovantes.</p>
-          <a href="{% url 'service_ai' %}">Découvrir</a>
-        </div>
+<p data-aos="fade-up">
+Nous créons des solutions modernes pour entreprises : sites web, applications mobiles,
+intelligence artificielle et systèmes performants.
+</p>
 
-        <div class="service-card">
-          <i class="fa-solid fa-bullhorn"></i>
-          <h4>Marketing & Publicité</h4>
-          <p>Campagnes digitales, gestion des réseaux sociaux et conception graphique haut de gamme.</p>
-          <a href="{% url 'service_marketing' %}">Découvrir</a>
-        </div>
-      </div>
+<a href="{% url 'home' %}" class="btn btn-home" data-aos="zoom-in">
+<i class="fa-solid fa-house"></i> Accueil
+</a>
 
-      <a href="{% url 'services' %}" class="btn-retour mt-5">
-        <i class="fa-solid fa-arrow-left"></i> Retour
-      </a>
-    </div>
-  </section>
+</section>
 
-  <footer>
-    &copy; 2025 HexaQuébec — Tous droits réservés.
-  </footer>
+<!-- SERVICES -->
+<section class="services container">
+<div class="row g-4">
 
-  <script>
-    // Carousel automatique des cartes
-    const cards = document.querySelectorAll('.service-card');
-    let current = 0;
+<div class="col-12 col-sm-6 col-lg-3">
+<div class="service-card">
+<i class="fa-solid fa-laptop-code"></i>
+<h4>Développement Web</h4>
+<p>Sites modernes et e-commerce performants.</p>
+<div class="price">1000$ - 3000$</div>
+<button class="btn btn-main w-100" onclick="openForm('web')">Devis</button>
+</div>
+</div>
 
-    setInterval(() => {
-      cards[current].classList.remove('active');
-      current = (current + 1) % cards.length;
-      cards[current].classList.add('active');
-    }, 3000); // changement toutes les 3 secondes
-  </script>
+<div class="col-12 col-sm-6 col-lg-3">
+<div class="service-card">
+<i class="fa-solid fa-mobile-screen"></i>
+<h4>Application Mobile</h4>
+<p>Applications Android & iOS modernes.</p>
+<div class="price">3000$ - 10000$</div>
+<button class="btn btn-main w-100" onclick="openForm('mobile')">Devis</button>
+</div>
+</div>
+
+<div class="col-12 col-sm-6 col-lg-3">
+<div class="service-card">
+<i class="fa-solid fa-robot"></i>
+<h4>Intelligence Artificielle</h4>
+<p>Automatisation et solutions IA.</p>
+<div class="price">2000$ - 15000$</div>
+<button class="btn btn-main w-100" onclick="openForm('ia')">Devis</button>
+</div>
+</div>
+
+<div class="col-12 col-sm-6 col-lg-3">
+<div class="service-card">
+<i class="fa-solid fa-screwdriver-wrench"></i>
+<h4>Maintenance</h4>
+<p>Support et sécurité informatique.</p>
+<div class="price">30$ / mois</div>
+<button class="btn btn-main w-100" onclick="openForm('maintenance')">Devis</button>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- FORMULAIRE DEVIS MODERNE -->
+<section class="devis-section" id="formDevis" style="display:none;">
+
+<div class="devis-box">
+
+<h3>🚀 Demande de devis</h3>
+<p class="subtitle">Parlez-nous de votre projet</p>
+<form method="POST" action="{% url 'devis' %}" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="row g-3">
+
+<div class="col-md-6">
+    <label>Nom / Entreprise</label>
+    <input type="text" name="nom" placeholder="Ex: HexaQuébec" required>
+</div>
+
+<div class="col-md-6">
+    <label>Email</label>
+    <input type="email" name="email" placeholder="contact@email.com" required>
+</div>
+
+<div class="col-md-6">
+    <label>Service</label>
+    <select name="service" id="serviceSelect" required>
+        <option value="">Choisir</option>
+        <option value="web">💻 Web</option>
+        <option value="mobile">📱 Mobile</option>
+        <option value="ia">🤖 IA</option>
+        <option value="maintenance">🛠️ Maintenance</option>
+    </select>
+</div>
+
+<div class="col-md-6">
+    <label>Type de projet</label>
+    <input type="text" name="type_projet" placeholder="Ex: e-commerce" required>
+</div>
+
+<div class="col-12">
+    <label>Description</label>
+    <textarea name="description" placeholder="Explique ton projet..."></textarea>
+</div>
+
+<div class="col-12">
+    <label>📎 Cahier de charge</label>
+    <input type="file" name="fichier">
+</div>
+
+<div class="col-12">
+    <button type="submit" class="btn-send">
+        Envoyer la demande
+    </button>
+</div>
+
+</div>
+
+</form>
+
+</div>
+</section>
+</div>
+</section>
+<!-- CTA -->
+<section class="cta">
+<h2 data-aos="fade-up">Besoin d’un projet ?</h2>
+<p data-aos="fade-up">Contactez-nous maintenant</p>
+<a href="https://wa.me/15144677377" target="_blank" class="btn btn-main">
+<i class="fab fa-whatsapp"></i> WhatsApp
+</a>
+</section>
+
+<!-- FLOAT -->
+<a href="https://wa.me/15144677377" target="_blank" class="whatsapp">
+<i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- FOOTER -->
+<footer>
+© 2026 HexaQuébec
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+AOS.init({duration:800, once:true});
+</script>
+<script>
+function openForm(service){
+    document.getElementById("formDevis").style.display = "block";
+    document.getElementById("serviceSelect").value = service;
+
+    window.scrollTo({
+        top: document.getElementById("formDevis").offsetTop - 50,
+        behavior: "smooth"
+    });
+}
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-

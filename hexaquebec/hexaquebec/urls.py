@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('siteweb.urls')),  # Application principale
+   
 ]
 
 # Servir les fichiers médias (images) en développement

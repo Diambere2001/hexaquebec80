@@ -7,6 +7,13 @@ from .models import MessageClient, RendezVous, Partenaire
 from django.utils.html import format_html
 from .models import VideoAnnonce, Affiche
 from .models import Panier, PanierItem
+from .models import ProfilStagiaire
+from django.contrib.auth.admin import UserAdmin
+from .models import CompteStagiaire
+
+from .models import Stagiairelogin
+from django.utils.html import format_html
+from .forms import ProfilStagiaireForm 
 
 
 @admin.register(Product)
@@ -171,20 +178,45 @@ class ContactMessageAdmin(admin.ModelAdmin):
 # ===========================
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("entreprise", "contact", "numero_client", "adresse", "user")
+    list_display = ("entreprise", "contact", "numero_client", "adresse", "user", "photo_preview")
     search_fields = ("entreprise", "contact", "numero_client")
     list_filter = ("entreprise",)
     ordering = ("entreprise",)
 
-# ===========================
-# ADMIN : MessageClient
-# ===========================
+    # Fonction pour afficher un aperçu de la photo
+    def photo_preview(self, obj):
+        if obj.photo:
+            return format_html('<img src="{}" style="width:50px; height:50px; border-radius:50%"/>', obj.photo.url)
+        return "-"
+    photo_preview.short_description = "Photo"
+
 @admin.register(MessageClient)
 class MessageClientAdmin(admin.ModelAdmin):
-    list_display = ("client", "date", "message", "reponse")
-    search_fields = ("client__entreprise", "message")
+    list_display = ("client", "expediteur", "date", "short_message", "has_reply")
+    search_fields = ("client__nom", "message", "expediteur__username")
     list_filter = ("date",)
-    ordering = ("-date",)
+
+    readonly_fields = ("date",)
+
+    fields = ("client", "expediteur", "message", "image", "fichier", "reponse", "date")
+
+    def short_message(self, obj):
+        return obj.message[:50]
+
+    def has_reply(self, obj):
+        return bool(obj.reponse)
+
+    has_reply.boolean = True
+
+from .models import Service
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ("nom", "prix", "description")
+    search_fields = ("nom",)
+
+
+
 
 
 @admin.register(RendezVous)
@@ -265,3 +297,376 @@ class PanierItemAdmin(admin.ModelAdmin):
     def total_item(self, obj):
         return obj.total()
     total_item.short_description = "Total"
+
+
+
+
+
+from .models import Stagiaire
+
+
+@admin.register(Stagiaire)
+class StagiaireAdmin(admin.ModelAdmin):
+
+    # 📋 Colonnes affichées
+    list_display = (
+        'nom',
+        'email',
+        'specialite',
+        'niveau',
+        'programme',
+        'date_debut',
+        'voir_cv',
+        'voir_acte',
+        'commentaire_preview',  # Aperçu du commentaire
+    )
+
+    # 🔍 Recherche
+    search_fields = ('nom', 'email', 'specialite', 'programme', 'commentaire')
+
+    # 🎯 Filtres
+    list_filter = ('niveau', 'specialite', 'date_debut')
+
+    # 📅 Organisation du formulaire admin
+    fieldsets = (
+        ("👤 Informations personnelles", {
+            'fields': ('nom', 'email', 'code')
+        }),
+        ("🎓 Formation", {
+            'fields': ('specialite', 'niveau', 'programme', 'date_debut')
+        }),
+        ("📄 Documents", {
+            'fields': ('cv', 'acte_naissance', 'lettre_convention')
+        }),
+        ("🧾 Naissance", {
+            'fields': ('date_naissance', 'lieu_naissance')
+        }),
+        ("📝 Notes & Commentaires", {
+            'fields': ('note', 'commentaire')
+        }),
+        ("📸 Profil", {
+            'fields': ('photo',)
+        }),
+    )
+
+    # 📎 Aperçu CV
+    def voir_cv(self, obj):
+        if obj.cv:
+            return f'<a href="{obj.cv.url}" target="_blank">📄 Voir CV</a>'
+        return "❌"
+    voir_cv.allow_tags = True
+    voir_cv.short_description = "CV"
+
+    # 📎 Aperçu acte de naissance
+    def voir_acte(self, obj):
+        if obj.acte_naissance:
+            return f'<a href="{obj.acte_naissance.url}" target="_blank">📜 Voir</a>'
+        return "❌"
+    voir_acte.allow_tags = True
+    voir_acte.short_description = "Acte"
+
+    # 📝 Aperçu commentaire dans la liste
+    def commentaire_preview(self, obj):
+        return obj.commentaire[:30] + "..." if obj.commentaire else "—"
+    commentaire_preview.short_description = "Commentaire"
+
+    # ⚠️ IMPORTANT pour HTML
+    def get_queryset(self, request):
+        return super().get_queryset(request)
+    
+@admin.register(ProfilStagiaire)
+class ProfilStagiaireAdmin(admin.ModelAdmin):
+
+    # 📊 LISTE
+    list_display = (
+        "stagiaire",
+        "code_stagiaire",
+        "responsable",
+        "date_debut",
+        "date_fin",
+        "stage_valide",
+        "projet_valide",
+        "reponse_rdv",
+        "voir_attestation",
+    )
+
+    # 🔍 RECHERCHE
+    search_fields = (
+        "stagiaire__nom",
+        "code_stagiaire",
+        "responsable",
+    )
+
+    # 🧠 FILTRES
+    list_filter = (
+        "stage_valide",
+        "projet_valide",
+        "reponse_rdv",
+        "pays_naissance",
+        "date_debut",
+        "date_fin",
+    )
+
+    # ✏️ FORMULAIRE
+    fieldsets = (
+
+        ("👤 Informations stagiaire", {
+            "fields": (
+                "stagiaire",
+                "code_stagiaire",
+                "photo_preview",
+                "photo",
+            )
+        }),
+
+        ("📄 Documents", {
+            "fields": (
+                "cv",
+                "acte_naissance",
+            )
+        }),
+
+        ("🌍 Naissance", {
+            "fields": (
+                "date_naissance",
+                "lieu_naissance",
+                "pays_naissance",
+            )
+        }),
+
+        ("👨‍🏫 Responsable & Signature", {
+            "fields": (
+                 "responsable",
+
+        # ✍️ SIGNATURE
+               "signature_preview",
+                "signature_data",
+
+            # 💬 MESSAGERIE ADMIN → STAGIAIRE
+                "message_responsable",
+
+        # 💬 RÉPONSE ADMIN → STAGIAIRE (nouveau)
+                "reponse_admin",
+                "message_stagiaire",
+            )
+        }),
+
+        ("📅 Rendez-vous", {
+            "fields": (
+                "date_rdv",
+                "statut_rdv",
+                "reponse_rdv",
+            )
+        }),
+
+        ("📘 Projet", {
+            "fields": (
+                "titre_projet",
+                "projet_fichier",
+                "projet_valide",
+            )
+        }),
+
+        ("📄 Attestation", {
+            "fields": (
+                "stage_valide",
+                "attestation",
+                "voir_attestation",
+            )
+        }),
+
+        ("📅 Période du stage", {
+            "fields": (
+                "date_debut",
+                "date_fin",
+            )
+        }),
+    )
+
+    # 🔒 READONLY
+    readonly_fields = (
+        "code_stagiaire",
+        "attestation",
+        "voir_attestation",
+        "photo_preview",
+        "signature_preview",
+    )
+
+    # ⚡ ACTIONS
+    actions = ["valider_stage", "valider_projet"]
+
+    # 👁️ PHOTO
+    def photo_preview(self, obj):
+        if obj.photo:
+            return format_html(
+                '<img src="{}" width="80" style="border-radius:8px;" />',
+                obj.photo.url
+            )
+        return "Aucune photo"
+    photo_preview.short_description = "Aperçu photo"
+
+    # ✍️ SIGNATURE
+    def signature_preview(self, obj):
+        if obj.signature_data:
+            try:
+                return format_html(
+                    '<img src="{}" width="150" style="border:1px solid #ccc; border-radius:4px;" />',
+                    obj.signature_data
+                )
+            except:
+                return format_html("<span style='color:red;'>Erreur signature</span>")
+        return format_html("<span style='color:gray;'>Signature non définie</span>")
+    signature_preview.short_description = "Aperçu signature"
+
+    # 📄 VOIR PDF
+    def voir_attestation(self, obj):
+        if obj.attestation:
+            return format_html(
+                '<a class="button" href="{}" target="_blank">📄 Télécharger PDF</a>',
+                obj.attestation.url
+            )
+        return "Pas encore générée"
+    voir_attestation.short_description = "Attestation"
+
+    # 🔥 VALIDER STAGE
+    def valider_stage(self, request, queryset):
+        for profil in queryset:
+            profil.stage_valide = True
+
+            # ✅ IMPORTANT : auto date fin
+            if not profil.date_fin:
+                profil.date_fin = timezone.now().date()
+
+            # 🔁 regen PDF
+            profil.attestation = None
+            profil.save()
+
+        self.message_user(request, "✅ Stage validé + attestation générée")
+    valider_stage.short_description = "Valider stage + générer attestation"
+
+    # 🔥 VALIDER PROJET
+    def valider_projet(self, request, queryset):
+        queryset.update(projet_valide=True)
+        self.message_user(request, "📘 Projet validé")
+    valider_projet.short_description = "Valider projet"
+
+
+class CompteStagiaireAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'email', 'code_stagiaire', 'autorise', 'is_admin')
+    list_filter = ('autorise', 'is_admin')
+    search_fields = ('nom', 'email', 'code_stagiaire')
+    ordering = ('email',)
+
+    fieldsets = (
+        (None, {'fields': ('email', 'code_stagiaire', 'nom', 'password')}),
+        ('Permissions', {'fields': ('autorise', 'is_admin')}),
+    )
+
+admin.site.register(CompteStagiaire, CompteStagiaireAdmin)
+
+
+
+
+from django.contrib import admin
+from .models import Stagiairelogin
+
+
+@admin.register(Stagiairelogin)
+class StagiaireloginAdmin(admin.ModelAdmin):
+    list_display = ('email', 'accepte', 'refuse', 'date_creation')
+    list_filter = ('accepte', 'refuse')
+    search_fields = ('email',)
+
+    actions = ['accepter_demandes', 'refuser_demandes']
+
+    # ✅ ACTION : ACCEPTER
+    def accepter_demandes(self, request, queryset):
+        count = 0
+
+        for stagiaire in queryset:
+            # éviter double traitement
+            if not stagiaire.accepte and not stagiaire.refuse:
+                stagiaire.generer_code()  # 🔐 code
+                stagiaire.accepte = True
+                stagiaire.refuse = False
+                stagiaire.save()
+
+                # 📧 email
+                stagiaire.envoyer_email_acceptation()
+
+                count += 1
+
+        self.message_user(
+            request,
+            f"✅ {count} demande(s) acceptée(s) et email(s) envoyé(s)."
+        )
+
+    accepter_demandes.short_description = "✅ Accepter les demandes sélectionnées"
+
+    # ❌ ACTION : REFUSER
+    def refuser_demandes(self, request, queryset):
+        count = 0
+
+        for stagiaire in queryset:
+            # éviter double refus
+            if not stagiaire.refuse:
+                stagiaire.accepte = False
+                stagiaire.refuse = True
+                stagiaire.save()
+
+                # 📧 email
+                stagiaire.envoyer_email_refus()
+
+                count += 1
+
+        self.message_user(
+            request,
+            f"❌ {count} demande(s) refusée(s) et email(s) envoyé(s)."
+        )
+
+    refuser_demandes.short_description = "❌ Refuser les demandes sélectionnées"
+
+
+
+
+
+from .models import Devis
+
+
+@admin.register(Devis)
+class DevisAdmin(admin.ModelAdmin):
+
+    # Colonnes affichées dans la liste
+    list_display = ("nom", "email", "service", "type_projet", "date")
+
+    # Filtres à droite
+    list_filter = ("service", "date")
+
+    # Barre de recherche
+    search_fields = ("nom", "email", "type_projet", "description")
+
+    # Ordre
+    ordering = ("-date",)
+
+    # Champs en lecture seule
+    readonly_fields = ("date",)
+
+    # Organisation du formulaire admin
+    fieldsets = (
+        ("Informations client", {
+            "fields": ("nom", "email")
+        }),
+        ("Projet", {
+            "fields": ("service", "type_projet", "description", "fichier")
+        }),
+        ("Date", {
+            "fields": ("date",)
+        }),
+    )
+
+def fichier_link(self, obj):
+    if obj.fichier:
+        return f'<a href="{obj.fichier.url}" target="_blank">Voir fichier</a>'
+    return "-"
+fichier_link.allow_tags = True
+fichier_link.short_description = "Fichier"

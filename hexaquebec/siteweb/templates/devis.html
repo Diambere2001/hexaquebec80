@@ -1,0 +1,7 @@
+<select name="service" class="form-control" required>
+    <option value="">Choisir un service</option>
+    <option value="web" {% if service_selected == "web" %}selected{% endif %}>Développement Web</option>
+    <option value="mobile" {% if service_selected == "mobile" %}selected{% endif %}>Application Mobile</option>
+    <option value="ia" {% if service_selected == "ia" %}selected{% endif %}>Intelligence Artificielle</option>
+    <option value="maintenance" {% if service_selected == "maintenance" %}selected{% endif %}>Maintenance</option>
+</select>

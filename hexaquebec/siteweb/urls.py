@@ -72,6 +72,15 @@ urlpatterns = [
     path('ajouter/<int:produit_id>/', views.ajouter_au_panier, name='ajouter_au_panier'),
     path('supprimer/<int:item_id>/', views.supprimer_du_panier, name='supprimer_du_panier'),
     path('facture/pdf/<int:facture_id>/', views.fact_pdf, name='fact_pdf'),
+ 
+    path("stage/demande/", views.demande_stage, name="demande_stage"),
+    path("stagiaire/", views.login_stagiaire, name="login_stagiaire"),
+    path("stagiaire/dashboard/", views.dashboard_stagiaire, name="dashboard_stagiaire"),
+    path("stagiaire/logout/", views.logout_stagiaire, name="logout_stagiaire"),
+    path("espace/", views.space, name="space"),
+    path('carte-affaire/', views.carte_affaire_pdf, name='carte_affaire_pdf'),
+    path('devis/', views.devis_view, name="devis"),
+    path('devis/success/', views.devissucc, name='devissucc'),
 
 
     
