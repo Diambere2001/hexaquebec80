@@ -2,6 +2,9 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 
 
@@ -158,3 +161,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
+
+
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'Hexa',
+    'API_KEY': '823312244837413',
+    'API_SECRET': 'HiT-wxTXrsUw8c6IScLzlBmc4_c',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
