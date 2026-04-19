@@ -329,6 +329,90 @@ footer .service-card:hover i { transform: scale(1.3) rotate(5deg); text-shadow: 
         padding: 40px 15px;
     }
 }
+
+
+
+.container-choices {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+/* CARD */
+.choice {
+    background: rgba(0,0,0,0.08);
+    padding: 40px 25px;
+    border-radius: 15px;
+    text-align: center;
+    width: 280px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.choice:hover {
+    transform: translateY(-5px);
+}
+
+/* ICON */
+.icon-choice {
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: #0d6efd;
+}
+
+/* BUTTONS */
+.btn-access {
+    display: block;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 25px;
+    background: #0d6efd;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-access:hover {
+    background: #0a58ca;
+}
+
+.btn-cancel {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #6c757d;
+    text-decoration: none;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+
+    .container-choices {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .choice {
+        width: 90%;
+        padding: 30px 20px;
+    }
+
+    .icon-choice {
+        font-size: 60px; /* plus grand mobile */
+    }
+
+    .btn-access {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-cancel {
+        font-size: 15px;
+    }
+}
 </style>
 </head>
 <body>
@@ -359,18 +443,21 @@ footer .service-card:hover i { transform: scale(1.3) rotate(5deg); text-shadow: 
 
 </header>
 <div class="container-choices">
+
     <div class="choice" data-tilt>
-        <i class="fas fa-user-graduate fa-3x mb-3"></i>
+        <i class="fas fa-user-graduate icon-choice"></i>
         <h4>Espace Stagiaire</h4>
-        <a href="{% url 'login_stagiaire' %}">Accéder</a>
-         <a href="/" class="btn-cancel">Annuler</a>
+        <a href="{% url 'login_stagiaire' %}" class="btn-access">Accéder</a>
+        <a href="/" class="btn-cancel">Annuler</a>
     </div>
+
     <div class="choice" data-tilt>
-        <i class="fas fa-user-tie fa-3x mb-3"></i>
+        <i class="fas fa-user-tie icon-choice"></i>
         <h4>Espace Client</h4>
-        <a href="{% url 'client_login' %}">Accéder</a>
-         <a href="/" class="btn-cancel">Annuler</a>
+        <a href="{% url 'client_login' %}" class="btn-access">Accéder</a>
+        <a href="/" class="btn-cancel">Annuler</a>
     </div>
+
 </div>
 
 <footer class="footer-animated">

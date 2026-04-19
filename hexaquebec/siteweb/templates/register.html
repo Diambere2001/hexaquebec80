@@ -180,6 +180,16 @@ body{
         font-size: 0.75rem;
     }
 }
+.home-icon {
+    color: #6c757d;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.home-icon:hover {
+    color: #0d6efd;
+    transform: scale(1.2);
+}
 </style>
 </head>
 
@@ -214,22 +224,22 @@ body{
 
 <div class="mb-3">
     <label class="form-label">Nom de l’entreprise</label>
-    <input type="text" name="entreprise" class="form-control" placeholder="Ex: HexaQuébec" required>
+    <input type="text" name="entreprise" class="form-control" placeholder="" required>
 </div>
 
 <div class="mb-3">
     <label class="form-label">Personne contact</label>
-    <input type="text" name="nom" class="form-control" placeholder="Ex: Abdoulaye Kamara" required>
+    <input type="text" name="nom" class="form-control" placeholder="" required>
 </div>
 
 <div class="mb-3">
     <label class="form-label">Adresse complète</label>
-    <input type="text" name="adresse" class="form-control" placeholder="Ex: Montréal, Canada" required>
+    <input type="text" name="adresse" class="form-control" placeholder="" required>
 </div>
 
 <div class="mb-3">
     <label class="form-label">Courriel</label>
-    <input type="email" name="email" class="form-control" placeholder="Ex: contact@email.com" required>
+    <input type="email" name="email" class="form-control" placeholder="" required>
 </div>
 
 <div class="mt-4">
@@ -239,8 +249,16 @@ body{
 </div>
 
 <p class="text-center mt-3 login-link">
+
+    <a href="{% url 'home' %}" class="home-icon me-2" title="Accueil">
+        <i class="fas fa-home"></i>
+    </a>
+
     Déjà un compte ?
-    <a href="{% url 'client_login' %}">Se connecter</a>
+    <a href="{% url 'client_login' %}">
+        <i class="fas fa-sign-in-alt me-1"></i> Se connecter
+    </a>
+
 </p>
 
 </form>
