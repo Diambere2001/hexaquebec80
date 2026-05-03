@@ -353,25 +353,61 @@ class Affiche(models.Model):
 
 class Facture(models.Model):
 
-    numero = models.CharField(max_length=20, unique=True)
+    numero = models.CharField(max_length=20, unique=True, blank=True)
 
     vendeur_nom = models.CharField(max_length=200)
     acheteur_nom = models.CharField(max_length=200)
 
-    produit = models.CharField(max_length=200)
-
-    prix = models.DecimalField(max_digits=10, decimal_places=2)
+    # ✅ NOUVEAU : adresse client
+    adresse_client = models.CharField(max_length=255)
+    ville_client = models.CharField(max_length=100)
+    code_postal_client = models.CharField(max_length=20)
+    pays_client = models.CharField(max_length=100, default="Canada")
 
     date = models.DateField()
 
-    
     signature_vendeur = models.TextField(blank=True, null=True) 
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if not self.numero:
+            last_facture = Facture.objects.order_by('-id').first()
+
+            if last_facture:
+                last_num = int(last_facture.numero.split('-')[1])
+                new_num = last_num + 1
+            else:
+                new_num = 1
+
+            self.numero = f"HEX-{new_num:04d}"
+
+        super().save(*args, **kwargs)
+
+    def total_facture(self):
+        return sum(ligne.total() for ligne in self.lignes.all())
+
     def __str__(self):
         return self.numero
     
+    
+class LigneFacture(models.Model):
+    facture = models.ForeignKey(
+        Facture,
+        on_delete=models.CASCADE,
+        related_name='lignes'
+    )
+
+    produit = models.CharField(max_length=200)
+    quantite = models.PositiveIntegerField(default=1)
+    prix_unitaire = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def total(self):
+        return self.quantite * self.prix_unitaire
+
+    def __str__(self):
+        return f"{self.produit} x{self.quantite}"
+
 
 
 
@@ -849,3 +885,14 @@ class Devis(models.Model):
 
     def __str__(self):
         return self.nom
+
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_id = models.CharField(max_length=255)
+    status = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+

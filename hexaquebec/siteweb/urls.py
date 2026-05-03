@@ -81,6 +81,13 @@ urlpatterns = [
     path('carte-affaire/', views.carte_affaire_pdf, name='carte_affaire_pdf'),
     path('devis/', views.devis_view, name="devis"),
     path('devis/success/', views.devissucc, name='devissucc'),
+    path('paiement/client/', views.paiement_client_view, name='paiement_client'),
+    path('paiement/success/client/', views.payment_successclient, name='payment_successclient'),
+    path("paypal/checkout/", views.paypal_checkout_view, name="paypal_checkout"),
+    path("paypal/payment/", views.paypal_payment_view, name="paypal_payment"),
+    path("paypal/success/", views.paypal_success_view, name="paypal_success"),
+    path("paypal/error/", views.paypal_error_view, name="paypal_error"),
+    path("paypal/verify/", views.paypal_verify, name="paypal_verify"),
 
 
     

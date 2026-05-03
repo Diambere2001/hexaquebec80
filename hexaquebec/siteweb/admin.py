@@ -670,3 +670,87 @@ def fichier_link(self, obj):
     return "-"
 fichier_link.allow_tags = True
 fichier_link.short_description = "Fichier"
+
+
+
+
+from .models import Payment
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'amount', 'transaction_id', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('user__username', 'transaction_id')
+    ordering = ('-created_at',)
+
+
+
+
+from django.contrib import admin
+from .models import Facture, LigneFacture
+
+
+# 👉 Afficher les lignes directement dans la facture
+class LigneFactureInline(admin.TabularInline):
+    model = LigneFacture
+    extra = 1  # nombre de lignes vides affichées
+    fields = ('produit', 'quantite', 'prix_unitaire')
+    readonly_fields = ()
+    show_change_link = True
+
+
+
+
+# 👉 Inline des lignes de facture
+class LigneFactureInline(admin.TabularInline):
+    model = LigneFacture
+    extra = 1
+    fields = ('produit', 'quantite', 'prix_unitaire')
+    show_change_link = True
+
+
+# 👉 Admin Facture corrigé
+@admin.register(Facture)
+class FactureAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'numero',
+        'vendeur_nom',
+        'acheteur_nom',
+        'date',
+        'created_at',
+        'total_facture_display'
+    )
+
+    search_fields = (
+        'numero',
+        'vendeur_nom',
+        'acheteur_nom'
+    )
+
+    list_filter = (
+        'date',
+        'created_at'
+    )
+
+    ordering = ('-created_at',)
+
+    inlines = [LigneFactureInline]
+
+    readonly_fields = (
+        'numero',
+        'created_at'
+    )
+
+    # 👉 afficher le total dans l'admin
+    def total_facture_display(self, obj):
+        return obj.total_facture()
+
+    total_facture_display.short_description = "Total facture"
+
+
+# 👉 Admin LigneFacture (optionnel mais utile)
+@admin.register(LigneFacture)
+class LigneFactureAdmin(admin.ModelAdmin):
+    list_display = ('facture', 'produit', 'quantite', 'prix_unitaire')
+    search_fields = ('produit',)

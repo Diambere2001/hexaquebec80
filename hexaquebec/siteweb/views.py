@@ -733,7 +733,7 @@ def dashboard_hexa(request):
 
     # Données pour Chart.js
     factures_labels = [f.date.strftime('%b %Y') for f in factures]
-    factures_data = [float(f.prix) for f in factures]
+    factures_data = [float(f.total_facture()) for f in factures]
 
     return render(request, "dashboard_hexa.html", {
         "messages": messages_clients,
@@ -1125,6 +1125,10 @@ def generer_numero():
 
     return f"HEXA-{number:04d}"
 
+from django.shortcuts import render, redirect
+from .models import Facture, LigneFacture
+from decimal import Decimal
+
 
 def creer_facture(request):
 
@@ -1132,46 +1136,60 @@ def creer_facture(request):
 
         vendeur = request.POST.get("vendeur")
         acheteur = request.POST.get("acheteur")
-        produit = request.POST.get("produit")
-        prix = request.POST.get("prix")
+
+        # 👉 adresse client (AJOUT IMPORTANT)
+        adresse = request.POST.get("adresse_client")
+        ville = request.POST.get("ville_client")
+        code_postal = request.POST.get("code_postal_client")
+        pays = request.POST.get("pays_client")
+
         date = request.POST.get("date")
         signature = request.POST.get("signature")
 
-        # compter les factures existantes
-        total = Facture.objects.count() + 1
-
-        numero_facture = f"HEX-{total}"
-
+        # 👉 création facture (numéro automatique dans model.save)
         facture = Facture.objects.create(
-            numero=numero_facture,
             vendeur_nom=vendeur,
             acheteur_nom=acheteur,
-            produit=produit,
-            prix=prix,
+            adresse_client=adresse,
+            ville_client=ville,
+            code_postal_client=code_postal,
+            pays_client=pays,
             date=date,
             signature_vendeur=signature
         )
+
+        # 👉 produits multiples
+        produits = request.POST.getlist("produit[]")
+        quantites = request.POST.getlist("quantite[]")
+        prix = request.POST.getlist("prix_unitaire[]")
+
+        for p, q, pr in zip(produits, quantites, prix):
+
+            LigneFacture.objects.create(
+                facture=facture,
+                produit=p,
+                quantite=int(q),
+                prix_unitaire=Decimal(pr)
+            )
 
         return redirect("facture_detail", id=facture.id)
 
     return render(request, "facture_form.html")
 
-
-
-import qrcode
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from decimal import Decimal
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import HexColor
 from reportlab.lib.utils import ImageReader
-from .models import Facture
 import base64
 from io import BytesIO
 
 
 def fact_pdf(request, facture_id):
 
-    facture = Facture.objects.get(id=facture_id)
+    facture = get_object_or_404(Facture, id=facture_id)
 
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="facture_{facture.numero}.pdf"'
@@ -1184,134 +1202,107 @@ def fact_pdf(request, facture_id):
     # ======================
     p.setFillColor(HexColor("#2c3e50"))
     p.setFont("Helvetica-Bold", 24)
-    p.drawString(40, height-50, "HexaQuebec")
+    p.drawString(40, height - 50, "HexaQuébec")
 
     p.setFont("Helvetica-Bold", 18)
-    p.drawRightString(width-40, height-50, f"FACTURE #{facture.numero}")
+    p.drawRightString(width - 40, height - 50, f"FACTURE #{facture.numero}")
 
-    p.line(40, height-60, width-40, height-60)
-
-    # ======================
-    # INFO ENTREPRISE
-    # ======================
-    y_info = height - 90
-    p.setFont("Helvetica", 10)
-
-    p.drawString(40, y_info, "HexaQuebec")
-    p.drawString(40, y_info-15, "Entreprise de développement Web et Mobile")
-    p.drawString(40, y_info-30, "Services informatiques professionnels")
-    p.drawString(40, y_info-45, "Maintenance et support technique")
-    p.drawString(40, y_info-60, "Saguenay, Québec, Canada")
+    p.line(40, height - 60, width - 40, height - 60)
 
     # ======================
-    # DESCRIPTION
+    # ADRESSES
     # ======================
-    y_desc = y_info - 90
-    line = 15
+    y = height - 100
+
+    # ENTREPRISE
+    p.setFont("Helvetica-Bold", 11)
+    p.drawString(40, y, "HexaQuébec")
 
     p.setFont("Helvetica", 10)
+    p.drawString(40, y - 15, "2186 Rue Roussel")
+    p.drawString(40, y - 30, "Chicoutimi, QC G7G 1W6")
+    p.drawString(40, y - 45, "Canada")
+    p.drawString(40, y - 60, "hexaquebec80@gmail.com")
 
-    p.drawString(40, y_desc,
-        "Cette facture est établie dans le cadre d'une transaction commerciale.")
-
-    p.drawString(40, y_desc-line,
-        "Elle peut concerner l'achat d'un produit ou d'un service professionnel.")
-
-    p.drawString(40, y_desc-line*2,
-        "Tous les produits sont vérifiés avant livraison pour garantir leur qualité.")
-
-    p.drawString(40, y_desc-line*3,
-        "Services possibles :")
-
-    p.drawString(60, y_desc-line*4,
-        "- Vente ou achat de matériel informatique")
-
-    p.drawString(60, y_desc-line*5,
-        "- Développement de site web ou application mobile")
-
-    p.drawString(60, y_desc-line*6,
-        "- Maintenance et support technique")
-
-    p.drawString(40, y_desc-line*7,
-        "TPS (5%) et TVQ (9,975%) appliquées selon la loi du Québec.")
-
-    # ======================
-    # CLIENT / VENDEUR
-    # ======================
-    client_y = y_desc - 130
-
+    # CLIENT
     p.setFont("Helvetica-Bold", 11)
-    p.drawString(40, client_y, "Facturé à :")
+    p.drawString(width / 2, y, "Facturé à :")
 
-    p.setFont("Helvetica", 11)
-    p.drawString(40, client_y-15, facture.acheteur_nom)
+    p.setFont("Helvetica", 10)
+    p.drawString(width / 2, y - 15, facture.acheteur_nom)
+    p.drawString(width / 2, y - 30, facture.adresse_client)
+    p.drawString(width / 2, y - 45,
+                 f"{facture.ville_client} - {facture.code_postal_client}")
+    p.drawString(width / 2, y - 60, facture.pays_client)
 
+    # VENDEUR + DATE
     p.setFont("Helvetica-Bold", 11)
-    p.drawString(width/2, client_y, "Vendeur :")
+    p.drawString(width / 2, y - 85, "Vendeur :")
 
-    p.setFont("Helvetica", 11)
-    p.drawString(width/2, client_y-15, facture.vendeur_nom)
-
-    p.drawString(width/2, client_y-35, f"Date : {facture.date}")
+    p.setFont("Helvetica", 10)
+    p.drawString(width / 2, y - 100, facture.vendeur_nom)
+    p.drawString(width / 2, y - 115, f"Date : {facture.date}")
 
     # ======================
-    # TABLE
+    # TABLE HEADER
     # ======================
-    table_y = client_y - 70
+    table_y = y - 150
 
     p.setFillColor(HexColor("#2c3e50"))
-    p.rect(40, table_y, width-80, 25, fill=1)
+    p.rect(40, table_y, width - 80, 25, fill=1)
 
     p.setFillColor("white")
     p.setFont("Helvetica-Bold", 11)
 
-    p.drawString(50, table_y+7, "Description")
-    p.drawString(300, table_y+7, "Qté")
-    p.drawString(380, table_y+7, "Prix")
-    p.drawString(460, table_y+7, "Total")
+    p.drawString(50, table_y + 7, "Produit")
+    p.drawString(300, table_y + 7, "Qté")
+    p.drawString(380, table_y + 7, "Prix")
+    p.drawString(460, table_y + 7, "Total")
 
-    # PRODUIT
+    # ======================
+    # LIGNES PRODUITS
+    # ======================
     p.setFillColor("black")
     p.setFont("Helvetica", 11)
 
     y = table_y - 25
+    subtotal = Decimal("0.00")
 
-    p.drawString(50, y, facture.produit)
-    p.drawString(300, y, "1")
-    p.drawString(380, y, f"{facture.prix} $")
-    p.drawString(460, y, f"{facture.prix} $")
+    for ligne in facture.lignes.all():
 
-    p.line(40, y-10, width-40, y-10)
+        total_ligne = Decimal(str(ligne.total()))
+        subtotal += total_ligne
+
+        p.drawString(50, y, str(ligne.produit))
+        p.drawString(300, y, str(ligne.quantite))
+        p.drawString(380, y, f"{ligne.prix_unitaire} $")
+        p.drawString(460, y, f"{total_ligne:.2f} $")
+
+        y -= 20
 
     # ======================
-    # TOTAL + TAXES QC
+    # TAXES (CORRIGÉ)
     # ======================
-    subtotal = float(facture.prix)
+    tps = subtotal * Decimal("0.05")
+    tvq = subtotal * Decimal("0.09975")
+    total = subtotal + tps + tvq
 
-    tps = subtotal * 0.05
-    tvq = subtotal * 0.09975
-    taxes = tps + tvq
-    total = subtotal + taxes
-
-    total_y = y - 60
+    total_y = y - 40
 
     p.setFont("Helvetica", 11)
 
-    p.drawRightString(width-150, total_y, "Sous-total :")
-    p.drawRightString(width-40, total_y, f"{subtotal:.2f} $")
+    p.drawRightString(width - 150, total_y, "Sous-total :")
+    p.drawRightString(width - 40, total_y, f"{subtotal:.2f} $")
 
-    p.drawRightString(width-150, total_y-18, "TPS (5%) :")
-    p.drawRightString(width-40, total_y-18, f"{tps:.2f} $")
+    p.drawRightString(width - 150, total_y - 18, "TPS (5%) :")
+    p.drawRightString(width - 40, total_y - 18, f"{tps:.2f} $")
 
-    p.drawRightString(width-150, total_y-36, "TVQ (9.975%) :")
-    p.drawRightString(width-40, total_y-36, f"{tvq:.2f} $")
-
-    p.drawRightString(width-150, total_y-54, "Taxes :")
-    p.drawRightString(width-40, total_y-54, f"{taxes:.2f} $")
+    p.drawRightString(width - 150, total_y - 36, "TVQ (9.975%) :")
+    p.drawRightString(width - 40, total_y - 36, f"{tvq:.2f} $")
 
     p.setFont("Helvetica-Bold", 14)
-    p.drawRightString(width-150, total_y-80, "TOTAL :")
-    p.drawRightString(width-40, total_y-80, f"{total:.2f} $")
+    p.drawRightString(width - 150, total_y - 70, "TOTAL :")
+    p.drawRightString(width - 40, total_y - 70, f"{total:.2f} $")
 
     # ======================
     # SIGNATURE
@@ -1322,86 +1313,128 @@ def fact_pdf(request, facture_id):
     signature = facture.signature_vendeur
 
     if signature and "base64" in signature:
-        _, imgstr = signature.split(';base64,')
+        _, imgstr = signature.split(";base64,")
         img_data = base64.b64decode(imgstr)
         image = ImageReader(BytesIO(img_data))
 
-        p.drawImage(
-            image,
-            120,
-            total_y - 110,
-            width=150,
-            height=50,
-            mask='auto'
-        )
+        p.drawImage(image, 120, total_y - 110,
+                    width=150, height=50, mask="auto")
 
     # ======================
     # FOOTER
     # ======================
-    p.line(40, 120, width-40, 120)
+    p.line(40, 120, width - 40, 120)
 
     p.setFont("Helvetica-Bold", 10)
-    p.drawString(40, 100, "Facture officielle - HexaQuebec")
+    p.drawString(40, 90, "FACTURE OFFICIELLE - HexaQuébec")
 
     p.setFont("Helvetica", 9)
-    p.drawString(40, 80, "HexaQuebec - Solutions numériques professionnelles")
-    p.drawString(40, 65, "Web | Mobile | Maintenance informatique")
-    p.drawString(40, 50, "Canada - Québec")
+    p.drawString(40, 75, "Développement Web | Mobile | IA | Design | Infographie")
+    p.drawString(40, 60, "Vente de services informatiques | Maintenance ordinateur")
+    p.drawString(40, 45, "Canada - Québec")
 
     p.showPage()
     p.save()
 
     return response
 
+
+
+from django.shortcuts import render, get_object_or_404
+from decimal import Decimal
+
 def facture_detail(request, id):
     facture = get_object_or_404(Facture, id=id)
-    
+    lignes = facture.lignes.all()
+
+    subtotal = Decimal(str(facture.total_facture()))
+
+    tps = subtotal * Decimal("0.05")
+    tvq = subtotal * Decimal("0.09975")
+    total = subtotal + tps + tvq
+
     context = {
-        "facture": facture
+        "facture": facture,
+        "lignes": lignes,
+        "subtotal": subtotal,
+        "tps": tps,
+        "tvq": tvq,
+        "total": total
     }
-    
+
     return render(request, "facture_detail.html", context)
 
 
 def facture_list(request):
-    # Récupérer toutes les factures ou celles liées à l'utilisateur
-    factures = Facture.objects.all()
-    return render(request, "facture_list.html", {"factures": factures})
+    factures = Facture.objects.all().order_by('-created_at')
 
+    return render(request, "facture_list.html", {
+        "factures": factures
+    })
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from decimal import Decimal
 
 def facture_edit(request, id):
 
-    facture = Facture.objects.get(id=id)
+    facture = get_object_or_404(Facture, id=id)
 
     if request.method == "POST":
+
+        # ======================
+        # INFO FACTURE
+        # ======================
         facture.vendeur_nom = request.POST.get("vendeur_nom")
         facture.acheteur_nom = request.POST.get("acheteur_nom")
-        facture.produit = request.POST.get("produit")
-        facture.prix = request.POST.get("prix")
         facture.date = request.POST.get("date")
+        facture.signature_vendeur = request.POST.get("signature_vendeur")
+
+        facture.adresse_client = request.POST.get("adresse_client")
+        facture.ville_client = request.POST.get("ville_client")
+        facture.code_postal_client = request.POST.get("code_postal_client")
+        facture.pays_client = request.POST.get("pays_client")
 
         facture.save()
 
-        return redirect("facture_list")
+        # ======================
+        # PRODUITS (LIGNES)
+        # ======================
+        for ligne in facture.lignes.all():
 
-    return render(request,"facture_edit.html",{"facture":facture})
+            produit = request.POST.get(f"produit_{ligne.id}")
+            quantite = request.POST.get(f"quantite_{ligne.id}")
+            prix = request.POST.get(f"prix_{ligne.id}")
 
+            if produit and quantite and prix:
+                ligne.produit = produit
+                ligne.quantite = int(quantite)
+                ligne.prix_unitaire = Decimal(prix)
+                ligne.save()
+
+        return redirect("facture_detail", id=facture.id)
+
+    return render(request, "facture_edit.html", {
+        "facture": facture,
+        "lignes": facture.lignes.all()
+    })
+
+
+
+from django.contrib import messages
+from django.shortcuts import redirect
 
 @login_required
 def facture_delete(request, facture_id):
-    # Vérifie si la facture existe
-    try:
-        facture = Facture.objects.get(id=facture_id)
-    except Facture.DoesNotExist:
-        messages.error(request, "Cette facture n'existe pas.")
-        return redirect('facture_list')  # ou dashboard
+
+    facture = get_object_or_404(Facture, id=facture_id)
 
     if request.method == "POST":
         facture.delete()
         messages.success(request, "Facture supprimée avec succès !")
-    return redirect('facture_list')  # ou dashboard
 
-
+    return redirect('facture_list')
 
 def add_to_cart(request, product_id):
 
@@ -2304,3 +2337,128 @@ def devis_view(request):
 
 def devissucc(request):
     return render(request, 'devissucc.html')
+
+
+import json
+from django.http import JsonResponse
+from .models import Payment
+
+@login_required
+def payment_successclient(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        Payment.objects.create(
+            client=request.user.client,
+            amount=request.session.get("payment_amount", 0),
+            paypal_order_id=data["orderID"],
+            status="paid"
+        )
+
+        return JsonResponse({"status": "ok"})
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+@login_required
+def paiement_client_view(request):
+    if request.method == "POST":
+        amount = request.POST.get("amount")
+
+        if not amount:
+            return redirect("payment_form")
+
+        request.session['payment_amount'] = amount
+
+        return render(request, "payment_page.html", {
+            "amount": amount
+        })
+
+    return render(request, "payment_form.html")
+
+
+
+
+
+@login_required
+def paypal_checkout_view(request):
+    return render(request, "paypal_checkout.html")
+
+
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def paypal_payment_view(request):
+    if request.method == "POST":
+        amount = request.POST.get("amount")
+
+        # 🔐 validation sécurité
+        if not amount:
+            return redirect("paypal_checkout")
+
+        try:
+            amount = float(amount)
+        except ValueError:
+            return redirect("paypal_checkout")
+
+        if amount <= 0:
+            return redirect("paypal_checkout")
+
+        # 💾 session sécurisée
+        request.session["paypal_amount"] = str(amount)
+
+        return render(request, "paypal_payment.html", {
+            "amount": amount
+        })
+
+    return redirect("paypal_checkout")
+
+
+
+@login_required
+def paypal_success_view(request):
+    amount = request.session.get("paypal_amount")
+
+    return render(request, "paypal_success.html", {
+        "amount": amount
+    })
+
+def paypal_error_view(request):
+    return render(request, "paypal_error.html")
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from .models import Payment
+
+@csrf_exempt
+@login_required
+def paypal_verify(request):
+
+    data = json.loads(request.body)
+
+    status = data.get("status")
+    transaction_id = data.get("transaction_id")
+    amount = data.get("amount")
+
+    # ✅ Enregistrer en base (TOUJOURS)
+    payment = Payment.objects.create(
+        user=request.user,
+        amount=amount,
+        transaction_id=transaction_id,
+        status=status
+    )
+
+    # ✅ LOGIQUE CORRECTE
+    if status == "COMPLETED":
+        return JsonResponse({"ok": True})
+    else:
+        return JsonResponse({
+            "ok": False,
+            "status": status
+        })

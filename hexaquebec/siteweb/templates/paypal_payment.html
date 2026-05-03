@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Paiement PayPal | HexaQuébec</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#0b132b;
+    --card:rgba(255,255,255,0.06);
+    --accent:#c6a87d;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+}
+
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(-45deg,#0b132b,#1c2541,#3a506b,#0b132b);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
+    color:var(--text);
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* CARD */
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.card{
+    background:var(--card);
+    backdrop-filter: blur(12px);
+    border-radius:18px;
+    padding:40px;
+    width:100%;
+    max-width:420px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    transition:0.4s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+h2{
+    color:var(--accent);
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+/* AMOUNT BOX */
+.amount-box{
+    background:rgba(255,255,255,0.08);
+    padding:10px;
+    border-radius:12px;
+    margin-bottom:20px;
+    font-weight:600;
+}
+
+/* ERROR */
+#error-box{
+    color:#ff5c5c;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+/* PAYPAL AREA */
+#paypal-button-container{
+    margin-top:15px;
+}
+
+/* ICON */
+.icon{
+    font-size:40px;
+    color:var(--accent);
+    margin-bottom:10px;
+}
+
+/* CANCEL */
+.cancel{
+    display:block;
+    margin-top:15px;
+    text-decoration:none;
+    color:var(--muted);
+    font-size:13px;
+    transition:0.3s;
+}
+
+.cancel:hover{
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+    <div class="icon">
+        <i class="fab fa-paypal"></i>
+    </div>
+
+    <h2>Confirmer paiement</h2>
+    <p class="subtitle">Paiement sécurisé via PayPal</p>
+
+    <div class="amount-box">
+        💰 {{ amount }} CAD
+    </div>
+
+    <div id="error-box"></div>
+
+    <div id="paypal-button-container"></div>
+
+    <a href="{% url 'paypal_checkout' %}" class="cancel">
+        Annuler et revenir
+    </a>
+
+</div>
+
+</div>
+
+<!-- PAYPAL SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AfuQmb2HuvTnj6E3GJeM2xVo6rgLegRW8aZoXIwt_amX919KEnOztri5sE7blqK_fJUZoJobzQoRvPym&currency=CAD"></script>
+<script>
+const amount = parseFloat("{{ amount|default:'0' }}");
+const errorBox = document.getElementById("error-box");
+
+if (!amount || amount <= 0) {
+    errorBox.innerHTML = "❌ Montant invalide";
+} else {
+
+    paypal.Buttons({
+
+        // 🧾 CREATION COMMANDE
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: amount.toString()
+                    }
+                }]
+            });
+        },
+
+        // ✅ CLIENT APPROUVE (mais pas encore validé backend)
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+
+                console.log("PayPal details:", details);
+
+                const status = details.status; // IMPORTANT
+                const transactionId = details.id;
+
+                // 🔐 ENVOI AU BACKEND DJANGO
+                fetch("{% url 'paypal_verify' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({
+                        status: status,
+                        transaction_id: transactionId,
+                        amount: amount
+                    })
+                })
+                .then(res => res.json())
+                .then(response => {
+
+                    console.log("Backend response:", response);
+
+                    // ✅ REDIRECTION SELON BACKEND (PAS FRONT)
+                    if (response.ok === true) {
+                        window.location.href = "{% url 'paypal_success' %}";
+                    } else {
+                        window.location.href = "{% url 'paypal_error' %}";
+                    }
+
+                })
+                .catch(err => {
+                    console.error("Fetch error:", err);
+                    window.location.href = "{% url 'paypal_error' %}";
+                });
+
+            });
+        },
+
+        // ❌ UTILISATEUR ANNULE
+        onCancel: function () {
+
+            fetch("{% url 'paypal_verify' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    status: "CANCELLED",
+                    transaction_id: "N/A",
+                    amount: amount
+                })
+            });
+
+            window.location.href = "{% url 'paypal_checkout' %}";
+        },
+
+        // ❌ ERREUR PAYPAL
+        onError: function (err) {
+            console.error("PayPal error:", err);
+
+            fetch("{% url 'paypal_verify' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    status: "FAILED",
+                    transaction_id: "ERROR",
+                    amount: amount
+                })
+            });
+
+            errorBox.innerHTML = "❌ Erreur PayPal";
+        }
+
+    }).render('#paypal-button-container');
+}
+</script>
+</body>
+</html>

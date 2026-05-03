@@ -7,7 +7,7 @@
 <style>
 
 body{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial;
     margin:40px;
     color:#333;
 }
@@ -21,23 +21,20 @@ body{
 }
 
 .logo{
-    font-size:28px;
+    font-size:26px;
     font-weight:bold;
     color:#2c3e50;
 }
 
 .facture-title{
-    font-size:26px;
+    font-size:22px;
     font-weight:bold;
+    text-align:right;
 }
 
-.company-info{
-    margin-top:10px;
+.info{
+    margin-top:20px;
     font-size:14px;
-}
-
-.client-info{
-    margin-top:30px;
 }
 
 table{
@@ -50,7 +47,6 @@ table th{
     background:#2c3e50;
     color:white;
     padding:10px;
-    text-align:left;
 }
 
 table td{
@@ -60,34 +56,35 @@ table td{
 
 .total{
     margin-top:20px;
-    width:300px;
+    width:320px;
     float:right;
 }
 
 .total td{
-    padding:10px;
+    padding:8px;
 }
 
-.total .price{
-    font-weight:bold;
+.grand{
     font-size:18px;
+    font-weight:bold;
+}
+
+.signature{
+    margin-top:60px;
 }
 
 .footer{
     margin-top:80px;
-    border-top:2px solid #eee;
-    padding-top:20px;
-    font-size:13px;
-}
-
-.signature{
-    margin-top:50px;
-}
-
-.pub{
-    margin-top:30px;
-    font-size:13px;
+    border-top:1px solid #ccc;
+    padding-top:15px;
+    font-size:12px;
     color:#555;
+}
+
+.company-services{
+    margin-top:10px;
+    font-size:12px;
+    color:#444;
 }
 
 </style>
@@ -95,132 +92,139 @@ table td{
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
 
-<div class="logo">
-HexaQuebec
-</div>
+    <div class="logo">
+        HexaQuebec
+    </div>
 
-<div class="facture-title">
-FACTURE
-<br>
-N° {{ facture.numero }}
-</div>
-
-</div>
-
-
-<div class="company-info">
-
-<b>HexaQuebec</b><br>
-Entreprise de développement Web et Mobile<br>
-Vente de services informatiques<br>
-Maintenance et réparation d'ordinateurs<br>
-Adresse : Québec, Canada<br>
-Email : hexaquebec80@gmail.com
+    <div class="facture-title">
+        FACTURE<br>
+        #{{ facture.numero }}
+    </div>
 
 </div>
 
-
-<div class="client-info">
-
-<b>Facturé à :</b><br>
-{{ facture.acheteur_nom }}
-
-<br><br>
-
-<b>Vendeur :</b><br>
-{{ facture.vendeur_nom }}
-
-<br><br>
-
-<b>Date :</b> {{ facture.date }}
-
+<!-- ENTREPRISE -->
+<div class="info">
+    <b>HexaQuebec</b><br>
+    2186 Rue Roussel, Chicoutimi, QC G7G 1W6<br>
+    Canada<br>
+    hexaquebec80@gmail.com
 </div>
 
+<!-- SERVICES ENTREPRISE -->
+<div class="company-services">
+<b>Services :</b><br>
+Développement Web • Développement Mobile • Intégration IA • Design UI/UX • Infographie • Vente de services informatiques • Maintenance ordinateur
+</div>
 
+<!-- CLIENT -->
+<div class="info">
+    <b>Facturé à :</b><br>
+    {{ facture.acheteur_nom }}<br>
+    {{ facture.adresse_client }}<br>
+    {{ facture.ville_client }} - {{ facture.code_postal_client }}<br>
+    {{ facture.pays_client }}
+</div>
+
+<!-- FACTURE INFO -->
+<div class="info">
+    <b>Vendeur :</b> {{ facture.vendeur_nom }}<br>
+    <b>Date :</b> {{ facture.date }}
+</div>
+
+<!-- TABLE PRODUITS -->
 <table>
-
 <thead>
-
 <tr>
-<th>Description</th>
-<th>Quantité</th>
-<th>Prix Unitaire</th>
-<th>Total</th>
+    <th>Produit</th>
+    <th>Qté</th>
+    <th>Prix Unitaire</th>
+    <th>Total</th>
 </tr>
-
 </thead>
 
 <tbody>
 
+{% for ligne in facture.lignes.all %}
 <tr>
-<td>{{ facture.produit }}</td>
-<td>1</td>
-<td>{{ facture.prix }} $</td>
-<td>{{ facture.prix }} $</td>
+    <td>{{ ligne.produit }}</td>
+    <td>{{ ligne.quantite }}</td>
+    <td>{{ ligne.prix_unitaire }} $</td>
+    <td>{{ ligne.total }} $</td>
 </tr>
+{% endfor %}
 
 </tbody>
+</table>
+
+<!-- TOTAL + TAXES -->
+{% with subtotal=facture.total_facture %}
+{% with tps=subtotal|floatformat:2|add:"0" %}
+{% with tvq=subtotal|floatformat:2|add:"0" %}
+
+<div class="total">
+
+<table>
+
+<tr>
+  <td>Sous-total</td>
+  <td>{{ subtotal|floatformat:2 }} $</td>
+</tr>
+
+<tr>
+  <td>TPS (5%)</td>
+  <td>{{ tps|floatformat:2 }} $</td>
+</tr>
+
+<tr>
+  <td>TVQ (9.975%)</td>
+  <td>{{ tvq|floatformat:2 }} $</td>
+</tr>
+
+<tr>
+  <td><b>Total</b></td>
+  <td><b>{{ total|floatformat:2 }} $</b></td>
+</tr>
 
 </table>
 
-
-<table class="total">
-
-<tr>
-<td>Sous-total</td>
-<td>{{ facture.prix }} $</td>
-</tr>
-
-<tr>
-<td>Taxes</td>
-<td>0 $</td>
-</tr>
-
-<tr class="price">
-<td>Total</td>
-<td>{{ facture.prix }} $</td>
-</tr>
-
-</table>
-
+</div>
+{% endwith %}
+{% endwith %}
+{% endwith %}
 
 <div style="clear:both"></div>
 
-
+<!-- SIGNATURE -->
 <div class="signature">
-    <b>Signature Vendeur :</b><br>
+    <b>Signature :</b><br>
     {% if facture.signature_vendeur %}
-        <img src="{{ facture.signature_vendeur }}" alt="Signature Vendeur" style="width:250px; border:1px solid #000; border-radius:5px;">
+        <img src="{{ facture.signature_vendeur }}" width="200">
     {% else %}
-        __________________________
+        ______________________
     {% endif %}
 </div>
 
-
+<!-- FOOTER OFFICIEL -->
 <div class="footer">
 
-<b>Facture originale - HexaQuebec</b>
+<b>FACTURE OFFICIELLE - HEXAQUEBEC</b><br><br>
 
-<div class="pub">
-
-HexaQuebec est une entreprise spécialisée dans :
-
-• Développement Web  
-• Développement Mobile  
-• Vente de services informatiques  
-• Maintenance et réparation d’ordinateurs  
-• Solutions numériques pour entreprises  
-
-</div>
-
-</div>
+HexaQuebec est une entreprise spécialisée dans :<br>
+Développement Web • Développement Mobile • Intégration IA • Design • Infographie • Vente de services informatiques • Maintenance ordinateur
 
 <br><br>
 
+© HexaQuebec - Tous droits réservés
+
+</div>
+
+<!-- BOUTON PDF -->
 <a href="{% url 'fact_pdf' facture.id %}" 
-   style="padding:12px 25px;background:#27ae60;color:white;border-radius:6px;text-decoration:none;">
+   style="display:inline-block;margin-top:25px;padding:12px 20px;background:#27ae60;color:white;border-radius:6px;text-decoration:none;">
     📄 Télécharger la facture PDF
 </a>
 

@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Modifier facture</title>
 
@@ -17,7 +15,7 @@ padding:0;
 }
 
 .container{
-max-width:700px;
+max-width:800px;
 margin:auto;
 margin-top:60px;
 }
@@ -77,6 +75,19 @@ text-decoration:none;
 color:#3498db;
 }
 
+.section-title{
+margin-top:25px;
+font-weight:bold;
+color:#2c3e50;
+}
+
+.line-item{
+border:1px solid #eee;
+padding:10px;
+margin-bottom:10px;
+border-radius:5px;
+}
+
 </style>
 
 </head>
@@ -90,9 +101,9 @@ color:#3498db;
 <h2 class="title">✏️ Modifier la facture</h2>
 
 <form method="POST">
-
 {% csrf_token %}
 
+<!-- FACTURE INFO -->
 <div class="form-group">
 <label>Nom du vendeur</label>
 <input type="text" name="vendeur_nom" value="{{ facture.vendeur_nom }}">
@@ -104,19 +115,48 @@ color:#3498db;
 </div>
 
 <div class="form-group">
-<label>Produit / Service</label>
-<input type="text" name="produit" value="{{ facture.produit }}">
-</div>
-
-<div class="form-group">
-<label>Prix ($)</label>
-<input type="number" name="prix" value="{{ facture.prix }}">
-</div>
-
-<div class="form-group">
 <label>Date</label>
 <input type="date" name="date" value="{{ facture.date|date:'Y-m-d' }}">
 </div>
+
+<!-- CLIENT ADRESSE -->
+<div class="form-group">
+<label>Adresse client</label>
+<input type="text" name="adresse_client" value="{{ facture.adresse_client }}">
+</div>
+
+<div class="form-group">
+<label>Ville</label>
+<input type="text" name="ville_client" value="{{ facture.ville_client }}">
+</div>
+
+<div class="form-group">
+<label>Code postal</label>
+<input type="text" name="code_postal_client" value="{{ facture.code_postal_client }}">
+</div>
+
+<div class="form-group">
+<label>Pays</label>
+<input type="text" name="pays_client" value="{{ facture.pays_client }}">
+</div>
+
+<!-- PRODUITS -->
+<div class="section-title">🧾 Produits</div>
+
+{% for ligne in facture.lignes.all %}
+<div class="line-item">
+
+    <label>Produit</label>
+    <input type="text" name="produit_{{ ligne.id }}" value="{{ ligne.produit }}">
+
+    <label>Quantité</label>
+    <input type="number" name="quantite_{{ ligne.id }}" value="{{ ligne.quantite }}">
+
+    <label>Prix unitaire</label>
+    <input type="number" step="0.01" name="prix_{{ ligne.id }}" value="{{ ligne.prix_unitaire }}">
+
+</div>
+{% endfor %}
 
 <button type="submit">
 💾 Enregistrer les modifications

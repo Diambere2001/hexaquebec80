@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Paiement échoué | HexaQuébec</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#0b132b;
+    --card:rgba(255,255,255,0.06);
+    --accent:#c6a87d;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+    --danger:#ef4444;
+}
+
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(-45deg,#0b132b,#1c2541,#3a506b,#0b132b);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
+    color:var(--text);
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.card{
+    background:var(--card);
+    backdrop-filter: blur(12px);
+    border-radius:18px;
+    padding:40px;
+    width:100%;
+    max-width:420px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    animation:shake 0.5s ease;
+}
+
+@keyframes shake{
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    50%{transform:translateX(5px);}
+    75%{transform:translateX(-5px);}
+    100%{transform:translateX(0);}
+}
+
+.icon{
+    font-size:60px;
+    color:var(--danger);
+    margin-bottom:10px;
+}
+
+h1{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+p{
+    color:var(--muted);
+    margin:8px 0;
+}
+
+.btn{
+    display:block;
+    margin-top:20px;
+    padding:12px;
+    border-radius:25px;
+    text-decoration:none;
+    background:linear-gradient(135deg,#c6a87d,#e8c395);
+    color:#0b132b;
+    font-weight:700;
+    transition:0.3s;
+}
+
+.btn:hover{
+    transform:scale(1.03);
+}
+
+.btn-secondary{
+    display:block;
+    margin-top:10px;
+    padding:12px;
+    border-radius:25px;
+    text-decoration:none;
+    background:rgba(255,255,255,0.08);
+    color:var(--text);
+    font-weight:600;
+    transition:0.3s;
+}
+
+.btn-secondary:hover{
+    background:rgba(255,255,255,0.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+    <div class="icon">
+        <i class="fa-solid fa-circle-xmark"></i>
+    </div>
+
+    <h1>Paiement échoué</h1>
+
+    <p>Votre paiement n’a pas été complété.</p>
+
+    <p>Veuillez vérifier vos informations PayPal ou votre carte bancaire.</p>
+
+    <!-- RETRY -->
+    <a href="{% url 'paypal_checkout' %}" class="btn">
+        Réessayer le paiement
+    </a>
+
+    <!-- BACK -->
+    <a href="javascript:history.back()" class="btn-secondary">
+        Retour
+    </a>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -134,6 +134,91 @@ body{
     padding:10px;
     width:100%;
 }
+.footer-hexa{
+    background: rgba(255,255,255,0.03);
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-payment{
+    max-width: 280px;
+    margin: auto;
+}
+
+.footer-payment input{
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.footer-icons a{
+    color: #c6a87d;
+    margin: 0 8px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.footer-icons a:hover{
+    color: white;
+}
+.payment-icons{
+    font-size: 28px;
+    color: #c6a87d;
+}
+
+.payment-icons i{
+    margin: 0 8px;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.payment-icons i:hover{
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.footer-icons a{
+    color: #c6a87d;
+    margin: 0 8px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.footer-icons a:hover{
+    color: white;
+}
+.footer-text{
+    font-size: 15px;
+    font-weight: 600;
+    color: #e0c097;
+    letter-spacing: 0.5px;
+}
+
+.footer-subtext{
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.footer-services{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.footer-services span{
+    background: rgba(255,255,255,0.05);
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: #c6a87d;
+    transition: 0.3s;
+}
+
+.footer-services span:hover{
+    background: #c6a87d;
+    color: #0b132b;
+}
 </style>
 </head>
 
@@ -311,6 +396,54 @@ body{
 </div>
 
 </div>
+<footer class="footer-hexa mt-5 text-center">
+
+    <div>
+
+        <h6 class="mb-2">HexaQuébec</h6>
+
+        <p class="footer-text mb-1">
+            Paiement flexible adapté à vos besoins
+        </p>
+
+        <p class="footer-subtext mb-3">
+            Mensuel • Trimestriel • Paiement global
+        </p>
+
+        <p class="footer-services">
+            <span>Sites web</span>
+            <span>Applications</span>
+            <span>Maintenance</span>
+            <span>Design</span>
+            <span>IA</span>
+        </p>
+
+        <!-- 💳 ICONES PAIEMENT (ACTION DIRECTE) -->
+        <div class="payment-icons mb-3">
+
+    <i class="fab fa-cc-paypal" onclick="goToPayPal()" style="cursor:pointer;"></i>
+    <i class="fab fa-cc-visa"></i>
+    <i class="fab fa-cc-mastercard"></i>
+
+</div>
+        
+
+        <!-- 💳 PAYPAL BUTTON (CACHE UX PRO) -->
+        <div id="paypal-button-container" style="display:none;"></div>
+
+        <p class="small mb-1">
+            © 2026 HexaQuébec — Tous droits réservés
+        </p>
+
+        <div class="footer-icons">
+            <a href="https://www.facebook.com/profile.php?id=61578598457506"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com/hexaquebec/"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+
+    </div>
+
+</footer>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
 <script>
@@ -330,6 +463,10 @@ function toggleInfo(){
     x.style.display = (x.style.display==="block") ? "none" : "block";
 }
 </script>
-
+<script>
+function goToPayPal() {
+    window.location.href = "{% url 'paypal_checkout' %}";
+}
+</script>
 </body>
 </html>
