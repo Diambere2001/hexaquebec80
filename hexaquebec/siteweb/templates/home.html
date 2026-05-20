@@ -2,1072 +2,1345 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HexaQuébec - Développement Web & Solutions Numériques</title>
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+<title>HexaQuébec - Développement Web & Solutions Numériques</title>
 
-    /* ===== NAVBAR ===== */
-    .navbar { background: transparent !important; transition: all 0.6s ease; padding: 1rem 0; z-index: 1000; }
-    .navbar.scrolled { background: rgba(11,19,43,0.95) !important; backdrop-filter: blur(10px); box-shadow: 0 4px 25px rgba(0,0,0,0.4); padding: 0.7rem 0; }
-    .logo-hero { height: 120px; filter: drop-shadow(0 0 15px rgba(198,168,125,0.8)) brightness(1.2); transition: transform 0.6s ease, filter 0.6s ease; }
-    .logo-hero:hover { transform: scale(1.1); filter: drop-shadow(0 0 30px rgba(198,168,125,1)) brightness(1.4); }
-    .nav-modern .nav-link { color: #f7f3ec !important; font-size: 1.15rem; font-weight: 600; text-transform: uppercase; margin: 0 18px; letter-spacing: 0.5px; position: relative; transition: all 0.4s ease; }
-    .navbar.scrolled .nav-link { color: #f7f3ec !important; }
-    .nav-modern .nav-link::after { content: ''; width: 0%; height: 3px; background: #c6a87d; position: absolute; left: 0; bottom: -6px; transition: width 0.4s ease; }
-    .nav-modern .nav-link:hover::after, .nav-modern .nav-link.active::after { width: 100%; }
-    .nav-modern .nav-link:hover { color: #c6a87d !important; transform: translateY(-2px); }
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    /* ===== HERO ===== */
-    .hero { height: 100vh; background: linear-gradient(to bottom right, rgba(15,15,15,0.6), rgba(0,0,0,0.85)), url("{% static 'images/accuiel.jpg' %}") center/cover no-repeat; display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden; animation: animateBG 20s ease-in-out infinite alternate; }
-    .hero-content { z-index:2; animation: fadeInUp 1.5s ease-out; }
-    .hero h1 { font-size:3rem; font-weight:800; color:#eeeae2; text-shadow:0 0 25px rgba(255,255,255,0.5); letter-spacing:1px; }
-    .hero p { font-size:1.5rem; margin-bottom:30px; color:#f2f2f2; opacity:0.9; }
-    .btn-primary { background:#c6a87d; border:none; padding:14px 42px; font-size:1.2rem; border-radius:50px; color:#fff; font-weight:600; letter-spacing:0.5px; transition:0.4s ease; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
-    .btn-primary:hover { background:#b3916b; transform:scale(1.08); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    @keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes animateBG { 0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;} }
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    /* ===== POST-LOGOUT AVEC LION ===== */
-    #post-logout { position:fixed; top:0; left:0; width:100%; height:100%; z-index:2000; display:flex; align-items:center; justify-content:center; flex-direction:column; background: url('{% static "images/forest-bg.png" %}') center/cover no-repeat; }
-    .lion-sleep svg { width: 180px; height:180px; transform-origin: center center; animation: breath 3s ease-in-out infinite; }
-    .eyelid-left, .eyelid-right { animation: blink 4s infinite; }
-    @keyframes breath { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-    @keyframes blink { 0%,95%,100% { opacity:0; } 97%,98% { opacity:1; } }
-
-    /* ===== TEXTE TYPING ===== */
-    #typing-text {
-      color: #c6a87d;
-      font-size: 2.5rem;
-      text-align: center;
-      margin-top: 30px;
-      text-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.4);
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 4px solid #c6a87d;
-      width: auto;
-      display: inline-block;
-      animation: blinkCursor 0.7s steps(1) infinite;
-    }
-    @keyframes blinkCursor { 0%,50%,100% { border-color: #c6a87d; } 25%,75% { border-color: transparent; } }
-
-    /* ===== CHATBOT ===== */
-    #ai-bubble { position: fixed; bottom: 30px; right: 30px; background: #c6a87d; color: white; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.8rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; z-index: 9999; }
-    #ai-bubble:hover { transform: scale(1.1); }
-    #ai-chat { position: fixed; bottom: 120px; right: 30px; width: 340px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; flex-direction: column; overflow: hidden; z-index: 9999; }
-    #chat-header { background: #0b132b; color: #fff; padding: 15px; text-align: center; font-weight: 600; }
-    #chat-body { padding: 15px; height: 300px; overflow-y: auto; font-size: 0.95rem; }
-    #chat-footer { display: flex; border-top: 1px solid #ddd; }
-    #user-input { flex: 1; border: none; padding: 10px; outline: none; }
-    #send-btn { background: #c6a87d; color: #fff; border: none; padding: 10px 15px; cursor: pointer; }
-
-.footer {
-  background: linear-gradient(135deg, #0a0a0f, #151521);
-  color: #ccc;
-  position: relative;
-  overflow: hidden;
-}
-.footer .social-train {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  animation: trainMove 6s linear infinite;
-}
-@keyframes trainMove {
-  0% { transform: translateX(-10px); }
-  50% { transform: translateX(10px); }
-  100% { transform: translateX(-10px); }
-}
-.social-link {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  box-shadow: 0 0 10px rgba(255,255,255,0.1);
-}
-.social-link:hover {
-  background: #00bcd4;
-  color: #fff;
-  transform: scale(1.2);
-  box-shadow: 0 0 20px #00bcd4;
-}
-.footer {
-  background: rgba(11, 19, 43, 0.98); /* même couleur que la navbar scrolled */
-  color: #f7f3ec;
-  position: relative;
-  overflow: hidden;
-  padding-top: 60px;
-  padding-bottom: 30px;
-  border-top: 3px solid #c6a87d;
-}
-
-.footer-title {
-  color: #c6a87d;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.footer-text {
-  color: #ddd;
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.footer-contact {
-  display: inline-block;
-  margin-top: 8px;
-  color: #c6a87d;
-  font-weight: 600;
-}
-
-.footer-copy {
-  color: #aaa;
-  font-size: 0.9rem;
-}
-
-.social-train {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  animation: trainMove 6s linear infinite;
-}
-
-@keyframes trainMove {
-  0% { transform: translateX(-10px); }
-  50% { transform: translateX(10px); }
-  100% { transform: translateX(-10px); }
-}
-
-.social-link {
-  background: rgba(255,255,255,0.08);
-  color: #c6a87d;
-  border: 2px solid #c6a87d;
-  border-radius: 50%;
-  font-size: 1.3rem;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  box-shadow: 0 0 12px rgba(198,168,125,0.2);
-}
-.social-link:hover {
-  background: #c6a87d;
-  color: #0b132b;
-  transform: scale(1.2);
-  box-shadow: 0 0 25px #c6a87d;
-}
-
-.owner-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.owner-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 20px;
-  transition: all 0.4s ease-in-out;
-  box-shadow: 0 0 20px rgba(198,168,125,0.1);
-}
-
-.owner-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 40px rgba(198,168,125,0.3);
-}
-
-.owner-img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #c6a87d;
-  animation: pulseGlow 6s ease-in-out infinite;
-  box-shadow: 0 0 25px rgba(198,168,125,0.2);
-  transition: all 0.4s ease-in-out;
-}
-
-/* Effet lumineux doux sur le contour */
-@keyframes pulseGlow {
-  0% { transform: scale(1); box-shadow: 0 0 20px rgba(198,168,125,0.3); }
-  50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(198,168,125,0.5); }
-  100% { transform: scale(1); box-shadow: 0 0 20px rgba(198,168,125,0.3); }
-}
-
-/* Survol de l'image : effet doré + halo */
-.owner-img:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 50px rgba(198,168,125,0.7);
-  border-color: #f0d49d;
-  filter: brightness(1.1);
-}
-
-.owner-name {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.owner-title {
-  color: #c6a87d;
-  font-size: 0.95rem;
-  margin-bottom: 0.3rem;
-}
-
-.owner-role {
-  color: #ddd;
-  font-size: 0.9rem;
-  font-style: italic;
-}
-
-.owner-desc {
-  color: #aaa;
-  font-size: 0.85rem;
-  margin-top: 10px;
-  line-height: 1.5;
-}
-
-/* Séparateur élégant */
-.separator-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.separator-line {
-  width: 120px;
-  height: 2.5px;
-  background: linear-gradient(90deg, transparent, #c6a87d, transparent);
-}
-
-.separator-icon {
-  color: #c6a87d;
-  font-size: 1.5rem;
-  margin: 0 12px;
-}
-
-/* Titre section */
-.section-title {
-  color: #c6a87d;
-  font-weight: 800;
-  font-size: 2.5rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-}
-
-/* Cartes annonces */
-.annonce-card {
-  background: rgba(255,255,255,0.05);
-  border-radius: 18px;
-  backdrop-filter: blur(5px);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  border: 1px solid rgba(198, 168, 125, 0.15);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.4);
-}
-
-.annonce-card:hover {
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.6);
-}
-
-/* Image */
-.annonce-img {
-  height: 230px;
-  object-fit: cover;
-  border-radius: 18px 18px 0 0;
-}
-
-/* Titre annonce */
-.card-title {
-  color: #c6a87d;
-  font-weight: 700;
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-}
-
-/* Texte annonce */
-.card-text {
-  color: #dcdcdc;
-}
-
-/* Date */
-.annonce-date {
-  color: #aaa;
-  font-size: 0.8rem;
-  margin-top: 10px;
-}
-
-/* Bouton Lire Plus */
-.btn-annonce {
-  border: 2px solid #c6a87d;
-  color: #c6a87d;
-  padding: 8px 25px;
-  border-radius: 30px;
-  font-weight: 600;
-  transition: 0.4s ease;
-  display: inline-block;
-}
-
-.btn-annonce:hover {
-  background: #c6a87d;
-  color: #0b132b;
-  transform: scale(1.08);
-}
-
-/* Style général du texte */
-.typing-responsive {
-    font-family: 'Poppins', sans-serif;
-    color: #c6a87d;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 3px solid #c6a87d;
-    padding-right: 5px;
-}
-
-/* PC */
-@media (min-width: 1025px) {
-    .typing-responsive {
-        font-size: 32px;
-    }
-}
-
-/* Tablette */
-@media (min-width: 481px) and (max-width: 1024px) {
-    .typing-responsive {
-        font-size: 26px;
-    }
-}
-
-/* Téléphone */
-@media (max-width: 480px) {
-    .typing-responsive {
-        font-size: 20px;
-        white-space: normal;   /* Permet de voir le texte même petit */
-        line-height: 1.3;
-    }
-}
-.partner-card {
-    background: white;
-    border-radius: 18px;
-    border: 1px solid #e2e8f0;
-    transition: 0.3s ease;
-}
-
-.partner-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-}
-
-
-  </style>
-</head>
-<body>
-
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg fixed-top">
-  <div class="container">
- <a href="{% url 'login_hexa' %}" 
-   class="navbar-brand d-flex align-items-center justify-content-center logo-hexa">
-    
-    <img src="{% static 'images/logoHexa.png' %}" 
-         alt="HexaQuébec" 
-         class="logo-img">
-</a>
-
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
-.logo-hexa {
-  background: radial-gradient(circle at 30% 30%, #f0d49d, #c6a87d);
-  padding: 10px;
-  border-radius: 50%;
-  border: 2.5px solid #c6a87d;
-  box-shadow: 0 0 20px rgba(198,168,125,0.4), inset 0 0 10px rgba(255,255,255,0.25);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  position: relative;
-  overflow: hidden;
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+    font-family:'Poppins',sans-serif;
 }
 
-/* Bordure lumineuse animée */
-.logo-hexa::before {
-  content: "";
-  position: absolute;
-  top: -2px; left: -2px; right: -2px; bottom: -2px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  background: conic-gradient(
-    from 0deg,
-    #c6a87d,
-    #f0d49d,
-    #ffffff,
-    #c6a87d
-  );
-  animation: rotateBorder 4s linear infinite;
-  z-index: 0;
-  opacity: 0.8;
+body{
+    background:#020826;
+    overflow-x:hidden;
+    color:#fff;
+    padding-top: 90px;
 }
 
-@keyframes rotateBorder {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* =========================================================
+   NAVBAR
+========================================================= */
 
-.logo-hexa:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 25px rgba(198,168,125,0.55), inset 0 0 12px rgba(255,255,255,0.3);
-}
-
-.logo-img {
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  display: block;
-  position: relative;
-  z-index: 2;
-}
- #annonces .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba(198,168,125,0.3);
-  }
-  #ai-bubble {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background-color: #0077b6;
-  color: white;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: transform 0.2s ease;
-}
-#ai-bubble:hover { transform: scale(1.1); }
-
-#ai-chat {
-  position: fixed;
-  bottom: 100px;
-  right: 25px;
-  width: 350px;
-  height: 480px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-#ai-header {
-  background: linear-gradient(45deg, #0077b6, #0096c7);
-  color: white;
-  text-align: center;
-  padding: 12px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-#chat-body {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-  background: #f8f9fa;
-}
-
-#chat-footer {
-  display: flex;
-  border-top: 1px solid #ddd;
-}
-
-#user-input {
-  flex: 1;
-  border: none;
-  padding: 10px;
-  font-size: 14px;
-}
-
-#send-btn {
-  background: #0077b6;
-  color: white;
-  border: none;
-  padding: 0 15px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-#send-btn:hover { background: #0096c7; }
-
-/* Messages */
-#chat-body p {
-  margin: 6px 0;
-  padding: 8px 12px;
-  border-radius: 10px;
-  max-width: 80%;
-  line-height: 1.4;
-}
-#chat-body p strong {
-  display: block;
-  font-size: 12px;
-  color: #555;
-}
-#chat-body p.user {
-  background: #d1ecf1;
-  align-self: flex-end;
-  margin-left: auto;
-}
-#chat-body p.ai {
-  background: #e0f7fa;
-  color: #004b63;
-}
-
-/* ===== BUBBLE ===== */
-#ai-bubble {
+.navbar{
     position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: #0d6efd;
-    color: #fff;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 28px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    animation: pulse 1.5s infinite;
+    top: 0;
+    left: 0;
+    width: 100%;
     z-index: 9999;
+
+    background: transparent;
+    transition: all 0.4s ease;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-    100% { transform: scale(1); }
+.navbar.scrolled{
+    background: rgba(11,19,43,0.95) !important;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    padding: 0.6rem 0;
+}
+/* LOGO */
+
+.logo-hexa{
+    position:relative;
+    width:75px;
+    height:75px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:linear-gradient(135deg,#f0d49d,#c6a87d);
+    border:2px solid #c6a87d;
+    box-shadow:
+    0 0 25px rgba(198,168,125,0.35),
+    inset 0 0 12px rgba(255,255,255,0.25);
+
+    transition:0.4s ease;
 }
 
-/* ===== CHATBOX ===== */
-#ai-chat {
-    position: fixed;
-    bottom: 100px;
-    right: 25px;
-    width: 360px;
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-    overflow: hidden;
-    z-index: 99999;
-    display: none;
+.logo-hexa::before{
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border-radius:50%;
+    background:conic-gradient(
+        from 0deg,
+        #ffffff,
+        #c6a87d,
+        #f0d49d,
+        #ffffff
+    );
+    animation:rotateBorder 5s linear infinite;
+    z-index:0;
 }
 
-#ai-header {
-    background: #0d6efd;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    font-weight: bold;
+.logo-hexa:hover{
+    transform:scale(1.08);
+    box-shadow:
+    0 0 40px rgba(198,168,125,0.6),
+    inset 0 0 14px rgba(255,255,255,0.3);
 }
 
-#chat-body {
-    height: 330px;
-    overflow-y: auto;
-    padding: 10px;
-    background: #f4f7fb;
+.logo-img{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    position:relative;
+    z-index:2;
 }
 
-.user-msg, .bot-msg {
-    margin-bottom: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    max-width: 80%;
-}
-
-.user-msg {
-    background: #d1e7ff;
-    margin-left: auto;
-}
-
-.bot-msg {
-    background: #fff;
-    border: 1px solid #e3e3e3;
-}
-
-/* ===== FOOTER ===== */
-#chat-footer {
-    display: flex;
-    border-top: 1px solid #eee;
-}
-
-#chat-footer input {
-    width: 80%;
-    padding: 12px;
-    border: none;
-    outline: none;
-}
-
-#chat-footer button {
-    width: 20%;
-    background: #0d6efd;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-}
-
-/* ===== FORMULAIRE TECHNIQUE ===== */
-#ai-form {
-    padding: 15px;
-    background: #eef4ff;
-}
-
-#ai-form h4 {
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: #0d6efd;
-    font-weight: bold;
-}
-
-#ai-form input,
-#ai-form textarea {
-    width: 100%;
-    margin-bottom: 12px;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #d8d8d8;
-    font-size: 14px;
-}
-
-#ai-form button {
-    width: 100%;
-    background: #0d6efd;
-    color: white;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#ai-form button:hover {
-    background: #003c99;
-}
-#typing-container {
-    text-align: center;
-    position: relative;
-    padding: 20px;
-}
-
-/* Logo toujours visible */
-#hexa-logo {
-    width: 180px;
-    margin-bottom: 10px;
-}
-
-/* Texte animé */
-.typing-responsive {
-    font-family: 'Poppins', sans-serif;
-    color: #c6a87d;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 3px solid #c6a87d;
-    padding-right: 5px;
-    margin-top: 10px;
-}
-
-/* PC */
-@media (min-width: 1025px) {
-    .typing-responsive {
-        font-size: 32px;
+@keyframes rotateBorder{
+    to{
+        transform:rotate(360deg);
     }
-    #hexa-logo { width: 220px; }
 }
 
-/* Tablette */
-@media (min-width: 481px) and (max-width: 1024px) {
-    .typing-responsive {
-        font-size: 26px;
+/* NAV LINKS */
+
+.nav-modern .nav-link{
+    color:#f7f3ec !important;
+    font-weight:600;
+    font-size:1rem;
+    margin:0 15px;
+    position:relative;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    transition:0.3s ease;
+}
+
+.nav-modern .nav-link::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-7px;
+    width:0%;
+    height:2px;
+    background:#c6a87d;
+    transition:0.4s;
+}
+
+.nav-modern .nav-link:hover{
+    color:#c6a87d !important;
+}
+
+.nav-modern .nav-link:hover::after,
+.nav-modern .nav-link.active::after{
+    width:100%;
+}
+
+/* TOGGLER */
+
+.navbar-toggler{
+    border:1px solid #c6a87d;
+}
+
+.navbar-toggler-icon{
+    filter:invert(1);
+}
+
+/* MOBILE MENU */
+
+@media(max-width:991px){
+
+    .nav-modern{
+        background:#0b132b;
+        padding:25px;
+        border-radius:18px;
+        margin-top:20px;
     }
-    #hexa-logo { width: 180px; }
-}
 
-/* Mobile */
-@media (max-width: 480px) {
-    .typing-responsive {
-        font-size: 20px;
-        white-space: normal;
-        line-height: 1.3;
+    .nav-modern .nav-link{
+        margin:12px 0;
     }
-    #hexa-logo { width: 150px; }
-}
-
-/* icone blanche */
-.navbar-toggler {
-    border-color:  #c6a87d;
-}
-
-.navbar-toggler-icon {
-    filter: invert(1);
-}
-
-/* menu mobile */
-@media (max-width: 991px) {
-
-.nav-modern {
-    background: linear-gradient(135deg,  #0b132b);
-    padding: 20px;
-    border-radius: 20px;
-    margin-top: 30px;
 
 }
 
-/* texte menu */
-.nav-modern .nav-link {
-    color: white;
-    font-size: 18px;
-    text-align: left;
-    padding: 10px 0;
+/* =========================================================
+   HERO
+========================================================= */
+
+/* =========================================================
+   HERO SLIDER MODERNE
+========================================================= */
+
+.hero{
+    min-height:100vh;
+
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
 }
 
-/* hover */
-.nav-modern .nav-link:hover {
-    color: #ffd700;
+/* IMAGES */
+
+.hero-slide{
+    position:absolute;
+    inset:0;
+
+    background-size:cover;
+    background-position:center;
+
+    opacity:0;
+
+    animation:heroSlider 20s infinite;
+
+    transform:scale(1.08);
 }
 
+/* OVERLAY DARK */
+
+.hero-slide::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        rgba(2,8,38,0.72),
+        rgba(2,8,38,0.88)
+    );
 }
 
+/* IMAGE 1 */
 
-/* SECTION VIDEO */
+.hero-slide:nth-child(1){
+    background-image:url("https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg");
+    animation-delay:0s;
+}
+
+/* IMAGE 2 */
+
+.hero-slide:nth-child(2){
+    background-image:url("https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg");
+    animation-delay:5s;
+}
+
+/* IMAGE 3 */
+
+.hero-slide:nth-child(3){
+    background-image:url("https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg");
+    animation-delay:10s;
+}
+
+/* IMAGE 4 */
+
+.hero-slide:nth-child(4){
+    background-image:url("https://images.pexels.com/photos/1181359/pexels-photo-1181359.jpeg");
+    animation-delay:15s;
+}
+
+/* CONTENT */
+
+.hero-content{
+    position:relative;
+    z-index:5;
+}
+
+/* ANIMATION */
+
+@keyframes heroSlider{
+
+    0%{
+        opacity:0;
+        transform:scale(1.08);
+    }
+
+    5%{
+        opacity:1;
+    }
+
+    25%{
+        opacity:1;
+        transform:scale(1);
+    }
+
+    30%{
+        opacity:0;
+    }
+
+    100%{
+        opacity:0;
+    }
+
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:rgba(198,168,125,0.08);
+    filter:blur(120px);
+    top:-200px;
+    right:-200px;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    filter:blur(100px);
+    bottom:-150px;
+    left:-150px;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    animation:fadeUp 1.2s ease;
+}
+
+.hero-title{
+    font-size:4rem;
+    font-weight:800;
+    color:#f7f3ec;
+    margin-bottom:15px;
+    text-shadow:0 0 20px rgba(255,255,255,0.15);
+}
+
+.hero-subtitle{
+    color:#cbd5e1;
+    font-size:1.3rem;
+    max-width:700px;
+    margin:auto;
+    margin-bottom:35px;
+    line-height:1.8;
+}
+
+.hero-buttons{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+/* HERO BUTTON */
+
+.btn-hero{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:14px 22px;
+    border-radius:14px;
+
+    text-decoration:none;
+    color:#fff;
+
+    background:linear-gradient(135deg,#3a86ff,#4361ee);
+
+    transition:0.35s ease;
+
+    font-weight:600;
+}
+
+.btn-hero.warning{
+    background:linear-gradient(135deg,#ffbe0b,#fb8500);
+    color:#0b132b;
+}
+
+.btn-hero.outline{
+    background:transparent;
+    border:1px solid #c6a87d;
+    color:#c6a87d;
+}
+
+.btn-hero:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.35);
+}
+
+.hero-info{
+    margin-top:35px;
+    color:#e2e8f0;
+    font-size:1rem;
+    line-height:1.8;
+}
+
+/* MOBILE HERO */
+
+@media(max-width:768px){
+
+    .hero{
+        padding:160px 20px 80px;
+    }
+
+    .hero-title{
+        font-size:2.4rem;
+    }
+
+    .hero-subtitle{
+        font-size:1rem;
+    }
+
+    .hero-buttons{
+        gap:12px;
+    }
+
+    .btn-hero{
+        width:58px;
+        height:58px;
+        border-radius:50%;
+        justify-content:center;
+        padding:0;
+    }
+
+    .btn-hero .label{
+        display:none;
+    }
+
+}
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title{
+    color:#c6a87d;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-size:2.7rem;
+}
+
+.section-desc{
+    color:#d6d6d6;
+    max-width:700px;
+    margin:auto;
+    line-height:1.8;
+}
+
+/* =========================================================
+   SERVICES
+========================================================= */
+.hexa-services{
+    position:relative;
+    padding:140px 20px;
+    overflow:hidden;
+
+    /* fond ultra premium */
+    background:#070b1a;
+}
+
+/* =========================
+   BACKGROUND LUXE LIGHTS
+========================= */
+
+.hexa-services::before,
+.hexa-services::after{
+    content:"";
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:0.25;
+    z-index:0;
+}
+
+.hexa-services::before{
+    background:radial-gradient(circle,#7c5cff,transparent 60%);
+    top:-200px;
+    left:-200px;
+}
+
+.hexa-services::after{
+    background:radial-gradient(circle,#00d4ff,transparent 60%);
+    bottom:-200px;
+    right:-200px;
+}
+
+/* =========================
+   HEADER PREMIUM
+========================= */
+
+.section-header{
+    text-align:center;
+    margin-bottom:90px;
+    position:relative;
+    z-index:2;
+}
+
+.mini-title{
+    display:inline-block;
+    padding:10px 20px;
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:999px;
+
+    color:#b7c0ff;
+    font-size:12px;
+    letter-spacing:3px;
+
+    background:rgba(255,255,255,0.03);
+    backdrop-filter:blur(15px);
+}
+
+.section-header h2{
+    font-size:58px;
+    font-weight:800;
+    color:#ffffff;
+    margin-top:20px;
+    line-height:1.1;
+}
+
+.section-header p{
+    max-width:800px;
+    margin:auto;
+    margin-top:20px;
+    font-size:18px;
+    color:rgba(255,255,255,0.65);
+    line-height:1.8;
+}
+
+/* =========================
+   GRID LUXE
+========================= */
+
+.services-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+    position:relative;
+    z-index:2;
+}
+
+/* =========================
+   CARDS ULTRA LUXE
+========================= */
+
+.service-card{
+    position:relative;
+    padding:45px 35px;
+    border-radius:24px;
+
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(18px);
+
+    transition:0.5s ease;
+
+    overflow:hidden;
+}
+
+/* glow hover premium */
+.service-card::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(124,92,255,0.25),
+        rgba(0,212,255,0.15),
+        transparent 60%
+    );
+
+    opacity:0;
+    transition:0.5s ease;
+}
+
+.service-card:hover{
+    transform:translateY(-12px) scale(1.02);
+    border-color:rgba(124,92,255,0.35);
+    box-shadow:0 25px 60px rgba(0,0,0,0.6);
+}
+
+.service-card:hover::before{
+    opacity:1;
+}
+
+/* =========================
+   ICON LUXE
+========================= */
+
+.icon{
+    width:65px;
+    height:65px;
+    border-radius:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:26px;
+
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+    color:#fff;
+
+    box-shadow:0 15px 35px rgba(124,92,255,0.25);
+    margin-bottom:22px;
+}
+
+/* =========================
+   TEXT PREMIUM
+========================= */
+
+.service-card h3{
+    font-size:22px;
+    color:#ffffff;
+    margin-bottom:12px;
+}
+
+.service-card p{
+    font-size:15px;
+    line-height:1.7;
+    color:rgba(255,255,255,0.65);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:992px){
+    .services-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .section-header h2{
+        font-size:42px;
+    }
+}
+
+@media(max-width:768px){
+    .services-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-header h2{
+        font-size:32px;
+    }
+}
+
+/* =========================================================
+   ANNONCES
+========================================================= */
+
+#annonces{
+    background:#0b132b;
+    color:#fff;
+    position:relative;
+}
+
+.separator-container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.separator-line{
+    width:120px;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #c6a87d,
+        transparent
+    );
+}
+
+.separator-icon{
+    margin:0 12px;
+    color:#c6a87d;
+    font-size:1.4rem;
+}
+
+/* CARD */
+
+.annonce-card{
+    background:rgba(255,255,255,0.05);
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid rgba(198,168,125,0.15);
+
+    transition:0.4s ease;
+
+    box-shadow:0 12px 25px rgba(0,0,0,0.35);
+}
+
+.annonce-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 18px 40px rgba(0,0,0,0.55);
+}
+
+.annonce-img{
+    height:230px;
+    width:100%;
+    object-fit:cover;
+}
+
+.card-title{
+    color:#c6a87d;
+    font-weight:700;
+}
+
+.card-text{
+    color:#ddd;
+}
+
+.annonce-date{
+    color:#999;
+    font-size:0.85rem;
+}
+
+.btn-annonce{
+    display:inline-block;
+    border:2px solid #c6a87d;
+    color:#c6a87d;
+    text-decoration:none;
+    padding:10px 24px;
+    border-radius:40px;
+    font-weight:600;
+    transition:0.35s ease;
+}
+
+.btn-annonce:hover{
+    background:#c6a87d;
+    color:#0b132b;
+    transform:scale(1.05);
+}
+
+/* =========================================================
+   VIDEO SECTION
+========================================================= */
 
 .video-section{
-background:#0b132b;
-padding-top:80px;
-padding-bottom:80px;
+    background:#020826;
+    padding:100px 0;
 }
 
-/* Carte vidéo */
-
 .video-card{
-background:rgba(255,255,255,0.05);
-border-radius:18px;
-overflow:hidden;
-box-shadow:0 10px 35px rgba(0,0,0,0.6);
-transition:0.4s;
-border:1px solid rgba(198,168,125,0.2);
+    background:rgba(255,255,255,0.05);
+    border-radius:22px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:0 10px 35px rgba(0,0,0,0.5);
+
+    transition:0.4s ease;
 }
 
 .video-card:hover{
-transform:translateY(-8px);
-box-shadow:0 18px 45px rgba(0,0,0,0.8);
+    transform:translateY(-8px);
 }
-
-/* Vidéo */
 
 .video-player{
-width:100%;
-height:auto;
-border-bottom:1px solid rgba(255,255,255,0.1);
+    width:100%;
 }
 
-/* Info */
-
 .video-info{
-padding:20px;
+    padding:22px;
 }
 
 .video-title{
-color:#c6a87d;
-font-weight:700;
-font-size:1.3rem;
+    color:#c6a87d;
+    font-weight:700;
 }
 
 .video-date{
-color:#bbb;
-font-size:0.9rem;
-margin-top:6px;
+    color:#bbb;
+    margin-top:8px;
 }
 
-/* SECTION AFFICHES */
-.affiche-section {
-  background: #0b132b;
-  padding: 60px 20px;
+/* =========================================================
+   AFFICHES
+========================================================= */
+
+.affiche-section{
+    background:#0b132b;
+    padding:100px 20px;
 }
 
-.affiche-slider {
-  position: relative;
-  max-width: 700px;
-  margin: auto;
-  overflow: hidden;
+.affiche-slider{
+    max-width:700px;
+    margin:auto;
+    overflow:hidden;
+    position:relative;
 }
 
-.slides-wrapper {
-  display: flex;
-  transition: transform 1s ease;
-  width: 100%;
+.slides-wrapper{
+    display:flex;
+    transition:1s ease;
 }
 
-.slide {
-  min-width: 100%;
-  box-sizing: border-box;
-  text-align: center;
+.slide{
+    min-width:100%;
+    text-align:center;
 }
 
-.slide img {
-  width: 90%;
-  max-width: 500px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  margin: auto;
+.slide img{
+    width:90%;
+    max-width:520px;
+    border-radius:16px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,0.45);
 }
 
-/* Responsive */
-@media (max-width: 768px){
-  .affiche-slider {
-    max-width: 100%;
-  }
-  .slide img {
-    width: 95%;
-    max-width: none;
-  }
-}
-.hero {
-    height: 90vh;
-    background: linear-gradient(rgba(11,19,43,0.8), rgba(11,19,43,0.9)),
-                url('https://images.unsplash.com/photo-1519389950473-47ba0277781c') center/cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+/* =========================================================
+   PARTENAIRES
+========================================================= */
+
+.partner-slider{
+    overflow:hidden;
+    position:relative;
 }
 
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 800;
+.partner-track{
+    display:flex;
+    width:max-content;
+    animation:scroll 22s linear infinite;
 }
 
-.hero p {
-    font-size: 1.2rem;
-    color: #cbd5e1;
+.partner-card{
+    flex:0 0 auto;
+
+    margin:0 25px;
+    padding:20px;
+
+    background:#fff;
+    border-radius:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:0.35s ease;
+
+    box-shadow:0 8px 22px rgba(0,0,0,0.12);
 }
 
-/* Bouton hover pro */
-.btn {
-    border-radius: 10px;
-    transition: all 0.3s ease;
+.partner-card:hover{
+    transform:scale(1.12);
+    box-shadow:0 10px 35px rgba(198,168,125,0.45);
 }
 
-.btn:hover {
-    transform: translateY(-3px);
-}
-
-/* ===== HERO RESPONSIVE PRO ===== */
-
-.hero-title {
-    font-size: 3rem;
-    font-weight: 800;
-}
-
-.hero-subtitle {
-    font-size: 1.3rem;
-    color: #cbd5e1;
-    margin-bottom: 20px;
-}
-
-/* Boutons */
-.hero-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-}
-
-/* Boutons style */
-.hero-buttons .btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 12px;
-}
-
-/* Texte info */
-.hero-info {
-    margin-top: 20px;
-    font-size: 0.95rem;
-    color: #e2e8f0;
-}
-
-/* ===== TABLETTE ===== */
-@media (max-width: 992px) {
-
-    .hero-title {
-        font-size: 2.5rem;
+@keyframes scroll{
+    0%{
+        transform:translateX(0);
     }
 
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 576px) {
-
-    .hero {
-        height: auto;
-        padding: 170px 0 60px; /* 🔥 espace en haut ajouté */
-    }
-
-    .hero-title {
-        font-size: 2rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .hero-buttons .btn {
-        width: 100%;
-        justify-content: center;
-        font-size: 0.95rem;
-    }
-
-    .hero-info {
-        font-size: 0.85rem;
-        padding: 0 10px;
-    }
-}
-/* DESKTOP NORMAL */
-.hero-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-}
-
-/* BOUTONS */
-.btn-hero {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 12px;
-    color: white;
-    background: linear-gradient(135deg, #3a86ff, #4361ee);
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-/* VARIANTS */
-.btn-hero.warning {
-    background: linear-gradient(135deg, #ffbe0b, #fb8500);
-    color: #0b132b;
-}
-
-.btn-hero.outline {
-    background: transparent;
-    border: 1px solid #e0c097;
-    color: #e0c097;
-}
-
-/* ========================= */
-/* 📱 MOBILE HORIZONTAL */
-/* ========================= */
-@media (max-width: 768px) {
-
-    .hero-buttons {
-        flex-direction: row;     /* 🔥 horizontal */
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .btn-hero {
-        width: 55px;
-        height: 55px;
-        border-radius: 50%;      /* 🔥 rond */
-        padding: 0;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .btn-hero i {
-        font-size: 1.3rem;
-    }
-
-    .btn-hero .label {
-        display: none;           /* 🔥 cache texte */
-    }
-
-    /* effet premium */
-    .btn-hero:hover {
-        transform: scale(1.08);
-        box-shadow: 0 0 12px rgba(255,255,255,0.4);
+    100%{
+        transform:translateX(-50%);
     }
 }
 
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+    background:rgba(11,19,43,0.98);
+    padding-top:70px;
+    padding-bottom:30px;
+    border-top:2px solid #c6a87d;
+}
+
+.footer-title{
+    color:#c6a87d;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+.footer-text{
+    color:#d6d6d6;
+    line-height:1.8;
+}
+
+.footer-contact{
+    color:#c6a87d;
+    font-weight:600;
+}
+
+.social-train{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+}
+
+.social-link{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(255,255,255,0.08);
+
+    color:#c6a87d;
+
+    border:1px solid #c6a87d;
+
+    transition:0.35s ease;
+}
+
+.social-link:hover{
+    background:#c6a87d;
+    color:#0b132b;
+    transform:scale(1.15);
+}
+
+.owner-card{
+    background:rgba(255,255,255,0.05);
+    border-radius:18px;
+    padding:25px;
+
+    box-shadow:0 0 25px rgba(198,168,125,0.1);
+
+    transition:0.35s ease;
+}
+
+.owner-card:hover{
+    transform:translateY(-6px);
+}
+
+.owner-name{
+    color:#fff;
+    font-weight:700;
+}
+
+.owner-title{
+    color:#c6a87d;
+}
+
+.owner-role{
+    color:#ddd;
+}
+
+.owner-desc{
+    color:#aaa;
+    line-height:1.7;
+}
+
+.footer-copy{
+    color:#999;
+}
+
+/* =========================================================
+   CHATBOT
+========================================================= */
+
+#ai-bubble{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+
+    width:65px;
+    height:65px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+    z-index:99999;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.35);
+
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.08);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+#ai-chat{
+    position:fixed;
+    bottom:100px;
+    right:25px;
+
+    width:360px;
+    background:#fff;
+
+    border-radius:18px;
+    overflow:hidden;
+
+    display:none;
+
+    z-index:99999;
+
+    box-shadow:0 15px 40px rgba(0,0,0,0.35);
+}
+
+#ai-header{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+    padding:15px;
+    font-weight:700;
+}
+
+#chat-body{
+    height:330px;
+    overflow-y:auto;
+    padding:12px;
+    background:#f4f7fb;
+}
+
+.user-msg,
+.bot-msg{
+    max-width:82%;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:12px;
+    font-size:14px;
+    line-height:1.6;
+}
+
+.user-msg{
+    margin-left:auto;
+    background:#d1e7ff;
+    color:#000;
+}
+
+.bot-msg{
+    background:#fff;
+    color:#333;
+    border:1px solid #e3e3e3;
+}
+
+#chat-footer{
+    display:flex;
+    border-top:1px solid #eee;
+}
+
+#user-input{
+    width:80%;
+    border:none;
+    outline:none;
+    padding:12px;
+}
+
+#send-btn{
+    width:20%;
+    border:none;
+    background:#0d6efd;
+    color:#fff;
+    cursor:pointer;
+}
+
+/* =========================================================
+   INTRO LION
+========================================================= */
+
+#post-logout{
+    position:fixed;
+    inset:0;
+
+    background:
+    linear-gradient(
+        rgba(2,8,38,0.85),
+        rgba(2,8,38,0.92)
+    ),
+    url("{% static 'images/forest-bg.png' %}");
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    z-index:999999;
+}
+
+.lion-sleep svg{
+    width:230px;
+    animation:breath 3s ease-in-out infinite;
+}
+
+@keyframes breath{
+    0%,100%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.05);
+    }
+}
+
+#typing-text{
+    margin-top:25px;
+
+    color:#fff;
+    font-size:30px;
+    font-weight:700;
+
+    border-right:3px solid #fff;
+
+    white-space:nowrap;
+    overflow:hidden;
+
+    animation:blink 0.7s infinite;
+}
+
+@keyframes blink{
+    50%{
+        border-color:transparent;
+    }
+}
+
+@media(max-width:600px){
+
+    #typing-text{
+        font-size:20px;
+        white-space:normal;
+        border-right:none;
+        text-align:center;
+        padding:0 20px;
+    }
+
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* =========================
+   GLOBAL ANIMATION STYLE
+========================= */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+/* =========================
+   FADE IN SCROLL
+========================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(60px);
+    transition:all 0.8s ease;
+}
+
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* =========================
+   NAVBAR MODERNE SCROLL
+========================= */
+
+.navbar{
+    transition:all 0.4s ease;
+}
+
+.navbar.scrolled{
+    background:rgba(11,19,43,0.92) !important;
+    backdrop-filter:blur(15px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    padding:10px 0;
+}
+
+/* =========================
+   HERO ANIMATION
+========================= */
+
+.hero-title{
+    animation:fadeUp 1s ease;
+}
+
+.hero-subtitle{
+    animation:fadeUp 1.4s ease;
+}
+
+.hero-buttons{
+    animation:fadeUp 1.8s ease;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* =========================
+   HOVER PREMIUM CARDS
+========================= */
+
+.service-card,
+.partner-card{
+    transition:0.4s ease;
+}
+
+.service-card:hover,
+.partner-card:hover{
+    transform:translateY(-10px) scale(1.02);
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* =========================
+   BUTTON ANIMATION
+========================= */
+
+.btn-hero,
+.btn{
+    transition:0.3s ease;
+}
+
+.btn-hero:hover,
+.btn:hover{
+    transform:translateY(-4px) scale(1.05);
+}
+
+/* =========================
+   GLASS EFFECT FIX
+========================= */
+
+.glass{
+    backdrop-filter:blur(15px);
+}
 </style>
 
+</head>
+<body>
 
+<!-- ======================================================
+     NAVBAR
+====================================================== -->
 
+<nav class="navbar navbar-expand-lg fixed-top">
 
+<div class="container">
 
-<button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<a href="{% url 'login_hexa' %}" class="navbar-brand logo-hexa">
+    <img src="{% static 'images/logoHexa.png' %}" alt="HexaQuébec" class="logo-img">
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
     <span class="navbar-toggler-icon"></span>
 </button>
 
 <div class="collapse navbar-collapse" id="navbarNav">
-  <ul class="navbar-nav ms-auto nav-modern">
-    <li class="nav-item"><a href="#" class="nav-link active">Accueil</a></li>
-    <li class="nav-item"><a href="{% url 'services' %}" class="nav-link">Services</a></li>
-    <li class="nav-item"><a href="{% url 'produits_list' %}" class="nav-link">Articles</a></li>
-    <li class="nav-item"><a href="{% url 'portfolio' %}" class="nav-link">Projets</a></li>
-    <li class="nav-item"><a href="{% url 'client_login' %}" class="nav-link">Clients</a></li>
-    <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-  </ul>
+
+<ul class="navbar-nav ms-auto nav-modern">
+
+<li class="nav-item">
+    <a href="#" class="nav-link active">Accueil</a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'services' %}" class="nav-link">Services</a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'produits_list' %}" class="nav-link">Articles</a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'portfolio' %}" class="nav-link">Projets</a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'client_login' %}" class="nav-link">Clients</a>
+</li>
+
+<li class="nav-item">
+    <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+</li>
+
+</ul>
+
 </div>
-  </div>
+
+</div>
+
 </nav>
 
-<!-- ===== HERO ===== -->
-<header class="hero">
-  <div class="hero-content text-center px-3">
+<!-- ======================================================
+     HERO
+====================================================== -->
 
-    <h1 class="hero-title">HexaQuébec</h1>
-    <p class="hero-subtitle">
-      L’innovation au cœur du numérique québécois
-    </p>
+<header class="hero">
+
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+<div class="hero-content container px-3">
+
+<h1 class="hero-title">
+    HexaQuébec
+</h1>
+
+<p class="hero-subtitle">
+    L’innovation au cœur du numérique québécois
+</p>
+
 <div class="hero-buttons">
 
     <a href="{% url 'services' %}" class="btn-hero">
@@ -1086,87 +1359,220 @@ margin-top:6px;
     </a>
 
 </div>
-    <!-- Info -->
-    <div class="hero-info">
-      🎓 <strong>Stages :</strong> Web • Mobile • Design • Infographie • Maintenance <br>
-      ❌ Réseau & Cybersécurité non acceptés
-    </div>
-    
-   
 
-  </div>
+<div class="hero-info">
+
+🎓 <strong>Stages :</strong>
+Web • Mobile • Design • Infographie • Maintenance
+
+<br>
+
+❌ Réseau & Cybersécurité non acceptés
+
+</div>
+
+</div>
+
 </header>
 
-{% load static %}
-<section id="annonces" class="py-5 position-relative" style="background:#0b132b; color:#f7f3ec;">
+<!-- ======================================================
+     SERVICES
+====================================================== -->
 
-  <!-- Ligne décorative -->
-  <div class="separator-container mb-5">
-    <div class="separator-line"></div>
-    <div class="separator-icon">
-      <i class="fas fa-star"></i>
-    </div>
-    <div class="separator-line"></div>
-  </div>
+<section class="hexa-services">
 
-  <div class="container text-center">
-    <h2 class="section-title mb-4">
-      Nos Annonces
-    </h2>
+<div class="hexa-bg-glow glow1"></div>
+<div class="hexa-bg-glow glow2"></div>
 
-    {% if annonces %}
-    <div class="row g-4">
+<div class="container">
 
-      {% for annonce in annonces %}
-      <div class="col-md-4">
-        <div class="annonce-card card h-100">
+<div class="section-header">
 
-          {% if annonce.image %}
-            <img src="{{ annonce.image.url }}" class="card-img-top annonce-img" alt="{{ annonce.title }}">
-          {% else %}
-            <img src="{% static 'images/default-annonce.jpg' %}" class="card-img-top annonce-img" alt="Annonce">
-          {% endif %}
 
-          <div class="card-body text-start">
-            <h5 class="card-title">{{ annonce.title }}</h5>
-            <p class="card-text">{{ annonce.content|truncatewords:25 }}</p>
 
-            {% if annonce.published_at %}
-              <p class="annonce-date">{{ annonce.published_at|date:"d M Y" }}</p>
-            {% endif %}
-          </div>
+<h2>
+Solutions numériques <br>
+modernes & innovantes
+</h2>
 
-          <div class="card-footer border-0 bg-transparent text-center">
-            <a href="{% url 'annonce_detail' annonce.id %}" class="btn-annonce">Lire plus</a>
-          </div>
+<p>
+Nous accompagnons les entreprises dans la création de solutions digitales performantes :
+développement web, boutiques e-commerce, applications mobiles,
+intégration d’intelligence artificielle, UI/UX moderne et maintenance informatique.
+</p>
 
-        </div>
-      </div>
-      {% endfor %}
+</div>
 
-    </div>
-    {% else %}
-      <p class="text-light">Aucune annonce disponible pour le moment.</p>
-    {% endif %}
-  </div>
-  <br>
-  <br>
-  <br>
-  <div class="separator-container mb-5">
-    <div class="separator-line"></div>
-    <div class="separator-icon">
-      <i class="fas fa-star"></i>
-    </div>
-    <div class="separator-line"></div>
-  </div>
+<div class="services-grid">
+
+<div class="service-card">
+    <div class="icon">🌐</div>
+    <h3>Développement Web</h3>
+   <p>
+    Nous créons des sites vitrines professionnels pour mettre en valeur votre entreprise,
+    ainsi que des applications web sur mesure et des tableaux de bord sécurisés
+    pour gérer vos activités, vos clients et vos données en toute simplicité.
+</p>
+</div>
+
+<div class="service-card">
+    <div class="icon">🛒</div>
+    <h3>Sites E-commerce</h3>
+    <p>
+    Création de boutiques en ligne modernes, rapides et sécurisées,
+    avec intégration des paiements en ligne, gestion des produits,
+    commandes, livraisons et une expérience utilisateur optimisée
+    pour augmenter vos ventes.
+</p>
+</div>
+
+<div class="service-card">
+    <div class="icon">📱</div>
+    <h3>Applications Mobiles</h3>
+    <p>
+    Nous développons des applications Android & iOS modernes,
+    rapides et intuitives, offrant une expérience utilisateur fluide,
+    un design professionnel et des performances optimisées pour
+    répondre aux besoins de votre entreprise et de vos clients.
+</p>
+</div>
+
+<div class="service-card">
+    <div class="icon">🤖</div>
+    <h3>Intelligence Artificielle</h3>
+    <p>
+    Intégration de solutions d’intelligence artificielle modernes :
+    chatbots intelligents, automatisation des tâches, analyse de données
+    et IA générative pour améliorer la productivité, le service client
+    et l’innovation de votre entreprise.
+</p>
+</div>
+
+<div class="service-card">
+    <div class="icon">🎨</div>
+    <h3>Design UI/UX</h3>
+    <p>
+    Conception d’interfaces modernes et premium avec animations fluides,
+    design professionnel et expérience utilisateur optimisée pour offrir
+    une navigation élégante, intuitive et agréable sur tous les appareils.
+</p>
+</div>
+
+<div class="service-card">
+    <div class="icon">💻</div>
+    <h3>Maintenance Informatique</h3>
+   <p>
+    Assistance technique professionnelle, optimisation des performances
+    et sécurisation de vos systèmes informatiques afin d’assurer
+    la stabilité, la rapidité et la protection de vos équipements
+    et données numériques.
+</p>
+</div>
+
+</div>
+
+</div>
+
 </section>
 
-<section class="video-section py-5">
+<!-- ======================================================
+     ANNONCES
+====================================================== -->
+
+<section id="annonces" class="py-5">
+
+<div class="container">
+
+<div class="separator-container mb-5">
+    <div class="separator-line"></div>
+
+    <div class="separator-icon">
+        <i class="fas fa-star"></i>
+    </div>
+
+    <div class="separator-line"></div>
+</div>
+
+<h2 class="section-title text-center mb-4">
+    Nos Annonces
+</h2>
+
+{% if annonces %}
+
+<div class="row g-4">
+
+{% for annonce in annonces %}
+
+<div class="col-lg-4 col-md-6">
+
+<div class="annonce-card h-100">
+
+{% if annonce.image %}
+<img src="{{ annonce.image.url }}" class="annonce-img" alt="{{ annonce.title }}">
+{% else %}
+<img src="{% static 'images/default-annonce.jpg' %}" class="annonce-img" alt="Annonce">
+{% endif %}
+
+<div class="p-4">
+
+<h5 class="card-title">
+{{ annonce.title }}
+</h5>
+
+<p class="card-text">
+{{ annonce.content|truncatewords:25 }}
+</p>
+
+{% if annonce.published_at %}
+<p class="annonce-date">
+{{ annonce.published_at|date:"d M Y" }}
+</p>
+{% endif %}
+
+<div class="text-center mt-4">
+
+<a href="{% url 'annonce_detail' annonce.id %}" class="btn-annonce">
+    Lire plus
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<p class="text-center text-light">
+Aucune annonce disponible pour le moment.
+</p>
+
+{% endif %}
+
+</div>
+
+</section>
+
+<!-- ======================================================
+     VIDEO SECTION
+====================================================== -->
+
+<section class="video-section">
 
 <div class="container">
 
 <h2 class="section-title text-center mb-5">
-<i class="fa-solid fa-circle-play me-2"></i> Vidéo Annonce
+
+<i class="fa-solid fa-circle-play me-2"></i>
+
+Vidéo Annonce
+
 </h2>
 
 <div class="row justify-content-center">
@@ -1178,15 +1584,23 @@ margin-top:6px;
 <div class="video-card">
 
 <video class="video-player" controls>
+
 <source src="{{ v.video.url }}" type="video/mp4">
+
 </video>
 
 <div class="video-info text-center">
 
-<h4 class="video-title">{{ v.titre }}</h4>
+<h4 class="video-title">
+{{ v.titre }}
+</h4>
 
 <p class="video-date">
-<i class="fa-solid fa-calendar"></i> {{ v.date_pub|date:"d M Y" }}
+
+<i class="fa-solid fa-calendar"></i>
+
+{{ v.date_pub|date:"d M Y" }}
+
 </p>
 
 </div>
@@ -1203,522 +1617,523 @@ margin-top:6px;
 
 </section>
 
+<!-- ======================================================
+     AFFICHES
+====================================================== -->
+
 <section class="affiche-section">
-  <h2 class="text-center mb-5" style="color:#c6a87d; font-size: 40px;">Affiches promotionnelles</h2>
 
-  <div class="affiche-slider">
-    <div class="slides-wrapper">
-      {% for a in affiches %}
-      <div class="slide">
-        <img src="{{ a.image.url }}" alt="{{ a.titre }}">
-        <h5 class="mt-3" style="color:white;">{{ a.titre }}</h5>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+<div class="container">
+
+<h2 class="section-title text-center mb-5">
+    Affiches promotionnelles
+</h2>
+
+<div class="affiche-slider">
+
+<div class="slides-wrapper">
+
+{% for a in affiches %}
+
+<div class="slide">
+
+<img src="{{ a.image.url }}" alt="{{ a.titre }}">
+
+<h5 class="mt-4">
+{{ a.titre }}
+</h5>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
 </section>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const slidesWrapper = document.querySelector(".slides-wrapper");
-  const slides = document.querySelectorAll(".slide");
-  let index = 0;
 
-  function showSlide() {
-    index++;
-    if(index >= slides.length) index = 0;
+<!-- ======================================================
+     PARTENAIRES
+====================================================== -->
 
-    slidesWrapper.style.transform = `translateX(-${index * 100}%)`;
-  }
+<section class="py-5" style="background:#0b132b;">
 
-  setInterval(showSlide, 5000); // toutes les 5 secondes
-});
-</script>
-<!-- FontAwesome (icône étoile) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<div class="container">
 
+<h2 class="section-title text-center mb-4">
 
+Nos Partenaires
+<span style="color:#fff;">
+HexaQuébec
+</span>
 
-<!-- ===== POST-LOGOUT AVEC LION ===== -->
+</h2>
+
+<p class="section-desc text-center mb-5">
+Nous collaborons avec des entreprises solides
+pour offrir les meilleurs services.
+</p>
+
+<div class="partner-slider">
+
+<div class="partner-track">
+
+{% for partenaire in partenaires %}
+
+<div class="partner-card">
+
+{% if partenaire.logo %}
+
+<img src="{{ partenaire.logo.url }}"
+alt="{{ partenaire.nom }}"
+class="img-fluid"
+style="max-height:80px;">
+
+{% else %}
+
+<img src="{% static 'img/default_logo.png' %}"
+alt="Logo"
+class="img-fluid"
+style="max-height:80px;">
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+{% for partenaire in partenaires %}
+
+<div class="partner-card">
+
+{% if partenaire.logo %}
+
+<img src="{{ partenaire.logo.url }}"
+alt="{{ partenaire.nom }}"
+class="img-fluid"
+style="max-height:80px;">
+
+{% else %}
+
+<img src="{% static 'img/default_logo.png' %}"
+alt="Logo"
+class="img-fluid"
+style="max-height:80px;">
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ======================================================
+     CHATBOT
+====================================================== -->
+
+<div id="ai-bubble">
+💬
+</div>
+
+<div id="ai-chat">
+
+<div id="ai-header">
+🤖 Assistant HexaQuébec
+</div>
+
+<div id="chat-body"></div>
+
+<div id="chat-footer">
+
+<input type="text"
+id="user-input"
+placeholder="Écrivez votre message...">
+
+<button id="send-btn">
+Envoyer
+</button>
+
+</div>
+
+</div>
+
+<!-- ======================================================
+     INTRO SCREEN
+====================================================== -->
+
 <div id="post-logout">
-    <div class="lion-sleep">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <circle cx="256" cy="256" r="200" fill="#c6a87d" stroke="#b3916b" stroke-width="8"/>
-            <circle cx="180" cy="220" r="20" fill="#fff"/>
-            <circle cx="332" cy="220" r="20" fill="#fff"/>
-            <circle cx="180" cy="220" r="10" fill="#000"/>
-            <circle cx="332" cy="220" r="10" fill="#000"/>
-            <path d="M180 320 Q256 370 332 320" stroke="#000" stroke-width="8" fill="transparent" stroke-linecap="round"/>
-            <path d="M220 370 Q256 390 292 370" stroke="#000" stroke-width="6" fill="transparent" stroke-linecap="round"/>
-            <line x1="220" y1="370" x2="292" y2="370" stroke="#000" stroke-width="6"/>
-            <path class="eyelid-left" d="M160 220 Q180 200 200 220" stroke="#c6a87d" stroke-width="8" fill="none"/>
-            <path class="eyelid-right" d="M312 220 Q332 200 352 220" stroke="#c6a87d" stroke-width="8" fill="none"/>
-        </svg>
-    </div>
 
-    <h2 id="typing-text"></h2>
+<div class="lion-sleep">
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+
+<circle cx="256" cy="256" r="200" fill="#c6a87d" stroke="#b3916b" stroke-width="8"/>
+
+<circle cx="180" cy="220" r="20" fill="#fff"/>
+<circle cx="332" cy="220" r="20" fill="#fff"/>
+
+<circle cx="180" cy="220" r="10" fill="#000"/>
+<circle cx="332" cy="220" r="10" fill="#000"/>
+
+<path d="M180 320 Q256 370 332 320"
+stroke="#000"
+stroke-width="8"
+fill="transparent"
+stroke-linecap="round"/>
+
+<path d="M220 370 Q256 390 292 370"
+stroke="#000"
+stroke-width="6"
+fill="transparent"
+stroke-linecap="round"/>
+
+<line x1="220" y1="370"
+x2="292" y2="370"
+stroke="#000"
+stroke-width="6"/>
+
+</svg>
+
 </div>
 
-<style>
-/* --- Centrage global --- */
-#post-logout {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
-    padding: 20px;
-}
+<h2 id="typing-text"></h2>
 
-/* --- Lion --- */
-.lion-sleep svg {
-    width: 230px;
-    max-width: 70vw;
-}
-
-/* --- Texte animé --- */
-#typing-text {
-    font-size: 28px;
-    font-weight: bold;
-    color: #fff;
-    margin-top: 25px;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 3px solid #333;
-    animation: blink 0.7s infinite;
-}
-
-/* Curseur clignotant */
-@keyframes blink {
-    50% { border-color: transparent; }
-}
-
-/* --- Responsive mobile --- */
-@media (max-width: 600px) {
-    #typing-text {
-        font-size: 20px;
-        margin-top: 15px;
-        white-space: normal; /* IMPORTANT : pour que le texte ne disparaisse pas en petit écran */
-        border-right: none;
-    }
-}
-</style>
-
-
-<!-- ===== CHATBOT HTML ===== -->
-<div id="ai-bubble">💬</div>
-
-<div id="ai-chat" style="display:none;">
-    
-    <!-- Header -->
-    <div id="ai-header">🤖 Assistant HexaQuébec</div>
-
-    <!-- Zone des messages -->
-    <div id="chat-body"></div>
-
-    <!-- ===== FORMULAIRE AJOUTÉ ===== -->
-    <div id="ai-form" style="display:none; padding: 10px; border-top: 1px solid #c6a87d40;">
-        <h4 style="font-size:16px; margin-bottom:10px;">📄 Formulaire HexaQuébec</h4>
-
-        <form id="chatbot-form" method="POST" action="/chatbot_form/">
-            <div style="margin-bottom:10px;">
-                <label>Votre nom :</label>
-                <input type="text" name="nom" required class="form-control">
-            </div>
-
-            <div style="margin-bottom:10px;">
-                <label>Votre email :</label>
-                <input type="email" name="email" required class="form-control">
-            </div>
-
-            <div style="margin-bottom:10px;">
-                <label>Votre message :</label>
-                <textarea name="message" required class="form-control" rows="3"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100" style="background:#c6a87d; border:none;">
-                Envoyer le formulaire
-            </button>
-        </form>
-    </div>
-    <!-- ===== FIN FORMULAIRE ===== -->
-
-    <!-- Champ de saisie chatbot -->
-    <div id="chat-footer">
-        <input type="text" id="user-input" placeholder="Écrivez votre message...">
-        <button id="send-btn">Envoyer</button>
-    </div>
 </div>
 
-<!-- Ligne animée en haut -->
-  
+<!-- ======================================================
+     FOOTER
+====================================================== -->
 
-<section class="py-5" style="background:#0b132b; color:#f7f3ec;">
-  <div class="top-line"></div>
-  <div class="container">
-    <!-- Titre et description avec fade-in -->
-    <h2 class="text-center mb-4 section-title">
-      Nos Partenaires <span style="color:#c6a87d;">HexaQuébec</span>
-    </h2>
-    <p class="text-center mb-5 text-light section-desc">
-      Nous collaborons avec des entreprises solides pour offrir les meilleurs services.
-    </p>
+<footer class="footer">
 
-    <!-- Slider des partenaires -->
-    <div class="partner-slider">
-      <div class="partner-track">
-        {% for partenaire in partenaires %}
-        <div class="partner-card wow fadeIn" data-wow-delay="{{ forloop.counter0|add:'0.1' }}s">
-          {% if partenaire.logo %}
-            <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}" class="img-fluid" style="max-height:80px;">
-          {% else %}
-            <img src="{% static 'img/default_logo.png' %}" alt="Logo par défaut" class="img-fluid" style="max-height:80px;">
-          {% endif %}
-        </div>
-        {% endfor %}
-        {% for partenaire in partenaires %}
-        <div class="partner-card wow fadeIn" data-wow-delay="{{ forloop.counter0|add:'0.1' }}s">
-          {% if partenaire.logo %}
-            <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}" class="img-fluid" style="max-height:80px;">
-          {% else %}
-            <img src="{% static 'img/default_logo.png' %}" alt="Logo par défaut" class="img-fluid" style="max-height:80px;">
-          {% endif %}
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</section>
+<div class="container">
 
-<!-- Styles -->
-<style>
-/* Ligne animée */
-.top-line {
-  height:4px;
-  width:60px;
-  background:#c6a87d;
-  margin:0 auto 30px;
-  border-radius:2px;
-  animation: pulseLine 1.5s infinite alternate;
-}
-@keyframes pulseLine {
-  0% { transform: scaleX(0.7); opacity:0.6; }
-  50% { transform: scaleX(1); opacity:1; }
-  100% { transform: scaleX(0.7); opacity:0.6; }
-}
+<div class="row align-items-center text-center text-md-start">
 
-/* Slider */
-.partner-slider {
-  overflow:hidden;
-  width:100%;
-  position:relative;
-}
-.partner-track {
-  display:flex;
-  width:max-content;
-  animation: scroll 20s linear infinite;
-}
-.partner-card {
-  flex:0 0 auto;
-  margin:0 30px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#f7f3ec;
-  border-radius:12px;
-  padding:15px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.4s, box-shadow 0.4s;
-}
-.partner-card:hover {
-  transform: scale(1.15);
-  box-shadow:0 10px 25px rgba(198,168,125,0.6);
-}
-@keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+<div class="col-md-3 mb-4">
 
-/* Fade-in Titre & Paragraphe */
-.section-title, .section-desc {
-  opacity:0;
-  transform:translateY(20px);
-  animation: fadeUp 1s forwards;
-}
-.section-title { animation-delay:0.2s; }
-.section-desc { animation-delay:0.5s; }
-@keyframes fadeUp {
-  to { opacity:1; transform:translateY(0); }
-}
+<h4 class="footer-title">
+HexaQuébec
+</h4>
 
-/* Responsive */
-@media(max-width:768px){
-  .partner-card { margin:0 15px; padding:10px; }
-}
-</style>
+<p class="footer-text">
+HexaQuébec est votre partenaire en développement web
+et solutions numériques professionnelles.
+</p>
 
-
-<!-- Animate.css + WOW.js pour delays des logos -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.2.0/wow.min.js"></script>
-<script>
-  new WOW().init();
-</script>
-
-
-
-
- 
-
-<footer class="footer py-5">
-  <div class="container">
-    <div class="row text-center text-md-start align-items-center">
-
-      <!-- Présentation -->
-      <div class="col-md-3 mb-4">
-        <h4 class="footer-title">HexaQuébec</h4>
-        <p class="footer-text">
-          HexaQuébec est votre partenaire en développement web et solutions numériques professionnelles.
-          Nous transformons vos idées en projets digitaux performants et innovants.
-        </p>
-      </div>
-      
-
-      <!-- Adresse -->
-      <div class="col-md-3 mb-4">
-        <h5 class="footer-title">Adresse</h5>
-        <p class="footer-text">
-          1249 rue d'Angoulême<br>
-          Chicoutimi, Saguenay, Qc<br>
-          Canada<br>
-          <span class="footer-contact"><i class="fa-solid fa-phone"></i> 514 467 7377</span>
-        </p>
-      </div>
-
-      <!-- Réseaux sociaux -->
-      <div class="col-md-3 mb-4 text-center">
-        <h5 class="footer-title">Suivez-nous</h5>
-        <div class="social-train">
-          <a href="https://m.facebook.com/p/HexaQuebec-61578598457506/?deoia=1&wtsid=rdr_0QJab4d0DoCHtrW4n" class="social-link"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://www.tiktok.com/@hexaquebec.ca?_r=1&_t=ZS-91qqwvDvYXd" class="social-link"><i class="fab fa-tiktok"></i></a>
-          <a href="https://l.instagram.com/?u=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1JWMqrXy5C%2F%3Fmibextid%3DwwXIfr%26utm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio&e=AT3qddxdmjegj7nKn1LQ2N1ohnskX3GTWP3gLcmqaHGRFSmKnDwFi2ZOy8frumubJVIY28hCktBwPLeYk6sZyt-DS-RFLf9123sYrMxWQw" class="social-link"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-
-      <!-- Propriétaire -->
-     <div class="col-md-3 mb-4 text-center owner-section">
-  <div class="owner-card">
-
-
-
-
-         
-    <h6 class="owner-name mt-3 mb-1">Diambere Kamara</h6>
-    <p class="owner-title mb-2">Fondateur & Directeur Technique</p>
-    <p class="owner-role mb-3">Développeur Backend spécialisé en Django, Flask & Node.js</p>
-    <p class="owner-desc">
-      Passionné par la conception de solutions numériques performantes et sécurisées,
-      il dirige HexaQuébec avec une vision axée sur l'innovation et la qualité.
-    </p>
-  </div>
 </div>
 
-    <hr style="border-color: rgba(198,168,125,0.4); margin-top: 30px;">
-    <p class="text-center mt-3 mb-0 footer-copy">&copy; 2025 HexaQuébec — Tous droits réservés.</p>
-  </div>
+<div class="col-md-3 mb-4">
+
+<h5 class="footer-title">
+Adresse
+</h5>
+
+<p class="footer-text">
+
+2186 rue Roussel
+<br>
+
+Chicoutimi, Saguenay, Québec
+<br>
+
+Canada
+
+<br><br>
+
+<span class="footer-contact">
+
+<i class="fa-solid fa-phone"></i>
+
+514 467 7377
+
+</span>
+
+</p>
+
+</div>
+
+<div class="col-md-3 mb-4 text-center">
+
+<h5 class="footer-title">
+Suivez-nous
+</h5>
+
+<div class="social-train">
+
+<a href="https://facebook.com"
+class="social-link">
+<i class="fab fa-facebook-f"></i>
+</a>
+
+<a href="https://tiktok.com"
+class="social-link">
+<i class="fab fa-tiktok"></i>
+</a>
+
+<a href="https://instagram.com"
+class="social-link">
+<i class="fab fa-instagram"></i>
+</a>
+
+</div>
+
+</div>
+
+<div class="col-md-3 mb-4">
+
+<div class="owner-card text-center">
+
+<h6 class="owner-name">
+Diambere Kamara
+</h6>
+
+<p class="owner-title">
+Fondateur & Directeur Technique
+</p>
+
+<p class="owner-role">
+Développeur Backend spécialisé en Django, Flask & Node.js
+</p>
+
+<p class="owner-desc">
+Passionné par les solutions numériques performantes,
+il dirige HexaQuébec avec innovation et qualité.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<hr style="border-color:rgba(198,168,125,0.25);">
+
+<p class="text-center footer-copy mb-0">
+
+&copy; 2026 HexaQuébec — Tous droits réservés.
+
+</p>
+
+</div>
+
 </footer>
 
-<!-- ===== SCRIPTS ===== -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-  
-</script><script>
-/* ============================
-   NAVBAR SCROLL
-============================ */
-window.addEventListener('scroll', function() {
-  const navbar = document.querySelector('.navbar');
-  if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
-});
+<!-- ======================================================
+     SCRIPTS
+====================================================== -->
 
-/* ============================
-   RETOUR ACCUEIL
-============================ */
-function restoreHome() {
-  const postLogout = document.getElementById('post-logout');
-  const navbar = document.querySelector('.navbar');
-  if (postLogout) postLogout.style.display = 'none';
-  if (navbar) navbar.style.display = 'flex';
-}
-document.addEventListener('keydown', restoreHome);
-document.addEventListener('click', restoreHome);
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-const navbar = document.querySelector('.navbar');
-if (navbar) navbar.style.display = 'none';
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.2.0/wow.min.js"></script>
 
-/* ============================
-   TEXT TYPING ANIMATION
-============================ */
-const text = "Bienvenue sur le territoire de HexaQuébec";
-const typingText = document.getElementById("typing-text");
-let index = 0;
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-function typeEffect() {
-    if (index < text.length) {
-        typingText.textContent += text.charAt(index);
-        index++;
-        setTimeout(typeEffect, 70);
-    } else {
-        // Après 3 secondes, le texte disparaît
-        setTimeout(() => {
-            typingText.style.opacity = "0";
-            typingText.style.transition = "opacity 1.5s ease";
-        }, 3000);
+    /* =========================================================
+       WOW ANIMATION
+    ========================================================= */
+    if (typeof WOW !== "undefined") {
+        new WOW().init();
     }
-}
 
-typeEffect();
+    /* =========================================================
+       NAVBAR SCROLL
+    ========================================================= */
 
+    const navbar = document.querySelector('.navbar');
 
-/* ============================
-   CHATBOT
-============================ */
-const bubble = document.getElementById("ai-bubble");
-const chat = document.getElementById("ai-chat");
-const chatBody = document.getElementById("chat-body");
-const sendBtn = document.getElementById("send-btn");
-const input = document.getElementById("user-input");
-const formContainer = document.getElementById("ai-form");
+    if (navbar) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
 
-let messageEnvoye = false;
+    /* =========================================================
+       INTRO SCREEN
+    ========================================================= */
 
-/* ---- Ouvrir / Fermer chatbot ---- */
-if (bubble) {
-    bubble.onclick = () => {
-
-        const isClosed = chat.style.display === "none";
-        chat.style.display = isClosed ? "block" : "none";
-
-        if (isClosed && chatBody) {
-            chatBody.innerHTML = `
-                <div class="bot-msg">
-                    👋 Bonjour, je suis le représentant du <b>soutien technique HexaQuébec</b>.<br><br>
-                    Décrivez votre problème ci-dessous.<br>
-                    Merci !
-                </div>
-            `;
+    function restoreHome() {
+        const intro = document.getElementById('post-logout');
+        if (intro) {
+            intro.style.display = 'none';
         }
-    };
-}
+    }
 
-/* ---- Envoi du message utilisateur ---- */
-if (sendBtn) {
-    sendBtn.onclick = () => {
+    document.addEventListener('click', restoreHome);
+    document.addEventListener('keydown', restoreHome);
 
-        let msg = input.value.trim();
-        if (!msg) return;
+    /* =========================================================
+       TYPING EFFECT
+    ========================================================= */
 
-        messageEnvoye = true;
+    const text = "Bienvenue sur le territoire de HexaQuébec";
+    const typingText = document.getElementById("typing-text");
 
-        chatBody.innerHTML += `<div class="user-msg">${msg}</div>`;
-        chatBody.scrollTop = chatBody.scrollHeight;
-        input.value = "";
+    if (typingText) {
 
-        const text = msg.toLowerCase();
+        let index = 0;
 
-        /* ===============================
-           RÉPONSE AUTOMATIQUE HEXAQUÉBEC
-        =============================== */
-        chatBody.innerHTML += `
-           <div class="bot-msg">
-    ⚠️ <b>Information administrative :</b><br><br>
-    En raison des politiques internes de <b>HexaQuébec</b>, je ne suis pas autorisé à répondre 
-    aux questions d’ordre personnel, juridique ou technique avancée.<br><br>
-    Pour obtenir une prise en charge officielle, merci de <b>créer un compte client</b> 
-    ou de <b>compléter le formulaire de contact <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li> </b>
-</div>
-
-        `;
-
-        /* ===============================
-           DÉTECTION DES PROBLÈMES → FORMULAIRE
-        =============================== */
-        if (
-            text.includes("problème") ||
-            text.includes("bug") ||
-            text.includes("erreur") ||
-            text.includes("technique") ||
-            text.includes("aide") ||
-            text.includes("support")
-        ) {
-            chatBody.innerHTML += `
-                <div class="bot-msg">
-                    🔧 Afin de mieux vous aider, merci de remplir le champs :
-                </div>
-            `;
-
-            if (formContainer) {
-                formContainer.style.display = "block";
+        function typeEffect() {
+            if (index < text.length) {
+                typingText.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 70);
             }
         }
 
-        chatBody.scrollTop = chatBody.scrollHeight;
-    };
-}
+        typeEffect();
+    }
 
-/* ============= FORMULAIRE TECHNIQUE =================== */
-const chatbotForm = document.getElementById("chatbot-form");
+    /* =========================================================
+       SLIDER
+    ========================================================= */
 
-if (chatbotForm) {
-    chatbotForm.onsubmit = (e) => {
-        e.preventDefault();
+    const slidesWrapper = document.querySelector(".slides-wrapper");
+    const slides = document.querySelectorAll(".slide");
 
-        if (!messageEnvoye) {
-            alert("Veuillez d’abord envoyer un message avant de remplir le formulaire.");
-            return;
-        }
+    if (slidesWrapper && slides.length > 0) {
 
-        let formData = new FormData(chatbotForm);
+        let current = 0;
 
-        fetch("/chatbot_form/", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(response => {
+        setInterval(function () {
 
-            formContainer.style.display = "none";
+            current++;
+
+            if (current >= slides.length) {
+                current = 0;
+            }
+
+            slidesWrapper.style.transform = `translateX(-${current * 100}%)`;
+
+        }, 5000);
+
+    }
+
+    /* =========================================================
+       CHATBOT
+    ========================================================= */
+
+    const bubble = document.getElementById("ai-bubble");
+    const chat = document.getElementById("ai-chat");
+    const chatBody = document.getElementById("chat-body");
+    const sendBtn = document.getElementById("send-btn");
+    const input = document.getElementById("user-input");
+
+    if (bubble && chat && chatBody) {
+
+        bubble.onclick = () => {
+
+            const isHidden = chat.style.display === "none" || chat.style.display === "";
+
+            chat.style.display = isHidden ? "block" : "none";
+
+            if (isHidden) {
+                chatBody.innerHTML = `
+                    <div class="bot-msg">
+                        👋 Bonjour, bienvenue chez <b>HexaQuébec</b>.<br><br>
+                        Comment pouvons-nous vous aider aujourd’hui ?
+                    </div>
+                `;
+            }
+
+        };
+    }
+
+    if (sendBtn && input && chatBody) {
+
+        sendBtn.onclick = () => {
+
+            const msg = input.value.trim();
+
+            if (!msg) return;
+
+            chatBody.innerHTML += `
+                <div class="user-msg">
+                    ${msg}
+                </div>
+            `;
+
+            input.value = "";
 
             chatBody.innerHTML += `
                 <div class="bot-msg">
-                    ✅ Merci ! Votre message et votre formulaire ont été transmis à l’équipe HexaQuébec.<br>
-                    Nous vous contacterons sous peu.
+                    ✅ Merci pour votre message.<br><br>
+                    Notre équipe vous répondra rapidement.<br><br>
+                    📩 Vous pouvez aussi utiliser la page contact.
                 </div>
             `;
 
             chatBody.scrollTop = chatBody.scrollHeight;
-            chatbotForm.reset();
-        });
-    };
+        };
+    }
+
+});
+
+
+/* =========================
+   NAVBAR SCROLL EFFECT
+========================= */
+
+window.addEventListener("scroll", function () {
+    const navbar = document.querySelector(".navbar");
+
+    if (navbar) {
+        navbar.classList.toggle("scrolled", window.scrollY > 50);
+    }
+});
+
+/* =========================
+   SCROLL REVEAL (ANIMATIONS)
+========================= */
+
+function revealOnScroll() {
+    const elements = document.querySelectorAll(".reveal");
+
+    const windowHeight = window.innerHeight;
+
+    elements.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+
+        if (top < windowHeight - 100) {
+            el.classList.add("active");
+        }
+    });
 }
 
-AOS.init({
-        duration: 800,
-        once: true
-    });
+window.addEventListener("scroll", revealOnScroll);
+window.addEventListener("load", revealOnScroll);
 
+/* =========================
+   SMOOTH INTERACTION CLICK
+========================= */
 
+document.addEventListener("click", function (e) {
+    const el = e.target;
 
+    if (el.classList.contains("btn") || el.classList.contains("btn-hero")) {
+        el.style.transform = "scale(0.95)";
 
+        setTimeout(() => {
+            el.style.transform = "";
+        }, 150);
+    }
+});
 </script>
-
-
-
-<script src="{% static 'js/chatbot.js' %}">
-
-
-
-</script>
-
 
 </body>
 </html>

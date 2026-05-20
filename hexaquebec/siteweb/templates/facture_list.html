@@ -1,165 +1,352 @@
-
-
 {% block content %}
 
 <style>
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body{
+    background:
+    radial-gradient(circle at top left,#1e3a8a22,transparent 30%),
+    radial-gradient(circle at bottom right,#9333ea22,transparent 30%),
+    linear-gradient(135deg,#0f172a,#111827,#1e293b);
+
+    font-family:'Poppins',sans-serif;
+    color:#f8fafc;
+    min-height:100vh;
+}
+
+/* CONTAINER */
+
 .container-factures{
-max-width:1000px;
-margin:auto;
-margin-top:40px;
-font-family:Arial, Helvetica, sans-serif;
+    max-width:1300px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+/* HEADER */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+    gap:20px;
 }
 
 .title{
-font-size:28px;
-font-weight:bold;
-color:#2c3e50;
-margin-bottom:25px;
+    font-size:34px;
+    font-weight:700;
+    color:#fff;
+    margin:0;
 }
 
+.title span{
+    color:#c6a87d;
+}
+
+.subtitle{
+    color:#94a3b8;
+    margin-top:5px;
+    font-size:14px;
+}
+
+/* BUTTON */
+
+.btn-create{
+    background:linear-gradient(135deg,#c6a87d,#e2c49b);
+    color:#0f172a;
+    border:none;
+    padding:14px 22px;
+    border-radius:14px;
+    font-weight:600;
+    text-decoration:none;
+    transition:0.3s;
+    box-shadow:0 10px 25px rgba(198,168,125,0.25);
+}
+
+.btn-create:hover{
+    transform:translateY(-3px);
+    color:#0f172a;
+}
+
+/* TABLE CARD */
+
+.table-card{
+    background:rgba(15,23,42,0.92);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:24px;
+    overflow:hidden;
+    backdrop-filter:blur(12px);
+    box-shadow:0 15px 45px rgba(0,0,0,0.35);
+}
+
+/* TABLE */
+
 .facture-table{
-width:100%;
-border-collapse:collapse;
-background:white;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-border-radius:8px;
-overflow:hidden;
+    width:100%;
+    border-collapse:collapse;
+}
+
+.facture-table thead{
+    background:rgba(255,255,255,0.04);
 }
 
 .facture-table th{
-background:#2c3e50;
-color:white;
-padding:12px;
-text-align:left;
-font-size:14px;
+    padding:20px;
+    color:#cbd5e1;
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
 .facture-table td{
-padding:12px;
-border-bottom:1px solid #eee;
+    padding:18px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    vertical-align:middle;
 }
 
-.facture-table tr:hover{
-background:#f8f9fa;
+.facture-table tr{
+    transition:0.25s;
+}
+
+.facture-table tbody tr:hover{
+    background:rgba(255,255,255,0.03);
+}
+
+/* BADGE */
+
+.facture-id{
+    background:#1e293b;
+    padding:8px 14px;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:600;
+    display:inline-block;
+    color:#fff;
 }
 
 .price{
-font-weight:bold;
-color:#27ae60;
+    color:#4ade80;
+    font-weight:700;
+    font-size:16px;
 }
 
+/* ACTIONS */
+
 .actions{
-display:flex;
-gap:8px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn-action{
+    border:none;
+    padding:10px 14px;
+    border-radius:12px;
+    color:white;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.btn-action:hover{
+    transform:translateY(-2px);
+    color:white;
 }
 
 .btn-view{
-padding:6px 14px;
-background:#3498db;
-color:white;
-text-decoration:none;
-border-radius:5px;
-font-size:13px;
-}
-
-.btn-view:hover{
-background:#2980b9;
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
 }
 
 .btn-edit{
-padding:6px 14px;
-background:#f39c12;
-color:white;
-text-decoration:none;
-border-radius:5px;
-font-size:13px;
+    background:linear-gradient(135deg,#d97706,#f59e0b);
 }
 
-.btn-edit:hover{
-background:#d68910;
-}
 .btn-delete{
-    padding:6px 14px;
-    background:#e74c3c;
-    color:white;
-    text-decoration:none;
-    border:none;
-    border-radius:5px;
-    font-size:13px;
+    background:linear-gradient(135deg,#dc2626,#ef4444);
     cursor:pointer;
 }
 
-.btn-delete:hover{
-    background:#c0392b;
+/* EMPTY */
+
+.empty-box{
+    text-align:center;
+    padding:60px 20px;
 }
+
+.empty-box i{
+    font-size:60px;
+    color:#475569;
+    margin-bottom:15px;
+}
+
+.empty-box h4{
+    color:white;
+    margin-bottom:10px;
+}
+
+.empty-box p{
+    color:#94a3b8;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+    .facture-table{
+        min-width:900px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .title{
+        font-size:26px;
+    }
+
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+}
+
 </style>
 
 <div class="container-factures">
 
-<h2 class="title">📄 Liste des factures</h2>
+    <!-- HEADER -->
 
-<table class="facture-table">
+    <div class="page-header">
 
-<tr>
-<th>ID</th>
-<th>Vendeur</th>
-<th>Date</th>
-<th>Prix</th>
-<th>Actions</th>
-</tr>
+        <div>
+            <h2 class="title">
+                Gestion des <span>Factures</span>
+            </h2>
 
-{% for facture in factures %}
+            <p class="subtitle">
+                Administration moderne des factures HexaQuébec
+            </p>
+        </div>
 
-<tr>
+        <a href="{% url 'facture_create' %}" class="btn-create">
+            ➕ Nouvelle facture
+        </a>
 
-<td>#{{ facture.id }}</td>
+    </div>
 
-<td>{{ facture.nom_vendeur }}</td>
+    <!-- TABLE CARD -->
 
-<td>{{ facture.date }}</td>
+    <div class="table-card">
 
-<td class="price">{{ facture.prix }} $</td>
+        {% if factures %}
 
-<td class="actions">
+        <div class="table-responsive">
 
-    <a href="{% url 'facture_detail' facture.id %}" class="btn-view">
-        Voir
-    </a>
+            <table class="facture-table">
 
-    <a href="{% url 'facture_edit' facture.id %}" class="btn-edit">
-        Modifier
-    </a>
+                <thead>
 
-    <form action="{% url 'facture_delete' facture.id %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cette facture ?');">
-            Supprimer
-        </button>
-    </form>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vendeur</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
 
-</td>
+                </thead>
 
-</tr>
+                <tbody>
 
-{% empty %}
+                    {% for facture in factures %}
 
-<tr>
-<td colspan="5" style="text-align:center;padding:20px;">
-Aucune facture trouvée
-</td>
-</tr>
+                    <tr>
 
-{% endfor %}
+                        <td>
+                            <span class="facture-id">
+                                #{{ facture.id }}
+                            </span>
+                        </td>
 
-</table>
+                        <td>
+                            <strong>{{ facture.nom_vendeur }}</strong>
+                        </td>
+
+                        <td>
+                            {{ facture.date }}
+                        </td>
+
+                        <td class="price">
+                            {{ facture.prix }} $
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <a href="{% url 'facture_detail' facture.id %}" class="btn-action btn-view">
+                                    👁 Voir
+                                </a>
+
+                                <a href="{% url 'facture_edit' facture.id %}" class="btn-action btn-edit">
+                                    ✏ Modifier
+                                </a>
+
+                                <form action="{% url 'facture_delete' facture.id %}" method="post">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit"
+                                            class="btn-action btn-delete"
+                                            onclick="return confirm('Voulez-vous vraiment supprimer cette facture ?');">
+
+                                        🗑 Supprimer
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-box">
+
+            <i>📄</i>
+
+            <h4>Aucune facture trouvée</h4>
+
+            <p>
+                Les nouvelles factures apparaîtront ici.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
 
 </div>
 
 {% endblock %}
-
-
-
-
-
-

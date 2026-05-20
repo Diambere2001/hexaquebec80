@@ -229,3 +229,12 @@ class ProfilStagiaireForm(forms.ModelForm):
         model = ProfilStagiaire
         fields = ['photo']
 
+
+
+from django import forms
+from .models import PaiementClient
+
+class PaiementClientForm(forms.ModelForm):
+    class Meta:
+        model = PaiementClient
+        fields = '__all__'

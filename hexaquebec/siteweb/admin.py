@@ -754,3 +754,14 @@ class FactureAdmin(admin.ModelAdmin):
 class LigneFactureAdmin(admin.ModelAdmin):
     list_display = ('facture', 'produit', 'quantite', 'prix_unitaire')
     search_fields = ('produit',)
+
+
+
+from django.contrib import admin
+from .models import PaiementClient
+
+@admin.register(PaiementClient)
+class PaiementClientAdmin(admin.ModelAdmin):
+    list_display = ('nom_client', 'entreprise', 'montant', 'statut', 'date')
+    list_filter = ('statut', 'date')
+    search_fields = ('nom_client', 'entreprise', 'telephone')

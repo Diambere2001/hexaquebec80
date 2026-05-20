@@ -1,63 +1,19 @@
-{% extends 'base.html' %}
-{% block title %}Contactez-nous - HexaQuébec{% endblock %}
-<link rel="icon" href="{% static 'images/HexaQuebec.png' %}" type="image/png">
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}HexaQuébec{% endblock %}</title>
+
+    <link rel="icon" href="{% static 'images/HexaQuebec.png' %}" type="image/png">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
 {% block content %}
-<div class="container mt-4">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-primary">📬 Contactez HexaQuébec</h2>
-        <p>Vous avez une question, un besoin en matériel informatique ou un projet de développement ?  
-        Écrivez-nous, notre équipe vous répond rapidement.</p>
-    </div>
-
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-    {% endif %}
-
-    <form method="POST" action="{% url 'contact' %}" class="p-4 shadow rounded bg-white">
-        {% csrf_token %}
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Nom</label>
-                <input type="text" name="nom" class="form-control" placeholder="Votre nom" required>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Prénom</label>
-                <input type="text" name="prenom" class="form-control" placeholder="Votre prénom" required>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Téléphone</label>
-                <input type="text" name="telephone" class="form-control" placeholder="+1 418-xxx-xxxx">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Adresse</label>
-                <input type="text" name="adresse" class="form-control" placeholder="Votre adresse complète">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Courriel</label>
-                <input type="email" name="courriel" class="form-control" placeholder="exemple@courriel.com" required>
-            </div>
-            <div class="col-12">
-                <label class="form-label fw-semibold">Message</label>
-                <textarea name="message" class="form-control" rows="5" placeholder="Votre message ici..." required></textarea>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary px-4 py-2">Envoyer le message</button>
-        </div>
-    </form>
-
-    <div class="text-center mt-5">
-        <h5 class="fw-bold">📍 Adresse</h5>
-        <p>2371 Rue Bauman, Saguenay, QC, Canada</p>
-        <h6>📞 Téléphone</h6>
-        <p>(+1) 418-000-0000</p>
-        <h6>✉️ Courriel</h6>
-        <p><a href="mailto:hexaquebec80@gmail.com">hexaquebec80@gmail.com</a></p>
-    </div>
-</div>
 {% endblock %}
+
+</body>
+</html>

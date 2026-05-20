@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gestion des Annonces{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* === SAME THEME AS DASHBOARD === */
+
+:root{
+    --bg:#0b1120;
+    --card:#111827;
+    --border:rgba(255,255,255,0.08);
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --gold:#d4af37;
+    --blue:#2563eb;
+}
+
+body{
+    background:
+    radial-gradient(circle at top left,#1e3a8a22,transparent 30%),
+    radial-gradient(circle at bottom right,#d4af3722,transparent 30%),
+    var(--bg);
+    color:var(--text);
+}
+
+/* HEADER */
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:25px 0;
+}
+
+.page-title{
+    font-size:28px;
+    font-weight:800;
+}
+
+.page-sub{
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* CARD */
+.annonce-card{
+    background:rgba(17,24,39,0.92);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:22px;
+    margin-bottom:18px;
+    transition:0.3s;
+    backdrop-filter:blur(10px);
+}
+
+.annonce-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+.annonce-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.annonce-content{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+}
+
+/* IMAGE */
+.annonce-img{
+    width:100%;
+    max-height:260px;
+    object-fit:cover;
+    border-radius:16px;
+    margin-top:12px;
+}
+
+/* META */
+.meta{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:10px;
+    font-size:12px;
+    color:var(--muted);
+}
+
+/* BADGE */
+.badge{
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.badge-success{
+    background:#22c55e22;
+    color:#4ade80;
+}
+
+.badge-danger{
+    background:#ef444422;
+    color:#f87171;
+}
+
+/* BUTTON */
+.btn-hexa{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    border:none;
+    color:white;
+    border-radius:14px;
+    padding:10px 16px;
+    font-weight:600;
+    transition:0.3s;
+    text-decoration:none;
+    display:inline-block;
+}
+
+.btn-hexa:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(37,99,235,0.3);
+    color:white;
+}
+
+/* EMPTY */
+.empty{
+    text-align:center;
+    padding:60px;
+    color:var(--muted);
+    background:rgba(17,24,39,0.6);
+    border:1px dashed var(--border);
+    border-radius:20px;
+}
+
+</style>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <div>
+            <div class="page-title">📢 Gestion des annonces</div>
+            <div class="page-sub">Admin / Publication / Gestion contenu</div>
+        </div>
+
+        <a href="#" class="btn-hexa" onclick="toggleForm('annonceForm')">
+            + Ajouter annonce
+        </a>
+    </div>
+
+    <!-- FORM -->
+    <div id="annonceForm" style="display:none;" class="annonce-card">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="text" name="title" class="form-control mb-2" placeholder="Titre">
+
+            <textarea name="content" class="form-control mb-2" placeholder="Contenu"></textarea>
+
+            <input type="file" name="image" class="form-control mb-2">
+
+            <label class="mb-2">
+                <input type="checkbox" name="published">
+                Publier
+            </label>
+
+            <button class="btn-hexa w-100">
+                Enregistrer
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- LIST -->
+    {% for a in annonces %}
+
+    <div class="annonce-card">
+
+        <div class="annonce-title">{{ a.title }}</div>
+
+        <div class="annonce-content">
+            {{ a.content }}
+        </div>
+
+        {% if a.image %}
+            <img src="{{ a.image.url }}" class="annonce-img">
+        {% endif %}
+
+        <div class="meta">
+
+            <span>👤 {{ a.author }}</span>
+            <span>📅 {{ a.created_at }}</span>
+
+            {% if a.published %}
+                <span class="badge badge-success">Publié</span>
+            {% else %}
+                <span class="badge badge-danger">Brouillon</span>
+            {% endif %}
+
+        </div>
+
+        <div style="margin-top:12px;">
+            <a href="{% url 'annonce_edit' a.id %}" class="btn-hexa">
+                ✏ Modifier
+            </a>
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="empty">
+        <h4>Aucune annonce</h4>
+        <p>Commence à créer ton contenu 🚀</p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<script>
+function toggleForm(id){
+    let el = document.getElementById(id);
+    el.style.display = (el.style.display === "none" || el.style.display==="") ? "block" : "none";
+}
+</script>
+
+{% endblock %}

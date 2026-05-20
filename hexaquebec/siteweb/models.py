@@ -334,6 +334,7 @@ class VideoAnnonce(models.Model):
     titre = models.CharField(max_length=200)
     video = models.FileField(upload_to="videos_annonces/")
     date_pub = models.DateTimeField(auto_now_add=True)
+    actif = models.BooleanField(default=True)
 
     def __str__(self):
         return self.titre
@@ -896,3 +897,27 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+
+
+from django.db import models
+
+class PaiementClient(models.Model):
+    STATUT_CHOICES = [
+        ('paye', 'Payé'),
+        ('non_paye', 'Non payé'),
+    ]
+
+    nom_client = models.CharField(max_length=255)
+    entreprise = models.CharField(max_length=255)
+    telephone = models.CharField(max_length=30)
+    residence = models.CharField(max_length=255, blank=True, null=True)
+
+    titre_projet = models.CharField(max_length=255)
+
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    statut = models.CharField(max_length=10, choices=STATUT_CHOICES, default='non_paye')
+
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nom_client} - {self.montant} - {self.statut}"

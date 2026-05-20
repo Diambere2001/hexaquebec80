@@ -2,90 +2,247 @@
 <html lang="fr">
 
 <head>
+
 <meta charset="UTF-8">
-<title>Modifier facture</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modifier facture | HexaQuébec</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 
-body{
-background:#f4f6f9;
-font-family:Arial, Helvetica, sans-serif;
+*{
 margin:0;
 padding:0;
+box-sizing:border-box;
 }
+
+body{
+font-family:'Poppins',sans-serif;
+
+background:
+radial-gradient(circle at top left,#2563eb22,transparent 25%),
+radial-gradient(circle at bottom right,#9333ea22,transparent 25%),
+linear-gradient(135deg,#0f172a,#111827,#1e293b);
+
+min-height:100vh;
+padding:40px 20px;
+color:white;
+}
+
+/* CONTAINER */
 
 .container{
-max-width:800px;
+max-width:1100px;
 margin:auto;
-margin-top:60px;
 }
 
+/* CARD */
+
 .card{
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,0.08);
+background:rgba(15,23,42,0.92);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:30px;
+padding:40px;
+box-shadow:0 20px 60px rgba(0,0,0,0.35);
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:35px;
+flex-wrap:wrap;
+gap:20px;
 }
 
 .title{
-font-size:26px;
-margin-bottom:25px;
-color:#2c3e50;
-font-weight:bold;
+font-size:34px;
+font-weight:700;
+color:white;
 }
 
-.form-group{
-margin-bottom:18px;
+.title span{
+color:#c6a87d;
 }
 
-label{
-display:block;
-margin-bottom:6px;
-font-weight:bold;
-color:#555;
-}
-
-input{
-width:100%;
-padding:10px;
-border:1px solid #ddd;
-border-radius:5px;
+.subtitle{
+margin-top:8px;
+color:#94a3b8;
 font-size:14px;
 }
 
-button{
-margin-top:10px;
-padding:10px 18px;
-background:#27ae60;
+/* FORM GRID */
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:22px;
+}
+
+.form-group{
+margin-bottom:22px;
+}
+
+/* LABEL */
+
+label{
+display:block;
+margin-bottom:10px;
+font-size:14px;
+font-weight:600;
+color:#cbd5e1;
+}
+
+/* INPUT */
+
+input{
+width:100%;
+padding:15px 18px;
+border-radius:16px;
+border:1px solid rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.04);
 color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
 font-size:15px;
+transition:0.3s;
+outline:none;
 }
 
-button:hover{
-background:#219150;
+input:focus{
+border-color:#c6a87d;
+background:rgba(255,255,255,0.06);
+box-shadow:0 0 0 4px rgba(198,168,125,0.15);
 }
 
-.back{
-display:inline-block;
-margin-top:15px;
-text-decoration:none;
-color:#3498db;
-}
+/* SECTION */
 
 .section-title{
-margin-top:25px;
-font-weight:bold;
-color:#2c3e50;
+font-size:22px;
+font-weight:700;
+margin:35px 0 20px;
+color:white;
+display:flex;
+align-items:center;
+gap:10px;
 }
 
+/* PRODUCT LINE */
+
 .line-item{
-border:1px solid #eee;
-padding:10px;
-margin-bottom:10px;
-border-radius:5px;
+background:rgba(255,255,255,0.03);
+border:1px solid rgba(255,255,255,0.06);
+padding:25px;
+border-radius:22px;
+margin-bottom:20px;
+transition:0.3s;
+}
+
+.line-item:hover{
+transform:translateY(-2px);
+border-color:rgba(198,168,125,0.3);
+}
+
+/* BUTTONS */
+
+.actions{
+display:flex;
+gap:15px;
+margin-top:35px;
+flex-wrap:wrap;
+}
+
+.btn-save{
+background:linear-gradient(135deg,#22c55e,#16a34a);
+color:white;
+border:none;
+padding:16px 28px;
+border-radius:16px;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 12px 30px rgba(34,197,94,0.25);
+}
+
+.btn-save:hover{
+transform:translateY(-3px);
+}
+
+.btn-back{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.08);
+padding:16px 24px;
+border-radius:16px;
+color:#e2e8f0;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+.btn-back:hover{
+background:rgba(255,255,255,0.08);
+color:white;
+}
+
+/* BADGE */
+
+.facture-badge{
+background:rgba(198,168,125,0.15);
+color:#e2c49b;
+padding:10px 16px;
+border-radius:14px;
+font-size:14px;
+font-weight:600;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.card{
+padding:25px;
+}
+
+.title{
+font-size:28px;
+}
+
+}
+
+@media(max-width:600px){
+
+body{
+padding:20px 12px;
+}
+
+.card{
+border-radius:22px;
+padding:20px;
+}
+
+.title{
+font-size:24px;
+}
+
+.actions{
+flex-direction:column;
+}
+
+.btn-save,
+.btn-back{
+width:100%;
+text-align:center;
+}
+
 }
 
 </style>
@@ -98,75 +255,177 @@ border-radius:5px;
 
 <div class="card">
 
-<h2 class="title">✏️ Modifier la facture</h2>
+<!-- HEADER -->
+
+<div class="header">
+
+<div>
+
+<h2 class="title">
+Modifier <span>Facture</span>
+</h2>
+
+<p class="subtitle">
+Interface professionnelle d’administration HexaQuébec
+</p>
+
+</div>
+
+<div class="facture-badge">
+<i class="fa-solid fa-file-invoice"></i>
+Facture #{{ facture.id }}
+</div>
+
+</div>
 
 <form method="POST">
+
 {% csrf_token %}
 
-<!-- FACTURE INFO -->
+<!-- INFORMATIONS -->
+
+<div class="form-grid">
+
 <div class="form-group">
-<label>Nom du vendeur</label>
-<input type="text" name="vendeur_nom" value="{{ facture.vendeur_nom }}">
+<label>
+<i class="fa-solid fa-user-tie"></i>
+Nom du vendeur
+</label>
+
+<input type="text"
+name="vendeur_nom"
+value="{{ facture.vendeur_nom }}">
 </div>
 
 <div class="form-group">
-<label>Nom de l’acheteur</label>
-<input type="text" name="acheteur_nom" value="{{ facture.acheteur_nom }}">
+<label>
+<i class="fa-solid fa-user"></i>
+Nom de l’acheteur
+</label>
+
+<input type="text"
+name="acheteur_nom"
+value="{{ facture.acheteur_nom }}">
 </div>
 
 <div class="form-group">
-<label>Date</label>
-<input type="date" name="date" value="{{ facture.date|date:'Y-m-d' }}">
-</div>
+<label>
+<i class="fa-solid fa-calendar"></i>
+Date
+</label>
 
-<!-- CLIENT ADRESSE -->
-<div class="form-group">
-<label>Adresse client</label>
-<input type="text" name="adresse_client" value="{{ facture.adresse_client }}">
-</div>
-
-<div class="form-group">
-<label>Ville</label>
-<input type="text" name="ville_client" value="{{ facture.ville_client }}">
+<input type="date"
+name="date"
+value="{{ facture.date|date:'Y-m-d' }}">
 </div>
 
 <div class="form-group">
-<label>Code postal</label>
-<input type="text" name="code_postal_client" value="{{ facture.code_postal_client }}">
+<label>
+<i class="fa-solid fa-globe"></i>
+Pays
+</label>
+
+<input type="text"
+name="pays_client"
+value="{{ facture.pays_client }}">
 </div>
 
 <div class="form-group">
-<label>Pays</label>
-<input type="text" name="pays_client" value="{{ facture.pays_client }}">
+<label>
+<i class="fa-solid fa-location-dot"></i>
+Adresse client
+</label>
+
+<input type="text"
+name="adresse_client"
+value="{{ facture.adresse_client }}">
+</div>
+
+<div class="form-group">
+<label>
+<i class="fa-solid fa-city"></i>
+Ville
+</label>
+
+<input type="text"
+name="ville_client"
+value="{{ facture.ville_client }}">
+</div>
+
+<div class="form-group">
+<label>
+<i class="fa-solid fa-map-pin"></i>
+Code postal
+</label>
+
+<input type="text"
+name="code_postal_client"
+value="{{ facture.code_postal_client }}">
+</div>
+
 </div>
 
 <!-- PRODUITS -->
-<div class="section-title">🧾 Produits</div>
+
+<div class="section-title">
+<i class="fa-solid fa-cart-shopping"></i>
+Produits de la facture
+</div>
 
 {% for ligne in facture.lignes.all %}
+
 <div class="line-item">
 
-    <label>Produit</label>
-    <input type="text" name="produit_{{ ligne.id }}" value="{{ ligne.produit }}">
+<div class="form-grid">
 
-    <label>Quantité</label>
-    <input type="number" name="quantite_{{ ligne.id }}" value="{{ ligne.quantite }}">
+<div class="form-group">
+<label>Produit</label>
 
-    <label>Prix unitaire</label>
-    <input type="number" step="0.01" name="prix_{{ ligne.id }}" value="{{ ligne.prix_unitaire }}">
+<input type="text"
+name="produit_{{ ligne.id }}"
+value="{{ ligne.produit }}">
+</div>
+
+<div class="form-group">
+<label>Quantité</label>
+
+<input type="number"
+name="quantite_{{ ligne.id }}"
+value="{{ ligne.quantite }}">
+</div>
+
+<div class="form-group">
+<label>Prix unitaire</label>
+
+<input type="number"
+step="0.01"
+name="prix_{{ ligne.id }}"
+value="{{ ligne.prix_unitaire }}">
+</div>
 
 </div>
+
+</div>
+
 {% endfor %}
 
-<button type="submit">
-💾 Enregistrer les modifications
+<!-- ACTIONS -->
+
+<div class="actions">
+
+<button type="submit" class="btn-save">
+<i class="fa-solid fa-floppy-disk"></i>
+Enregistrer les modifications
 </button>
 
-</form>
-
-<a href="{% url 'facture_list' %}" class="back">
-⬅ Retour aux factures
+<a href="{% url 'facture_list' %}" class="btn-back">
+<i class="fa-solid fa-arrow-left"></i>
+Retour aux factures
 </a>
+
+</div>
+
+</form>
 
 </div>
 

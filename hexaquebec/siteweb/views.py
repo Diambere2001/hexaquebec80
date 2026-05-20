@@ -28,8 +28,7 @@ from django.views.decorators.http import require_POST
 import mimetypes  # <-- Ajoute cette ligne
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, CartItem
-
-
+from .models import PaiementClient
 
 
 
@@ -160,7 +159,7 @@ def annonce_detail(request, annonce_id):
 
 def annonces_list(request):
     annonces = Announcement.objects.filter(published=True).order_by('-published_at')
-    return render(request, 'siteweb/annonces.html', {'annonces': annonces})
+    return render(request, 'annonces.html', {'annonces': annonces})
 
 
 # ===================== CONTACT =====================
@@ -716,35 +715,36 @@ def login_hexa(request):
             return redirect("dashboard_hexa")
     return render(request, "login_hexa.html")
 
+
 @login_required
 def dashboard_hexa(request):
 
-    # Tous les messages des clients
     messages_clients = MessageClient.objects.all().order_by('-date')
-
-    # Tous les clients
     clients = Client.objects.all()
-
-    # Toutes les factures
     factures = Facture.objects.all().order_by('date')
-
-    # Toutes les commandes
     orders = Order.objects.select_related('product').all().order_by('-id')
+    paiements = PaiementClient.objects.all().order_by('-date')
 
-    # Données pour Chart.js
     factures_labels = [f.date.strftime('%b %Y') for f in factures]
     factures_data = [float(f.total_facture()) for f in factures]
+
+    total_revenus = sum(float(f.total_facture()) for f in factures)
+    total_non_paye = 0
 
     return render(request, "dashboard_hexa.html", {
         "messages": messages_clients,
         "clients": clients,
         "factures": factures,
-        "orders": orders,   # 🔥 important pour ton tableau commandes
+        "orders": orders,
+
+        "clients_paye": paiements,
 
         "factures_labels": json.dumps(factures_labels),
         "factures_data": json.dumps(factures_data),
-    })
 
+        "total_revenus": total_revenus,
+        "total_non_paye": total_non_paye,
+    })
 def repondre_message(request, message_id):
     # Récupère le message
     message_obj = get_object_or_404(MessageClient, id=message_id)
@@ -2462,3 +2462,168 @@ def paypal_verify(request):
             "ok": False,
             "status": status
         })
+    
+
+
+
+    from django.shortcuts import render
+
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from .models import Announcement
+
+def annonce_create(request):
+
+    if request.method == "POST":
+
+        annonce = Announcement.objects.create(
+            title=request.POST.get("title"),
+            content=request.POST.get("content"),
+            image=request.FILES.get("image"),
+            author=request.user,
+            published="published" in request.POST,
+            published_at=timezone.now() if "published" in request.POST else None
+        )
+
+        return redirect("home")  # 🔥 ICI IMPORTANT
+
+    return render(request, "annonce_create.html")
+
+
+def annonce_list(request):
+    annonces = Announcement.objects.all().order_by('-created_at')
+    return render(request, "annonce_list.html", {
+        "annonces": annonces
+    })
+
+@login_required
+def video_create(request):
+
+    if request.method == "POST":
+        VideoAnnonce.objects.create(
+            titre=request.POST['titre'],
+            video=request.FILES['video']
+        )
+        return redirect('video_list')
+
+    return render(request, "videos/video_create.html")
+
+@login_required
+def video_list(request):
+    videos = VideoAnnonce.objects.all().order_by('-date_pub')
+    return render(request, "videos/video_list.html", {
+        "videos": videos
+    })
+
+@login_required
+def affiche_create(request):
+
+    if request.method == "POST":
+        Affiche.objects.create(
+            titre=request.POST['titre'],
+            image=request.FILES['image']
+        )
+        return redirect('affiche_list')
+
+    return render(request, "affiches/affiche_create.html")
+
+@login_required
+def affiche_list(request):
+    affiches = Affiche.objects.filter(actif=True).order_by('-date_pub')
+    return render(request, "affiches/affiche_list.html", {
+        "affiches": affiches
+    })
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Sum
+from .models import PaiementClient
+
+
+
+@login_required
+def paye_dashboard(request):
+
+    clients_paye = PaiementClient.objects.all().order_by('-date')
+
+    total_revenus = PaiementClient.objects.filter(statut='paye').aggregate(
+        total=Sum('montant')
+    )['total'] or 0
+
+    total_non_paye = PaiementClient.objects.filter(statut='non_paye').aggregate(
+        total=Sum('montant')
+    )['total'] or 0
+
+    return render(request, "dashboard_hexa.html", {
+        "clients_paye": clients_paye,
+        "total_revenus": total_revenus,
+        "total_non_paye": total_non_paye,
+    })
+# CREATE
+def ajouter_paye(request):
+    if request.method == "POST":
+        PaiementClient.objects.create(
+            nom_client=request.POST['nom_client'],
+            entreprise=request.POST['entreprise'],
+            telephone=request.POST['telephone'],
+            residence=request.POST['residence'],
+            titre_projet=request.POST['titre_projet'],
+            montant=request.POST['montant'],
+            statut=request.POST['statut'],
+        )
+        return redirect('paye_dashboard')
+
+    return render(request, "paye_form.html")
+
+
+# UPDATE
+def modifier_paye(request, id):
+    client = get_object_or_404(PaiementClient, id=id)
+
+    if request.method == "POST":
+        client.nom_client = request.POST['nom_client']
+        client.entreprise = request.POST['entreprise']
+        client.telephone = request.POST['telephone']
+        client.residence = request.POST['residence']
+        client.titre_projet = request.POST['titre_projet']
+        client.montant = request.POST['montant']
+        client.statut = request.POST['statut']
+        client.save()
+        return redirect('paye_dashboard')
+
+    return render(request, "paye_form.html", {"client": client})
+
+
+# DELETE
+def supprimer_paye(request, id):
+    client = get_object_or_404(PaiementClient, id=id)
+    client.delete()
+    return redirect('paye_dashboard')
+
+
+
+
+
+
+
+
+
+def annonce_edit(request, id):
+    annonce = get_object_or_404(Announcement, id=id)
+
+    if request.method == "POST":
+        annonce.title = request.POST['title']
+        annonce.content = request.POST['content']
+
+        if 'published' in request.POST:
+            annonce.published = True
+        else:
+            annonce.published = False
+
+        if request.FILES.get('image'):
+            annonce.image = request.FILES['image']
+
+        annonce.save()
+        return redirect('annonces_list')
+
+    return render(request, 'annonce_edit.html', {'annonce': annonce})

@@ -1,200 +1,528 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion Stagiaire - HexaQuébec</title>
 
-<!-- Bootstrap + Icons -->
+<title>Connexion Stagiaire | HexaQuébec</title>
+
+<!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-body {
-    background: linear-gradient(135deg, #0b132b, #1c2541);
-    color: white;
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; 
-    padding: 20px; 
+
+:root{
+    --bg:#070b1a;
+    --bg2:#0b132b;
+    --gold:#c6a87d;
+    --gold-light:#f0d49d;
+    --white:#ffffff;
 }
 
-.login-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
-    padding: 40px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 0 40px rgba(224,192,151,0.3);
-    backdrop-filter: blur(12px);
-    animation: fadeIn 0.6s ease;
+/* ===== BASE ===== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
-/* TITLE ICON */
-.icon-box {
-    width: 60px;
-    height: 60px;
-    margin: auto;
-    border-radius: 50%;
-    background: linear-gradient(135deg,#c6a87d,#e0c097);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #0b132b;
-    font-size: 24px;
-    margin-bottom: 15px;
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    position:relative;
+    background:
+    linear-gradient(rgba(7,11,26,0.88),rgba(7,11,26,0.94)),
+    url("/static/images/forest-bg.png") center/cover no-repeat;
+    padding:20px;
 }
 
-/* INPUT */
-.form-control {
-    background: rgba(255,255,255,0.08) !important;
-    border: none !important;
-    color: white !important;
-    border-radius: 10px;
-    padding: 12px;
-    transition: 0.3s;
+/* ===== GLOW EFFECT ===== */
+
+.glow{
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:radial-gradient(circle, rgba(198,168,125,0.18), transparent 70%);
+    top:-180px;
+    right:-120px;
+    z-index:0;
+    animation:floatGlow 8s ease-in-out infinite;
 }
 
-.form-control:focus {
-    background: rgba(255,255,255,0.15) !important;
-    box-shadow: 0 0 0 2px #e0c097;
+.glow2{
+    position:absolute;
+    width:400px;
+    height:400px;
+    background:radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
+    bottom:-150px;
+    left:-100px;
+    z-index:0;
+    animation:floatGlow 10s ease-in-out infinite alternate;
 }
 
-/* INPUT GROUP */
-.input-group-text {
-    background: rgba(255,255,255,0.08);
-    border: none;
-    color: #e0c097;
-}
-
-/* BUTTON */
-.btn-login {
-    background: linear-gradient(135deg,#c6a87d,#e0c097);
-    border: none;
-    color: #0b132b;
-    font-weight: 600;
-    border-radius: 10px;
-    padding: 12px;
-    transition: 0.3s;
-}
-
-.btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(224,192,151,0.5);
-}
-
-/* ALERT */
-.alert {
-    border-radius: 10px;
-    font-size: 0.9rem;
-}
-
-/* ANIMATION */
-@keyframes fadeIn {
-    from {opacity:0; transform:translateY(20px);}
-    to {opacity:1; transform:translateY(0);}
-}
-
-@media (max-width: 768px) {
-
-    .login-card {
-        padding: 25px 20px; /* moins grand */
-        max-width: 350px;   /* 🔥 réduit la taille */
+@keyframes floatGlow{
+    0%{
+        transform:translateY(0px);
     }
-
-    .icon-box {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+    50%{
+        transform:translateY(30px);
     }
-
-    h4 {
-        font-size: 18px;
-    }
-
-    .form-control {
-        padding: 10px;
-        font-size: 14px;
-    }
-
-    .btn-login {
-        padding: 10px;
-        font-size: 14px;
+    100%{
+        transform:translateY(0px);
     }
 }
-@media (max-width: 380px) {
 
-    .login-card {
-        padding: 20px 15px;
-        max-width: 320px;
+/* ===== LOGIN CARD ===== */
+
+.login-wrapper{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:430px;
+}
+
+.login-card{
+    position:relative;
+    overflow:hidden;
+    padding:40px 35px;
+    border-radius:32px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    box-shadow:
+    0 25px 60px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+    animation:fadeUp 1s ease;
+}
+
+.login-card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    border-radius:32px;
+    padding:1px;
+    background:linear-gradient(
+        135deg,
+        rgba(198,168,125,0.6),
+        rgba(255,255,255,0.08),
+        rgba(198,168,125,0.25)
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+}
+
+/* ===== HEADER ===== */
+
+.login-header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo-box{
+    width:90px;
+    height:90px;
+    margin:auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    background:linear-gradient(135deg,#f0d49d,#c6a87d);
+    box-shadow:0 15px 35px rgba(198,168,125,0.4);
+}
+
+.logo-box::before{
+    content:'';
+    position:absolute;
+    inset:-6px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,0.12);
+    animation:pulse 2s infinite;
+}
+
+.logo-box i{
+    font-size:2rem;
+    color:#0b132b;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+        opacity:1;
     }
-
-    h4 {
-        font-size: 16px;
+    100%{
+        transform:scale(1.15);
+        opacity:0;
     }
 }
+
+.login-title{
+    margin-top:20px;
+    font-size:2rem;
+    font-weight:800;
+    color:#fff;
+}
+
+.login-subtitle{
+    margin-top:10px;
+    color:#d6d6d6;
+    font-size:0.92rem;
+    line-height:1.6;
+}
+
+/* ===== ALERT ===== */
+
+.alert{
+    border:none;
+    border-radius:16px;
+    backdrop-filter:blur(10px);
+    font-size:0.9rem;
+}
+
+/* ===== INPUT ===== */
+
+.input-box{
+    margin-bottom:22px;
+}
+
+.form-label{
+    color:#f2f2f2;
+    font-size:0.88rem;
+    font-weight:500;
+    margin-bottom:8px;
+}
+
+.input-group{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    overflow:hidden;
+    transition:0.3s ease;
+}
+
+.input-group:focus-within{
+    border-color:rgba(198,168,125,0.6);
+    box-shadow:0 0 20px rgba(198,168,125,0.2);
+}
+
+.input-group-text{
+    background:transparent;
+    border:none;
+    color:var(--gold);
+    padding-left:18px;
+}
+
+.form-control{
+    background:transparent !important;
+    border:none !important;
+    color:#fff !important;
+    padding:14px 12px;
+    font-size:0.95rem;
+}
+
+.form-control:focus{
+    box-shadow:none !important;
+}
+
+.form-control::placeholder{
+    color:rgba(255,255,255,0.45);
+}
+
+/* ===== BUTTON ===== */
+
+.btn-login{
+    width:100%;
+    height:58px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#f0d49d,#c6a87d);
+    color:#0b132b;
+    font-weight:700;
+    font-size:1rem;
+    transition:0.35s ease;
+    cursor:pointer;
+    box-shadow:0 12px 30px rgba(198,168,125,0.28);
+}
+
+.btn-login:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 40px rgba(198,168,125,0.4);
+}
+
+.btn-login:active{
+    transform:scale(0.98);
+}
+
+/* ===== BACK BUTTON ===== */
+
+.btn-return{
+    width:100%;
+    height:54px;
+    border-radius:18px;
+    margin-top:16px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.04);
+    color:#fff;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-decoration:none;
+    transition:0.35s ease;
+    backdrop-filter:blur(10px);
+}
+
+.btn-return:hover{
+    background:rgba(255,255,255,0.08);
+    border-color:rgba(198,168,125,0.5);
+    color:var(--gold);
+    transform:translateY(-3px);
+}
+
+/* ===== FOOTER ===== */
+
+.login-footer{
+    margin-top:25px;
+    text-align:center;
+    color:rgba(255,255,255,0.6);
+    font-size:0.85rem;
+}
+
+/* ===== ANIMATION ===== */
+
+@keyframes fadeUp{
+    0%{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    100%{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:576px){
+
+    body{
+        align-items:flex-start;
+        padding-top:40px;
+    }
+
+    .login-card{
+        padding:30px 22px;
+        border-radius:26px;
+    }
+
+    .logo-box{
+        width:75px;
+        height:75px;
+    }
+
+    .logo-box i{
+        font-size:1.7rem;
+    }
+
+    .login-title{
+        font-size:1.6rem;
+    }
+
+    .login-subtitle{
+        font-size:0.86rem;
+    }
+
+    .btn-login,
+    .btn-return{
+        height:52px;
+        font-size:0.92rem;
+    }
+}
+
+
+.login-card::before{
+    pointer-events: none;
+}
+
+.login-card{
+    position: relative;
+    z-index: 1;
+}
+
+.btn-login{
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+}
+
+
 </style>
 </head>
 
 <body>
 
-<div class="login-card text-center">
+<!-- GLOW -->
 
-    <div class="icon-box">
-        <i class="fa-solid fa-user-graduate"></i>
-    </div>
+<div class="glow"></div>
+<div class="glow2"></div>
 
-    <h4 class="mb-4 fw-bold">Connexion Stagiaire</h4>
+<!-- LOGIN -->
 
-    <!-- ✅ MESSAGES DJANGO -->
-    {% if messages %}
-        <div class="mb-3 text-start">
-            {% for message in messages %}
-                <div class="alert 
-                    {% if message.tags == 'error' %}
-                        alert-danger
-                    {% elif message.tags == 'success' %}
-                        alert-success
-                    {% else %}
-                        alert-warning
-                    {% endif %}
-                    alert-dismissible fade show" role="alert">
+<div class="login-wrapper">
 
-                    <i class="fa-solid fa-circle-info me-2"></i>
-                    {{ message }}
+<div class="login-card">
 
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+<!-- HEADER -->
 
-    <!-- FORM -->
-    <form method="POST">
-        {% csrf_token %}
+<div class="login-header">
 
-        <!-- EMAIL -->
-        <div class="input-group mb-3">
-            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-            <input type="email" name="email" class="form-control" placeholder="Votre email" required>
-        </div>
+<div class="logo-box">
+<i class="fa-solid fa-user-graduate"></i>
+</div>
 
-        <!-- CODE -->
-        <div class="input-group mb-3">
-            <span class="input-group-text"><i class="fa fa-lock"></i></span>
-            <input type="text" name="code" class="form-control" placeholder="Code d'accès" required>
-        </div>
+<h1 class="login-title">
+Connexion Stagiaire
+</h1>
 
-        <button type="submit" class="btn btn-login w-100">
-            <i class="fa-solid fa-right-to-bracket"></i> Se connecter
-        </button>
-    </form>
+<p class="login-subtitle">
+Accédez à votre espace de stage sécurisé
+et consultez vos informations facilement.
+</p>
 
-    <a href="/" class="btn btn-outline-light mt-3 w-100">
-        <i class="fa-solid fa-arrow-left"></i> Retour
-    </a>
+</div>
+
+<!-- DJANGO MESSAGES -->
+
+{% if messages %}
+<div class="mb-3">
+
+{% for message in messages %}
+
+<div class="alert
+{% if message.tags == 'error' %}
+alert-danger
+{% elif message.tags == 'success' %}
+alert-success
+{% else %}
+alert-warning
+{% endif %}
+alert-dismissible fade show">
+
+<i class="fa-solid fa-circle-info me-2"></i>
+
+{{ message }}
+
+<button type="button"
+        class="btn-close btn-close-white"
+        data-bs-dismiss="alert">
+</button>
+
+</div>
+
+{% endfor %}
+
+</div>
+{% endif %}
+
+<!-- FORM -->
+
+<form method="POST">
+
+{% csrf_token %}
+
+<!-- EMAIL -->
+
+<div class="input-box">
+
+<label class="form-label">
+Adresse courriel
+</label>
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="fa-solid fa-envelope"></i>
+</span>
+
+<input type="email"
+       name="email"
+       class="form-control"
+       placeholder="exemple@gmail.com"
+       required>
+
+</div>
+
+</div>
+
+<!-- CODE -->
+
+<div class="input-box">
+
+<label class="form-label">
+Code d'accès
+</label>
+
+<div class="input-group">
+
+<span class="input-group-text">
+<i class="fa-solid fa-lock"></i>
+</span>
+
+<input type="text"
+       name="code"
+       class="form-control"
+       placeholder="Entrer votre code"
+       required>
+
+</div>
+
+</div>
+
+<!-- BUTTON -->
+
+<button type="submit" class="btn-login">
+
+<i class="fa-solid fa-right-to-bracket me-2"></i>
+Connexion
+
+</button>
+
+</form>
+
+<!-- RETURN -->
+
+<a href="/" class="btn-return">
+
+<i class="fa-solid fa-arrow-left"></i>
+Retour à l'accueil
+
+</a>
+
+<!-- FOOTER -->
+
+<div class="login-footer">
+
+© 2025 HexaQuébec — Plateforme Stagiaire
+
+</div>
+
+</div>
 
 </div>
 

@@ -88,7 +88,25 @@ urlpatterns = [
     path("paypal/success/", views.paypal_success_view, name="paypal_success"),
     path("paypal/error/", views.paypal_error_view, name="paypal_error"),
     path("paypal/verify/", views.paypal_verify, name="paypal_verify"),
+    path('annonces/ajouter/', views.annonce_create, name='annonce_create'),
+    path('annonces/', views.annonce_list, name='annonce_list'),
 
+    # VIDEOS
+    path('videos/ajouter/', views.video_create, name='video_create'),
+    path('videos/', views.video_list, name='video_list'),
+
+    # AFFICHES
+    path('affiches/ajouter/', views.affiche_create, name='affiche_create'),
+    path('affiches/', views.affiche_list, name='affiche_list'),
+    
+    path('paye/', views.paye_dashboard, name='paye_dashboard'),
+    path('paye/ajouter/', views.ajouter_paye, name='ajouter_paye'),
+    path('paye/modifier/<int:id>/', views.modifier_paye, name='modifier_paye'),
+    path('paye/supprimer/<int:id>/', views.supprimer_paye, name='supprimer_paye'),
+    path('annonces/', views.annonces_list, name='annonces_list'),
+    path('annonces/edit/<int:id>/', views.annonce_edit, name='annonce_edit'),
+
+ 
 
     
 
