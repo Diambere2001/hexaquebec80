@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Répondre au message</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:system-ui;
+            background:radial-gradient(circle at top,#0f172a,#0b1220);
+            color:white;
+        }
+
+        /* PAGE */
+        .reply-page{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            padding:60px 20px;
+        }
+
+        .reply-container{
+            width:100%;
+            max-width:900px;
+        }
+
+        /* HEADER */
+        .reply-header{
+            background:rgba(17,24,39,0.85);
+            border:1px solid rgba(255,255,255,0.06);
+            padding:22px;
+            border-radius:18px;
+            margin-bottom:18px;
+            display:flex;
+            align-items:center;
+            gap:15px;
+            backdrop-filter:blur(10px);
+        }
+
+        .avatar{
+            width:52px;
+            height:52px;
+            border-radius:14px;
+            background:linear-gradient(135deg,#2563eb,#4f46e5);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+            font-size:18px;
+            text-transform:uppercase;
+        }
+
+        .reply-header h2{
+            margin:0;
+            font-size:18px;
+        }
+
+        .reply-header p{
+            margin:4px 0 0;
+            font-size:13px;
+            color:#94a3b8;
+        }
+
+        /* MESSAGE */
+        .message-card{
+            background:rgba(17,24,39,0.75);
+            border:1px solid rgba(255,255,255,0.05);
+            border-radius:18px;
+            padding:20px;
+            margin-bottom:18px;
+        }
+
+        .label{
+            font-size:11px;
+            color:#60a5fa;
+            text-transform:uppercase;
+            letter-spacing:1px;
+            margin-bottom:10px;
+        }
+
+        .message-text{
+            color:#e2e8f0;
+            line-height:1.7;
+            font-size:15px;
+            white-space:pre-wrap;
+        }
+
+        /* FORM */
+        .reply-form{
+            background:rgba(17,24,39,0.85);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:18px;
+            padding:22px;
+            backdrop-filter:blur(10px);
+        }
+
+        .reply-form label{
+            display:block;
+            margin-bottom:10px;
+            color:#cbd5e1;
+            font-weight:600;
+        }
+
+        .reply-form textarea{
+            width:100%;
+            min-height:180px;
+            background:#0b1220;
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:14px;
+            padding:16px;
+            color:white;
+            font-size:15px;
+            outline:none;
+            resize:none;
+            transition:0.25s;
+        }
+
+        .reply-form textarea:focus{
+            border-color:#4f46e5;
+            box-shadow:0 0 0 4px rgba(79,70,229,0.18);
+            transform:translateY(-1px);
+        }
+
+        /* BUTTON */
+        .btn{
+            margin-top:15px;
+            width:100%;
+            height:52px;
+            border:none;
+            border-radius:14px;
+            background:linear-gradient(135deg,#2563eb,#4f46e5);
+            color:white;
+            font-weight:700;
+            font-size:15px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            transition:0.25s;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 15px 35px rgba(37,99,235,0.35);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="reply-page">
+
+    <div class="reply-container">
+
+        <!-- HEADER -->
+        <div class="reply-header">
+
+            <div class="avatar">
+                {{ message.client.user.first_name|default:"U"|slice:":1" }}
+            </div>
+
+            <div>
+                <h2>Répondre à {{ message.client.user.username }}</h2>
+                <p>Message reçu le {{ message.date|date:"d M Y H:i" }}</p>
+            </div>
+
+        </div>
+
+        <!-- MESSAGE CLIENT -->
+        <div class="message-card">
+
+            <div class="label">Message du client</div>
+
+            <div class="message-text">
+                {{ message.message }}
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="reply-form">
+
+            {% csrf_token %}
+
+            <label>Votre réponse</label>
+
+            <textarea name="reponse"
+                      placeholder="Écrire une réponse professionnelle..."
+                      required></textarea>
+
+            <button type="submit" class="btn">
+                <i class="fa-solid fa-paper-plane"></i>
+                Envoyer la réponse
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

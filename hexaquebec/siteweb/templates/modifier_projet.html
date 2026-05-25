@@ -1,0 +1,291 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modifier Projet</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#0b1120;
+    --card:#111827;
+    --card2:#1e293b;
+    --border:rgba(255,255,255,0.06);
+    --text:#ffffff;
+    --muted:#94a3b8;
+    --blue:#2563eb;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    padding:30px;
+}
+
+.page-container{
+    max-width:900px;
+    margin:auto;
+}
+
+.dashboard-card{
+    background:var(--card);
+    border-radius:24px;
+    padding:30px;
+    border:1px solid var(--border);
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.page-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.page-title i{
+    width:55px;
+    height:55px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+}
+
+.page-title h2{
+    font-size:28px;
+    font-weight:700;
+    margin:0;
+}
+
+.project-form{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.form-control,
+textarea,
+select{
+    background:var(--card2) !important;
+    border:1px solid rgba(255,255,255,0.05) !important;
+    color:white !important;
+    border-radius:14px !important;
+    height:50px !important;
+    padding:12px 15px !important;
+    font-size:14px !important;
+}
+
+textarea{
+    height:130px !important;
+    resize:none;
+    grid-column:1/3;
+}
+
+.form-control:focus,
+textarea:focus,
+select:focus{
+    box-shadow:none !important;
+    border:1px solid var(--blue) !important;
+    background:#243247 !important;
+}
+
+.form-control::placeholder,
+textarea::placeholder{
+    color:#94a3b8;
+}
+
+input[type="file"]{
+    padding:10px !important;
+}
+
+.current-image{
+    grid-column:1/3;
+    margin-top:10px;
+}
+
+.current-image img{
+    width:100%;
+    max-height:300px;
+    object-fit:cover;
+    border-radius:20px;
+    border:2px solid rgba(255,255,255,0.05);
+}
+
+.btn-hexa{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    border:none;
+    color:white;
+    height:52px;
+    border-radius:14px;
+    font-weight:600;
+    transition:0.3s;
+    grid-column:1/3;
+}
+
+.btn-hexa:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(37,99,235,0.35);
+}
+
+.back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:#cbd5e1;
+    text-decoration:none;
+    margin-top:20px;
+    font-weight:500;
+}
+
+.back-btn:hover{
+    color:white;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    .project-form{
+        grid-template-columns:1fr;
+    }
+
+    textarea,
+    .btn-hexa,
+    .current-image{
+        grid-column:auto;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="dashboard-card">
+
+        <div class="page-title">
+
+            <i class="fa-solid fa-pen"></i>
+
+            <h2>Modifier Projet</h2>
+
+        </div>
+
+        <form method="POST"
+        enctype="multipart/form-data"
+        class="project-form">
+
+            {% csrf_token %}
+
+            <input type="text"
+            name="nom_projet"
+            class="form-control"
+            value="{{ projet.nom_projet }}"
+            placeholder="Nom projet">
+
+            <input type="text"
+            name="client"
+            class="form-control"
+            value="{{ projet.client }}"
+            placeholder="Client">
+
+            <input type="number"
+            name="prix"
+            class="form-control"
+            value="{{ projet.prix }}"
+            placeholder="Prix">
+
+            <input type="text"
+            name="technologie"
+            class="form-control"
+            value="{{ projet.technologie }}"
+            placeholder="Technologie">
+
+            <select name="statut" class="form-control">
+
+                <option value="disponible"
+                {% if projet.statut == 'disponible' %}selected{% endif %}>
+                    Disponible
+                </option>
+
+                <option value="encours"
+                {% if projet.statut == 'encours' %}selected{% endif %}>
+                    En cours
+                </option>
+
+                <option value="termine"
+                {% if projet.statut == 'termine' %}selected{% endif %}>
+                    Terminé
+                </option>
+
+            </select>
+
+            <input type="file"
+            name="image"
+            class="form-control">
+
+            <textarea
+            name="description"
+            class="form-control"
+            placeholder="Description">{{ projet.description }}</textarea>
+
+            {% if projet.image %}
+
+            <div class="current-image">
+
+                <img src="{{ projet.image.url }}">
+
+            </div>
+
+            {% endif %}
+
+            <button type="submit" class="btn-hexa">
+
+                <i class="fa-solid fa-floppy-disk"></i>
+                Enregistrer Modifications
+
+            </button>
+
+        </form>
+
+        <a href="{% url 'projet_list' %}" class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Retour aux projets
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -14,7 +14,7 @@ from .models import CompteStagiaire
 from .models import Stagiairelogin
 from django.utils.html import format_html
 from .forms import ProfilStagiaireForm 
-
+from .models import PresenceStagiaire
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -765,3 +765,147 @@ class PaiementClientAdmin(admin.ModelAdmin):
     list_display = ('nom_client', 'entreprise', 'montant', 'statut', 'date')
     list_filter = ('statut', 'date')
     search_fields = ('nom_client', 'entreprise', 'telephone')
+
+
+
+
+from django.contrib import admin
+from .models import Projet
+
+
+@admin.register(Projet)
+class ProjetAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'nom_projet',
+        'client',
+        'prix',
+        'statut',
+        'date_creation'
+    )
+
+    search_fields = (
+        'nom_projet',
+        'client'
+    )
+
+    list_filter = (
+        'statut',
+        'date_creation'
+    )
+
+
+
+
+
+
+
+
+
+from django.contrib import admin
+from django.utils import timezone
+from .models import PresenceStagiaire
+import pytz
+
+
+@admin.register(PresenceStagiaire)
+class PresenceStagiaireAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "profil",
+        "date_quebec",
+        "horaire_entree",
+        "pointage_entree",
+        "pause_repas",
+        "horaire_sortie",
+        "pointage_sortie",
+        "absent",
+    )
+
+    search_fields = (
+        "profil__stagiaire__nom",
+    )
+
+    list_filter = (
+        "absent",
+        "date",
+    )
+
+    readonly_fields = (
+        "date",
+        "created_at",
+        "heure_canada",
+    )
+
+    fieldsets = (
+
+        ("👤 Stagiaire", {
+            "fields": (
+                "profil",
+            )
+        }),
+
+        ("🕒 Horaire", {
+            "fields": (
+                "horaire_entree",
+                "pause_repas",
+                "horaire_sortie",
+            )
+        }),
+
+        ("📍 Pointage", {
+            "fields": (
+                "pointage_entree",
+                "pointage_sortie",
+            )
+        }),
+
+        ("❌ Absence", {
+            "fields": (
+                "absent",
+                "raison_absence",
+            )
+        }),
+
+        ("📝 Note Admin", {
+            "fields": (
+                "note_admin",
+            )
+        }),
+
+        ("🇨🇦 Heure Canada / Québec", {
+            "fields": (
+                "heure_canada",
+            )
+        }),
+
+        ("📅 Historique", {
+            "fields": (
+                "date",
+                "created_at",
+            )
+        }),
+
+    )
+
+    # 🇨🇦 Heure Québec
+    def heure_canada(self, obj):
+        quebec_tz = pytz.timezone("America/Toronto")
+        heure_quebec = timezone.now().astimezone(quebec_tz)
+
+        return heure_quebec.strftime("%d/%m/%Y %H:%M:%S")
+
+    heure_canada.short_description = "Heure actuelle Québec"
+
+    # 📅 Date Québec
+    def date_quebec(self, obj):
+        quebec_tz = pytz.timezone("America/Toronto")
+
+        if obj.created_at:
+            date_qc = obj.created_at.astimezone(quebec_tz)
+            return date_qc.strftime("%d/%m/%Y")
+
+        return "-"
+
+    date_quebec.short_description = "Date Québec"
+    date_quebec.admin_order_field = "date"

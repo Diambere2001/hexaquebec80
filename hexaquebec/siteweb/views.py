@@ -745,26 +745,77 @@ def dashboard_hexa(request):
         "total_revenus": total_revenus,
         "total_non_paye": total_non_paye,
     })
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+
+from .models import MessageClient
+
+
 def repondre_message(request, message_id):
-    # Récupère le message
+
     message_obj = get_object_or_404(MessageClient, id=message_id)
 
     if request.method == "POST":
-        reponse = request.POST.get('reponse', '').strip()
-        if reponse:
-            message_obj.reponse = reponse
-            from django.utils import timezone
-            message_obj.date_reponse = timezone.now()
-            message_obj.save()
-            messages.success(request, f"Réponse envoyée à {message_obj.client.user.username} !")
-        else:
-            messages.error(request, "Veuillez écrire une réponse avant d'envoyer.")
 
-    # Redirige vers le dashboard
-    return redirect('dashboard')
-    
-    
-     # remplace 'dashboard' par le nom réel de ta page
+        reponse = request.POST.get("reponse", "").strip()
+
+        if not reponse:
+            messages.error(request, "Veuillez écrire une réponse.")
+            return redirect("repondre_message", message_id=message_id)
+
+        message_obj.reponse = reponse
+        message_obj.date_reponse = timezone.now()
+        message_obj.save()
+
+        client = message_obj.client.user
+
+        subject = "📩 Réponse à votre message - Hexa Québec"
+
+        email_body = f"""
+Bonjour {client.username},
+
+Vous avez reçu une nouvelle réponse de HexaQuébec.
+
+━━━━━━━━━━━━━━━━━━━━
+
+📩 Votre message :
+{message_obj.message}
+
+━━━━━━━━━━━━━━━━━━━━
+
+💬 Notre réponse :
+{reponse}
+
+━━━━━━━━━━━━━━━━━━━━
+
+🔗 https://hexaquebec.com
+
+━━━━━━━━━━━━━━━━━━━━
+
+Équipe HexaQuébec
+Support Client
+"""
+
+        if client.email:
+            send_mail(
+                subject,
+                email_body,
+                settings.DEFAULT_FROM_EMAIL,
+                [client.email],
+                fail_silently=False,
+            )
+
+        messages.success(request, "Réponse envoyée avec succès.")
+
+        return redirect("dashboard_hexa")
+
+    return render(request, "repondre_message.html", {
+        "message": message_obj
+    })
+
 @login_required
 def envoyer_message(request):
     message_envoye = False
@@ -1824,70 +1875,263 @@ def login_stagiaire(request):
 
 
 # ================= DASHBOARD =================
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Stagiairelogin, ProfilStagiaire
+from django.utils import timezone
+
+from .models import (
+    Stagiairelogin,
+    ProfilStagiaire,
+    PresenceStagiaire,
+)
+
 from .forms import ProfilStagiaireForm
+
 from datetime import datetime
 
 
 def dashboard_stagiaire(request):
+
+    # ================= SESSION =================
+
     stagiaire_id = request.session.get("stagiaire_id")
+
     if not stagiaire_id:
         return redirect("login_stagiaire")
 
+    # ================= USER =================
+
     login = Stagiairelogin.objects.get(id=stagiaire_id)
+
     stagiaire = login.stagiaire
-    profil, created = ProfilStagiaire.objects.get_or_create(stagiaire=stagiaire)
+
+    profil, created = ProfilStagiaire.objects.get_or_create(
+        stagiaire=stagiaire
+    )
+
+    # ================= PRESENCE JOUR =================
+
+    today = timezone.now().date()
+
+    presence, created = PresenceStagiaire.objects.get_or_create(
+        profil=profil,
+        date=today
+    )
+
+    # ================= HISTORIQUE =================
+
+    historique_presences = PresenceStagiaire.objects.filter(
+        profil=profil
+    ).order_by("-date")
+
+    # ================= POST =================
 
     if request.method == "POST":
 
+        # =====================================================
         # 📅 RDV
+        # =====================================================
+
         if "send_rdv" in request.POST:
+
             date = request.POST.get("date")
             heure = request.POST.get("heure")
 
             if date and heure:
+
                 datetime_str = f"{date} {heure}"
-                profil.date_rdv = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+
+                profil.date_rdv = datetime.strptime(
+                    datetime_str,
+                    "%Y-%m-%d %H:%M"
+                )
+
                 profil.statut_rdv = "en_attente"
+
                 profil.save()
 
-                messages.success(request, "📅 Demande de rendez-vous envoyée")
+                messages.success(
+                    request,
+                    "📅 Demande de rendez-vous envoyée"
+                )
+
             else:
-                messages.error(request, "Veuillez choisir date et heure")
+
+                messages.error(
+                    request,
+                    "Veuillez choisir date et heure"
+                )
 
             return redirect("dashboard_stagiaire")
 
-        # 💬 MESSAGE STAGIAIRE → ADMIN
+        # =====================================================
+        # 💬 MESSAGE
+        # =====================================================
+
         if "send_message" in request.POST:
+
             msg = request.POST.get("message_stagiaire")
 
             if msg:
+
                 profil.message_stagiaire = msg
+
                 profil.save()
-                messages.success(request, "💬 Message envoyé à l'administration")
+
+                messages.success(
+                    request,
+                    "💬 Message envoyé à l'administration"
+                )
+
             else:
-                messages.error(request, "Veuillez écrire un message")
+
+                messages.error(
+                    request,
+                    "Veuillez écrire un message"
+                )
 
             return redirect("dashboard_stagiaire")
 
-        # 📷 PHOTO (ton code existant)
-        form = ProfilStagiaireForm(request.POST, request.FILES, instance=profil)
+        # =====================================================
+        # 🟢 POINTAGE ENTRÉE
+        # =====================================================
+
+        if "pointer_entree" in request.POST:
+
+            if not presence.pointage_entree:
+
+                presence.pointage_entree = timezone.now().time()
+
+                presence.save()
+
+                messages.success(
+                    request,
+                    "🟢 Entrée enregistrée"
+                )
+
+            else:
+
+                messages.warning(
+                    request,
+                    "Entrée déjà enregistrée"
+                )
+
+            return redirect("dashboard_stagiaire")
+
+        # =====================================================
+        # 🍽️ PAUSE REPAS
+        # =====================================================
+
+        if "pause_repas" in request.POST:
+
+            repas = request.POST.get("repas")
+
+            presence.pause_repas = repas
+
+            presence.save()
+
+            messages.success(
+                request,
+                "🍽️ Pause repas enregistrée"
+            )
+
+            return redirect("dashboard_stagiaire")
+
+        # =====================================================
+        # 🔴 POINTAGE SORTIE
+        # =====================================================
+
+        if "pointer_sortie" in request.POST:
+
+            if not presence.pointage_sortie:
+
+                presence.pointage_sortie = timezone.now().time()
+
+                presence.save()
+
+                messages.success(
+                    request,
+                    "🔴 Sortie enregistrée"
+                )
+
+            else:
+
+                messages.warning(
+                    request,
+                    "Sortie déjà enregistrée"
+                )
+
+            return redirect("dashboard_stagiaire")
+
+        # =====================================================
+        # 🚨 ABSENCE
+        # =====================================================
+
+        if "signaler_absence" in request.POST:
+
+            raison = request.POST.get("raison_absence")
+
+            presence.absent = True
+
+            presence.raison_absence = raison
+
+            presence.save()
+
+            messages.warning(
+                request,
+                "🚨 Absence signalée"
+            )
+
+            return redirect("dashboard_stagiaire")
+
+        # =====================================================
+        # 📷 PHOTO
+        # =====================================================
+
+        form = ProfilStagiaireForm(
+            request.POST,
+            request.FILES,
+            instance=profil
+        )
+
         if form.is_valid():
+
             form.save()
-            messages.success(request, "Photo mise à jour avec succès !")
+
+            messages.success(
+                request,
+                "📷 Photo mise à jour avec succès"
+            )
+
             return redirect("dashboard_stagiaire")
+
         else:
-            messages.error(request, "Erreur lors de l'envoi de la photo.")
+
+            messages.error(
+                request,
+                "Erreur lors de l'envoi de la photo"
+            )
 
     else:
+
         form = ProfilStagiaireForm(instance=profil)
 
+    # ================= RENDER =================
+
     return render(request, "dashboard_stagiaire.html", {
+
         "stagiaire": stagiaire,
+
         "profil": profil,
-        "form": form
+
+        "form": form,
+
+        # PRESENCE JOUR
+        "presence": presence,
+
+        # HISTORIQUE
+        "historique_presences": historique_presences,
     })
 # ================= LOGOUT =================
 def logout_stagiaire(request):
@@ -2627,3 +2871,94 @@ def annonce_edit(request, id):
         return redirect('annonces_list')
 
     return render(request, 'annonce_edit.html', {'annonce': annonce})
+
+
+
+
+from django.shortcuts import render, redirect
+from .models import Projet
+
+
+
+def projet_list(request):
+
+    projets = Projet.objects.all().order_by('-id')
+
+    return render(request,
+    'projets.html',
+    {
+        'projets': projets
+    })
+
+
+def ajouter_projet(request):
+
+    if request.method == 'POST':
+
+        Projet.objects.create(
+
+            nom_projet=request.POST.get('nom_projet'),
+
+            client=request.POST.get('client'),
+
+            prix=request.POST.get('prix'),
+
+            statut=request.POST.get('statut'),
+
+            technologie=request.POST.get('technologie'),
+
+            description=request.POST.get('description'),
+
+            image=request.FILES.get('image')
+
+        )
+
+        return redirect('projet_list')
+
+    return redirect('projet_list')
+
+from decimal import Decimal
+from django.shortcuts import render, redirect, get_object_or_404
+
+# MODIFIER PROJET
+def modifier_projet(request, id):
+
+    projet = get_object_or_404(Projet, id=id)
+
+    if request.method == "POST":
+
+        projet.nom_projet = request.POST.get('nom_projet')
+        projet.client = request.POST.get('client')
+
+        # CORRECTION PRIX
+        prix = request.POST.get('prix')
+
+        if prix and prix.strip() != "":
+            projet.prix = Decimal(prix)
+        else:
+            projet.prix = 0
+
+        projet.technologie = request.POST.get('technologie')
+        projet.statut = request.POST.get('statut')
+        projet.description = request.POST.get('description')
+
+        if request.FILES.get('image'):
+            projet.image = request.FILES.get('image')
+
+        projet.save()
+
+        return redirect('projet_list')
+
+    return render(request, 'modifier_projet.html', {
+        'projet': projet
+    })
+
+# SUPPRIMER PROJET
+def supprimer_projet(request, id):
+
+    projet = get_object_or_404(Projet, id=id)
+
+    projet.delete()
+
+
+

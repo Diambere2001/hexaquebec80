@@ -1,970 +1,349 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HexaQuébec - Développement Web & Solutions Numériques</title>
+<title>
+HexaQuébec — Développement Web & Solutions Numériques
+</title>
 
-<!-- Bootstrap -->
+<!-- BOOTSTRAP -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Font Awesome -->
+<!-- FONT AWESOME -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-<!-- Animate.css -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- ANIMATE -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
 
-/* =========================================================
+/* ======================================================
    RESET
-========================================================= */
+====================================================== */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    scroll-behavior:smooth;
     font-family:'Poppins',sans-serif;
 }
 
-body{
-    background:#020826;
-    overflow-x:hidden;
-    color:#fff;
-    padding-top: 90px;
+html{
+    scroll-behavior:smooth;
 }
 
-/* =========================================================
+body{
+    background:#050816;
+    overflow-x:hidden;
+    color:#fff;
+}
+
+/* ======================================================
    NAVBAR
-========================================================= */
+====================================================== */
 
 .navbar{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9999;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
 
-    background: transparent;
-    transition: all 0.4s ease;
+    z-index:9999;
+
+    padding:18px 0;
+
+    transition:.4s ease;
+
+    background:transparent;
 }
 
 .navbar.scrolled{
-    background: rgba(11,19,43,0.95) !important;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-    padding: 0.6rem 0;
+    background:rgba(5,8,22,0.92);
+    backdrop-filter:blur(20px);
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.35);
+
+    padding:12px 0;
 }
+
 /* LOGO */
 
 .logo-hexa{
-    position:relative;
     width:75px;
     height:75px;
+
     border-radius:50%;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     overflow:hidden;
-    background:linear-gradient(135deg,#f0d49d,#c6a87d);
-    border:2px solid #c6a87d;
-    box-shadow:
-    0 0 25px rgba(198,168,125,0.35),
-    inset 0 0 12px rgba(255,255,255,0.25);
 
-    transition:0.4s ease;
-}
+    position:relative;
 
-.logo-hexa::before{
-    content:"";
-    position:absolute;
-    inset:-3px;
-    border-radius:50%;
-    background:conic-gradient(
-        from 0deg,
-        #ffffff,
-        #c6a87d,
-        #f0d49d,
-        #ffffff
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
     );
-    animation:rotateBorder 5s linear infinite;
-    z-index:0;
-}
 
-.logo-hexa:hover{
-    transform:scale(1.08);
     box-shadow:
-    0 0 40px rgba(198,168,125,0.6),
-    inset 0 0 14px rgba(255,255,255,0.3);
+    0 0 30px rgba(124,92,255,0.35);
 }
 
 .logo-img{
-    width:58px;
-    height:58px;
+    width:60px;
+    height:60px;
+
     border-radius:50%;
-    position:relative;
-    z-index:2;
 }
 
-@keyframes rotateBorder{
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-/* NAV LINKS */
+/* LINKS */
 
 .nav-modern .nav-link{
-    color:#f7f3ec !important;
+    color:#fff !important;
+
+    margin-left:20px;
+
     font-weight:600;
-    font-size:1rem;
-    margin:0 15px;
+
     position:relative;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    transition:0.3s ease;
+
+    transition:.4s ease;
 }
 
 .nav-modern .nav-link::after{
     content:"";
     position:absolute;
+
     left:0;
-    bottom:-7px;
+    bottom:-8px;
+
     width:0%;
     height:2px;
-    background:#c6a87d;
-    transition:0.4s;
+
+    background:#00d4ff;
+
+    transition:.4s ease;
 }
 
 .nav-modern .nav-link:hover{
-    color:#c6a87d !important;
+    color:#00d4ff !important;
 }
 
-.nav-modern .nav-link:hover::after,
-.nav-modern .nav-link.active::after{
+.nav-modern .nav-link:hover::after{
     width:100%;
 }
 
-/* TOGGLER */
+/* ======================================================
+   HERO SECTION
+====================================================== */
 
-.navbar-toggler{
-    border:1px solid #c6a87d;
-}
-
-.navbar-toggler-icon{
-    filter:invert(1);
-}
-
-/* MOBILE MENU */
-
-@media(max-width:991px){
-
-    .nav-modern{
-        background:#0b132b;
-        padding:25px;
-        border-radius:18px;
-        margin-top:20px;
-    }
-
-    .nav-modern .nav-link{
-        margin:12px 0;
-    }
-
-}
-
-/* =========================================================
-   HERO
-========================================================= */
-
-/* =========================================================
-   HERO SLIDER MODERNE
-========================================================= */
-
-.hero{
+.hero-section{
+    position:relative;
     min-height:100vh;
 
-    position:relative;
     overflow:hidden;
+
+    background:
+    linear-gradient(
+        135deg,
+        #050816 0%,
+        #081120 35%,
+        #0d1428 100%
+    );
 
     display:flex;
     align-items:center;
-    justify-content:center;
-    text-align:center;
+
+    padding:120px 0 80px;
 }
 
-/* IMAGES */
+/* BG */
 
-.hero-slide{
-    position:absolute;
-    inset:0;
-
-    background-size:cover;
-    background-position:center;
-
-    opacity:0;
-
-    animation:heroSlider 20s infinite;
-
-    transform:scale(1.08);
-}
-
-/* OVERLAY DARK */
-
-.hero-slide::before{
-    content:"";
+.hero-overlay{
     position:absolute;
     inset:0;
 
     background:
-    linear-gradient(
-        rgba(2,8,38,0.72),
-        rgba(2,8,38,0.88)
-    );
+    radial-gradient(circle at top left,
+    rgba(124,92,255,0.20),
+    transparent 35%),
+
+    radial-gradient(circle at bottom right,
+    rgba(0,212,255,0.18),
+    transparent 35%);
 }
 
-/* IMAGE 1 */
+/* BADGE */
 
-.hero-slide:nth-child(1){
-    background-image:url("https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg");
-    animation-delay:0s;
-}
-
-/* IMAGE 2 */
-
-.hero-slide:nth-child(2){
-    background-image:url("https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg");
-    animation-delay:5s;
-}
-
-/* IMAGE 3 */
-
-.hero-slide:nth-child(3){
-    background-image:url("https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg");
-    animation-delay:10s;
-}
-
-/* IMAGE 4 */
-
-.hero-slide:nth-child(4){
-    background-image:url("https://images.pexels.com/photos/1181359/pexels-photo-1181359.jpeg");
-    animation-delay:15s;
-}
-
-/* CONTENT */
-
-.hero-content{
-    position:relative;
-    z-index:5;
-}
-
-/* ANIMATION */
-
-@keyframes heroSlider{
-
-    0%{
-        opacity:0;
-        transform:scale(1.08);
-    }
-
-    5%{
-        opacity:1;
-    }
-
-    25%{
-        opacity:1;
-        transform:scale(1);
-    }
-
-    30%{
-        opacity:0;
-    }
-
-    100%{
-        opacity:0;
-    }
-
-}
-
-.hero::before{
-    content:"";
-    position:absolute;
-    width:600px;
-    height:600px;
-    border-radius:50%;
-    background:rgba(198,168,125,0.08);
-    filter:blur(120px);
-    top:-200px;
-    right:-200px;
-}
-
-.hero::after{
-    content:"";
-    position:absolute;
-    width:450px;
-    height:450px;
-    border-radius:50%;
-    background:rgba(255,255,255,0.05);
-    filter:blur(100px);
-    bottom:-150px;
-    left:-150px;
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-    animation:fadeUp 1.2s ease;
-}
-
-.hero-title{
-    font-size:4rem;
-    font-weight:800;
-    color:#f7f3ec;
-    margin-bottom:15px;
-    text-shadow:0 0 20px rgba(255,255,255,0.15);
-}
-
-.hero-subtitle{
-    color:#cbd5e1;
-    font-size:1.3rem;
-    max-width:700px;
-    margin:auto;
-    margin-bottom:35px;
-    line-height:1.8;
-}
-
-.hero-buttons{
-    display:flex;
-    justify-content:center;
-    gap:18px;
-    flex-wrap:wrap;
-}
-
-/* HERO BUTTON */
-
-.btn-hero{
-    display:flex;
+.hero-badge{
+    display:inline-flex;
     align-items:center;
     gap:10px;
 
-    padding:14px 22px;
-    border-radius:14px;
+    padding:12px 22px;
 
-    text-decoration:none;
-    color:#fff;
+    border-radius:100px;
 
-    background:linear-gradient(135deg,#3a86ff,#4361ee);
+    background:rgba(255,255,255,0.06);
 
-    transition:0.35s ease;
+    border:1px solid rgba(255,255,255,0.08);
 
+    color:#8be9ff;
+
+    backdrop-filter:blur(20px);
+
+    margin-bottom:28px;
+
+    font-size:14px;
     font-weight:600;
 }
 
-.btn-hero.warning{
-    background:linear-gradient(135deg,#ffbe0b,#fb8500);
-    color:#0b132b;
+/* TITLE */
+
+.hero-title{
+    font-size:72px;
+    font-weight:900;
+    line-height:1.05;
+
+    margin-bottom:30px;
 }
 
-.btn-hero.outline{
-    background:transparent;
-    border:1px solid #c6a87d;
-    color:#c6a87d;
+.hero-title span{
+    display:block;
+
+    background:
+    linear-gradient(
+        to right,
+        #7c5cff,
+        #00d4ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-.btn-hero:hover{
-    transform:translateY(-4px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.35);
-}
+/* TEXT */
 
-.hero-info{
-    margin-top:35px;
-    color:#e2e8f0;
-    font-size:1rem;
-    line-height:1.8;
-}
+.hero-text{
+    color:rgba(255,255,255,0.72);
 
-/* MOBILE HERO */
-
-@media(max-width:768px){
-
-    .hero{
-        padding:160px 20px 80px;
-    }
-
-    .hero-title{
-        font-size:2.4rem;
-    }
-
-    .hero-subtitle{
-        font-size:1rem;
-    }
-
-    .hero-buttons{
-        gap:12px;
-    }
-
-    .btn-hero{
-        width:58px;
-        height:58px;
-        border-radius:50%;
-        justify-content:center;
-        padding:0;
-    }
-
-    .btn-hero .label{
-        display:none;
-    }
-
-}
-
-/* =========================================================
-   SECTION TITLE
-========================================================= */
-
-.section-title{
-    color:#c6a87d;
-    font-weight:800;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    font-size:2.7rem;
-}
-
-.section-desc{
-    color:#d6d6d6;
-    max-width:700px;
-    margin:auto;
-    line-height:1.8;
-}
-
-/* =========================================================
-   SERVICES
-========================================================= */
-.hexa-services{
-    position:relative;
-    padding:140px 20px;
-    overflow:hidden;
-
-    /* fond ultra premium */
-    background:#070b1a;
-}
-
-/* =========================
-   BACKGROUND LUXE LIGHTS
-========================= */
-
-.hexa-services::before,
-.hexa-services::after{
-    content:"";
-    position:absolute;
-    width:600px;
-    height:600px;
-    border-radius:50%;
-    filter:blur(120px);
-    opacity:0.25;
-    z-index:0;
-}
-
-.hexa-services::before{
-    background:radial-gradient(circle,#7c5cff,transparent 60%);
-    top:-200px;
-    left:-200px;
-}
-
-.hexa-services::after{
-    background:radial-gradient(circle,#00d4ff,transparent 60%);
-    bottom:-200px;
-    right:-200px;
-}
-
-/* =========================
-   HEADER PREMIUM
-========================= */
-
-.section-header{
-    text-align:center;
-    margin-bottom:90px;
-    position:relative;
-    z-index:2;
-}
-
-.mini-title{
-    display:inline-block;
-    padding:10px 20px;
-    border:1px solid rgba(255,255,255,0.12);
-    border-radius:999px;
-
-    color:#b7c0ff;
-    font-size:12px;
-    letter-spacing:3px;
-
-    background:rgba(255,255,255,0.03);
-    backdrop-filter:blur(15px);
-}
-
-.section-header h2{
-    font-size:58px;
-    font-weight:800;
-    color:#ffffff;
-    margin-top:20px;
-    line-height:1.1;
-}
-
-.section-header p{
-    max-width:800px;
-    margin:auto;
-    margin-top:20px;
     font-size:18px;
-    color:rgba(255,255,255,0.65);
-    line-height:1.8;
+    line-height:1.9;
+
+    margin-bottom:35px;
 }
 
-/* =========================
-   GRID LUXE
-========================= */
+/* BUTTONS */
 
-.services-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:28px;
-    position:relative;
-    z-index:2;
+.hero-buttons{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+
+    margin-bottom:40px;
+}
+.hero-overlay{
+    pointer-events:none;
 }
 
-/* =========================
-   CARDS ULTRA LUXE
-========================= */
-
-.service-card{
-    position:relative;
-    padding:45px 35px;
-    border-radius:24px;
-
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(18px);
-
-    transition:0.5s ease;
-
-    overflow:hidden;
+.floating-card{
+    pointer-events:none;
 }
+.hero-btn{
+    padding:16px 28px;
 
-/* glow hover premium */
-.service-card::before{
-    content:"";
-    position:absolute;
-    inset:-2px;
-
-    background:linear-gradient(
-        135deg,
-        rgba(124,92,255,0.25),
-        rgba(0,212,255,0.15),
-        transparent 60%
-    );
-
-    opacity:0;
-    transition:0.5s ease;
-}
-
-.service-card:hover{
-    transform:translateY(-12px) scale(1.02);
-    border-color:rgba(124,92,255,0.35);
-    box-shadow:0 25px 60px rgba(0,0,0,0.6);
-}
-
-.service-card:hover::before{
-    opacity:1;
-}
-
-/* =========================
-   ICON LUXE
-========================= */
-
-.icon{
-    width:65px;
-    height:65px;
     border-radius:18px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:26px;
-
-    background:linear-gradient(135deg,#7c5cff,#00d4ff);
-    color:#fff;
-
-    box-shadow:0 15px 35px rgba(124,92,255,0.25);
-    margin-bottom:22px;
-}
-
-/* =========================
-   TEXT PREMIUM
-========================= */
-
-.service-card h3{
-    font-size:22px;
-    color:#ffffff;
-    margin-bottom:12px;
-}
-
-.service-card p{
-    font-size:15px;
-    line-height:1.7;
-    color:rgba(255,255,255,0.65);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:992px){
-    .services-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .section-header h2{
-        font-size:42px;
-    }
-}
-
-@media(max-width:768px){
-    .services-grid{
-        grid-template-columns:1fr;
-    }
-
-    .section-header h2{
-        font-size:32px;
-    }
-}
-
-/* =========================================================
-   ANNONCES
-========================================================= */
-
-#annonces{
-    background:#0b132b;
-    color:#fff;
-    position:relative;
-}
-
-.separator-container{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.separator-line{
-    width:120px;
-    height:2px;
-    background:linear-gradient(
-        90deg,
-        transparent,
-        #c6a87d,
-        transparent
-    );
-}
-
-.separator-icon{
-    margin:0 12px;
-    color:#c6a87d;
-    font-size:1.4rem;
-}
-
-/* CARD */
-
-.annonce-card{
-    background:rgba(255,255,255,0.05);
-    border-radius:18px;
-    overflow:hidden;
-    border:1px solid rgba(198,168,125,0.15);
-
-    transition:0.4s ease;
-
-    box-shadow:0 12px 25px rgba(0,0,0,0.35);
-}
-
-.annonce-card:hover{
-    transform:translateY(-10px);
-    box-shadow:0 18px 40px rgba(0,0,0,0.55);
-}
-
-.annonce-img{
-    height:230px;
-    width:100%;
-    object-fit:cover;
-}
-
-.card-title{
-    color:#c6a87d;
-    font-weight:700;
-}
-
-.card-text{
-    color:#ddd;
-}
-
-.annonce-date{
-    color:#999;
-    font-size:0.85rem;
-}
-
-.btn-annonce{
-    display:inline-block;
-    border:2px solid #c6a87d;
-    color:#c6a87d;
     text-decoration:none;
-    padding:10px 24px;
-    border-radius:40px;
+
     font-weight:600;
-    transition:0.35s ease;
-}
 
-.btn-annonce:hover{
-    background:#c6a87d;
-    color:#0b132b;
-    transform:scale(1.05);
-}
+    transition:.4s ease;
 
-/* =========================================================
-   VIDEO SECTION
-========================================================= */
-
-.video-section{
-    background:#020826;
-    padding:100px 0;
-}
-
-.video-card{
-    background:rgba(255,255,255,0.05);
-    border-radius:22px;
-    overflow:hidden;
-    border:1px solid rgba(255,255,255,0.08);
-
-    box-shadow:0 10px 35px rgba(0,0,0,0.5);
-
-    transition:0.4s ease;
-}
-
-.video-card:hover{
-    transform:translateY(-8px);
-}
-
-.video-player{
-    width:100%;
-}
-
-.video-info{
-    padding:22px;
-}
-
-.video-title{
-    color:#c6a87d;
-    font-weight:700;
-}
-
-.video-date{
-    color:#bbb;
-    margin-top:8px;
-}
-
-/* =========================================================
-   AFFICHES
-========================================================= */
-
-.affiche-section{
-    background:#0b132b;
-    padding:100px 20px;
-}
-
-.affiche-slider{
-    max-width:700px;
-    margin:auto;
-    overflow:hidden;
-    position:relative;
-}
-
-.slides-wrapper{
-    display:flex;
-    transition:1s ease;
-}
-
-.slide{
-    min-width:100%;
-    text-align:center;
-}
-
-.slide img{
-    width:90%;
-    max-width:520px;
-    border-radius:16px;
-
-    box-shadow:0 15px 35px rgba(0,0,0,0.45);
-}
-
-/* =========================================================
-   PARTENAIRES
-========================================================= */
-
-.partner-slider{
-    overflow:hidden;
-    position:relative;
-}
-
-.partner-track{
-    display:flex;
-    width:max-content;
-    animation:scroll 22s linear infinite;
-}
-
-.partner-card{
-    flex:0 0 auto;
-
-    margin:0 25px;
-    padding:20px;
-
-    background:#fff;
-    border-radius:18px;
-
-    display:flex;
+    display:inline-flex;
     align-items:center;
-    justify-content:center;
-
-    transition:0.35s ease;
-
-    box-shadow:0 8px 22px rgba(0,0,0,0.12);
+    gap:12px;
 }
 
-.partner-card:hover{
-    transform:scale(1.12);
-    box-shadow:0 10px 35px rgba(198,168,125,0.45);
+.primary-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    color:#fff;
 }
 
-@keyframes scroll{
-    0%{
-        transform:translateX(0);
-    }
+.secondary-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #ffbe0b,
+        #fb8500
+    );
 
-    100%{
-        transform:translateX(-50%);
-    }
+    color:#111;
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-    background:rgba(11,19,43,0.98);
-    padding-top:70px;
-    padding-bottom:30px;
-    border-top:2px solid #c6a87d;
+.outline-btn{
+    border:1px solid rgba(255,255,255,0.15);
+    color:#fff;
 }
 
-.footer-title{
-    color:#c6a87d;
-    font-weight:700;
-    margin-bottom:18px;
+.hero-btn:hover{
+    transform:translateY(-6px);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,0.35);
 }
 
-.footer-text{
-    color:#d6d6d6;
-    line-height:1.8;
-}
+/* STAGE */
 
-.footer-contact{
-    color:#c6a87d;
-    font-weight:600;
-}
-
-.social-train{
+.hero-stage-box{
     display:flex;
-    justify-content:center;
-    gap:16px;
-}
+    gap:20px;
 
-.social-link{
-    width:50px;
-    height:50px;
-    border-radius:50%;
+    align-items:flex-start;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:rgba(255,255,255,0.08);
-
-    color:#c6a87d;
-
-    border:1px solid #c6a87d;
-
-    transition:0.35s ease;
-}
-
-.social-link:hover{
-    background:#c6a87d;
-    color:#0b132b;
-    transform:scale(1.15);
-}
-
-.owner-card{
-    background:rgba(255,255,255,0.05);
-    border-radius:18px;
     padding:25px;
 
-    box-shadow:0 0 25px rgba(198,168,125,0.1);
+    border-radius:24px;
 
-    transition:0.35s ease;
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.07),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    margin-bottom:35px;
 }
 
-.owner-card:hover{
-    transform:translateY(-6px);
-}
+.stage-icon{
+    min-width:70px;
+    height:70px;
 
-.owner-name{
-    color:#fff;
-    font-weight:700;
-}
-
-.owner-title{
-    color:#c6a87d;
-}
-
-.owner-role{
-    color:#ddd;
-}
-
-.owner-desc{
-    color:#aaa;
-    line-height:1.7;
-}
-
-.footer-copy{
-    color:#999;
-}
-
-/* =========================================================
-   CHATBOT
-========================================================= */
-
-#ai-bubble{
-    position:fixed;
-    bottom:25px;
-    right:25px;
-
-    width:65px;
-    height:65px;
-
-    border-radius:50%;
-
-    background:#0d6efd;
-    color:#fff;
+    border-radius:20px;
 
     display:flex;
     align-items:center;
@@ -972,348 +351,1240 @@ body{
 
     font-size:28px;
 
-    cursor:pointer;
-
-    z-index:99999;
-
-    box-shadow:0 10px 25px rgba(0,0,0,0.35);
-
-    animation:pulse 1.5s infinite;
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
 }
 
-@keyframes pulse{
-    0%{
-        transform:scale(1);
+/* IMAGE */
+
+.hero-image-wrapper{
+    position:relative;
+    text-align:center;
+}
+
+.hero-image{
+    width:100%;
+    max-width:650px;
+
+    animation:floatImage 5s ease-in-out infinite;
+}
+
+@keyframes floatImage{
+
+    0%,100%{
+        transform:translateY(0px);
     }
+
     50%{
-        transform:scale(1.08);
+        transform:translateY(-18px);
     }
-    100%{
-        transform:scale(1);
-    }
+
 }
 
-#ai-chat{
-    position:fixed;
-    bottom:100px;
-    right:25px;
+/* FLOATING CARDS */
 
-    width:360px;
-    background:#fff;
+.floating-card{
+    position:absolute;
+
+    padding:14px 18px;
 
     border-radius:18px;
-    overflow:hidden;
 
-    display:none;
+    background:rgba(255,255,255,0.08);
 
-    z-index:99999;
+    border:1px solid rgba(255,255,255,0.08);
 
-    box-shadow:0 15px 40px rgba(0,0,0,0.35);
-}
+    backdrop-filter:blur(20px);
 
-#ai-header{
-    background:#0d6efd;
     color:#fff;
-    text-align:center;
-    padding:15px;
-    font-weight:700;
-}
 
-#chat-body{
-    height:330px;
-    overflow-y:auto;
-    padding:12px;
-    background:#f4f7fb;
-}
-
-.user-msg,
-.bot-msg{
-    max-width:82%;
-    padding:12px;
-    border-radius:12px;
-    margin-bottom:12px;
     font-size:14px;
-    line-height:1.6;
+    font-weight:600;
+
+    animation:floatingCard 4s ease-in-out infinite;
 }
 
-.user-msg{
-    margin-left:auto;
-    background:#d1e7ff;
-    color:#000;
+.floating-1{
+    top:8%;
+    left:-20px;
 }
 
-.bot-msg{
-    background:#fff;
-    color:#333;
-    border:1px solid #e3e3e3;
+.floating-2{
+    top:38%;
+    right:-20px;
 }
 
-#chat-footer{
-    display:flex;
-    border-top:1px solid #eee;
+.floating-3{
+    bottom:10%;
+    left:-10px;
 }
 
-#user-input{
-    width:80%;
-    border:none;
-    outline:none;
-    padding:12px;
+@keyframes floatingCard{
+
+    0%,100%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
 }
 
-#send-btn{
-    width:20%;
-    border:none;
-    background:#0d6efd;
-    color:#fff;
-    cursor:pointer;
-}
+/* ======================================================
+   SERVICES
+====================================================== */
 
-/* =========================================================
-   INTRO LION
-========================================================= */
-
-#post-logout{
-    position:fixed;
-    inset:0;
+.services-section{
+    padding:120px 0;
 
     background:
     linear-gradient(
-        rgba(2,8,38,0.85),
-        rgba(2,8,38,0.92)
-    ),
-    url("{% static 'images/forest-bg.png' %}");
+        180deg,
+        #060816 0%,
+        #091120 100%
+    );
+}
 
-    background-size:cover;
-    background-position:center;
+/* HEADER */
+
+.section-header{
+    text-align:center;
+
+    margin-bottom:80px;
+}
+
+.subtitle{
+    display:inline-block;
+
+    padding:12px 24px;
+
+    border-radius:100px;
+
+    background:rgba(255,255,255,0.06);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:#8be9ff;
+
+    font-size:14px;
+    font-weight:600;
+
+    margin-bottom:25px;
+}
+
+.section-header h2{
+    font-size:64px;
+    font-weight:900;
+
+    margin-bottom:25px;
+}
+
+.section-header p{
+    max-width:850px;
+    margin:auto;
+
+    color:rgba(255,255,255,0.70);
+
+    line-height:1.9;
+}
+
+/* GRID */
+
+.services-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
+    gap:30px;
+}
+
+/* CARD */
+
+.service-card{
+    position:relative;
+
+    padding:40px;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    overflow:hidden;
+
+    transition:.45s ease;
+}
+
+.service-card:hover{
+    transform:
+    translateY(-12px)
+    scale(1.02);
+
+    border-color:
+    rgba(0,212,255,0.25);
+
+    box-shadow:
+    0 25px 50px rgba(0,0,0,0.45);
+}
+
+/* ICON */
+
+.icon{
+    width:80px;
+    height:80px;
+
+    border-radius:24px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:25px;
+
+    font-size:32px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+}
+
+/* CARD TEXT */
+
+.service-card h3{
+    font-size:26px;
+    font-weight:700;
+
+    margin-bottom:15px;
+}
+
+.service-card p{
+    color:rgba(255,255,255,0.70);
+
+    line-height:1.9;
+}
+
+/* ======================================================
+   PARTNERS
+====================================================== */
+
+.partners-section{
+    position:relative;
+
+    overflow:hidden;
+
+    padding:120px 0;
+
+    background:
+    linear-gradient(
+        180deg,
+        #091120 0%,
+        #050816 100%
+    );
+}
+
+.partners-header{
+    text-align:center;
+
+    margin-bottom:70px;
+}
+
+.partners-badge{
+    display:inline-block;
+
+    padding:12px 24px;
+
+    border-radius:100px;
+
+    background:rgba(255,255,255,0.06);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:#8be9ff;
+
+    margin-bottom:25px;
+}
+
+.partners-title{
+    font-size:64px;
+    font-weight:900;
+
+    margin-bottom:25px;
+}
+
+.partners-title span{
+    background:
+    linear-gradient(
+        to right,
+        #7c5cff,
+        #00d4ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.partners-text{
+    max-width:850px;
+    margin:auto;
+
+    color:rgba(255,255,255,0.70);
+
+    line-height:1.9;
+}
+
+/* SLIDER */
+
+.partners-slider{
+    overflow:hidden;
+}
+
+.partners-track{
+    display:flex;
+    width:max-content;
+
+    animation:scrollPartners 28s linear infinite;
+}
+
+.partner-card{
+    width:250px;
+    height:220px;
+
+    margin:0 18px;
+
+    border-radius:28px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
 
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
 
-    z-index:999999;
+    transition:.4s ease;
 }
 
-.lion-sleep svg{
-    width:230px;
-    animation:breath 3s ease-in-out infinite;
+.partner-card:hover{
+    transform:
+    translateY(-12px)
+    scale(1.03);
+
+    border-color:
+    rgba(0,212,255,0.25);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,0.4);
 }
 
-@keyframes breath{
-    0%,100%{
-        transform:scale(1);
+.partner-logo{
+    width:120px;
+    height:120px;
+
+    border-radius:24px;
+
+    background:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    margin-bottom:20px;
+}
+
+.partner-logo img{
+    max-width:100%;
+    max-height:80px;
+
+    object-fit:contain;
+}
+
+.partner-name{
+    font-size:18px;
+    font-weight:700;
+}
+
+@keyframes scrollPartners{
+
+    0%{
+        transform:translateX(0);
     }
-    50%{
-        transform:scale(1.05);
+
+    100%{
+        transform:translateX(-50%);
     }
+
 }
 
-#typing-text{
-    margin-top:25px;
+/* ======================================================
+   FOOTER
+====================================================== */
+
+.footer{
+    padding:80px 0 30px;
+
+    background:#040611;
+
+    border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.footer-title{
+    font-size:24px;
+    font-weight:800;
+
+    margin-bottom:20px;
+}
+
+.footer-text{
+    color:rgba(255,255,255,0.65);
+
+    line-height:1.8;
+}
+
+.social-links{
+    display:flex;
+    gap:15px;
+
+    margin-top:20px;
+}
+
+.social-link{
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(255,255,255,0.06);
 
     color:#fff;
-    font-size:30px;
-    font-weight:700;
 
-    border-right:3px solid #fff;
-
-    white-space:nowrap;
-    overflow:hidden;
-
-    animation:blink 0.7s infinite;
+    transition:.4s ease;
 }
 
-@keyframes blink{
-    50%{
-        border-color:transparent;
-    }
+.social-link:hover{
+    background:#00d4ff;
+
+    color:#050816;
+
+    transform:translateY(-6px);
 }
 
-@media(max-width:600px){
+/* ======================================================
+   RESPONSIVE
+====================================================== */
 
-    #typing-text{
-        font-size:20px;
-        white-space:normal;
-        border-right:none;
+@media(max-width:991px){
+
+    .hero-section{
         text-align:center;
-        padding:0 20px;
+    }
+
+    .hero-title{
+        font-size:52px;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .hero-image{
+        margin-top:60px;
     }
 
 }
 
+@media(max-width:768px){
+
+    .hero-title{
+        font-size:38px;
+    }
+
+    .section-header h2,
+    .partners-title{
+        font-size:38px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+    }
+
+    .floating-card{
+        display:none;
+    }
+
+}
 /* =========================================================
-   ANIMATION
+   MOBILE NAVBAR PREMIUM LEFT PANEL
 ========================================================= */
 
-@keyframes fadeUp{
+@media(max-width:991px){
 
-    from{
+    /* NAVBAR CONTAINER */
+
+    .navbar{
+        padding:12px 0;
+    }
+
+    /* TOGGLER */
+
+    .navbar-toggler{
+        width:52px;
+        height:52px;
+
+        border:none;
+        border-radius:16px;
+
+        background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,0.25),
+            rgba(0,212,255,0.18)
+        );
+
+        backdrop-filter:blur(14px);
+
+        box-shadow:
+        0 10px 25px rgba(0,0,0,0.35);
+
+        transition:0.35s ease;
+    }
+
+    .navbar-toggler:hover{
+        transform:scale(1.05);
+    }
+
+    .navbar-toggler:focus{
+        box-shadow:none;
+    }
+
+    .navbar-toggler-icon{
+        filter:brightness(0) invert(1);
+    }
+
+    /* MOBILE MENU PANEL */
+
+    .navbar-collapse{
+        position:fixed;
+
+        top:0;
+        left:-100%;
+
+        width:320px;
+        height:100vh;
+
+        padding:120px 25px 40px;
+
+        background:
+        linear-gradient(
+            180deg,
+            rgba(5,8,20,0.98),
+            rgba(10,15,35,0.98)
+        );
+
+        backdrop-filter:blur(25px);
+
+        border-right:
+        1px solid rgba(255,255,255,0.08);
+
+        box-shadow:
+        20px 0 60px rgba(0,0,0,0.55);
+
+        transition:0.5s ease;
+
+        overflow-y:auto;
+
+        z-index:99999;
+    }
+
+    /* OPEN MENU */
+
+    .navbar-collapse.show{
+        left:0;
+        animation:slideMenu .45s ease;
+    }
+
+    @keyframes slideMenu{
+
+        from{
+            left:-100%;
+            opacity:0;
+        }
+
+        to{
+            left:0;
+            opacity:1;
+        }
+
+    }
+
+    /* MENU GLOW */
+
+    .navbar-collapse::before{
+        content:"";
+
+        position:absolute;
+
+        top:-120px;
+        left:-120px;
+
+        width:260px;
+        height:260px;
+
+        border-radius:50%;
+
+        background:
+        radial-gradient(
+            circle,
+            rgba(124,92,255,0.35),
+            transparent 70%
+        );
+
+        filter:blur(40px);
+    }
+
+    .navbar-collapse::after{
+        content:"";
+
+        position:absolute;
+
+        bottom:-100px;
+        right:-100px;
+
+        width:220px;
+        height:220px;
+
+        border-radius:50%;
+
+        background:
+        radial-gradient(
+            circle,
+            rgba(0,212,255,0.28),
+            transparent 70%
+        );
+
+        filter:blur(40px);
+    }
+
+    /* NAV LIST */
+
+    .nav-modern{
+        width:100%;
+        position:relative;
+        z-index:2;
+    }
+
+    .nav-modern .nav-item{
+        width:100%;
+        margin-bottom:14px;
+    }
+
+    /* LINKS */
+
+    .nav-modern .nav-link{
+        width:100%;
+
+        display:flex;
+        align-items:center;
+        gap:14px;
+
+        padding:18px 22px !important;
+
+        border-radius:20px;
+
+        color:#fff !important;
+
+        font-size:15px;
+        font-weight:600;
+
+        background:
+        rgba(255,255,255,0.04);
+
+        border:
+        1px solid rgba(255,255,255,0.06);
+
+        backdrop-filter:blur(12px);
+
+        transition:0.35s ease;
+
+        position:relative;
+
+        overflow:hidden;
+    }
+
+    /* LEFT BORDER ANIMATION */
+
+    .nav-modern .nav-link::before{
+        content:"";
+
+        position:absolute;
+
+        top:50%;
+        left:0;
+
+        transform:translateY(-50%);
+
+        width:4px;
+        height:0%;
+
+        border-radius:10px;
+
+        background:
+        linear-gradient(
+            180deg,
+            #7c5cff,
+            #00d4ff
+        );
+
+        transition:0.35s ease;
+    }
+
+    .nav-modern .nav-link:hover::before,
+    .nav-modern .nav-link.active::before{
+        height:70%;
+    }
+
+    /* HOVER */
+
+    .nav-modern .nav-link:hover{
+        transform:translateX(8px);
+
+        background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,0.18),
+            rgba(0,212,255,0.12)
+        );
+
+        border-color:
+        rgba(124,92,255,0.35);
+
+        box-shadow:
+        0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    /* ACTIVE */
+
+    .nav-modern .nav-link.active{
+        background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,0.22),
+            rgba(0,212,255,0.16)
+        );
+
+        border-color:
+        rgba(124,92,255,0.35);
+
+        color:#8be9ff !important;
+
+        box-shadow:
+        0 15px 35px rgba(0,0,0,0.4);
+    }
+
+    /* ICON */
+
+    .nav-modern .nav-link i{
+        width:22px;
+        text-align:center;
+        font-size:16px;
+
+        color:#8be9ff;
+    }
+
+    /* OVERLAY DARK */
+
+    .mobile-overlay{
+        position:fixed;
+        inset:0;
+
+        background:rgba(0,0,0,0.55);
+
+        backdrop-filter:blur(4px);
+
         opacity:0;
-        transform:translateY(40px);
+        visibility:hidden;
+
+        transition:0.4s ease;
+
+        z-index:9990;
     }
 
-    to{
+    .mobile-overlay.active{
         opacity:1;
-        transform:translateY(0);
+        visibility:visible;
+    }
+
+}
+.hero-image{
+    width:100%;
+    max-width:680px;
+    border-radius:32px;
+    object-fit:cover;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+    0 30px 80px rgba(0,0,0,0.45),
+    0 0 40px rgba(0,212,255,0.12);
+
+    transition:0.5s ease;
+
+    animation:floatImage 6s ease-in-out infinite;
+}
+
+.hero-image:hover{
+    transform:
+    scale(1.03)
+    rotate(-1deg);
+
+    box-shadow:
+    0 40px 100px rgba(0,0,0,0.55),
+    0 0 60px rgba(124,92,255,0.18);
+}
+
+@keyframes floatImage{
+
+    0%,100%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-18px);
     }
 
 }
 
-/* =========================
-   GLOBAL ANIMATION STYLE
-========================= */
 
-html{
-    scroll-behavior:smooth;
+/* =====================================================
+   HERO WRAPPER
+===================================================== */
+
+.hero-image-wrapper{
+    position:relative;
+    width:100%;
+    max-width:680px;
+    margin:auto;
 }
 
-body{
-    overflow-x:hidden;
+/* IMAGE */
+
+.hero-image{
+    width:100%;
+    height:520px;
+    object-fit:cover;
+
+    border-radius:35px;
+
+    box-shadow:
+    0 30px 80px rgba(0,0,0,0.45);
+
+    display:block;
 }
 
-/* =========================
-   FADE IN SCROLL
-========================= */
+/* =====================================================
+   FLOATING CARDS
+===================================================== */
 
-.reveal{
-    opacity:0;
-    transform:translateY(60px);
-    transition:all 0.8s ease;
-}
+.floating-card{
+    position:absolute;
 
-.reveal.active{
-    opacity:1;
-    transform:translateY(0);
-}
+    display:flex;
+    align-items:center;
+    gap:10px;
 
-/* =========================
-   NAVBAR MODERNE SCROLL
-========================= */
+    padding:14px 18px;
 
-.navbar{
-    transition:all 0.4s ease;
-}
+    background:
+    linear-gradient(
+        135deg,
+        rgba(10,15,35,0.92),
+        rgba(20,30,60,0.85)
+    );
 
-.navbar.scrolled{
-    background:rgba(11,19,43,0.92) !important;
+    border:
+    1px solid rgba(255,255,255,0.08);
+
     backdrop-filter:blur(15px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
-    padding:10px 0;
+
+    border-radius:18px;
+
+    color:#fff;
+
+    font-size:14px;
+    font-weight:600;
+
+    z-index:10;
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,0.35);
+
+    animation:floatingCard 4s ease-in-out infinite;
 }
 
-/* =========================
-   HERO ANIMATION
-========================= */
+/* ICON */
 
-.hero-title{
-    animation:fadeUp 1s ease;
+.floating-card span{
+    font-size:20px;
 }
 
-.hero-subtitle{
-    animation:fadeUp 1.4s ease;
+/* POSITIONS */
+
+.floating-1{
+    top:30px;
+    left:20px;
 }
 
-.hero-buttons{
-    animation:fadeUp 1.8s ease;
+.floating-2{
+    top:45%;
+    right:20px;
+    transform:translateY(-50%);
 }
 
-@keyframes fadeUp{
-    from{
-        opacity:0;
-        transform:translateY(40px);
+.floating-3{
+    bottom:30px;
+    left:40px;
+}
+
+/* ANIMATION */
+
+@keyframes floatingCard{
+
+    0%,100%{
+        transform:translateY(0px);
     }
-    to{
-        opacity:1;
-        transform:translateY(0);
+
+    50%{
+        transform:translateY(-8px);
     }
+
 }
 
-/* =========================
-   HOVER PREMIUM CARDS
-========================= */
+/* =====================================================
+   MOBILE
+===================================================== */
 
-.service-card,
-.partner-card{
-    transition:0.4s ease;
+@media(max-width:991px){
+
+    .hero-image{
+        height:380px;
+    }
+
+    .floating-card{
+        padding:10px 14px;
+        font-size:12px;
+    }
+
+    .floating-card span{
+        font-size:16px;
+    }
+
+    .floating-1{
+        top:15px;
+        left:10px;
+    }
+
+    .floating-2{
+        right:10px;
+    }
+
+    .floating-3{
+        bottom:15px;
+        left:10px;
+    }
+
 }
 
-.service-card:hover,
-.partner-card:hover{
-    transform:translateY(-10px) scale(1.02);
-    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+@media(max-width:576px){
+
+    .hero-image{
+        height:280px;
+        border-radius:24px;
+    }
+
+    .floating-card{
+        font-size:11px;
+        padding:8px 12px;
+        border-radius:14px;
+    }
+
+    .floating-card span{
+        font-size:14px;
+    }
+
+    .floating-1{
+        top:10px;
+        left:8px;
+    }
+
+    .floating-2{
+        top:50%;
+        right:8px;
+    }
+
+    .floating-3{
+        bottom:10px;
+        left:8px;
+    }
+
 }
 
-/* =========================
-   BUTTON ANIMATION
-========================= */
+/* =========================================
+   FOOTER CONTACT PREMIUM
+========================================= */
 
-.btn-hero,
-.btn{
-    transition:0.3s ease;
+.contact-info{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
 }
 
-.btn-hero:hover,
-.btn:hover{
-    transform:translateY(-4px) scale(1.05);
+.contact-item{
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    font-size:16px;
+    font-weight:500;
+
+    color:rgba(255,255,255,0.82);
+
+    padding:14px 18px;
+
+    border-radius:18px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,0.06),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(12px);
+
+    transition:.4s ease;
+
+    position:relative;
+    overflow:hidden;
 }
 
-/* =========================
-   GLASS EFFECT FIX
-========================= */
+/* ICON */
 
-.glass{
-    backdrop-filter:blur(15px);
+.contact-item i{
+    min-width:52px;
+    height:52px;
+
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+
+    color:#fff;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    box-shadow:
+    0 10px 25px rgba(0,212,255,0.25);
+
+    transition:.4s ease;
+}
+
+/* HOVER */
+
+.contact-item:hover{
+    transform:translateX(10px);
+
+    border-color:
+    rgba(0,212,255,0.30);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,0.35);
+}
+
+.contact-item:hover i{
+    transform:
+    rotate(8deg)
+    scale(1.08);
+
+    box-shadow:
+    0 15px 35px rgba(0,212,255,0.45);
+}
+
+/* LIGHT EFFECT */
+
+.contact-item::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:80%;
+    height:100%;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.12),
+        transparent
+    );
+
+    transition:.7s;
+}
+
+.contact-item:hover::before{
+    left:120%;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .contact-item{
+        font-size:14px;
+        padding:12px 14px;
+    }
+
+    .contact-item i{
+        min-width:45px;
+        height:45px;
+        font-size:17px;
+    }
+
 }
 </style>
 
 </head>
+
 <body>
 
 <!-- ======================================================
      NAVBAR
 ====================================================== -->
 
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav class="navbar navbar-expand-lg">
 
 <div class="container">
 
-<a href="{% url 'login_hexa' %}" class="navbar-brand logo-hexa">
-    <img src="{% static 'images/logoHexa.png' %}" alt="HexaQuébec" class="logo-img">
+<a href="{% url 'login_hexa' %}"
+class="navbar-brand logo-hexa">
+
+<img src="{% static 'images/logoHexa.png' %}"
+class="logo-img"
+alt="HexaQuébec">
+
 </a>
 
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-    <span class="navbar-toggler-icon"></span>
+<button class="navbar-toggler bg-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
 </button>
+
+
+<!-- =========================
+     NAVBAR MENU COMPLET
+========================= -->
 
 <div class="collapse navbar-collapse" id="navbarNav">
 
-<ul class="navbar-nav ms-auto nav-modern">
+    <ul class="navbar-nav ms-auto nav-modern align-items-lg-center">
 
-<li class="nav-item">
-    <a href="#" class="nav-link active">Accueil</a>
-</li>
+        <!-- ACCUEIL -->
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link active">
+                <i class="fa-solid fa-house me-2"></i>
+                Accueil
+            </a>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'services' %}" class="nav-link">Services</a>
-</li>
+        <!-- SERVICES -->
+        <li class="nav-item">
+            <a href="{% url 'services' %}" class="nav-link">
+                <i class="fa-solid fa-layer-group me-2"></i>
+                Services
+            </a>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'produits_list' %}" class="nav-link">Articles</a>
-</li>
+        <!-- ARTICLES -->
+        <li class="nav-item">
+            <a href="{% url 'produits_list' %}" class="nav-link">
+                <i class="fa-solid fa-newspaper me-2"></i>
+                Articles
+            </a>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'portfolio' %}" class="nav-link">Projets</a>
-</li>
+        <!-- PROJETS -->
+        <li class="nav-item">
+            <a href="{% url 'portfolio' %}" class="nav-link">
+                <i class="fa-solid fa-briefcase me-2"></i>
+                Projets
+            </a>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'client_login' %}" class="nav-link">Clients</a>
-</li>
+        <!-- CLIENTS -->
+        <li class="nav-item">
+            <a href="{% url 'client_login' %}" class="nav-link">
+                <i class="fa-solid fa-users me-2"></i>
+                Clients
+            </a>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'contact' %}" class="nav-link">Contact</a>
-</li>
+        <!-- CONTACT -->
+        <li class="nav-item">
+            <a href="{% url 'contact' %}" class="nav-link">
+                <i class="fa-solid fa-envelope me-2"></i>
+                Contact
+            </a>
+        </li>
 
-</ul>
+       
+
+    </ul>
 
 </div>
 
@@ -1325,50 +1596,124 @@ body{
      HERO
 ====================================================== -->
 
-<header class="hero">
+<header class="hero-section">
 
-    <div class="hero-slide"></div>
-    <div class="hero-slide"></div>
-    <div class="hero-slide"></div>
-    <div class="hero-slide"></div>
-<div class="hero-content container px-3">
+<div class="hero-overlay"></div>
 
-<h1 class="hero-title">
-    HexaQuébec
+<div class="container">
+
+<div class="row align-items-center min-vh-100">
+
+<!-- LEFT -->
+
+<div class="col-lg-6">
+
+<div class="hero-badge animate__animated animate__fadeInDown">
+🚀 Développement • IA • Mobile • UI/UX
+</div>
+
+<h1 class="hero-title animate__animated animate__fadeInUp">
+
+Solutions digitales
+<span>modernes & innovantes</span>
+
 </h1>
 
-<p class="hero-subtitle">
-    L’innovation au cœur du numérique québécois
+<p class="hero-text animate__animated animate__fadeInUp">
+
+HexaQuébec accompagne les entreprises
+dans la création de solutions numériques
+professionnelles performantes et modernes.
+
 </p>
 
-<div class="hero-buttons">
+<div class="hero-stage-box">
 
-    <a href="{% url 'services' %}" class="btn-hero">
-        <i class="fas fa-laptop-code"></i>
-        <span class="label">Services</span>
-    </a>
+<div class="stage-icon">
+🎓
+</div>
 
-    <a href="{% url 'demande_stage' %}" class="btn-hero warning">
-        <i class="fas fa-user-graduate"></i>
-        <span class="label">Stage</span>
-    </a>
+<div>
 
-    <a href="{% url 'space' %}" class="btn-hero outline">
-        <i class="fas fa-sign-in-alt"></i>
-        <span class="label">Espace</span>
-    </a>
+<h5>
+Stages disponibles
+</h5>
+
+<p>
+Développement Web • Mobile • UI/UX • Infographie
+</p>
+
+<small>
+❌ Réseau & cybersécurité non acceptés
+</small>
 
 </div>
 
-<div class="hero-info">
+</div>
 
-🎓 <strong>Stages :</strong>
-Web • Mobile • Design • Infographie • Maintenance
+<div class="hero-buttons">
 
-<br>
+<a href="{% url 'services' %}"
+class="hero-btn primary-btn">
 
-❌ Réseau & Cybersécurité non acceptés
+<i class="fa-solid fa-code"></i>
 
+Services
+
+</a>
+
+<a href="{% url 'demande_stage' %}"
+class="hero-btn secondary-btn">
+
+<i class="fa-solid fa-user-graduate"></i>
+
+Demande de Stage
+
+</a>
+
+<a href="{% url 'space' %}"
+class="hero-btn outline-btn">
+
+<i class="fa-solid fa-users"></i>
+
+Espace 
+
+</a>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="col-lg-6">
+
+    <div class="hero-image-wrapper">
+
+        <!-- IMAGE -->
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop"
+        class="hero-image"
+        alt="Développement Web">
+
+        <!-- FLOATING BADGES -->
+
+        <div class="floating-card floating-1">
+            <span>💻</span>
+            Développement Web
+        </div>
+
+        <div class="floating-card floating-2">
+            <span>🤖</span>
+            Intelligence Artificielle
+        </div>
+
+        <div class="floating-card floating-3">
+            <span>📱</span>
+            Applications Mobiles
+        </div>
+
+    </div>
+
+</div>
 </div>
 
 </div>
@@ -1379,26 +1724,26 @@ Web • Mobile • Design • Infographie • Maintenance
      SERVICES
 ====================================================== -->
 
-<section class="hexa-services">
-
-<div class="hexa-bg-glow glow1"></div>
-<div class="hexa-bg-glow glow2"></div>
+<section class="services-section">
 
 <div class="container">
 
 <div class="section-header">
 
-
+<span class="subtitle">
+🚀 Solutions Digitales Premium
+</span>
 
 <h2>
-Solutions numériques <br>
-modernes & innovantes
+Services HexaQuébec
 </h2>
 
 <p>
-Nous accompagnons les entreprises dans la création de solutions digitales performantes :
-développement web, boutiques e-commerce, applications mobiles,
-intégration d’intelligence artificielle, UI/UX moderne et maintenance informatique.
+
+Nous créons des plateformes modernes,
+applications web, solutions IA,
+e-commerce et applications mobiles.
+
 </p>
 
 </div>
@@ -1406,67 +1751,105 @@ intégration d’intelligence artificielle, UI/UX moderne et maintenance informa
 <div class="services-grid">
 
 <div class="service-card">
-    <div class="icon">🌐</div>
-    <h3>Développement Web</h3>
-   <p>
-    Nous créons des sites vitrines professionnels pour mettre en valeur votre entreprise,
-    ainsi que des applications web sur mesure et des tableaux de bord sécurisés
-    pour gérer vos activités, vos clients et vos données en toute simplicité.
+
+<div class="icon">
+🌐
+</div>
+
+<h3>
+Développement Web
+</h3>
+
+<p>
+Sites vitrines, dashboards, plateformes web,
+applications professionnelles modernes.
 </p>
+
 </div>
 
 <div class="service-card">
-    <div class="icon">🛒</div>
-    <h3>Sites E-commerce</h3>
-    <p>
-    Création de boutiques en ligne modernes, rapides et sécurisées,
-    avec intégration des paiements en ligne, gestion des produits,
-    commandes, livraisons et une expérience utilisateur optimisée
-    pour augmenter vos ventes.
+
+<div class="icon">
+🛒
+</div>
+
+<h3>
+E-commerce
+</h3>
+
+<p>
+Boutiques modernes avec paiement en ligne,
+gestion des commandes et expérience premium.
 </p>
+
 </div>
 
 <div class="service-card">
-    <div class="icon">📱</div>
-    <h3>Applications Mobiles</h3>
-    <p>
-    Nous développons des applications Android & iOS modernes,
-    rapides et intuitives, offrant une expérience utilisateur fluide,
-    un design professionnel et des performances optimisées pour
-    répondre aux besoins de votre entreprise et de vos clients.
+
+<div class="icon">
+📱
+</div>
+
+<h3>
+Applications Mobiles
+</h3>
+
+<p>
+Applications Android & iOS rapides,
+fluides et professionnelles.
 </p>
+
 </div>
 
 <div class="service-card">
-    <div class="icon">🤖</div>
-    <h3>Intelligence Artificielle</h3>
-    <p>
-    Intégration de solutions d’intelligence artificielle modernes :
-    chatbots intelligents, automatisation des tâches, analyse de données
-    et IA générative pour améliorer la productivité, le service client
-    et l’innovation de votre entreprise.
+
+<div class="icon">
+🤖
+</div>
+
+<h3>
+Intelligence Artificielle
+</h3>
+
+<p>
+Chatbots intelligents, automatisation,
+analyse et IA générative moderne.
 </p>
+
 </div>
 
 <div class="service-card">
-    <div class="icon">🎨</div>
-    <h3>Design UI/UX</h3>
-    <p>
-    Conception d’interfaces modernes et premium avec animations fluides,
-    design professionnel et expérience utilisateur optimisée pour offrir
-    une navigation élégante, intuitive et agréable sur tous les appareils.
+
+<div class="icon">
+🎨
+</div>
+
+<h3>
+Design UI/UX
+</h3>
+
+<p>
+Interfaces élégantes avec animations fluides
+et expérience utilisateur moderne.
 </p>
+
 </div>
 
 <div class="service-card">
-    <div class="icon">💻</div>
-    <h3>Maintenance Informatique</h3>
-   <p>
-    Assistance technique professionnelle, optimisation des performances
-    et sécurisation de vos systèmes informatiques afin d’assurer
-    la stabilité, la rapidité et la protection de vos équipements
-    et données numériques.
+
+<div class="icon">
+💻
+</div>
+
+<h3>
+Maintenance
+</h3>
+
+<p>
+Sécurisation et optimisation des systèmes
+informatiques professionnels.
 </p>
+
 </div>
 
 </div>
@@ -1475,172 +1858,968 @@ intégration d’intelligence artificielle, UI/UX moderne et maintenance informa
 
 </section>
 
+
+
+
+
+
 <!-- ======================================================
-     ANNONCES
+   ANNONCES PREMIUM HEXAQUEBEC
 ====================================================== -->
 
-<section id="annonces" class="py-5">
+<section id="annonces" class="annonces-section">
 
-<div class="container">
+<div class="annonce-bg"></div>
 
-<div class="separator-container mb-5">
-    <div class="separator-line"></div>
+<div class="container position-relative">
 
-    <div class="separator-icon">
-        <i class="fas fa-star"></i>
+    <!-- HEADER -->
+
+    <div class="section-header text-center mb-5">
+
+        <span class="subtitle">
+            📰 Actualités & Informations
+        </span>
+
+        <h2 class="section-title">
+            Nos annonces
+            <span>HexaQuébec</span>
+        </h2>
+
+        <p class="section-description">
+            Découvrez nos dernières annonces,
+            nouveautés, stages et informations importantes.
+        </p>
+
     </div>
 
-    <div class="separator-line"></div>
-</div>
+    <!-- SEPARATOR -->
 
-<h2 class="section-title text-center mb-4">
-    Nos Annonces
-</h2>
+    <div class="separator-container mb-5">
 
-{% if annonces %}
+        <div class="separator-line"></div>
 
-<div class="row g-4">
+        <div class="separator-icon">
+            <i class="fas fa-star"></i>
+        </div>
 
-{% for annonce in annonces %}
+        <div class="separator-line"></div>
 
-<div class="col-lg-4 col-md-6">
+    </div>
 
-<div class="annonce-card h-100">
+    <!-- CONTENT -->
 
-{% if annonce.image %}
-<img src="{{ annonce.image.url }}" class="annonce-img" alt="{{ annonce.title }}">
-{% else %}
-<img src="{% static 'images/default-annonce.jpg' %}" class="annonce-img" alt="Annonce">
-{% endif %}
+    {% if annonces %}
 
-<div class="p-4">
+    <div class="row g-4">
 
-<h5 class="card-title">
-{{ annonce.title }}
-</h5>
+        {% for annonce in annonces %}
 
-<p class="card-text">
-{{ annonce.content|truncatewords:25 }}
-</p>
+        <div class="col-lg-4 col-md-6">
 
-{% if annonce.published_at %}
-<p class="annonce-date">
-{{ annonce.published_at|date:"d M Y" }}
-</p>
-{% endif %}
+            <div class="annonce-card h-100">
 
-<div class="text-center mt-4">
+                <!-- IMAGE -->
 
-<a href="{% url 'annonce_detail' annonce.id %}" class="btn-annonce">
-    Lire plus
-</a>
+                <div class="annonce-image-wrapper">
 
-</div>
+                    {% if annonce.image %}
 
-</div>
+                    <img src="{{ annonce.image.url }}"
+                    class="annonce-img"
+                    alt="{{ annonce.title }}">
 
-</div>
+                    {% else %}
 
-</div>
+                    <img src="{% static 'images/default-annonce.jpg' %}"
+                    class="annonce-img"
+                    alt="Annonce">
 
-{% endfor %}
+                    {% endif %}
 
-</div>
+                    <div class="annonce-overlay"></div>
 
-{% else %}
+                    <div class="annonce-badge">
+                        ✨ Nouvelle annonce
+                    </div>
 
-<p class="text-center text-light">
-Aucune annonce disponible pour le moment.
-</p>
+                </div>
 
-{% endif %}
+                <!-- CONTENT -->
+
+                <div class="annonce-content">
+
+                    <h4 class="annonce-title">
+                        {{ annonce.title }}
+                    </h4>
+
+                    <p class="annonce-text">
+                        {{ annonce.content|truncatewords:25 }}
+                    </p>
+
+                    {% if annonce.published_at %}
+
+                    <div class="annonce-date">
+                        <i class="fa-solid fa-calendar-days"></i>
+
+                        {{ annonce.published_at|date:"d M Y" }}
+                    </div>
+
+                    {% endif %}
+
+                    <div class="mt-4">
+
+                        <a href="{% url 'annonce_detail' annonce.id %}"
+                        class="btn-annonce">
+
+                            Lire plus
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-annonce">
+
+        <i class="fa-solid fa-bullhorn"></i>
+
+        <h4>
+            Aucune annonce disponible
+        </h4>
+
+        <p>
+            Les nouvelles annonces apparaîtront bientôt.
+        </p>
+
+    </div>
+
+    {% endif %}
 
 </div>
 
 </section>
 
 <!-- ======================================================
-     VIDEO SECTION
+   VIDEO ANNONCES PREMIUM
 ====================================================== -->
 
 <section class="video-section">
 
-<div class="container">
+<div class="video-bg"></div>
 
-<h2 class="section-title text-center mb-5">
+<div class="container position-relative">
 
-<i class="fa-solid fa-circle-play me-2"></i>
+    <div class="section-header text-center mb-5">
 
-Vidéo Annonce
+        <span class="subtitle">
+            🎬 Communication digitale
+        </span>
 
-</h2>
+        <h2 class="section-title">
+            Vidéos
+            <span>Annonces</span>
+        </h2>
 
-<div class="row justify-content-center">
+        <p class="section-description">
+            Regardez nos vidéos de présentation,
+            annonces et démonstrations professionnelles.
+        </p>
 
-{% for v in videos %}
+    </div>
 
-<div class="col-lg-8 mb-4">
+    <div class="row justify-content-center g-4">
 
-<div class="video-card">
+        {% for v in videos %}
 
-<video class="video-player" controls>
+        <div class="col-lg-8">
 
-<source src="{{ v.video.url }}" type="video/mp4">
+            <div class="video-card">
 
-</video>
+                <div class="video-wrapper">
 
-<div class="video-info text-center">
+                    <video class="video-player" controls>
 
-<h4 class="video-title">
-{{ v.titre }}
-</h4>
+                        <source src="{{ v.video.url }}"
+                        type="video/mp4">
 
-<p class="video-date">
+                    </video>
 
-<i class="fa-solid fa-calendar"></i>
+                </div>
 
-{{ v.date_pub|date:"d M Y" }}
+                <div class="video-content">
 
-</p>
+                    <h3 class="video-title">
+                        {{ v.titre }}
+                    </h3>
 
-</div>
+                    <div class="video-date">
 
-</div>
+                        <i class="fa-solid fa-calendar"></i>
 
-</div>
+                        {{ v.date_pub|date:"d M Y" }}
 
-{% endfor %}
+                    </div>
 
-</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-lg-8">
+
+            <div class="empty-video">
+
+                <i class="fa-solid fa-video"></i>
+
+                <h4>
+                    Aucune vidéo disponible
+                </h4>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
 
 </div>
 
 </section>
 
 <!-- ======================================================
-     AFFICHES
+   AFFICHES PREMIUM
 ====================================================== -->
 
 <section class="affiche-section">
 
 <div class="container">
 
-<h2 class="section-title text-center mb-5">
-    Affiches promotionnelles
+    <div class="section-header text-center mb-5">
+
+        <span class="subtitle">
+            🎨 Promotion digitale
+        </span>
+
+        <h2 class="section-title">
+            Affiches
+            <span>Promotionnelles</span>
+        </h2>
+
+        <p class="section-description">
+            Découvrez nos affiches modernes
+            et campagnes visuelles professionnelles.
+        </p>
+
+    </div>
+
+    <div class="affiche-slider">
+
+        <div class="slides-wrapper">
+
+            {% for a in affiches %}
+
+            <div class="slide">
+
+                <div class="slide-image">
+
+                    <img src="{{ a.image.url }}"
+                    alt="{{ a.titre }}">
+
+                    <div class="slide-overlay"></div>
+
+                </div>
+
+                <div class="slide-content">
+
+                    <h5>
+                        {{ a.titre }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            <!-- LOOP POUR ANIMATION -->
+
+            {% for a in affiches %}
+
+            <div class="slide">
+
+                <div class="slide-image">
+
+                    <img src="{{ a.image.url }}"
+                    alt="{{ a.titre }}">
+
+                    <div class="slide-overlay"></div>
+
+                </div>
+
+                <div class="slide-content">
+
+                    <h5>
+                        {{ a.titre }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+<style>
+
+/* ======================================================
+   GLOBAL SECTION
+====================================================== */
+
+.section-title{
+    font-size:64px;
+    font-weight:900;
+    margin-bottom:20px;
+}
+
+.section-title span{
+    background:
+    linear-gradient(
+        to right,
+        #7c5cff,
+        #00d4ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.section-description{
+    max-width:850px;
+    margin:auto;
+    color:rgba(255,255,255,0.70);
+    line-height:1.9;
+}
+
+.subtitle{
+    display:inline-block;
+
+    padding:12px 22px;
+
+    border-radius:100px;
+
+    background:rgba(255,255,255,0.06);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:#8be9ff;
+
+    font-weight:600;
+
+    margin-bottom:25px;
+}
+
+/* ======================================================
+   SEPARATOR
+====================================================== */
+
+.separator-container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+}
+
+.separator-line{
+    width:120px;
+    height:2px;
+
+    background:
+    linear-gradient(
+        to right,
+        transparent,
+        #00d4ff,
+        transparent
+    );
+}
+
+.separator-icon{
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    color:#fff;
+
+    font-size:18px;
+
+    box-shadow:
+    0 0 30px rgba(0,212,255,0.35);
+}
+
+/* ======================================================
+   ANNONCES
+====================================================== */
+
+.annonces-section{
+    position:relative;
+    padding:120px 0;
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        180deg,
+        #081120 0%,
+        #050816 100%
+    );
+}
+
+.annonce-bg{
+    position:absolute;
+    inset:0;
+
+    background:
+    radial-gradient(
+        circle at top left,
+        rgba(124,92,255,0.15),
+        transparent 30%
+    ),
+    radial-gradient(
+        circle at bottom right,
+        rgba(0,212,255,0.15),
+        transparent 30%
+    );
+}
+
+.annonce-card{
+    position:relative;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    transition:.45s ease;
+}
+
+.annonce-card:hover{
+    transform:
+    translateY(-10px)
+    scale(1.02);
+
+    box-shadow:
+    0 25px 50px rgba(0,0,0,0.45);
+
+    border-color:
+    rgba(0,212,255,0.25);
+}
+
+.annonce-image-wrapper{
+    position:relative;
+    overflow:hidden;
+}
+
+.annonce-img{
+    width:100%;
+    height:260px;
+
+    object-fit:cover;
+
+    transition:.6s ease;
+}
+
+.annonce-card:hover .annonce-img{
+    transform:scale(1.08);
+}
+
+.annonce-overlay{
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        180deg,
+        transparent,
+        rgba(0,0,0,0.65)
+    );
+}
+
+.annonce-badge{
+    position:absolute;
+
+    top:18px;
+    left:18px;
+
+    padding:10px 18px;
+
+    border-radius:100px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    color:#fff;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+.annonce-content{
+    padding:30px;
+}
+
+.annonce-title{
+    font-size:24px;
+    font-weight:700;
+
+    margin-bottom:18px;
+}
+
+.annonce-text{
+    color:rgba(255,255,255,0.70);
+    line-height:1.9;
+}
+
+.annonce-date{
+    margin-top:20px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    color:#8be9ff;
+}
+
+.btn-annonce{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+
+    padding:15px 26px;
+
+    border-radius:16px;
+
+    text-decoration:none;
+
+    color:#fff;
+
+    font-weight:600;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    transition:.4s ease;
+}
+
+.btn-annonce:hover{
+    transform:translateY(-4px);
+
+    color:#fff;
+
+    box-shadow:
+    0 18px 35px rgba(0,0,0,0.35);
+}
+
+.empty-annonce{
+    text-align:center;
+
+    padding:80px 20px;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,0.05);
+}
+
+.empty-annonce i{
+    font-size:60px;
+    margin-bottom:20px;
+    color:#00d4ff;
+}
+
+/* ======================================================
+   VIDEO SECTION
+====================================================== */
+
+.video-section{
+    position:relative;
+    padding:120px 0;
+
+    background:
+    linear-gradient(
+        180deg,
+        #050816 0%,
+        #091120 100%
+    );
+}
+
+.video-bg{
+    position:absolute;
+    inset:0;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(124,92,255,0.10),
+        transparent 40%
+    );
+}
+
+.video-card{
+    overflow:hidden;
+
+    border-radius:35px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    transition:.4s ease;
+}
+
+.video-card:hover{
+    transform:translateY(-8px);
+
+    box-shadow:
+    0 25px 50px rgba(0,0,0,0.45);
+}
+
+.video-wrapper{
+    position:relative;
+}
+
+.video-player{
+    width:100%;
+    max-height:520px;
+
+    object-fit:cover;
+
+    background:#000;
+}
+
+.video-content{
+    padding:30px;
+    text-align:center;
+}
+
+.video-title{
+    font-size:28px;
+    font-weight:700;
+
+    margin-bottom:15px;
+}
+
+.video-date{
+    color:#8be9ff;
+}
+
+.empty-video{
+    text-align:center;
+
+    padding:80px 20px;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,0.05);
+}
+
+.empty-video i{
+    font-size:70px;
+    margin-bottom:20px;
+    color:#00d4ff;
+}
+
+/* ======================================================
+   AFFICHE SECTION
+====================================================== */
+
+.affiche-section{
+    padding:120px 0;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        180deg,
+        #091120 0%,
+        #050816 100%
+    );
+}
+
+.affiche-slider{
+    overflow:hidden;
+    position:relative;
+}
+
+.slides-wrapper{
+    display:flex;
+    width:max-content;
+
+    animation:slideAffiche 35s linear infinite;
+}
+
+.slide{
+    width:360px;
+
+    margin:0 20px;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    transition:.45s ease;
+}
+
+.slide:hover{
+    transform:
+    translateY(-10px)
+    scale(1.02);
+
+    box-shadow:
+    0 20px 45px rgba(0,0,0,0.45);
+}
+
+.slide-image{
+    position:relative;
+    overflow:hidden;
+}
+
+.slide img{
+    width:100%;
+    height:420px;
+
+    object-fit:cover;
+
+    transition:.6s ease;
+}
+
+.slide:hover img{
+    transform:scale(1.08);
+}
+
+.slide-overlay{
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        180deg,
+        transparent,
+        rgba(0,0,0,0.55)
+    );
+}
+
+.slide-content{
+    padding:25px;
+    text-align:center;
+}
+
+.slide-content h5{
+    font-size:22px;
+    font-weight:700;
+}
+
+@keyframes slideAffiche{
+
+    0%{
+        transform:translateX(0);
+    }
+
+    100%{
+        transform:translateX(-50%);
+    }
+
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media(max-width:768px){
+
+    .section-title{
+        font-size:38px;
+    }
+
+    .annonce-img{
+        height:220px;
+    }
+
+    .slide{
+        width:280px;
+    }
+
+    .slide img{
+        height:320px;
+    }
+
+    .video-title{
+        font-size:22px;
+    }
+
+}
+
+</style>
+
+
+
+
+<!-- ======================================================
+     PARTENAIRES
+====================================================== -->
+
+<section class="partners-section">
+
+<div class="container">
+
+<div class="partners-header">
+
+<span class="partners-badge">
+🤝 Entreprises partenaires
+</span>
+
+<h2 class="partners-title">
+
+Nos partenaires
+<span>HexaQuébec</span>
+
 </h2>
 
-<div class="affiche-slider">
+<p class="partners-text">
 
-<div class="slides-wrapper">
+Nous collaborons avec des entreprises solides
+pour offrir des services numériques modernes.
 
-{% for a in affiches %}
+</p>
 
-<div class="slide">
+</div>
 
-<img src="{{ a.image.url }}" alt="{{ a.titre }}">
+<div class="partners-slider">
 
-<h5 class="mt-4">
-{{ a.titre }}
+<div class="partners-track">
+
+<!-- LOOP 1 -->
+
+{% for partenaire in partenaires %}
+
+<div class="partner-card">
+
+<div class="partner-logo">
+
+{% if partenaire.logo %}
+
+<img src="{{ partenaire.logo.url }}"
+alt="{{ partenaire.nom }}">
+
+{% else %}
+
+<img src="{% static 'images/default_logo.png' %}"
+alt="Logo">
+
+{% endif %}
+
+</div>
+
+<h5 class="partner-name">
+{{ partenaire.nom }}
+</h5>
+
+</div>
+
+{% endfor %}
+
+<!-- LOOP 2 -->
+
+{% for partenaire in partenaires %}
+
+<div class="partner-card">
+
+<div class="partner-logo">
+
+{% if partenaire.logo %}
+
+<img src="{{ partenaire.logo.url }}"
+alt="{{ partenaire.nom }}">
+
+{% else %}
+
+<img src="{% static 'images/default_logo.png' %}"
+alt="Logo">
+
+{% endif %}
+
+</div>
+
+<h5 class="partner-name">
+{{ partenaire.nom }}
 </h5>
 
 </div>
@@ -1654,161 +2833,6 @@ Vidéo Annonce
 </div>
 
 </section>
-
-<!-- ======================================================
-     PARTENAIRES
-====================================================== -->
-
-<section class="py-5" style="background:#0b132b;">
-
-<div class="container">
-
-<h2 class="section-title text-center mb-4">
-
-Nos Partenaires
-<span style="color:#fff;">
-HexaQuébec
-</span>
-
-</h2>
-
-<p class="section-desc text-center mb-5">
-Nous collaborons avec des entreprises solides
-pour offrir les meilleurs services.
-</p>
-
-<div class="partner-slider">
-
-<div class="partner-track">
-
-{% for partenaire in partenaires %}
-
-<div class="partner-card">
-
-{% if partenaire.logo %}
-
-<img src="{{ partenaire.logo.url }}"
-alt="{{ partenaire.nom }}"
-class="img-fluid"
-style="max-height:80px;">
-
-{% else %}
-
-<img src="{% static 'img/default_logo.png' %}"
-alt="Logo"
-class="img-fluid"
-style="max-height:80px;">
-
-{% endif %}
-
-</div>
-
-{% endfor %}
-
-{% for partenaire in partenaires %}
-
-<div class="partner-card">
-
-{% if partenaire.logo %}
-
-<img src="{{ partenaire.logo.url }}"
-alt="{{ partenaire.nom }}"
-class="img-fluid"
-style="max-height:80px;">
-
-{% else %}
-
-<img src="{% static 'img/default_logo.png' %}"
-alt="Logo"
-class="img-fluid"
-style="max-height:80px;">
-
-{% endif %}
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ======================================================
-     CHATBOT
-====================================================== -->
-
-<div id="ai-bubble">
-💬
-</div>
-
-<div id="ai-chat">
-
-<div id="ai-header">
-🤖 Assistant HexaQuébec
-</div>
-
-<div id="chat-body"></div>
-
-<div id="chat-footer">
-
-<input type="text"
-id="user-input"
-placeholder="Écrivez votre message...">
-
-<button id="send-btn">
-Envoyer
-</button>
-
-</div>
-
-</div>
-
-<!-- ======================================================
-     INTRO SCREEN
-====================================================== -->
-
-<div id="post-logout">
-
-<div class="lion-sleep">
-
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-
-<circle cx="256" cy="256" r="200" fill="#c6a87d" stroke="#b3916b" stroke-width="8"/>
-
-<circle cx="180" cy="220" r="20" fill="#fff"/>
-<circle cx="332" cy="220" r="20" fill="#fff"/>
-
-<circle cx="180" cy="220" r="10" fill="#000"/>
-<circle cx="332" cy="220" r="10" fill="#000"/>
-
-<path d="M180 320 Q256 370 332 320"
-stroke="#000"
-stroke-width="8"
-fill="transparent"
-stroke-linecap="round"/>
-
-<path d="M220 370 Q256 390 292 370"
-stroke="#000"
-stroke-width="6"
-fill="transparent"
-stroke-linecap="round"/>
-
-<line x1="220" y1="370"
-x2="292" y2="370"
-stroke="#000"
-stroke-width="6"/>
-
-</svg>
-
-</div>
-
-<h2 id="typing-text"></h2>
-
-</div>
 
 <!-- ======================================================
      FOOTER
@@ -1818,110 +2842,114 @@ stroke-width="6"/>
 
 <div class="container">
 
-<div class="row align-items-center text-center text-md-start">
+<div class="row">
 
-<div class="col-md-3 mb-4">
+<div class="col-lg-4 mb-4">
 
-<h4 class="footer-title">
+<h3 class="footer-title">
 HexaQuébec
-</h4>
+</h3>
 
 <p class="footer-text">
-HexaQuébec est votre partenaire en développement web
-et solutions numériques professionnelles.
+
+Entreprise spécialisée en développement web,
+applications mobiles, intelligence artificielle
+et solutions numériques modernes.
+
 </p>
+
+<div class="social-links">
+
+<a href="https://www.facebook.com/profile.php?id=61578598457506" class="social-link">
+<i class="fab fa-facebook-f"></i>
+</a>
+
+<a href="https://www.instagram.com/hexaquebec/" class="social-link">
+<i class="fab fa-instagram"></i>
+</a>
+
+<a href="https://www.instagram.com/hexaquebec/" class="social-link">
+<i class="fab fa-linkedin-in"></i>
+</a>
 
 </div>
 
-<div class="col-md-3 mb-4">
+</div>
 
-<h5 class="footer-title">
-Adresse
-</h5>
+<div class="col-lg-4 mb-4">
 
-<p class="footer-text">
+<h3 class="footer-title">
+Contact
+</h3>
+<p class="footer-text contact-info">
 
-2186 rue Roussel
-<br>
+<span class="contact-item">
+    <i class="fa-solid fa-location-dot"></i>
+   2186 Rue Roussel, Chicoutimi, QC G7G 1W6
+</span>
 
-Chicoutimi, Saguenay, Québec
-<br>
+<span class="contact-item">
+    <i class="fa-solid fa-phone-volume"></i>
+    +1 514 467 7377
+</span>
 
-Canada
-
-<br><br>
-
-<span class="footer-contact">
-
-<i class="fa-solid fa-phone"></i>
-
-514 467 7377
-
+<span class="contact-item">
+    <i class="fa-solid fa-envelope-open-text"></i>
+    hexaquebec80@gmail.com
 </span>
 
 </p>
 
 </div>
 
-<div class="col-md-3 mb-4 text-center">
+<div class="col-lg-4 mb-4">
 
-<h5 class="footer-title">
-Suivez-nous
-</h5>
 
-<div class="social-train">
 
-<a href="https://facebook.com"
-class="social-link">
-<i class="fab fa-facebook-f"></i>
-</a>
+<p class="footer-text">
 
-<a href="https://tiktok.com"
-class="social-link">
-<i class="fab fa-tiktok"></i>
-</a>
+<h3 class="footer-title">
+    Fondateur & Développeur
+</h3>
 
-<a href="https://instagram.com"
-class="social-link">
-<i class="fab fa-instagram"></i>
-</a>
+<p class="footer-text">
 
-</div>
+    <strong style="font-size:20px; color:#fff;">
+        Diambere Kamara
+    </strong>
 
-</div>
+    <br><br>
 
-<div class="col-md-3 mb-4">
+    🚀 Développeur Backend spécialisé en
+    <span style="color:#8be9ff;">
+        Django, Python & Intelligence Artificielle
+    </span>
 
-<div class="owner-card text-center">
+    <br><br>
 
-<h6 class="owner-name">
-Diambere Kamara
-</h6>
+    💻 Création de plateformes web modernes,
+    dashboards professionnels, systèmes automatisés,
+    applications intelligentes et solutions numériques premium.
 
-<p class="owner-title">
-Fondateur & Directeur Technique
+    <br><br>
+
+    🎨 Passionné par le développement web moderne,
+    l’expérience utilisateur UI/UX et les technologies innovantes.
+
 </p>
 
-<p class="owner-role">
-Développeur Backend spécialisé en Django, Flask & Node.js
-</p>
-
-<p class="owner-desc">
-Passionné par les solutions numériques performantes,
-il dirige HexaQuébec avec innovation et qualité.
 </p>
 
 </div>
 
 </div>
 
-</div>
+<hr style="border-color:rgba(255,255,255,0.08);">
 
-<hr style="border-color:rgba(198,168,125,0.25);">
+<p class="text-center mt-4"
+style="color:rgba(255,255,255,0.55);">
 
-<p class="text-center footer-copy mb-0">
-
-&copy; 2026 HexaQuébec — Tous droits réservés.
+© 2026 HexaQuébec — Tous droits réservés
 
 </p>
 
@@ -1930,209 +2958,73 @@ il dirige HexaQuébec avec innovation et qualité.
 </footer>
 
 <!-- ======================================================
-     SCRIPTS
+     JS
 ====================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.2.0/wow.min.js"></script>
-
 <script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================================================
-       WOW ANIMATION
-    ========================================================= */
-    if (typeof WOW !== "undefined") {
-        new WOW().init();
-    }
+/* NAVBAR */
 
-    /* =========================================================
-       NAVBAR SCROLL
-    ========================================================= */
+window.addEventListener("scroll",function(){
 
-    const navbar = document.querySelector('.navbar');
+    const navbar=document.querySelector(".navbar");
 
-    if (navbar) {
-        window.addEventListener('scroll', function () {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-    }
-
-    /* =========================================================
-       INTRO SCREEN
-    ========================================================= */
-
-    function restoreHome() {
-        const intro = document.getElementById('post-logout');
-        if (intro) {
-            intro.style.display = 'none';
-        }
-    }
-
-    document.addEventListener('click', restoreHome);
-    document.addEventListener('keydown', restoreHome);
-
-    /* =========================================================
-       TYPING EFFECT
-    ========================================================= */
-
-    const text = "Bienvenue sur le territoire de HexaQuébec";
-    const typingText = document.getElementById("typing-text");
-
-    if (typingText) {
-
-        let index = 0;
-
-        function typeEffect() {
-            if (index < text.length) {
-                typingText.textContent += text.charAt(index);
-                index++;
-                setTimeout(typeEffect, 70);
-            }
-        }
-
-        typeEffect();
-    }
-
-    /* =========================================================
-       SLIDER
-    ========================================================= */
-
-    const slidesWrapper = document.querySelector(".slides-wrapper");
-    const slides = document.querySelectorAll(".slide");
-
-    if (slidesWrapper && slides.length > 0) {
-
-        let current = 0;
-
-        setInterval(function () {
-
-            current++;
-
-            if (current >= slides.length) {
-                current = 0;
-            }
-
-            slidesWrapper.style.transform = `translateX(-${current * 100}%)`;
-
-        }, 5000);
-
-    }
-
-    /* =========================================================
-       CHATBOT
-    ========================================================= */
-
-    const bubble = document.getElementById("ai-bubble");
-    const chat = document.getElementById("ai-chat");
-    const chatBody = document.getElementById("chat-body");
-    const sendBtn = document.getElementById("send-btn");
-    const input = document.getElementById("user-input");
-
-    if (bubble && chat && chatBody) {
-
-        bubble.onclick = () => {
-
-            const isHidden = chat.style.display === "none" || chat.style.display === "";
-
-            chat.style.display = isHidden ? "block" : "none";
-
-            if (isHidden) {
-                chatBody.innerHTML = `
-                    <div class="bot-msg">
-                        👋 Bonjour, bienvenue chez <b>HexaQuébec</b>.<br><br>
-                        Comment pouvons-nous vous aider aujourd’hui ?
-                    </div>
-                `;
-            }
-
-        };
-    }
-
-    if (sendBtn && input && chatBody) {
-
-        sendBtn.onclick = () => {
-
-            const msg = input.value.trim();
-
-            if (!msg) return;
-
-            chatBody.innerHTML += `
-                <div class="user-msg">
-                    ${msg}
-                </div>
-            `;
-
-            input.value = "";
-
-            chatBody.innerHTML += `
-                <div class="bot-msg">
-                    ✅ Merci pour votre message.<br><br>
-                    Notre équipe vous répondra rapidement.<br><br>
-                    📩 Vous pouvez aussi utiliser la page contact.
-                </div>
-            `;
-
-            chatBody.scrollTop = chatBody.scrollHeight;
-        };
-    }
+    navbar.classList.toggle(
+        "scrolled",
+        window.scrollY > 50
+    );
 
 });
 
 
-/* =========================
-   NAVBAR SCROLL EFFECT
-========================= */
 
-window.addEventListener("scroll", function () {
-    const navbar = document.querySelector(".navbar");
+/* =========================================================
+   MOBILE MENU PREMIUM
+========================================================= */
 
-    if (navbar) {
-        navbar.classList.toggle("scrolled", window.scrollY > 50);
-    }
-});
+const navbarCollapse = document.querySelector('.navbar-collapse');
+const navbarToggler = document.querySelector('.navbar-toggler');
+const overlay = document.querySelector('.mobile-overlay');
 
-/* =========================
-   SCROLL REVEAL (ANIMATIONS)
-========================= */
+if(navbarToggler){
 
-function revealOnScroll() {
-    const elements = document.querySelectorAll(".reveal");
-
-    const windowHeight = window.innerHeight;
-
-    elements.forEach(el => {
-        const top = el.getBoundingClientRect().top;
-
-        if (top < windowHeight - 100) {
-            el.classList.add("active");
-        }
-    });
-}
-
-window.addEventListener("scroll", revealOnScroll);
-window.addEventListener("load", revealOnScroll);
-
-/* =========================
-   SMOOTH INTERACTION CLICK
-========================= */
-
-document.addEventListener("click", function (e) {
-    const el = e.target;
-
-    if (el.classList.contains("btn") || el.classList.contains("btn-hero")) {
-        el.style.transform = "scale(0.95)";
+    navbarToggler.addEventListener('click', function(){
 
         setTimeout(() => {
-            el.style.transform = "";
-        }, 150);
-    }
-});
+
+            if(navbarCollapse.classList.contains('show')){
+                overlay.classList.add('active');
+            }
+            else{
+                overlay.classList.remove('active');
+            }
+
+        }, 200);
+
+    });
+
+}
+
+/* CLOSE MENU */
+
+if(overlay){
+
+    overlay.addEventListener('click', function(){
+
+        overlay.classList.remove('active');
+
+        const bsCollapse =
+        bootstrap.Collapse.getInstance(navbarCollapse);
+
+        if(bsCollapse){
+            bsCollapse.hide();
+        }
+
+    });
+
+}
 </script>
 
 </body>

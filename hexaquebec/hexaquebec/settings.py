@@ -173,3 +173,12 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+LANGUAGE_CODE = 'fr'
+
+TIME_ZONE = 'America/Montreal'
+
+USE_I18N = True
+
+USE_TZ = True

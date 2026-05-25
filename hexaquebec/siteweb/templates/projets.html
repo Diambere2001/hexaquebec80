@@ -1,0 +1,609 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gestion Projets</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#0b1120;
+    --card:#111827;
+    --card2:#1e293b;
+    --border:rgba(255,255,255,0.06);
+    --text:#ffffff;
+    --muted:#94a3b8;
+    --blue:#2563eb;
+    --red:#ef4444;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    padding:30px;
+}
+
+/* PAGE */
+
+.page-container{
+    max-width:1200px;
+    margin:auto;
+}
+
+/* CARD */
+
+.dashboard-card{
+    background:var(--card);
+    border-radius:24px;
+    padding:24px;
+    margin-bottom:30px;
+    border:1px solid var(--border);
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* TITLE */
+
+.page-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.page-title i{
+    width:50px;
+    height:50px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.page-title h2{
+    font-size:24px;
+    margin:0;
+    font-weight:700;
+}
+
+/* FORM */
+
+.project-form{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+/* INPUTS */
+
+.form-control,
+select,
+textarea{
+    background:var(--card2) !important;
+    border:1px solid rgba(255,255,255,0.05) !important;
+    color:white !important;
+
+    height:48px !important;
+    padding:10px 14px !important;
+
+    border-radius:14px !important;
+
+    font-size:14px !important;
+
+    margin-bottom:0 !important;
+}
+
+.form-control::placeholder,
+textarea::placeholder{
+    color:#94a3b8;
+}
+
+.form-control:focus,
+textarea:focus,
+select:focus{
+    box-shadow:none !important;
+    border:1px solid var(--blue) !important;
+    background:#243247 !important;
+}
+
+/* TEXTAREA */
+
+textarea{
+    height:120px !important;
+    resize:none;
+    grid-column:1/3;
+}
+
+/* FILE */
+
+input[type="file"]{
+    padding:10px !important;
+}
+
+/* BUTTON */
+
+.btn-hexa{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+    border:none;
+    height:50px;
+    border-radius:14px;
+    width:100%;
+    font-weight:600;
+    grid-column:1/3;
+    transition:0.3s;
+}
+
+.btn-hexa:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(37,99,235,0.35);
+}
+
+/* PROJECT CARD */
+
+.project-card{
+    background:#172033;
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,0.05);
+    transition:0.3s;
+}
+
+.project-card:hover{
+    transform:translateY(-5px);
+}
+
+.project-card img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+    border-radius:18px;
+    margin-bottom:18px;
+}
+
+/* PROJECT TITLE */
+
+.project-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.project-header h3{
+    font-size:24px;
+    font-weight:700;
+}
+
+/* STATUS */
+
+.status-badge{
+    padding:10px 16px;
+    border-radius:14px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.disponible{
+    background:#22c55e22;
+    color:#4ade80;
+}
+
+.encours{
+    background:#f59e0b22;
+    color:#fbbf24;
+}
+
+.termine{
+    background:#2563eb22;
+    color:#60a5fa;
+}
+
+/* INFO GRID */
+
+.project-info{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:16px;
+}
+
+/* INFO BOX */
+
+.info-box{
+    background:var(--card2);
+    border-radius:18px;
+    padding:16px;
+    border:1px solid rgba(255,255,255,0.04);
+}
+
+.info-box i{
+    width:45px;
+    height:45px;
+    border-radius:14px;
+    background:#2563eb22;
+    color:#60a5fa;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.info-box small{
+    color:var(--muted);
+    display:block;
+    margin-bottom:6px;
+}
+
+.info-box h6{
+    margin:0;
+    font-size:15px;
+    font-weight:600;
+}
+
+/* DESCRIPTION */
+
+.project-description{
+    margin-top:20px;
+    background:var(--card2);
+    padding:18px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+.project-description h5{
+    font-size:16px;
+    margin-bottom:12px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.project-description h5 i{
+    color:#60a5fa;
+}
+
+.project-description p{
+    color:#cbd5e1;
+    line-height:1.7;
+    margin:0;
+    font-size:15px;
+}
+
+/* ACTION BUTTONS */
+
+.action-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+.btn-action{
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    color:white;
+    font-weight:600;
+    text-decoration:none;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.btn-edit{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+.btn-delete{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.btn-admin{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    box-shadow:0 10px 25px rgba(37,99,235,0.25);
+}
+
+.btn-action:hover{
+    transform:translateY(-2px);
+    color:white;
+}
+
+/* EMPTY */
+
+.empty-box{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.empty-box i{
+    font-size:55px;
+    color:#475569;
+    margin-bottom:15px;
+}
+
+.empty-box h4{
+    color:#cbd5e1;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    .project-form{
+        grid-template-columns:1fr;
+    }
+
+    textarea,
+    .btn-hexa{
+        grid-column:auto;
+    }
+
+    .project-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .action-buttons{
+        width:100%;
+    }
+
+    .btn-action{
+        width:100%;
+        justify-content:center;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <!-- BOUTON ADMINISTRATION -->
+
+    <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+
+<a href="{% url 'dashboard_hexa' %}"
+class="btn-action btn-admin">
+
+    <i class="fa-solid fa-user-shield"></i>
+    Administration
+
+</a>
+
+    </div>
+
+    <!-- FORMULAIRE -->
+
+    <div class="dashboard-card">
+
+        <div class="page-title">
+
+            <i class="fa-solid fa-diagram-project"></i>
+
+            <h2>Ajouter Projet</h2>
+
+        </div>
+
+        <form method="POST"
+        enctype="multipart/form-data"
+        action="{% url 'ajouter_projet' %}"
+        class="project-form">
+
+            {% csrf_token %}
+
+            <input type="text"
+            name="nom_projet"
+            class="form-control"
+            placeholder="Nom du projet">
+
+            <input type="text"
+            name="client"
+            class="form-control"
+            placeholder="Nom client">
+
+            <input type="number"
+            name="prix"
+            class="form-control"
+            placeholder="Prix du projet">
+
+            <input type="text"
+            name="technologie"
+            class="form-control"
+            placeholder="Technologie utilisée">
+
+            <select name="statut" class="form-control">
+
+                <option value="disponible">
+                    Disponible
+                </option>
+
+                <option value="encours">
+                    En cours
+                </option>
+
+                <option value="termine">
+                    Terminé
+                </option>
+
+            </select>
+
+            <input type="file"
+            name="image"
+            class="form-control">
+
+            <textarea
+            name="description"
+            class="form-control"
+            placeholder="Description du projet"></textarea>
+
+            <button class="btn-hexa">
+
+                <i class="fa-solid fa-plus"></i>
+                Enregistrer Projet
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- LISTE PROJETS -->
+
+    {% for p in projets %}
+
+    <div class="project-card">
+
+        {% if p.image %}
+            <img src="{{ p.image.url }}">
+        {% endif %}
+
+        <div class="project-header">
+
+            <h3>{{ p.nom_projet }}</h3>
+
+            <span class="status-badge {{ p.statut }}">
+                {{ p.statut }}
+            </span>
+
+        </div>
+
+        <div class="project-info">
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-user"></i>
+
+                <small>Client</small>
+
+                <h6>{{ p.client }}</h6>
+
+            </div>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-money-bill-wave"></i>
+
+                <small>Prix</small>
+
+                <h6>{{ p.prix }} $</h6>
+
+            </div>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-calendar"></i>
+
+                <small>Date création</small>
+
+                <h6>{{ p.date_creation }}</h6>
+
+            </div>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-code"></i>
+
+                <small>Technologie</small>
+
+                <h6>{{ p.technologie }}</h6>
+
+            </div>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+
+        <div class="project-description">
+
+            <h5>
+                <i class="fa-solid fa-file-lines"></i>
+                Description du projet
+            </h5>
+
+            <p>
+                {{ p.description }}
+            </p>
+
+        </div>
+
+        <!-- BOUTONS ACTION -->
+
+        <div class="action-buttons">
+
+            <a href="{% url 'modifier_projet' p.id %}"
+            class="btn-action btn-edit">
+
+                <i class="fa-solid fa-pen"></i>
+                Modifier
+
+            </a>
+
+            <a href="{% url 'supprimer_projet' p.id %}"
+            class="btn-action btn-delete"
+            onclick="return confirm('Supprimer ce projet ?')">
+
+                <i class="fa-solid fa-trash"></i>
+                Supprimer
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="dashboard-card empty-box">
+
+        <i class="fa-solid fa-folder-open"></i>
+
+        <h4>Aucun projet disponible</h4>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

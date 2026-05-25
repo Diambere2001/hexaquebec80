@@ -1,219 +1,910 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ annonce.titre }}</title>
 
-  <!-- Bootstrap + Animate + AOS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<title>{{ annonce.titre }} | HexaQuébec</title>
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background: #0b132b;
-      color: #fff;
-      overflow-x: hidden;
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- AOS -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<!-- ANIMATE -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<style>
+
+/* ======================================================
+   RESET
+====================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:
+    linear-gradient(
+        180deg,
+        #050816 0%,
+        #081120 40%,
+        #0b132b 100%
+    );
+
+    color:#fff;
+    overflow-x:hidden;
+}
+
+/* ======================================================
+   BACKGROUND EFFECT
+====================================================== */
+
+.bg-effect{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    overflow:hidden;
+}
+
+.bg-effect::before{
+    content:"";
+
+    position:absolute;
+    top:-200px;
+    left:-150px;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(124,92,255,0.25),
+        transparent 70%
+    );
+
+    filter:blur(50px);
+
+    animation:floatGlow 8s ease-in-out infinite;
+}
+
+.bg-effect::after{
+    content:"";
+
+    position:absolute;
+    bottom:-200px;
+    right:-150px;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(0,212,255,0.18),
+        transparent 70%
+    );
+
+    filter:blur(50px);
+
+    animation:floatGlow 10s ease-in-out infinite;
+}
+
+@keyframes floatGlow{
+
+    0%,100%{
+        transform:translateY(0px);
     }
 
-    /* ===== Card Google Premium ===== */
-    .google-card {
-        background: linear-gradient(135deg, #0e1736, #111c44);
-        padding: 40px;
-        border-radius: 25px;
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.45);
-        transition: 0.5s ease;
-        position: relative;
-        overflow: hidden;
+    50%{
+        transform:translateY(-30px);
     }
 
-    .google-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.annonce-header{
+    padding:80px 0 40px;
+    position:relative;
+}
+
+/* CARD */
+
+.main-card{
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:35px;
+
+    padding:50px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(22px);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,0.45);
+
+    transition:.45s ease;
+}
+
+.main-card:hover{
+    transform:translateY(-8px);
+
+    box-shadow:
+    0 35px 70px rgba(0,0,0,0.55);
+}
+
+/* LIGHT EFFECT */
+
+.main-card::before{
+    content:"";
+
+    position:absolute;
+    top:-150px;
+    right:-150px;
+
+    width:350px;
+    height:350px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(124,92,255,0.25),
+        transparent 70%
+    );
+
+    filter:blur(30px);
+}
+
+/* TOP INFO */
+
+.top-info{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    flex-wrap:wrap;
+
+    position:relative;
+    z-index:2;
+}
+
+/* LOGO */
+
+.logo-box{
+    width:95px;
+    height:95px;
+
+    border-radius:50%;
+
+    padding:6px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    box-shadow:
+    0 10px 35px rgba(124,92,255,0.35);
+
+    animation:rotateBorder 5s linear infinite;
+}
+
+.logo-inner{
+    width:100%;
+    height:100%;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+.logo-inner img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+@keyframes rotateBorder{
+
+    0%{
+        transform:rotate(0deg);
     }
 
-    .google-card::after {
-        content: "";
-        position: absolute;
-        width: 250%;
-        height: 250%;
-        top: -120%;
-        left: -40%;
-        background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 60%);
-        animation: rotateGlow 12s linear infinite;
+    100%{
+        transform:rotate(360deg);
     }
 
-    @keyframes rotateGlow {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+}
+
+/* BADGE */
+
+.publish-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:12px 22px;
+
+    border-radius:100px;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+
+    color:#8be9ff;
+
+    font-size:14px;
+    font-weight:600;
+
+    margin-top:10px;
+}
+
+/* TITLE */
+
+.annonce-title{
+    font-size:58px;
+    font-weight:900;
+
+    line-height:1.1;
+
+    margin-top:35px;
+    margin-bottom:25px;
+
+    position:relative;
+    z-index:2;
+}
+
+.annonce-title span{
+    background:
+    linear-gradient(
+        to right,
+        #7c5cff,
+        #00d4ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+/* GOLD LINE */
+
+.gold-line{
+    width:180px;
+    height:6px;
+
+    border-radius:50px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #ffdd8a,
+        #ffb703,
+        #ffdd8a
+    );
+
+    background-size:300% 100%;
+
+    animation:moveGold 5s linear infinite;
+
+    margin-bottom:30px;
+}
+
+@keyframes moveGold{
+
+    0%{
+        background-position:0%;
     }
 
-    /* ===== Animated Gold Line ===== */
-    .gold-line {
-      width: 160px;
-      height: 5px;
-      background: linear-gradient(90deg, #ffdd8a, #ffcc74, #e9b45c, #ffdd8a);
-      background-size: 300% 100%;
-      border-radius: 50px;
-      margin: 20px 0;
-      animation: moveGold 4s infinite linear;
+    100%{
+        background-position:300%;
     }
 
-    @keyframes moveGold {
-      0% { background-position: 0%; }
-      100% { background-position: 300%; }
+}
+
+/* TEXT */
+
+.annonce-text{
+    color:rgba(255,255,255,0.75);
+
+    line-height:2;
+    font-size:17px;
+
+    position:relative;
+    z-index:2;
+}
+
+/* BUTTONS */
+
+.action-buttons{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+
+    margin-top:40px;
+}
+
+.custom-btn{
+    padding:15px 28px;
+
+    border-radius:18px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+
+    transition:.4s ease;
+}
+
+.btn-home{
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    color:#fff;
+}
+
+.btn-share{
+    background:
+    linear-gradient(
+        135deg,
+        #ffbe0b,
+        #fb8500
+    );
+
+    color:#111;
+}
+
+.custom-btn:hover{
+    transform:translateY(-6px);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* ======================================================
+   IMAGE
+====================================================== */
+
+.image-section{
+    padding:10px 0 80px;
+}
+
+.image-card{
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:35px;
+
+    background:
+    rgba(255,255,255,0.05);
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+
+    padding:20px;
+
+    backdrop-filter:blur(20px);
+
+    transition:.45s ease;
+}
+
+.image-card:hover{
+    transform:translateY(-8px);
+}
+
+.annonce-img{
+    width:100%;
+    max-height:650px;
+
+    object-fit:cover;
+
+    border-radius:25px;
+
+    transition:.6s ease;
+}
+
+.image-card:hover .annonce-img{
+    transform:scale(1.04);
+}
+
+/* OVERLAY */
+
+.image-overlay{
+    position:absolute;
+
+    inset:0;
+
+    background:
+    linear-gradient(
+        180deg,
+        transparent,
+        rgba(0,0,0,0.5)
+    );
+
+    opacity:0;
+
+    transition:.45s ease;
+}
+
+.image-card:hover .image-overlay{
+    opacity:1;
+}
+
+/* ======================================================
+   SOCIAL SHARE
+====================================================== */
+
+.social-section{
+    padding-bottom:100px;
+}
+
+.social-box{
+    text-align:center;
+
+    padding:50px;
+
+    border-radius:35px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+}
+
+.social-title{
+    font-size:38px;
+    font-weight:800;
+
+    margin-bottom:15px;
+}
+
+.social-text{
+    color:rgba(255,255,255,0.70);
+
+    margin-bottom:35px;
+}
+
+/* ICONS */
+
+.social-links{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+}
+
+.social-link{
+    width:80px;
+    height:80px;
+
+    border-radius:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+
+    text-decoration:none;
+
+    color:#fff;
+
+    position:relative;
+
+    overflow:hidden;
+
+    transition:.45s ease;
+}
+
+.facebook{
+    background:
+    linear-gradient(
+        135deg,
+        #1877f2,
+        #0d5bd7
+    );
+}
+
+.tiktok{
+    background:
+    linear-gradient(
+        135deg,
+        #ff0050,
+        #000
+    );
+}
+
+.whatsapp{
+    background:
+    linear-gradient(
+        135deg,
+        #25d366,
+        #128c7e
+    );
+}
+
+.social-link:hover{
+    transform:
+    translateY(-10px)
+    scale(1.08);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* ======================================================
+   FOOTER
+====================================================== */
+
+.footer{
+    padding:40px 0;
+
+    text-align:center;
+
+    color:rgba(255,255,255,0.55);
+
+    border-top:
+    1px solid rgba(255,255,255,0.08);
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media(max-width:991px){
+
+    .annonce-title{
+        font-size:42px;
     }
 
-    /* ===== Logo Circle ===== */
-    .logo-circle {
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        padding: 8px;
-        transition: 0.4s;
+    .main-card{
+        padding:35px;
     }
 
-    .logo-circle img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+}
+
+@media(max-width:768px){
+
+    .annonce-header{
+        padding-top:40px;
     }
 
-    .logo-circle:hover {
-        transform: rotate(8deg) scale(1.05);
+    .annonce-title{
+        font-size:32px;
     }
 
-    /* ===== Image animée ===== */
-    .annonce-img {
-      width: 100%;
-      max-width: 580px;
-      max-height: 340px;
-      object-fit: cover;
-      border-radius: 22px;
-      margin: auto;
-      display: block;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
-      transition: 0.55s ease;
+    .main-card{
+        padding:28px;
+        border-radius:28px;
     }
 
-    .annonce-img:hover {
-      transform: scale(1.06) rotate(-1deg);
-      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.55);
+    .top-info{
+        flex-direction:column;
+        align-items:flex-start;
     }
 
-    /* Mobile */
-    @media (max-width: 768px) {
-      .annonce-img {
-        max-height: 260px;
-      }
+    .action-buttons{
+        flex-direction:column;
     }
 
-    /* ===== Buttons ===== */
-    .btn-dark {
-      background: linear-gradient(135deg, #1b1f2a, #0e1118);
-      border: none;
-      font-weight: 600;
-      padding: 12px 25px;
-      transition: 0.35s;
+    .custom-btn{
+        width:100%;
+        justify-content:center;
     }
 
-    .btn-dark:hover {
-      transform: scale(1.05);
-      background: linear-gradient(135deg, #232836, #141822);
+    .social-box{
+        padding:35px 20px;
     }
 
-    /* ===== Social Share ===== */
-    .social-share i {
-      font-size: 2rem;
-      margin: 0 12px;
-      transition: 0.35s;
-      padding: 10px;
-      border-radius: 50%;
+    .social-title{
+        font-size:28px;
     }
 
-    .social-share i:hover {
-      transform: scale(1.25) rotate(10deg);
-      background: rgba(255,255,255,0.1);
+    .social-link{
+        width:65px;
+        height:65px;
+
+        font-size:22px;
     }
-  </style>
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="container py-5">
-  <div class="google-card" data-aos="zoom-out">
+<!-- BACKGROUND EFFECT -->
+<div class="bg-effect"></div>
 
-    <div class="d-flex align-items-center gap-4">
-      <div class="logo-circle">
-        <img src="{% static 'images/logoHexa.png' %}" alt="HexaQuébec">
-      </div>
+<!-- ======================================================
+     HEADER
+====================================================== -->
 
-      <div>
-        <h2 class="mb-1 fw-bold text-white">HexaQuébec</h2>
-        <span class="badge bg-light text-dark rounded-pill px-3 py-1">
-            🗓️ Publié le {{ annonce.published_at|date:"d M Y" }}
-        </span>
-      </div>
-    </div>
+<section class="annonce-header">
 
-    <div class="gold-line"></div>
+<div class="container">
 
-    <h1 class="mt-3 fw-bold text-white">{{ annonce.titre }}</h1>
-    <p class="mt-3 text-light">{{ annonce.content }}</p>
-<a href="{% url 'home' %}" 
-   class="btn btn-dark rounded-pill mt-3"
-   style="position: relative; z-index: 9999;">
-  ← Retour aux annonces
+<div class="main-card animate__animated animate__fadeInUp"
+data-aos="zoom-in">
+
+<!-- TOP -->
+
+<div class="top-info">
+
+<div class="logo-box">
+
+<div class="logo-inner">
+
+<img src="{% static 'images/logoHexa.png' %}"
+alt="HexaQuébec">
+
+</div>
+
+</div>
+
+<div>
+
+<h3 class="fw-bold mb-1">
+HexaQuébec
+</h3>
+
+<div class="publish-badge">
+
+<i class="fa-solid fa-calendar-days"></i>
+
+Publié le
+{{ annonce.published_at|date:"d M Y" }}
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TITLE -->
+
+<h1 class="annonce-title">
+
+{{ annonce.titre }}
+
+<span>Annonce officielle</span>
+
+</h1>
+
+<div class="gold-line"></div>
+
+<!-- CONTENT -->
+
+<p class="annonce-text">
+
+{{ annonce.content }}
+
+</p>
+
+<!-- BUTTONS -->
+
+<div class="action-buttons">
+
+<a href="{% url 'home' %}"
+class="custom-btn btn-home">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Retour Accueil
+
 </a>
 
-  </div>
+<a href="#partage"
+class="custom-btn btn-share">
+
+<i class="fa-solid fa-share-nodes"></i>
+
+Partager
+
+</a>
+
 </div>
 
-<!-- IMAGE -->
-<div class="container pb-5" data-aos="zoom-in-up">
-  {% if annonce.image %}
-      <img src="{{ annonce.image.url }}" alt="{{ annonce.titre }}" class="annonce-img">
-  {% else %}
-      <img src="{% static 'images/default-annonce.jpg' %}" class="annonce-img">
-  {% endif %}
 </div>
 
-<!-- SOCIAL SHARE -->
-<div class="container text-center pb-5">
-  <h4 class="fw-bold text-white">Partager l'annonce</h4>
-
-  <div class="social-share mt-3">
-      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
-          <i class="fab fa-facebook text-white"></i>
-      </a>
-
-      <a href="https://www.tiktok.com/share?url={{ request.build_absolute_uri }}" target="_blank">
-          <i class="fab fa-tiktok text-white"></i>
-      </a>
-  </div>
 </div>
 
-<!-- Scripts -->
+</section>
+
+<!-- ======================================================
+     IMAGE
+====================================================== -->
+
+<section class="image-section">
+
+<div class="container">
+
+<div class="image-card"
+data-aos="zoom-in-up">
+
+{% if annonce.image %}
+
+<img src="{{ annonce.image.url }}"
+alt="{{ annonce.titre }}"
+class="annonce-img">
+
+{% else %}
+
+<img src="{% static 'images/default-annonce.jpg' %}"
+alt="Annonce"
+class="annonce-img">
+
+{% endif %}
+
+<div class="image-overlay"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ======================================================
+     SHARE
+====================================================== -->
+
+<section class="social-section"
+id="partage">
+
+<div class="container">
+
+<div class="social-box"
+data-aos="fade-up">
+
+<h2 class="social-title">
+Partager cette annonce
+</h2>
+
+<p class="social-text">
+
+Partagez cette annonce HexaQuébec
+sur vos réseaux sociaux.
+
+</p>
+
+<div class="social-links">
+
+<!-- FACEBOOK -->
+
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+target="_blank"
+class="social-link facebook">
+
+<i class="fab fa-facebook-f"></i>
+
+</a>
+
+<!-- TIKTOK -->
+
+<a href="https://www.tiktok.com/"
+target="_blank"
+class="social-link tiktok">
+
+<i class="fab fa-tiktok"></i>
+
+</a>
+
+<!-- WHATSAPP -->
+
+<a href="https://wa.me/?text={{ request.build_absolute_uri }}"
+target="_blank"
+class="social-link whatsapp">
+
+<i class="fab fa-whatsapp"></i>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+© 2026 HexaQuébec — Tous droits réservés
+</p>
+
+</div>
+
+</footer>
+
+<!-- ======================================================
+     JS
+====================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
 <script>
-  AOS.init({
-    duration: 900,
-    once: true,
-    offset: 80,
-  });
+
+AOS.init({
+    duration:1000,
+    once:true
+});
+
 </script>
 
 </body>

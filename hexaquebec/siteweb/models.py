@@ -921,3 +921,107 @@ class PaiementClient(models.Model):
 
     def __str__(self):
         return f"{self.nom_client} - {self.montant} - {self.statut}"
+    
+
+
+
+
+
+
+class Projet(models.Model):
+
+    STATUT_CHOICES = [
+        ('disponible', 'Disponible'),
+        ('encours', 'En cours'),
+        ('termine', 'Terminé'),
+    ]
+
+    nom_projet = models.CharField(max_length=200)
+    client = models.CharField(max_length=200)
+    prix = models.DecimalField(max_digits=10, decimal_places=2)
+
+    date_creation = models.DateField(default=timezone.now)
+    statut = models.CharField(
+        max_length=20,
+        choices=STATUT_CHOICES,
+        default='disponible'
+    )
+
+    technologie = models.CharField(max_length=200, blank=True, null=True)
+
+    description = models.TextField(blank=True, null=True)
+
+    image = models.ImageField(
+        upload_to='projets/',
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return self.nom_projet
+    
+
+
+class PresenceStagiaire(models.Model):
+
+    profil = models.ForeignKey(
+        "ProfilStagiaire",
+        on_delete=models.CASCADE,
+        related_name="presences"
+    )
+
+    # DATE
+    date = models.DateField(auto_now_add=True)
+
+    # HORAIRE
+    horaire_entree = models.TimeField(
+        null=True,
+        blank=True
+    )
+
+    pause_repas = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    horaire_sortie = models.TimeField(
+        null=True,
+        blank=True
+    )
+
+    # POINTAGE
+    pointage_entree = models.TimeField(
+        null=True,
+        blank=True
+    )
+
+    pointage_sortie = models.TimeField(
+        null=True,
+        blank=True
+    )
+
+    # ABSENCE
+    absent = models.BooleanField(default=False)
+
+    raison_absence = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # NOTES
+    note_admin = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self):
+        return f"{self.profil} - {self.date}"
+    
+
+

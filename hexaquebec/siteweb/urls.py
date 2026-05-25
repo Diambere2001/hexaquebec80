@@ -106,6 +106,34 @@ urlpatterns = [
     path('annonces/', views.annonces_list, name='annonces_list'),
     path('annonces/edit/<int:id>/', views.annonce_edit, name='annonce_edit'),
 
+    path(
+        'projets/',
+        views.projet_list,
+        name='projet_list'
+    ),
+
+    path(
+        'ajouter-projet/',
+        views.ajouter_projet,
+        name='ajouter_projet'
+    ),
+
+    path(
+        'modifier-projet/<int:id>/',
+        views.modifier_projet,
+        name='modifier_projet'
+    ),
+
+    path(
+        'supprimer-projet/<int:id>/',
+        views.supprimer_projet,
+        name='supprimer_projet'
+    ),
+
+
+    path('repondre/<int:message_id>/', views.repondre_message, name='repondre_message'),
+    
+
  
 
     
