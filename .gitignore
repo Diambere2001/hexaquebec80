@@ -1,3 +1,7 @@
 ".env" 
 .env
 hexaquebec/.env
+__pycache__/
+*.pyc
+.env
+
