@@ -326,66 +326,136 @@ body {
 </div>
 </div>
 
+
 <!-- ===== MESSAGE STAGIAIRE ↔ ADMIN ===== -->
+
 <div class="col-md-6">
-<div class="glass card-modern">
 
-    <h5>💬 Messagerie</h5>
+    <div class="glass card-modern">
 
-    <!-- 📩 MESSAGE ENVOYÉ PAR LE STAGIAIRE -->
-    <div class="mb-3">
+        <h5 class="mb-4">
+            💬 Messagerie
+        </h5>
 
-        <div class="label">Votre dernier message</div>
+        <!-- ================= CONVERSATION ================= -->
 
-        {% if profil.message_stagiaire %}
-            <div class="value p-2 rounded"
-                 style="background:rgba(255,255,255,0.06); border-left:3px solid #e0c097;">
-                {{ profil.message_stagiaire }}
-            </div>
-        {% else %}
-            <p class="text-muted">Vous n’avez pas encore envoyé de message.</p>
-        {% endif %}
+        <div class="chat-box mb-4"
+             style="max-height:400px;
+                    overflow-y:auto;
+                    padding:10px;">
+
+            {% for msg in profil.messages.all %}
+
+                <!-- MESSAGE STAGIAIRE -->
+
+                {% if msg.auteur == "stagiaire" %}
+
+                    <div class="d-flex justify-content-end mb-3">
+
+                        <div style="
+                            max-width:80%;
+                            background:linear-gradient(135deg,#d4af37,#e0c097);
+                            color:#111;
+                            padding:12px 16px;
+                            border-radius:18px 18px 4px 18px;
+                            font-size:14px;
+                            box-shadow:0 4px 10px rgba(0,0,0,0.15);
+                        ">
+
+                            <div class="fw-bold mb-1">
+                                Vous
+                            </div>
+
+                            <div>
+                                {{ msg.message }}
+                            </div>
+
+                            <small style="opacity:.7;">
+                                {{ msg.date|date:"d/m/Y H:i" }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                <!-- MESSAGE ADMIN -->
+
+                    <div class="d-flex justify-content-start mb-3">
+
+                        <div style="
+                            max-width:80%;
+                            background:rgba(255,255,255,0.08);
+                            color:white;
+                            padding:12px 16px;
+                            border-radius:18px 18px 18px 4px;
+                            border-left:3px solid #0dcaf0;
+                            font-size:14px;
+                            box-shadow:0 4px 10px rgba(0,0,0,0.15);
+                        ">
+
+                            <div class="fw-bold text-info mb-1">
+                                Administration
+                            </div>
+
+                            <div>
+                                {{ msg.message }}
+                            </div>
+
+                            <small style="opacity:.7;">
+                                {{ msg.date|date:"d/m/Y H:i" }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {% empty %}
+
+                <div class="text-center text-muted py-4">
+
+                    Aucun message pour le moment.
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- ================= ENVOYER MESSAGE ================= -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label class="form-label mb-2">
+                Nouveau message
+            </label>
+
+            <textarea name="message_stagiaire"
+                      class="form-control mb-3"
+                      rows="3"
+                      placeholder="Écrivez votre message ici..."
+                      required></textarea>
+
+            <button type="submit"
+                    name="send_message"
+                    class="btn btn-primary w-100">
+
+                📤 Envoyer message
+
+            </button>
+
+        </form>
 
     </div>
 
-    <!-- 📬 RÉPONSE ADMIN -->
-    <div class="mb-3">
-
-        <div class="label">Réponse de l'administration</div>
-
-        {% if profil.reponse_admin %}
-            <div class="value p-2 rounded text-info"
-                 style="background:rgba(255,255,255,0.06); border-left:3px solid #0dcaf0;">
-                💬 {{ profil.reponse_admin }}
-            </div>
-        {% else %}
-            <p class="text-muted">Aucune réponse pour le moment.</p>
-        {% endif %}
-
-    </div>
-
-    <hr>
-
-    <!-- ✍️ ENVOYER MESSAGE -->
-    <form method="POST">
-
-        {% csrf_token %}
-
-        <label class="form-label">Nouveau message</label>
-
-        <textarea name="message_stagiaire"
-                  class="form-control mb-3"
-                  rows="3"
-                  placeholder="Écrivez votre message ici..."></textarea>
-
-        <button type="submit" name="send_message" class="btn btn-primary w-100">
-            📤 Envoyer message
-        </button>
-
-    </form>
-
 </div>
-</div>
+
+
 
 <div class="col-md-6">
 <div class="glass card-modern">
@@ -470,30 +540,79 @@ body {
 </div>
 </div>
 
+
+
 <div class="col-12">
-<div class="glass card-modern">
 
-    <h5 class="upload-title">
-        📤 Envoyer un fichier
-    </h5>
+    <div class="glass card-modern p-4">
 
-    <form method="POST" enctype="multipart/form-data" class="upload-form">
-        {% csrf_token %}
+        <h5 class="upload-title mb-4">
+            📤 Envoyer un document
+        </h5>
 
-        <div class="file-box">
-            <i class="bi bi-paperclip"></i>
+        <form method="POST"
+              enctype="multipart/form-data"
+              class="upload-form">
 
-            <input type="file" name="fichier" class="file-input">
-        </div>
+            {% csrf_token %}
 
-        <button class="btn-upload">
-            <i class="bi bi-send"></i> Envoyer
-        </button>
+            <!-- TITRE -->
 
-    </form>
+            <div class="mb-3">
+
+                <label class="form-label text-light mb-2">
+                    Titre du document
+                </label>
+
+                <input type="text"
+                       name="titre"
+                       class="form-control"
+                       placeholder="Ex: Rapport stage PDF"
+                       required>
+
+            </div>
+
+            <!-- FICHIER -->
+
+            <div class="mb-4">
+
+                <label class="form-label text-light mb-2">
+                    Choisir un fichier
+                </label>
+
+                <div class="file-box">
+
+                    <i class="bi bi-paperclip"></i>
+
+                    <input type="file"
+                           name="fichier"
+                           class="file-input"
+                           required>
+
+                </div>
+
+            </div>
+
+            <!-- BTN -->
+
+            <button type="submit"
+                    name="upload_document"
+                    class="btn-upload">
+
+                <i class="bi bi-send-fill"></i>
+                Envoyer document
+
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
-</div>
+
+
+
+
 
 </div>
 </div>

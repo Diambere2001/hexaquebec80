@@ -2729,6 +2729,509 @@ informatiques professionnels.
 
 </style>
 
+<!-- ======================================================
+   DIAM AI - HEXAQUEBEC
+====================================================== -->
+
+<section class="diam-ai-section">
+
+<div class="container">
+
+    <div class="row align-items-center g-5">
+
+        <!-- LEFT -->
+
+        <div class="col-lg-5">
+
+            <div class="diam-ai-card">
+
+                <div class="ai-glow"></div>
+
+                <img src="{% static 'images/diam.jpeg' %}"
+                     class="diam-ai-image"
+                     alt="Diam AI">
+
+                <div class="ai-status">
+                    <span class="pulse"></span>
+                    IA ACTIVE
+                </div>
+
+            </div>
+
+        </div>
+<style>
+.diam-ai-image{
+    width:100%;
+    max-width:420px;
+    border-radius:35px;
+    object-fit:cover;
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.55),
+        0 0 45px rgba(0,212,255,0.25);
+
+    animation: diamFloat 5s ease-in-out infinite;
+    transition:0.45s ease;
+}
+
+.diam-ai-image:hover{
+    transform:scale(1.04) rotate(-1deg);
+    box-shadow:
+        0 35px 90px rgba(0,0,0,0.65),
+        0 0 70px rgba(124,92,255,0.45);
+}
+
+.diam-ai-card{
+    position:relative;
+    text-align:center;
+}
+
+.diam-ai-card::before{
+    content:"";
+    position:absolute;
+    inset:-18px;
+    border-radius:45px;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff,#d4af37);
+    filter:blur(35px);
+    opacity:.35;
+    z-index:-1;
+    animation: glowMove 4s linear infinite;
+}
+
+@keyframes diamFloat{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-16px);
+    }
+}
+
+@keyframes glowMove{
+    0%{
+        opacity:.25;
+        transform:scale(.96);
+    }
+    50%{
+        opacity:.55;
+        transform:scale(1.03);
+    }
+    100%{
+        opacity:.25;
+        transform:scale(.96);
+    }
+}
+</style>
+        <!-- RIGHT -->
+
+        <div class="col-lg-7">
+
+            <span class="subtitle">
+                🤖 Assistant IA HexaQuébec
+            </span>
+
+            <h2 class="diam-ai-title">
+                Discutez avec
+                <span>Diam AI</span>
+            </h2>
+
+            <p class="diam-ai-text">
+
+                Votre assistant virtuel intelligent HexaQuébec.
+                Il répond automatiquement aux questions sur :
+
+            </p>
+
+            <div class="ai-features">
+
+                <div class="ai-feature">
+                    💻 Développement Web
+                </div>
+
+                <div class="ai-feature">
+                    🤖 Intelligence Artificielle
+                </div>
+
+                <div class="ai-feature">
+                    📱 Applications Mobiles
+                </div>
+
+                <div class="ai-feature">
+                    🎓 Stages HexaQuébec
+                </div>
+
+                <div class="ai-feature">
+                    🛒 E-commerce
+                </div>
+
+                <div class="ai-feature">
+                    🎨 UI/UX Design
+                </div>
+
+            </div>
+
+            <!-- CHAT -->
+
+            <div class="ai-chat-box">
+
+                <div class="chat-header">
+
+                    <img src="{% static 'images/diam.jpeg' %}"
+                         class="chat-avatar">
+
+                    <div>
+
+                        <h5>
+                            Diam AI
+                        </h5>
+
+                        <small>
+                            Assistant intelligent HexaQuébec
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+
+                    <div class="bot-message">
+                        👋 Bonjour, je suis Diam AI.
+                        Comment puis-je vous aider aujourd’hui ?
+                    </div>
+
+                </div>
+
+                <div class="chat-input-box">
+
+                    <input type="text"
+                           id="userInput"
+                           placeholder="Posez votre question...">
+
+                    <button onclick="sendMessage()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+<style>
+
+/* ======================================================
+   DIAM AI
+====================================================== */
+
+.diam-ai-section{
+    padding:120px 0;
+    background:
+    linear-gradient(
+        180deg,
+        #050816 0%,
+        #091120 100%
+    );
+}
+
+.diam-ai-card{
+    position:relative;
+    text-align:center;
+}
+
+.diam-ai-image{
+    width:100%;
+    max-width:420px;
+    border-radius:35px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,0.45);
+
+    position:relative;
+    z-index:2;
+}
+
+.ai-glow{
+    position:absolute;
+    width:350px;
+    height:350px;
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(0,212,255,0.25),
+        transparent 70%
+    );
+
+    filter:blur(50px);
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+}
+
+.ai-status{
+    margin-top:20px;
+
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:12px 20px;
+
+    border-radius:100px;
+
+    background:rgba(255,255,255,0.08);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:#8be9ff;
+}
+
+.pulse{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#00ff88;
+
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);opacity:1;}
+    100%{transform:scale(2);opacity:0;}
+}
+
+.diam-ai-title{
+    font-size:64px;
+    font-weight:900;
+    margin-bottom:25px;
+}
+
+.diam-ai-title span{
+    background:
+    linear-gradient(
+        to right,
+        #7c5cff,
+        #00d4ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.diam-ai-text{
+    color:rgba(255,255,255,0.72);
+    line-height:1.9;
+    margin-bottom:30px;
+}
+
+.ai-features{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:35px;
+}
+
+.ai-feature{
+    padding:14px 20px;
+    border-radius:18px;
+
+    background:
+    rgba(255,255,255,0.06);
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+}
+
+/* CHAT */
+
+.ai-chat-box{
+    border-radius:30px;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.chat-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding:20px;
+
+    border-bottom:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.chat-avatar{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.chat-messages{
+    padding:25px;
+    min-height:220px;
+}
+
+.bot-message{
+    background:
+    rgba(255,255,255,0.08);
+
+    padding:16px 20px;
+
+    border-radius:18px;
+
+    display:inline-block;
+
+    max-width:85%;
+}
+
+.user-message{
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    padding:16px 20px;
+
+    border-radius:18px;
+
+    margin-left:auto;
+    margin-top:15px;
+
+    max-width:85%;
+}
+
+.chat-input-box{
+    display:flex;
+    gap:10px;
+
+    padding:20px;
+
+    border-top:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.chat-input-box input{
+    flex:1;
+
+    background:
+    rgba(255,255,255,0.06);
+
+    border:none;
+
+    padding:16px 18px;
+
+    border-radius:16px;
+
+    color:#fff;
+}
+
+.chat-input-box button{
+    width:60px;
+    border:none;
+
+    border-radius:16px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #7c5cff,
+        #00d4ff
+    );
+
+    color:#fff;
+}
+
+</style>
+
+<script>
+async function sendMessage(){
+
+    let input = document.getElementById("userInput");
+    let chat = document.getElementById("chatMessages");
+    let text = input.value.trim();
+
+    if(text === "") return;
+
+    chat.innerHTML += `
+        <div class="user-message">
+            ${text}
+        </div>
+    `;
+
+    input.value = "";
+
+    chat.innerHTML += `
+        <div class="bot-message" id="typing">
+            Diam AI écrit...
+        </div>
+    `;
+
+    try{
+
+        const response = await fetch("{% url 'diam_ai_chat' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: text
+            })
+        });
+
+        const data = await response.json();
+
+        document.getElementById("typing").remove();
+
+        chat.innerHTML += `
+            <div class="bot-message">
+                ${data.answer}
+            </div>
+        `;
+
+    }catch(error){
+
+        document.getElementById("typing").remove();
+
+        chat.innerHTML += `
+            <div class="bot-message">
+                Désolé, Diam AI est momentanément indisponible.
+            </div>
+        `;
+    }
+
+    chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+
 
 
 

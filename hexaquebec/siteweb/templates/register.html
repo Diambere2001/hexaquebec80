@@ -692,6 +692,126 @@ body{
 
 }
 
+
+/* ======================================================
+   FIX MOBILE LISIBILITÉ
+====================================================== */
+
+@media(max-width:768px){
+
+    body{
+        background:#050816 !important;
+        padding:18px 10px;
+        color:#fff;
+    }
+
+    .bg-glow::before,
+    .bg-glow::after{
+        opacity:.25;
+        filter:blur(90px);
+    }
+
+    .mini-badge{
+        background:rgba(255,255,255,0.12);
+        color:#ffffff;
+        border:1px solid rgba(255,255,255,0.18);
+    }
+
+    .main-title{
+        font-size:34px;
+        color:#ffffff;
+        line-height:1.2;
+    }
+
+    .main-title span{
+        -webkit-text-fill-color:#8be9ff;
+        background:none;
+        color:#8be9ff;
+    }
+
+    .main-text{
+        color:#e5e7eb;
+        font-size:15px;
+        line-height:1.8;
+    }
+
+    .feature-item{
+        background:#111827;
+        border:1px solid rgba(255,255,255,0.14);
+        backdrop-filter:none;
+    }
+
+    .feature-item h5{
+        color:#ffffff;
+    }
+
+    .feature-item p{
+        color:#cbd5e1;
+    }
+
+    .register-box{
+        background:#0f172a;
+        border:1px solid rgba(255,255,255,0.14);
+        box-shadow:0 20px 45px rgba(0,0,0,0.45);
+        backdrop-filter:none;
+    }
+
+    .register-box::before{
+        opacity:.15;
+    }
+
+    .header-box h2{
+        color:#ffffff;
+    }
+
+    .header-box p{
+        color:#cbd5e1;
+    }
+
+    .form-label{
+        color:#ffffff;
+    }
+
+    .form-control{
+        background:#ffffff !important;
+        color:#111827 !important;
+        border:1px solid #d1d5db;
+    }
+
+    .form-control::placeholder{
+        color:#6b7280 !important;
+    }
+
+    .form-control:focus{
+        background:#ffffff !important;
+        color:#111827 !important;
+        border-color:#00d4ff;
+        box-shadow:0 0 0 4px rgba(0,212,255,0.15);
+    }
+
+    .input-box i{
+        color:#2563eb;
+    }
+
+    .bottom-links{
+        color:#e5e7eb;
+    }
+
+    .bottom-links a{
+        font-weight:700;
+    }
+
+    .btn-hexa{
+        background:#2563eb;
+        color:#ffffff;
+        box-shadow:none;
+    }
+
+    .btn-hexa:hover{
+        transform:none;
+        background:#1d4ed8;
+    }
+}
 </style>
 
 </head>

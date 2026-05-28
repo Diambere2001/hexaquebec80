@@ -182,3 +182,10 @@ TIME_ZONE = 'America/Montreal'
 USE_I18N = True
 
 USE_TZ = True
+
+
+
+
+
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")

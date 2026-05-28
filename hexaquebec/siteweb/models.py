@@ -515,12 +515,7 @@ class ProfilStagiaire(models.Model):
     date_debut = models.DateField(default=timezone.now)
     date_fin = models.DateField(null=True, blank=True)
 
-    message_responsable = models.TextField(blank=True)
-    # 💬 MESSAGE STAGIAIRE
-    message_stagiaire = models.TextField(null=True, blank=True)
-
-    # 💬 RÉPONSE ADMIN
-    reponse_admin = models.TextField(null=True, blank=True)
+    
 
     statut_rdv = models.CharField(
     max_length=20,
@@ -760,6 +755,22 @@ class ProfilStagiaire(models.Model):
     def __str__(self):
         return f"{self.stagiaire.nom} - {self.code_stagiaire}"
 
+
+
+class DocumentStagiaire(models.Model):
+    profil = models.ForeignKey(
+        ProfilStagiaire,
+        on_delete=models.CASCADE,
+        related_name="documents"
+    )
+
+    titre = models.CharField(max_length=150)
+    fichier = models.FileField(upload_to="documents_stagiaires/")
+
+    date_ajout = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.titre} - {self.profil.stagiaire}"
 
 
 
@@ -1024,4 +1035,67 @@ class PresenceStagiaire(models.Model):
         return f"{self.profil} - {self.date}"
     
 
+
+
+
+
+
+
+class RapportMensuel(models.Model):
+
+    TYPE_CHOICES = (
+        ('revenu', 'Revenu'),
+        ('depense', 'Dépense'),
+    )
+
+    type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES
+    )
+
+    description = models.CharField(
+        max_length=255
+    )
+
+    montant = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    date = models.DateField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.type} - {self.montant}$"
+
+
+
+
+class MessageStagiaire(models.Model):
+
+    profil = models.ForeignKey(
+        ProfilStagiaire,
+        on_delete=models.CASCADE,
+        related_name="messages"
+    )
+
+    auteur = models.CharField(
+        max_length=20,
+        choices=[
+            ("stagiaire", "Stagiaire"),
+            ("admin", "Administration"),
+        ]
+    )
+
+    message = models.TextField()
+
+    date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    lu = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.auteur} - {self.profil}"
 

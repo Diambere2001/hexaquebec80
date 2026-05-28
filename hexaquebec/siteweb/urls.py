@@ -132,6 +132,14 @@ urlpatterns = [
 
 
     path('repondre/<int:message_id>/', views.repondre_message, name='repondre_message'),
+    path( 'rapport-pdf/', views.rapport_pdf, name='rapport_pdf' ),
+
+    path('ajouter-rapport/', views.ajouter_rapport, name='ajouter_rapport'),
+    path('supprimer-rapport/<int:id>/', views.supprimer_rapport, name='supprimer_rapport'),
+    path('rapport-pdf/', views.rapport_pdf, name='rapport_pdf'),
+    path("diam-ai-chat/", views.diam_ai_chat, name="diam_ai_chat"),
+
+
     
 
  

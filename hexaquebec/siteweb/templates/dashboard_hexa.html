@@ -2249,6 +2249,176 @@ onclick="return confirm('Supprimer ce paiement ?')">
 
 </div>
 
+
+<!-- ================= RAPPORT MENSUEL ================= -->
+
+<div class="dashboard-card" data-aos="fade-up">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+
+        <div>
+            <h3 class="section-title">
+                <i class="fa-solid fa-chart-line"></i>
+                Rapport Mensuel
+            </h3>
+
+            <p style="color:#94a3b8;">
+                Revenus • Dépenses • Bénéfice automatique
+            </p>
+        </div>
+
+        <a href="{% url 'rapport_pdf' %}" class="btn btn-hexa">
+            <i class="fa-solid fa-file-pdf"></i>
+            Télécharger PDF
+        </a>
+
+    </div>
+
+    <!-- FORMULAIRE AJOUT -->
+    <form method="POST" action="{% url 'ajouter_rapport' %}" class="mb-4">
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+                <select name="type" class="form-control" required>
+                    <option value="revenu">Revenu</option>
+                    <option value="depense">Dépense</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text"
+                       name="description"
+                       class="form-control"
+                       placeholder="Description"
+                       required>
+            </div>
+
+            <div class="col-md-3">
+                <input type="number"
+                       step="0.01"
+                       name="montant"
+                       class="form-control"
+                       placeholder="Montant $"
+                       required>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-hexa w-100">
+                    Ajouter
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- KPI -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-icon icon-green">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                </div>
+
+                <h4>{{ total_revenus_rapport }} $</h4>
+                <small style="color:#94a3b8;">Revenus</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-icon icon-gold">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+
+                <h4>{{ total_depenses }} $</h4>
+                <small style="color:#94a3b8;">Dépenses</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-icon icon-blue">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+
+                <h4>{{ benefice }} $</h4>
+                <small style="color:#94a3b8;">Bénéfice net automatique</small>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for r in rapports %}
+
+                <tr>
+                    <td>{{ r.date }}</td>
+
+                    <td>
+                        {% if r.type == "revenu" %}
+                            <span class="badge-success">Revenu</span>
+                        {% else %}
+                            <span class="badge-danger">Dépense</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ r.description }}</td>
+
+                    <td class="fw-bold text-warning">
+                        {{ r.montant }} $
+                    </td>
+
+                    <td>
+                        <a href="{% url 'supprimer_rapport' r.id %}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Supprimer cette ligne ?')">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="5" class="text-center">
+                        Aucun rapport disponible.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+
+
+
 <div id="annonceForm" style="display:none;" class="dashboard-card">
 
 <form method="POST" enctype="multipart/form-data">

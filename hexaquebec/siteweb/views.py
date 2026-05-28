@@ -716,6 +716,9 @@ def login_hexa(request):
     return render(request, "login_hexa.html")
 
 
+from .models import RapportMensuel
+
+
 @login_required
 def dashboard_hexa(request):
 
@@ -725,9 +728,26 @@ def dashboard_hexa(request):
     orders = Order.objects.select_related('product').all().order_by('-id')
     paiements = PaiementClient.objects.all().order_by('-date')
 
+    # RAPPORT MENSUEL
+    rapports = RapportMensuel.objects.all().order_by('-date')
+
+    total_depenses = sum(
+        float(r.montant) for r in rapports
+        if r.type == 'depense'
+    )
+
+    total_revenus_rapport = sum(
+        float(r.montant) for r in rapports
+        if r.type == 'revenu'
+    )
+
+    benefice = total_revenus_rapport - total_depenses
+
+    # FACTURES CHART
     factures_labels = [f.date.strftime('%b %Y') for f in factures]
     factures_data = [float(f.total_facture()) for f in factures]
 
+    # TES REVENUS FACTURES
     total_revenus = sum(float(f.total_facture()) for f in factures)
     total_non_paye = 0
 
@@ -744,7 +764,280 @@ def dashboard_hexa(request):
 
         "total_revenus": total_revenus,
         "total_non_paye": total_non_paye,
+
+        # RAPPORT
+        "rapports": rapports,
+        "total_depenses": total_depenses,
+        "total_revenus_rapport": total_revenus_rapport,
+        "benefice": benefice,
     })
+
+
+
+
+from django.shortcuts import redirect, get_object_or_404
+from .models import RapportMensuel
+
+
+@login_required
+def ajouter_rapport(request):
+
+    if request.method == "POST":
+
+        type_rapport = request.POST.get("type")
+        description = request.POST.get("description")
+        montant = request.POST.get("montant")
+
+        RapportMensuel.objects.create(
+            type=type_rapport,
+            description=description,
+            montant=montant
+        )
+
+    return redirect('dashboard_hexa')
+
+
+@login_required
+def supprimer_rapport(request, id):
+
+    rapport = get_object_or_404(RapportMensuel, id=id)
+    rapport.delete()
+
+    return redirect('dashboard_hexa')
+
+
+
+
+
+@login_required
+def rapport_pdf(request):
+
+    from django.http import HttpResponse
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.units import cm
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    from datetime import datetime
+
+    rapports = RapportMensuel.objects.all().order_by('-date')
+
+    total_revenus_rapport = sum(
+        float(r.montant) for r in rapports
+        if r.type == 'revenu'
+    )
+
+    total_depenses = sum(
+        float(r.montant) for r in rapports
+        if r.type == 'depense'
+    )
+
+    benefice = total_revenus_rapport - total_depenses
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="rapport_mensuel_hexaquebec.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+
+    width, height = A4
+
+    # COULEURS
+    dark = colors.HexColor("#0b1120")
+    card = colors.HexColor("#111827")
+    blue = colors.HexColor("#2563eb")
+    gold = colors.HexColor("#d4af37")
+    green = colors.HexColor("#22c55e")
+    red = colors.HexColor("#ef4444")
+    light = colors.HexColor("#f8fafc")
+    muted = colors.HexColor("#64748b")
+
+    def money(value):
+        return f"{value:,.2f} $".replace(",", " ")
+
+    def draw_header():
+        # FOND HEADER
+        p.setFillColor(dark)
+        p.rect(0, height - 120, width, 120, fill=True, stroke=False)
+
+        # TITRE
+        p.setFillColor(light)
+        p.setFont("Helvetica-Bold", 22)
+        p.drawString(40, height - 55, "HexaQuébec")
+
+        p.setFillColor(gold)
+        p.setFont("Helvetica-Bold", 15)
+        p.drawString(40, height - 80, "Rapport mensuel financier")
+
+        # DATE
+        p.setFillColor(colors.white)
+        p.setFont("Helvetica", 10)
+        today = datetime.now().strftime("%d/%m/%Y")
+        p.drawRightString(width - 40, height - 55, f"Généré le : {today}")
+
+        p.setFillColor(muted)
+        p.drawRightString(width - 40, height - 75, "Revenus • Dépenses • Bénéfice")
+
+    def draw_footer(page_num):
+        p.setFillColor(muted)
+        p.setFont("Helvetica", 9)
+        p.drawString(40, 25, "HexaQuébec - Rapport confidentiel")
+        p.drawRightString(width - 40, 25, f"Page {page_num}")
+
+    def draw_kpi_card(x, y, title, amount, color):
+        p.setFillColor(colors.HexColor("#f8fafc"))
+        p.roundRect(x, y, 155, 80, 14, fill=True, stroke=False)
+
+        p.setFillColor(color)
+        p.roundRect(x + 12, y + 50, 32, 18, 8, fill=True, stroke=False)
+
+        p.setFillColor(muted)
+        p.setFont("Helvetica-Bold", 10)
+        p.drawString(x + 15, y + 35, title)
+
+        p.setFillColor(dark)
+        p.setFont("Helvetica-Bold", 17)
+        p.drawString(x + 15, y + 15, money(amount))
+
+    page_num = 1
+
+    draw_header()
+    draw_footer(page_num)
+
+    # CARTES KPI
+    y = height - 220
+
+    draw_kpi_card(40, y, "REVENUS", total_revenus_rapport, green)
+    draw_kpi_card(220, y, "DÉPENSES", total_depenses, red)
+
+    benefice_color = green if benefice >= 0 else red
+    draw_kpi_card(400, y, "BÉNÉFICE NET", benefice, benefice_color)
+
+    # TITRE TABLE
+    y -= 60
+
+    p.setFillColor(dark)
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(40, y, "Détails des transactions")
+
+    y -= 30
+
+    # HEADER TABLE
+    p.setFillColor(blue)
+    p.roundRect(40, y - 8, width - 80, 30, 8, fill=True, stroke=False)
+
+    p.setFillColor(colors.white)
+    p.setFont("Helvetica-Bold", 10)
+
+    p.drawString(55, y, "Date")
+    p.drawString(135, y, "Type")
+    p.drawString(230, y, "Description")
+    p.drawRightString(width - 55, y, "Montant")
+
+    y -= 35
+
+    p.setFont("Helvetica", 9)
+
+    if not rapports:
+        p.setFillColor(muted)
+        p.drawString(55, y, "Aucune donnée disponible.")
+    else:
+        for index, r in enumerate(rapports):
+
+            if y < 70:
+                p.showPage()
+                page_num += 1
+                draw_header()
+                draw_footer(page_num)
+
+                y = height - 160
+
+                p.setFillColor(blue)
+                p.roundRect(40, y - 8, width - 80, 30, 8, fill=True, stroke=False)
+
+                p.setFillColor(colors.white)
+                p.setFont("Helvetica-Bold", 10)
+
+                p.drawString(55, y, "Date")
+                p.drawString(135, y, "Type")
+                p.drawString(230, y, "Description")
+                p.drawRightString(width - 55, y, "Montant")
+
+                y -= 35
+                p.setFont("Helvetica", 9)
+
+            # LIGNE ALTERNÉE
+            if index % 2 == 0:
+                p.setFillColor(colors.HexColor("#f1f5f9"))
+                p.roundRect(40, y - 8, width - 80, 26, 6, fill=True, stroke=False)
+
+            # DATE
+            p.setFillColor(dark)
+            p.drawString(55, y, str(r.date))
+
+            # BADGE TYPE
+            if r.type == "revenu":
+                type_color = green
+                type_text = "Revenu"
+            else:
+                type_color = red
+                type_text = "Dépense"
+
+            p.setFillColor(type_color)
+            p.roundRect(130, y - 5, 70, 17, 7, fill=True, stroke=False)
+
+            p.setFillColor(colors.white)
+            p.setFont("Helvetica-Bold", 8)
+            p.drawCentredString(165, y, type_text)
+
+            # DESCRIPTION
+            p.setFillColor(dark)
+            p.setFont("Helvetica", 9)
+
+            description = r.description
+            if len(description) > 45:
+                description = description[:45] + "..."
+
+            p.drawString(230, y, description)
+
+            # MONTANT
+            p.setFont("Helvetica-Bold", 9)
+            p.setFillColor(type_color)
+            p.drawRightString(width - 55, y, money(float(r.montant)))
+
+            y -= 28
+
+    # RÉSUMÉ FINAL
+    if y < 130:
+        p.showPage()
+        page_num += 1
+        draw_header()
+        draw_footer(page_num)
+        y = height - 170
+
+    y -= 30
+
+    p.setFillColor(dark)
+    p.roundRect(40, y - 70, width - 80, 80, 14, fill=True, stroke=False)
+
+    p.setFillColor(colors.white)
+    p.setFont("Helvetica-Bold", 13)
+    p.drawString(60, y - 10, "Résumé financier")
+
+    p.setFont("Helvetica", 11)
+    p.drawString(60, y - 35, f"Total revenus : {money(total_revenus_rapport)}")
+    p.drawString(240, y - 35, f"Total dépenses : {money(total_depenses)}")
+
+    p.setFillColor(gold)
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(420, y - 35, f"Bénéfice : {money(benefice)}")
+
+    p.save()
+
+    return response
+
+
+
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
@@ -1887,9 +2180,9 @@ from .models import (
 )
 
 from .forms import ProfilStagiaireForm
-
+from .models import MessageStagiaire
 from datetime import datetime
-
+from .models import DocumentStagiaire
 
 def dashboard_stagiaire(request):
 
@@ -1965,6 +2258,7 @@ def dashboard_stagiaire(request):
 
             return redirect("dashboard_stagiaire")
 
+
         # =====================================================
         # 💬 MESSAGE
         # =====================================================
@@ -1975,9 +2269,11 @@ def dashboard_stagiaire(request):
 
             if msg:
 
-                profil.message_stagiaire = msg
-
-                profil.save()
+                MessageStagiaire.objects.create(
+                    profil=profil,
+                    auteur="stagiaire",
+                    message=msg
+                )
 
                 messages.success(
                     request,
@@ -1992,6 +2288,7 @@ def dashboard_stagiaire(request):
                 )
 
             return redirect("dashboard_stagiaire")
+
 
         # =====================================================
         # 🟢 POINTAGE ENTRÉE
@@ -2084,7 +2381,40 @@ def dashboard_stagiaire(request):
             )
 
             return redirect("dashboard_stagiaire")
+        
 
+        # =====================================================
+        # 📄 DOCUMENT
+        # =====================================================
+
+        if "upload_document" in request.POST:
+
+            titre = request.POST.get("titre")
+            fichier = request.FILES.get("fichier")
+
+            if titre and fichier:
+
+                DocumentStagiaire.objects.create(
+                    profil=profil,
+                    titre=titre,
+                    fichier=fichier
+                )
+
+                messages.success(
+                    request,
+                    "📄 Document envoyé avec succès"
+                )
+
+            else:
+
+                messages.error(
+                    request,
+                    "Veuillez sélectionner un fichier"
+                )
+
+            return redirect("dashboard_stagiaire")
+
+    
         # =====================================================
         # 📷 PHOTO
         # =====================================================
@@ -2113,9 +2443,14 @@ def dashboard_stagiaire(request):
                 "Erreur lors de l'envoi de la photo"
             )
 
+
     else:
 
         form = ProfilStagiaireForm(instance=profil)
+
+    # ================= DOCUMENTS =================
+
+    documents = profil.documents.all().order_by("-date_ajout")
 
     # ================= RENDER =================
 
@@ -2132,7 +2467,15 @@ def dashboard_stagiaire(request):
 
         # HISTORIQUE
         "historique_presences": historique_presences,
+
+        # DOCUMENTS
+        "documents": documents,
     })
+
+
+
+
+
 # ================= LOGOUT =================
 def logout_stagiaire(request):
     request.session.flush()
@@ -2961,4 +3304,79 @@ def supprimer_projet(request, id):
     projet.delete()
 
 
+
+
+
+
+
+
+
+
+
+from django.http import JsonResponse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from openai import OpenAI
+import json
+
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
+
+@csrf_exempt
+def diam_ai_chat(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+        question = data.get("message", "")
+
+        system_prompt = """
+        Tu es Diam AI, assistant virtuel officiel de HexaQuébec.
+
+        Tu réponds toujours en français, de manière professionnelle, claire et intelligente.
+
+        Informations HexaQuébec :
+        - HexaQuébec fait du développement web
+        - Création de sites vitrines
+        - Création de sites e-commerce
+        - Dashboards administratifs
+        - Applications mobiles
+        - Intelligence artificielle
+        - Chatbots intelligents
+        - UI/UX Design
+        - Maintenance informatique
+        - Stages disponibles : développement web, mobile, UI/UX, IA, infographie,administration
+        - Réseau et cybersécurité non acceptés
+        - Contact : hexaquebec80@gmail.com
+        - Téléphone : +1 514 467 7377
+        - Adresse : 2186 Rue Roussel, Chicoutimi, QC G7G 1W6
+
+        Si la personne demande un prix, explique que le prix dépend du projet et propose de demander un devis.
+        Si la personne demande un stage, explique les domaines acceptés et invite à remplir une demande de stage.
+        Si la question n’a pas rapport avec HexaQuébec, réponds poliment et ramène vers les services HexaQuébec.
+        """
+
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_prompt
+                },
+                {
+                    "role": "user",
+                    "content": question
+                }
+            ]
+        )
+
+        answer = completion.choices[0].message.content
+
+        return JsonResponse({
+            "answer": answer
+        })
+
+    return JsonResponse({
+        "answer": "Méthode non autorisée"
+    })
 

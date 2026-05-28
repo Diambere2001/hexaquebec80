@@ -16,6 +16,11 @@ from django.utils.html import format_html
 from .forms import ProfilStagiaireForm 
 from .models import PresenceStagiaire
 
+from .models import DocumentStagiaire
+
+
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "price", "quality", "published", "stock", "likes_count")
@@ -374,8 +379,29 @@ class StagiaireAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request)
     
+
+
+
+
+class DocumentStagiaireInline(admin.TabularInline):
+    model = DocumentStagiaire
+    extra = 1
+
+    fields = (
+        "titre",
+        "fichier",
+        "date_ajout",
+    )
+
+    readonly_fields = (
+        "date_ajout",
+    )
+
+
 @admin.register(ProfilStagiaire)
 class ProfilStagiaireAdmin(admin.ModelAdmin):
+
+    inlines = [DocumentStagiaireInline] 
 
     # 📊 LISTE
     list_display = (
@@ -442,12 +468,7 @@ class ProfilStagiaireAdmin(admin.ModelAdmin):
                "signature_preview",
                 "signature_data",
 
-            # 💬 MESSAGERIE ADMIN → STAGIAIRE
-                "message_responsable",
-
-        # 💬 RÉPONSE ADMIN → STAGIAIRE (nouveau)
-                "reponse_admin",
-                "message_stagiaire",
+            
             )
         }),
 
@@ -909,3 +930,88 @@ class PresenceStagiaireAdmin(admin.ModelAdmin):
 
     date_quebec.short_description = "Date Québec"
     date_quebec.admin_order_field = "date"
+
+
+
+
+
+
+
+
+
+from .models import RapportMensuel
+
+
+@admin.register(RapportMensuel)
+class RapportMensuelAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'type',
+        'description',
+        'montant',
+        'date'
+    )
+
+    list_filter = (
+        'type',
+        'date'
+    )
+
+    search_fields = (
+        'description',
+    )
+
+
+
+
+from .models import MessageStagiaire
+
+
+@admin.register(MessageStagiaire)
+class MessageStagiaireAdmin(admin.ModelAdmin):
+
+    # LISTE
+    list_display = (
+        "profil",
+        "auteur",
+        "message_court",
+        "date",
+        "lu",
+    )
+
+    # RECHERCHE
+    search_fields = (
+        "profil__stagiaire__nom",
+        "message",
+    )
+
+    # FILTRES
+    list_filter = (
+        "auteur",
+        "lu",
+        "date",
+    )
+
+    # ORDER
+    ordering = (
+        "-date",
+    )
+
+    # READONLY
+    readonly_fields = (
+        "date",
+    )
+
+    # MESSAGE COURT
+    def message_court(self, obj):
+
+        if len(obj.message) > 50:
+            return obj.message[:50] + "..."
+
+        return obj.message
+
+    message_court.short_description = "Message"
+
+
+
+
