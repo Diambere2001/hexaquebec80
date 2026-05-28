@@ -2925,7 +2925,126 @@ informatiques professionnels.
 </div>
 
 </section>
+<style>
 
+.ai-chat-box{
+    width:100%;
+    max-width:700px;
+    margin:40px auto;
+    background:#0f172a;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* HEADER FIXE */
+.chat-header{
+    position:sticky;
+    top:0;
+    z-index:100;
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding:18px 20px;
+
+    background:#111827;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+/* AVATAR */
+.chat-avatar{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .ai-chat-box{
+        width:95%;
+        margin:20px auto;
+        border-radius:16px;
+    }
+
+    .chat-header{
+        padding:14px;
+        gap:10px;
+    }
+
+    .chat-avatar{
+        width:45px;
+        height:45px;
+    }
+
+}
+
+</style>
+<style>
+
+.chat-input-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+}
+
+.chat-input-box input{
+    flex:1;
+    height:55px;
+    border:none;
+    outline:none;
+    padding:0 18px;
+    border-radius:14px;
+    font-size:15px;
+}
+
+.chat-input-box button{
+    min-width:55px;
+    height:55px;
+    border:none;
+    border-radius:14px;
+    background:#c6a87d;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:0.3s;
+}
+
+.chat-input-box button:hover{
+    transform:scale(1.05);
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .chat-input-box{
+        gap:8px;
+    }
+
+    .chat-input-box input{
+        height:50px;
+        font-size:14px;
+    }
+
+    .chat-input-box button{
+        min-width:50px;
+        height:50px;
+        font-size:18px;
+        border-radius:12px;
+    }
+
+}
+
+</style>
 <style>
 
 /* ======================================================
