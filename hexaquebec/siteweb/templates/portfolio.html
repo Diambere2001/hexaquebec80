@@ -521,7 +521,63 @@ body{
     }
 }
 
+.project-realise{
+    position:relative;
+    overflow:hidden;
+}
 
+.project-number{
+
+    font-size:70px;
+
+    font-weight:900;
+
+    background:
+    linear-gradient(
+        135deg,
+        #d4af37,
+        #00d4ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    margin-bottom:15px;
+
+    animation:numberFloat 3s ease-in-out infinite;
+}
+
+.project-realise::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:220px;
+    height:220px;
+
+    background:
+    radial-gradient(
+        rgba(0,212,255,.20),
+        transparent
+    );
+
+    top:-80px;
+    right:-80px;
+
+    border-radius:50%;
+}
+
+@keyframes numberFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+}
 </style>
 
 
@@ -654,6 +710,10 @@ AOS.init({ duration: 800, once: true });
     </div>
 </div>
 
+
+
+
+
 <!-- MODAL MOBILE -->
 <div class="modal fade" id="mobileModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -678,11 +738,88 @@ AOS.init({ duration: 800, once: true });
     </div>
 </div>
 
+<section class="container py-5" data-aos="fade-up">
+
+    <h2 class="section-title">
+        Projets Réalisés par HexaQuébec
+    </h2>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="portfolio-box project-realise">
+
+                <div class="project-number" data-target="25">0</div>
+
+                <div class="icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+
+                <h5>Sites Web Réalisés</h5>
+
+                <p>
+                    Création de sites vitrines, plateformes professionnelles,
+                    boutiques en ligne et dashboards modernes.
+                </p>
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="portfolio-box project-realise">
+
+                <div class="project-number" data-target="12">0</div>
+
+                <div class="icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+
+                <h5>Applications Développées</h5>
+
+                <p>
+                    Applications Android et solutions mobiles
+                    adaptées aux besoins des entreprises.
+                </p>
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="portfolio-box project-realise">
+
+                <div class="project-number" data-target="100">0</div>
+
+                <div class="icon">
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <h5>Clients Satisfaits</h5>
+
+                <p>
+                    Entreprises, commerces et organisations
+                    accompagnés par HexaQuébec.
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
 <!-- WHATSAPP -->
 <a href="https://wa.me/15144677377" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
 
 <!-- BACK TO TOP -->
 <div id="backTop"><i class="fas fa-chevron-up"></i></div>
+
+
+
+
 
 <!-- FOOTER -->
 <footer class="footer-modern mt-5">
@@ -801,5 +938,45 @@ window.addEventListener('scroll', () => {
 backTop.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
 </script>
 
+
+<script>
+
+const counters =
+document.querySelectorAll(".project-number");
+
+counters.forEach(counter=>{
+
+    let start = 0;
+
+    const target =
+    parseInt(counter.dataset.target);
+
+    const speed =
+    target / 60;
+
+    const updateCounter = ()=>{
+
+        start += speed;
+
+        if(start < target){
+
+            counter.innerText =
+            Math.floor(start);
+
+            requestAnimationFrame(updateCounter);
+
+        }else{
+
+            counter.innerText =
+            target + "+";
+
+        }
+    };
+
+    updateCounter();
+
+});
+
+</script>
 </body>
 </html>

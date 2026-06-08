@@ -1,35 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
-HexaQuébec — Développement Web & Solutions Numériques
-</title>
+<title>HexaQuébec — Développement Web & Solutions Numériques</title>
 
-<!-- BOOTSTRAP -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- FONT AWESOME -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-<!-- GOOGLE FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- ANIMATE -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
 <style>
-
-/* ======================================================
-   RESET
-====================================================== */
-
 *{
     margin:0;
     padding:0;
@@ -43,2372 +25,462 @@ html{
 
 body{
     background:#050816;
-    overflow-x:hidden;
     color:#fff;
+    overflow-x:hidden;
 }
 
-/* ======================================================
-   NAVBAR
-====================================================== */
+/* NAVBAR */
 
 .navbar{
     position:fixed;
     top:0;
     left:0;
     width:100%;
-
     z-index:9999;
-
-    padding:18px 0;
-
+    padding:16px 0;
     transition:.4s ease;
-
-    background:transparent;
+    background:rgba(5,8,22,.65);
+    backdrop-filter:blur(18px);
 }
 
 .navbar.scrolled{
-    background:rgba(5,8,22,0.92);
-    backdrop-filter:blur(20px);
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.35);
-
-    padding:12px 0;
+    background:rgba(5,8,22,.95);
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    padding:10px 0;
 }
 
-/* LOGO */
-
 .logo-hexa{
-    width:75px;
-    height:75px;
-
+    width:70px;
+    height:70px;
     border-radius:50%;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     overflow:hidden;
-
-    position:relative;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    box-shadow:
-    0 0 30px rgba(124,92,255,0.35);
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+    box-shadow:0 0 30px rgba(0,212,255,.25);
 }
 
 .logo-img{
-    width:60px;
-    height:60px;
-
+    width:58px;
+    height:58px;
     border-radius:50%;
+    object-fit:cover;
 }
-
-/* LINKS */
 
 .nav-modern .nav-link{
-    color:#fff !important;
-
-    margin-left:20px;
-
+    color:#fff!important;
+    margin-left:18px;
     font-weight:600;
-
     position:relative;
-
-    transition:.4s ease;
-}
-
-.nav-modern .nav-link::after{
-    content:"";
-    position:absolute;
-
-    left:0;
-    bottom:-8px;
-
-    width:0%;
-    height:2px;
-
-    background:#00d4ff;
-
-    transition:.4s ease;
 }
 
 .nav-modern .nav-link:hover{
-    color:#00d4ff !important;
+    color:#00d4ff!important;
 }
 
-.nav-modern .nav-link:hover::after{
-    width:100%;
-}
-
-/* ======================================================
-   HERO SECTION
-====================================================== */
+/* HERO */
 
 .hero-section{
     position:relative;
     min-height:100vh;
-
-    overflow:hidden;
-
-    background:
-    linear-gradient(
-        135deg,
-        #050816 0%,
-        #081120 35%,
-        #0d1428 100%
-    );
-
     display:flex;
     align-items:center;
-
-    padding:120px 0 80px;
+    padding:140px 0 90px;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at top left,rgba(124,92,255,.22),transparent 35%),
+        radial-gradient(circle at bottom right,rgba(0,212,255,.18),transparent 35%),
+        linear-gradient(135deg,#050816,#081120,#0d1428);
 }
-
-/* BG */
 
 .hero-overlay{
     position:absolute;
     inset:0;
-
-    background:
-    radial-gradient(circle at top left,
-    rgba(124,92,255,0.20),
-    transparent 35%),
-
-    radial-gradient(circle at bottom right,
-    rgba(0,212,255,0.18),
-    transparent 35%);
+    pointer-events:none;
 }
-
-/* BADGE */
 
 .hero-badge{
     display:inline-flex;
-    align-items:center;
-    gap:10px;
-
     padding:12px 22px;
-
     border-radius:100px;
-
-    background:rgba(255,255,255,0.06);
-
-    border:1px solid rgba(255,255,255,0.08);
-
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
     color:#8be9ff;
-
-    backdrop-filter:blur(20px);
-
-    margin-bottom:28px;
-
     font-size:14px;
-    font-weight:600;
+    font-weight:700;
+    margin-bottom:25px;
 }
 
-/* TITLE */
-
 .hero-title{
-    font-size:72px;
+    font-size:70px;
     font-weight:900;
     line-height:1.05;
-
-    margin-bottom:30px;
+    margin-bottom:28px;
 }
 
 .hero-title span{
     display:block;
-
-    background:
-    linear-gradient(
-        to right,
-        #7c5cff,
-        #00d4ff
-    );
-
+    background:linear-gradient(90deg,#7c5cff,#00d4ff);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
-/* TEXT */
-
 .hero-text{
-    color:rgba(255,255,255,0.72);
-
+    color:rgba(255,255,255,.75);
     font-size:18px;
     line-height:1.9;
+    margin-bottom:30px;
+}
 
+/* STAGE */
+
+.hero-stage-box{
+    position:relative;
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    padding:24px;
     margin-bottom:35px;
+    border-radius:28px;
+    overflow:hidden;
+    background:linear-gradient(135deg,rgba(124,92,255,.16),rgba(0,212,255,.08));
+    border:1px solid rgba(255,255,255,.09);
+    backdrop-filter:blur(20px);
+    box-shadow:0 20px 50px rgba(0,0,0,.28);
+    animation:stageFloat 6s ease-in-out infinite;
+}
+
+.hero-stage-box::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-120%;
+    width:80%;
+    height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+    transition:.8s;
+}
+
+.hero-stage-box:hover::before{
+    left:120%;
+}
+
+.stage-icon{
+    min-width:72px;
+    height:72px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    color:#fff;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+    box-shadow:0 15px 35px rgba(0,212,255,.25);
+}
+
+.stage-badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:100px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.08);
+    color:#8be9ff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.stage-content h5{
+    font-size:23px;
+    font-weight:800;
+    margin:12px 0;
+}
+
+.stage-content p{
+    color:rgba(255,255,255,.78);
+    line-height:1.8;
+    margin-bottom:10px;
+}
+
+.stage-content small{
+    color:#ffbe0b;
+    font-weight:700;
 }
 
 /* BUTTONS */
 
 .hero-buttons{
     display:flex;
-    gap:18px;
     flex-wrap:wrap;
+    gap:18px;
+    position:relative;
+    z-index:50;
+    margin-top:10px;
+}
 
-    margin-bottom:40px;
-}
-.hero-overlay{
-    pointer-events:none;
-}
-
-.floating-card{
-    pointer-events:none;
-}
 .hero-btn{
+    min-height:58px;
     padding:16px 28px;
-
     border-radius:18px;
-
     text-decoration:none;
-
-    font-weight:600;
-
-    transition:.4s ease;
-
+    font-weight:700;
     display:inline-flex;
     align-items:center;
+    justify-content:center;
     gap:12px;
+    transition:.35s ease;
 }
 
 .primary-btn{
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
     color:#fff;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
 }
 
 .secondary-btn{
-    background:
-    linear-gradient(
-        135deg,
-        #ffbe0b,
-        #fb8500
-    );
-
     color:#111;
+    background:linear-gradient(135deg,#ffbe0b,#fb8500);
 }
 
 .outline-btn{
-    border:1px solid rgba(255,255,255,0.15);
     color:#fff;
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.04);
 }
 
 .hero-btn:hover{
-    transform:translateY(-6px);
-
-    box-shadow:
-    0 20px 40px rgba(0,0,0,0.35);
+    transform:translateY(-5px);
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
 }
 
-/* STAGE */
-
-.hero-stage-box{
-    display:flex;
-    gap:20px;
-
-    align-items:flex-start;
-
-    padding:25px;
-
-    border-radius:24px;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.07),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    margin-bottom:35px;
-}
-
-.stage-icon{
-    min-width:70px;
-    height:70px;
-
-    border-radius:20px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:28px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-}
-
-/* IMAGE */
+/* HERO IMAGE */
 
 .hero-image-wrapper{
     position:relative;
-    text-align:center;
-}
-
-.hero-image{
-    width:100%;
-    max-width:650px;
-
-    animation:floatImage 5s ease-in-out infinite;
-}
-
-@keyframes floatImage{
-
-    0%,100%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-18px);
-    }
-
-}
-
-/* FLOATING CARDS */
-
-.floating-card{
-    position:absolute;
-
-    padding:14px 18px;
-
-    border-radius:18px;
-
-    background:rgba(255,255,255,0.08);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    color:#fff;
-
-    font-size:14px;
-    font-weight:600;
-
-    animation:floatingCard 4s ease-in-out infinite;
-}
-
-.floating-1{
-    top:8%;
-    left:-20px;
-}
-
-.floating-2{
-    top:38%;
-    right:-20px;
-}
-
-.floating-3{
-    bottom:10%;
-    left:-10px;
-}
-
-@keyframes floatingCard{
-
-    0%,100%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-10px);
-    }
-
-}
-
-/* ======================================================
-   SERVICES
-====================================================== */
-
-.services-section{
-    padding:120px 0;
-
-    background:
-    linear-gradient(
-        180deg,
-        #060816 0%,
-        #091120 100%
-    );
-}
-
-/* HEADER */
-
-.section-header{
-    text-align:center;
-
-    margin-bottom:80px;
-}
-
-.subtitle{
-    display:inline-block;
-
-    padding:12px 24px;
-
-    border-radius:100px;
-
-    background:rgba(255,255,255,0.06);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    color:#8be9ff;
-
-    font-size:14px;
-    font-weight:600;
-
-    margin-bottom:25px;
-}
-
-.section-header h2{
-    font-size:64px;
-    font-weight:900;
-
-    margin-bottom:25px;
-}
-
-.section-header p{
-    max-width:850px;
-    margin:auto;
-
-    color:rgba(255,255,255,0.70);
-
-    line-height:1.9;
-}
-
-/* GRID */
-
-.services-grid{
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(320px,1fr));
-
-    gap:30px;
-}
-
-/* CARD */
-
-.service-card{
-    position:relative;
-
-    padding:40px;
-
-    border-radius:30px;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    overflow:hidden;
-
-    transition:.45s ease;
-}
-
-.service-card:hover{
-    transform:
-    translateY(-12px)
-    scale(1.02);
-
-    border-color:
-    rgba(0,212,255,0.25);
-
-    box-shadow:
-    0 25px 50px rgba(0,0,0,0.45);
-}
-
-/* ICON */
-
-.icon{
-    width:80px;
-    height:80px;
-
-    border-radius:24px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    margin-bottom:25px;
-
-    font-size:32px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-}
-
-/* CARD TEXT */
-
-.service-card h3{
-    font-size:26px;
-    font-weight:700;
-
-    margin-bottom:15px;
-}
-
-.service-card p{
-    color:rgba(255,255,255,0.70);
-
-    line-height:1.9;
-}
-
-/* ======================================================
-   PARTNERS
-====================================================== */
-
-.partners-section{
-    position:relative;
-
-    overflow:hidden;
-
-    padding:120px 0;
-
-    background:
-    linear-gradient(
-        180deg,
-        #091120 0%,
-        #050816 100%
-    );
-}
-
-.partners-header{
-    text-align:center;
-
-    margin-bottom:70px;
-}
-
-.partners-badge{
-    display:inline-block;
-
-    padding:12px 24px;
-
-    border-radius:100px;
-
-    background:rgba(255,255,255,0.06);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    color:#8be9ff;
-
-    margin-bottom:25px;
-}
-
-.partners-title{
-    font-size:64px;
-    font-weight:900;
-
-    margin-bottom:25px;
-}
-
-.partners-title span{
-    background:
-    linear-gradient(
-        to right,
-        #7c5cff,
-        #00d4ff
-    );
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.partners-text{
-    max-width:850px;
-    margin:auto;
-
-    color:rgba(255,255,255,0.70);
-
-    line-height:1.9;
-}
-
-/* SLIDER */
-
-.partners-slider{
-    overflow:hidden;
-}
-
-.partners-track{
-    display:flex;
-    width:max-content;
-
-    animation:scrollPartners 28s linear infinite;
-}
-
-.partner-card{
-    width:250px;
-    height:220px;
-
-    margin:0 18px;
-
-    border-radius:28px;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-
-    transition:.4s ease;
-}
-
-.partner-card:hover{
-    transform:
-    translateY(-12px)
-    scale(1.03);
-
-    border-color:
-    rgba(0,212,255,0.25);
-
-    box-shadow:
-    0 20px 40px rgba(0,0,0,0.4);
-}
-
-.partner-logo{
-    width:120px;
-    height:120px;
-
-    border-radius:24px;
-
-    background:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-
-    margin-bottom:20px;
-}
-
-.partner-logo img{
-    max-width:100%;
-    max-height:80px;
-
-    object-fit:contain;
-}
-
-.partner-name{
-    font-size:18px;
-    font-weight:700;
-}
-
-@keyframes scrollPartners{
-
-    0%{
-        transform:translateX(0);
-    }
-
-    100%{
-        transform:translateX(-50%);
-    }
-
-}
-
-/* ======================================================
-   FOOTER
-====================================================== */
-
-.footer{
-    padding:80px 0 30px;
-
-    background:#040611;
-
-    border-top:1px solid rgba(255,255,255,0.08);
-}
-
-.footer-title{
-    font-size:24px;
-    font-weight:800;
-
-    margin-bottom:20px;
-}
-
-.footer-text{
-    color:rgba(255,255,255,0.65);
-
-    line-height:1.8;
-}
-
-.social-links{
-    display:flex;
-    gap:15px;
-
-    margin-top:20px;
-}
-
-.social-link{
-    width:50px;
-    height:50px;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:rgba(255,255,255,0.06);
-
-    color:#fff;
-
-    transition:.4s ease;
-}
-
-.social-link:hover{
-    background:#00d4ff;
-
-    color:#050816;
-
-    transform:translateY(-6px);
-}
-
-/* ======================================================
-   RESPONSIVE
-====================================================== */
-
-@media(max-width:991px){
-
-    .hero-section{
-        text-align:center;
-    }
-
-    .hero-title{
-        font-size:52px;
-    }
-
-    .hero-buttons{
-        justify-content:center;
-    }
-
-    .hero-image{
-        margin-top:60px;
-    }
-
-}
-
-@media(max-width:768px){
-
-    .hero-title{
-        font-size:38px;
-    }
-
-    .section-header h2,
-    .partners-title{
-        font-size:38px;
-    }
-
-    .hero-buttons{
-        flex-direction:column;
-    }
-
-    .floating-card{
-        display:none;
-    }
-
-}
-/* =========================================================
-   MOBILE NAVBAR PREMIUM LEFT PANEL
-========================================================= */
-
-@media(max-width:991px){
-
-    /* NAVBAR CONTAINER */
-
-    .navbar{
-        padding:12px 0;
-    }
-
-    /* TOGGLER */
-
-    .navbar-toggler{
-        width:52px;
-        height:52px;
-
-        border:none;
-        border-radius:16px;
-
-        background:
-        linear-gradient(
-            135deg,
-            rgba(124,92,255,0.25),
-            rgba(0,212,255,0.18)
-        );
-
-        backdrop-filter:blur(14px);
-
-        box-shadow:
-        0 10px 25px rgba(0,0,0,0.35);
-
-        transition:0.35s ease;
-    }
-
-    .navbar-toggler:hover{
-        transform:scale(1.05);
-    }
-
-    .navbar-toggler:focus{
-        box-shadow:none;
-    }
-
-    .navbar-toggler-icon{
-        filter:brightness(0) invert(1);
-    }
-
-    /* MOBILE MENU PANEL */
-
-    .navbar-collapse{
-        position:fixed;
-
-        top:0;
-        left:-100%;
-
-        width:320px;
-        height:100vh;
-
-        padding:120px 25px 40px;
-
-        background:
-        linear-gradient(
-            180deg,
-            rgba(5,8,20,0.98),
-            rgba(10,15,35,0.98)
-        );
-
-        backdrop-filter:blur(25px);
-
-        border-right:
-        1px solid rgba(255,255,255,0.08);
-
-        box-shadow:
-        20px 0 60px rgba(0,0,0,0.55);
-
-        transition:0.5s ease;
-
-        overflow-y:auto;
-
-        z-index:99999;
-    }
-
-    /* OPEN MENU */
-
-    .navbar-collapse.show{
-        left:0;
-        animation:slideMenu .45s ease;
-    }
-
-    @keyframes slideMenu{
-
-        from{
-            left:-100%;
-            opacity:0;
-        }
-
-        to{
-            left:0;
-            opacity:1;
-        }
-
-    }
-
-    /* MENU GLOW */
-
-    .navbar-collapse::before{
-        content:"";
-
-        position:absolute;
-
-        top:-120px;
-        left:-120px;
-
-        width:260px;
-        height:260px;
-
-        border-radius:50%;
-
-        background:
-        radial-gradient(
-            circle,
-            rgba(124,92,255,0.35),
-            transparent 70%
-        );
-
-        filter:blur(40px);
-    }
-
-    .navbar-collapse::after{
-        content:"";
-
-        position:absolute;
-
-        bottom:-100px;
-        right:-100px;
-
-        width:220px;
-        height:220px;
-
-        border-radius:50%;
-
-        background:
-        radial-gradient(
-            circle,
-            rgba(0,212,255,0.28),
-            transparent 70%
-        );
-
-        filter:blur(40px);
-    }
-
-    /* NAV LIST */
-
-    .nav-modern{
-        width:100%;
-        position:relative;
-        z-index:2;
-    }
-
-    .nav-modern .nav-item{
-        width:100%;
-        margin-bottom:14px;
-    }
-
-    /* LINKS */
-
-    .nav-modern .nav-link{
-        width:100%;
-
-        display:flex;
-        align-items:center;
-        gap:14px;
-
-        padding:18px 22px !important;
-
-        border-radius:20px;
-
-        color:#fff !important;
-
-        font-size:15px;
-        font-weight:600;
-
-        background:
-        rgba(255,255,255,0.04);
-
-        border:
-        1px solid rgba(255,255,255,0.06);
-
-        backdrop-filter:blur(12px);
-
-        transition:0.35s ease;
-
-        position:relative;
-
-        overflow:hidden;
-    }
-
-    /* LEFT BORDER ANIMATION */
-
-    .nav-modern .nav-link::before{
-        content:"";
-
-        position:absolute;
-
-        top:50%;
-        left:0;
-
-        transform:translateY(-50%);
-
-        width:4px;
-        height:0%;
-
-        border-radius:10px;
-
-        background:
-        linear-gradient(
-            180deg,
-            #7c5cff,
-            #00d4ff
-        );
-
-        transition:0.35s ease;
-    }
-
-    .nav-modern .nav-link:hover::before,
-    .nav-modern .nav-link.active::before{
-        height:70%;
-    }
-
-    /* HOVER */
-
-    .nav-modern .nav-link:hover{
-        transform:translateX(8px);
-
-        background:
-        linear-gradient(
-            135deg,
-            rgba(124,92,255,0.18),
-            rgba(0,212,255,0.12)
-        );
-
-        border-color:
-        rgba(124,92,255,0.35);
-
-        box-shadow:
-        0 12px 30px rgba(0,0,0,0.35);
-    }
-
-    /* ACTIVE */
-
-    .nav-modern .nav-link.active{
-        background:
-        linear-gradient(
-            135deg,
-            rgba(124,92,255,0.22),
-            rgba(0,212,255,0.16)
-        );
-
-        border-color:
-        rgba(124,92,255,0.35);
-
-        color:#8be9ff !important;
-
-        box-shadow:
-        0 15px 35px rgba(0,0,0,0.4);
-    }
-
-    /* ICON */
-
-    .nav-modern .nav-link i{
-        width:22px;
-        text-align:center;
-        font-size:16px;
-
-        color:#8be9ff;
-    }
-
-    /* OVERLAY DARK */
-
-    .mobile-overlay{
-        position:fixed;
-        inset:0;
-
-        background:rgba(0,0,0,0.55);
-
-        backdrop-filter:blur(4px);
-
-        opacity:0;
-        visibility:hidden;
-
-        transition:0.4s ease;
-
-        z-index:9990;
-    }
-
-    .mobile-overlay.active{
-        opacity:1;
-        visibility:visible;
-    }
-
-}
-.hero-image{
-    width:100%;
-    max-width:680px;
-    border-radius:32px;
-    object-fit:cover;
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    box-shadow:
-    0 30px 80px rgba(0,0,0,0.45),
-    0 0 40px rgba(0,212,255,0.12);
-
-    transition:0.5s ease;
-
-    animation:floatImage 6s ease-in-out infinite;
-}
-
-.hero-image:hover{
-    transform:
-    scale(1.03)
-    rotate(-1deg);
-
-    box-shadow:
-    0 40px 100px rgba(0,0,0,0.55),
-    0 0 60px rgba(124,92,255,0.18);
-}
-
-@keyframes floatImage{
-
-    0%,100%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-18px);
-    }
-
-}
-
-
-/* =====================================================
-   HERO WRAPPER
-===================================================== */
-
-.hero-image-wrapper{
-    position:relative;
-    width:100%;
     max-width:680px;
     margin:auto;
 }
-
-/* IMAGE */
 
 .hero-image{
     width:100%;
     height:520px;
     object-fit:cover;
-
     border-radius:35px;
-
-    box-shadow:
-    0 30px 80px rgba(0,0,0,0.45);
-
     display:block;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 30px 80px rgba(0,0,0,.45);
+    animation:floatImage 6s ease-in-out infinite;
 }
-
-/* =====================================================
-   FLOATING CARDS
-===================================================== */
 
 .floating-card{
     position:absolute;
-
     display:flex;
     align-items:center;
     gap:10px;
-
     padding:14px 18px;
-
-    background:
-    linear-gradient(
-        135deg,
-        rgba(10,15,35,0.92),
-        rgba(20,30,60,0.85)
-    );
-
-    border:
-    1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(15px);
-
     border-radius:18px;
-
+    background:linear-gradient(135deg,rgba(10,15,35,.92),rgba(20,30,60,.85));
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(15px);
     color:#fff;
-
     font-size:14px;
-    font-weight:600;
-
-    z-index:10;
-
-    box-shadow:
-    0 15px 35px rgba(0,0,0,0.35);
-
+    font-weight:700;
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+    pointer-events:none;
     animation:floatingCard 4s ease-in-out infinite;
 }
 
-/* ICON */
+.floating-1{top:30px;left:20px;}
+.floating-2{top:45%;right:20px;}
+.floating-3{bottom:30px;left:40px;}
 
-.floating-card span{
-    font-size:20px;
-}
+/* SECTIONS GLOBAL */
 
-/* POSITIONS */
-
-.floating-1{
-    top:30px;
-    left:20px;
-}
-
-.floating-2{
-    top:45%;
-    right:20px;
-    transform:translateY(-50%);
-}
-
-.floating-3{
-    bottom:30px;
-    left:40px;
-}
-
-/* ANIMATION */
-
-@keyframes floatingCard{
-
-    0%,100%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-8px);
-    }
-
-}
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media(max-width:991px){
-
-    .hero-image{
-        height:380px;
-    }
-
-    .floating-card{
-        padding:10px 14px;
-        font-size:12px;
-    }
-
-    .floating-card span{
-        font-size:16px;
-    }
-
-    .floating-1{
-        top:15px;
-        left:10px;
-    }
-
-    .floating-2{
-        right:10px;
-    }
-
-    .floating-3{
-        bottom:15px;
-        left:10px;
-    }
-
-}
-
-@media(max-width:576px){
-
-    .hero-image{
-        height:280px;
-        border-radius:24px;
-    }
-
-    .floating-card{
-        font-size:11px;
-        padding:8px 12px;
-        border-radius:14px;
-    }
-
-    .floating-card span{
-        font-size:14px;
-    }
-
-    .floating-1{
-        top:10px;
-        left:8px;
-    }
-
-    .floating-2{
-        top:50%;
-        right:8px;
-    }
-
-    .floating-3{
-        bottom:10px;
-        left:8px;
-    }
-
-}
-
-/* =========================================
-   FOOTER CONTACT PREMIUM
-========================================= */
-
-.contact-info{
-    display:flex;
-    flex-direction:column;
-    gap:22px;
-}
-
-.contact-item{
-    display:flex;
-    align-items:center;
-    gap:16px;
-
-    font-size:16px;
-    font-weight:500;
-
-    color:rgba(255,255,255,0.82);
-
-    padding:14px 18px;
-
-    border-radius:18px;
-
-    background:
-    linear-gradient(
-        135deg,
-        rgba(255,255,255,0.06),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(12px);
-
-    transition:.4s ease;
-
+.section-block{
     position:relative;
+    padding:120px 0;
     overflow:hidden;
 }
 
-/* ICON */
+.section-header{
+    text-align:center;
+    margin-bottom:70px;
+}
 
-.contact-item i{
-    min-width:52px;
-    height:52px;
-
-    border-radius:16px;
-
-    display:flex;
+.subtitle{
+    display:inline-flex;
     align-items:center;
-    justify-content:center;
-
-    font-size:20px;
-
-    color:#fff;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    box-shadow:
-    0 10px 25px rgba(0,212,255,0.25);
-
-    transition:.4s ease;
+    gap:10px;
+    padding:12px 24px;
+    border-radius:100px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#8be9ff;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:25px;
+    box-shadow:0 0 35px rgba(0,212,255,.12);
 }
 
-/* HOVER */
-
-.contact-item:hover{
-    transform:translateX(10px);
-
-    border-color:
-    rgba(0,212,255,0.30);
-
-    box-shadow:
-    0 20px 40px rgba(0,0,0,0.35);
-}
-
-.contact-item:hover i{
-    transform:
-    rotate(8deg)
-    scale(1.08);
-
-    box-shadow:
-    0 15px 35px rgba(0,212,255,0.45);
-}
-
-/* LIGHT EFFECT */
-
-.contact-item::before{
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:-120%;
-
-    width:80%;
-    height:100%;
-
-    background:
-    linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,0.12),
-        transparent
-    );
-
-    transition:.7s;
-}
-
-.contact-item:hover::before{
-    left:120%;
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .contact-item{
-        font-size:14px;
-        padding:12px 14px;
-    }
-
-    .contact-item i{
-        min-width:45px;
-        height:45px;
-        font-size:17px;
-    }
-
-}
-</style>
-
-</head>
-
-<body>
-
-<!-- ======================================================
-     NAVBAR
-====================================================== -->
-
-<nav class="navbar navbar-expand-lg">
-
-<div class="container">
-
-<a href="{% url 'login_hexa' %}"
-class="navbar-brand logo-hexa">
-
-<img src="{% static 'images/logoHexa.png' %}"
-class="logo-img"
-alt="HexaQuébec">
-
-</a>
-
-<button class="navbar-toggler bg-light"
-type="button"
-data-bs-toggle="collapse"
-data-bs-target="#navbarNav">
-
-<span class="navbar-toggler-icon"></span>
-
-</button>
-
-
-<!-- =========================
-     NAVBAR MENU COMPLET
-========================= -->
-
-<div class="collapse navbar-collapse" id="navbarNav">
-
-    <ul class="navbar-nav ms-auto nav-modern align-items-lg-center">
-
-        <!-- ACCUEIL -->
-        <li class="nav-item">
-            <a href="{% url 'home' %}" class="nav-link active">
-                <i class="fa-solid fa-house me-2"></i>
-                Accueil
-            </a>
-        </li>
-
-        <!-- SERVICES -->
-        <li class="nav-item">
-            <a href="{% url 'services' %}" class="nav-link">
-                <i class="fa-solid fa-layer-group me-2"></i>
-                Services
-            </a>
-        </li>
-
-        <!-- ARTICLES -->
-        <li class="nav-item">
-            <a href="{% url 'produits_list' %}" class="nav-link">
-                <i class="fa-solid fa-newspaper me-2"></i>
-                Articles
-            </a>
-        </li>
-
-        <!-- PROJETS -->
-        <li class="nav-item">
-            <a href="{% url 'portfolio' %}" class="nav-link">
-                <i class="fa-solid fa-briefcase me-2"></i>
-                Projets
-            </a>
-        </li>
-
-        <!-- CLIENTS -->
-        <li class="nav-item">
-            <a href="{% url 'client_login' %}" class="nav-link">
-                <i class="fa-solid fa-users me-2"></i>
-                Clients
-            </a>
-        </li>
-
-        <!-- CONTACT -->
-        <li class="nav-item">
-            <a href="{% url 'contact' %}" class="nav-link">
-                <i class="fa-solid fa-envelope me-2"></i>
-                Contact
-            </a>
-        </li>
-
-       
-
-    </ul>
-
-</div>
-
-</div>
-
-</nav>
-
-<!-- ======================================================
-     HERO
-====================================================== -->
-
-<header class="hero-section">
-
-<div class="hero-overlay"></div>
-
-<div class="container">
-
-<div class="row align-items-center min-vh-100">
-
-<!-- LEFT -->
-
-<div class="col-lg-6">
-
-<div class="hero-badge animate__animated animate__fadeInDown">
-🚀 Développement • IA • Mobile • UI/UX
-</div>
-
-<h1 class="hero-title animate__animated animate__fadeInUp">
-
-Solutions digitales
-<span>modernes & innovantes</span>
-
-</h1>
-
-<p class="hero-text animate__animated animate__fadeInUp">
-
-HexaQuébec accompagne les entreprises
-dans la création de solutions numériques
-professionnelles performantes et modernes.
-
-</p>
-
-<div class="hero-stage-box">
-
-<div class="stage-icon">
-🎓
-</div>
-
-<div>
-
-<h5>
-Stages disponibles
-</h5>
-
-<p>
-Développement Web • Mobile • UI/UX • Infographie
-</p>
-
-<small>
-❌ Réseau & cybersécurité non acceptés
-</small>
-
-</div>
-
-</div>
-
-<div class="hero-buttons">
-
-<a href="{% url 'services' %}"
-class="hero-btn primary-btn">
-
-<i class="fa-solid fa-code"></i>
-
-Services
-
-</a>
-
-<a href="{% url 'demande_stage' %}"
-class="hero-btn secondary-btn">
-
-<i class="fa-solid fa-user-graduate"></i>
-
-Demande de Stage
-
-</a>
-
-<a href="{% url 'space' %}"
-class="hero-btn outline-btn">
-
-<i class="fa-solid fa-users"></i>
-
-Espace 
-
-</a>
-
-</div>
-
-</div>
-
-<!-- RIGHT -->
-<div class="col-lg-6">
-
-    <div class="hero-image-wrapper">
-
-        <!-- IMAGE -->
-        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop"
-        class="hero-image"
-        alt="Développement Web">
-
-        <!-- FLOATING BADGES -->
-
-        <div class="floating-card floating-1">
-            <span>💻</span>
-            Développement Web
-        </div>
-
-        <div class="floating-card floating-2">
-            <span>🤖</span>
-            Intelligence Artificielle
-        </div>
-
-        <div class="floating-card floating-3">
-            <span>📱</span>
-            Applications Mobiles
-        </div>
-
-    </div>
-
-</div>
-</div>
-
-</div>
-
-</header>
-
-<!-- ======================================================
-     SERVICES
-====================================================== -->
-
-<section class="services-section">
-
-<div class="container">
-
-<div class="section-header">
-
-<span class="subtitle">
-🚀 Solutions Digitales Premium
-</span>
-
-<h2>
-Services HexaQuébec
-</h2>
-
-<p>
-
-Nous créons des plateformes modernes,
-applications web, solutions IA,
-e-commerce et applications mobiles.
-
-</p>
-
-</div>
-
-<div class="services-grid">
-
-<div class="service-card">
-
-<div class="icon">
-🌐
-</div>
-
-<h3>
-Développement Web
-</h3>
-
-<p>
-Sites vitrines, dashboards, plateformes web,
-applications professionnelles modernes.
-</p>
-
-</div>
-
-<div class="service-card">
-
-<div class="icon">
-🛒
-</div>
-
-<h3>
-E-commerce
-</h3>
-
-<p>
-Boutiques modernes avec paiement en ligne,
-gestion des commandes et expérience premium.
-</p>
-
-</div>
-
-<div class="service-card">
-
-<div class="icon">
-📱
-</div>
-
-<h3>
-Applications Mobiles
-</h3>
-
-<p>
-Applications Android & iOS rapides,
-fluides et professionnelles.
-</p>
-
-</div>
-
-<div class="service-card">
-
-<div class="icon">
-🤖
-</div>
-
-<h3>
-Intelligence Artificielle
-</h3>
-
-<p>
-Chatbots intelligents, automatisation,
-analyse et IA générative moderne.
-</p>
-
-</div>
-
-<div class="service-card">
-
-<div class="icon">
-🎨
-</div>
-
-<h3>
-Design UI/UX
-</h3>
-
-<p>
-Interfaces élégantes avec animations fluides
-et expérience utilisateur moderne.
-</p>
-
-</div>
-
-<div class="service-card">
-
-<div class="icon">
-💻
-</div>
-
-<h3>
-Maintenance
-</h3>
-
-<p>
-Sécurisation et optimisation des systèmes
-informatiques professionnels.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-
-
-
-<!-- ======================================================
-   ANNONCES PREMIUM HEXAQUEBEC
-====================================================== -->
-
-<section id="annonces" class="annonces-section">
-
-<div class="annonce-bg"></div>
-
-<div class="container position-relative">
-
-    <!-- HEADER -->
-
-    <div class="section-header text-center mb-5">
-
-        <span class="subtitle">
-            📰 Actualités & Informations
-        </span>
-
-        <h2 class="section-title">
-            Nos annonces
-            <span>HexaQuébec</span>
-        </h2>
-
-        <p class="section-description">
-            Découvrez nos dernières annonces,
-            nouveautés, stages et informations importantes.
-        </p>
-
-    </div>
-
-    <!-- SEPARATOR -->
-
-    <div class="separator-container mb-5">
-
-        <div class="separator-line"></div>
-
-        <div class="separator-icon">
-            <i class="fas fa-star"></i>
-        </div>
-
-        <div class="separator-line"></div>
-
-    </div>
-
-    <!-- CONTENT -->
-
-    {% if annonces %}
-
-    <div class="row g-4">
-
-        {% for annonce in annonces %}
-
-        <div class="col-lg-4 col-md-6">
-
-            <div class="annonce-card h-100">
-
-                <!-- IMAGE -->
-
-                <div class="annonce-image-wrapper">
-
-                    {% if annonce.image %}
-
-                    <img src="{{ annonce.image.url }}"
-                    class="annonce-img"
-                    alt="{{ annonce.title }}">
-
-                    {% else %}
-
-                    <img src="{% static 'images/default-annonce.jpg' %}"
-                    class="annonce-img"
-                    alt="Annonce">
-
-                    {% endif %}
-
-                    <div class="annonce-overlay"></div>
-
-                    <div class="annonce-badge">
-                        ✨ Nouvelle annonce
-                    </div>
-
-                </div>
-
-                <!-- CONTENT -->
-
-                <div class="annonce-content">
-
-                    <h4 class="annonce-title">
-                        {{ annonce.title }}
-                    </h4>
-
-                    <p class="annonce-text">
-                        {{ annonce.content|truncatewords:25 }}
-                    </p>
-
-                    {% if annonce.published_at %}
-
-                    <div class="annonce-date">
-                        <i class="fa-solid fa-calendar-days"></i>
-
-                        {{ annonce.published_at|date:"d M Y" }}
-                    </div>
-
-                    {% endif %}
-
-                    <div class="mt-4">
-
-                        <a href="{% url 'annonce_detail' annonce.id %}"
-                        class="btn-annonce">
-
-                            Lire plus
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-    {% else %}
-
-    <div class="empty-annonce">
-
-        <i class="fa-solid fa-bullhorn"></i>
-
-        <h4>
-            Aucune annonce disponible
-        </h4>
-
-        <p>
-            Les nouvelles annonces apparaîtront bientôt.
-        </p>
-
-    </div>
-
-    {% endif %}
-
-</div>
-
-</section>
-
-<!-- ======================================================
-   VIDEO ANNONCES PREMIUM
-====================================================== -->
-
-<section class="video-section">
-
-<div class="video-bg"></div>
-
-<div class="container position-relative">
-
-    <div class="section-header text-center mb-5">
-
-        <span class="subtitle">
-            🎬 Communication digitale
-        </span>
-
-        <h2 class="section-title">
-            Vidéos
-            <span>Annonces</span>
-        </h2>
-
-        <p class="section-description">
-            Regardez nos vidéos de présentation,
-            annonces et démonstrations professionnelles.
-        </p>
-
-    </div>
-
-    <div class="row justify-content-center g-4">
-
-        {% for v in videos %}
-
-        <div class="col-lg-8">
-
-            <div class="video-card">
-
-                <div class="video-wrapper">
-
-                    <video class="video-player" controls>
-
-                        <source src="{{ v.video.url }}"
-                        type="video/mp4">
-
-                    </video>
-
-                </div>
-
-                <div class="video-content">
-
-                    <h3 class="video-title">
-                        {{ v.titre }}
-                    </h3>
-
-                    <div class="video-date">
-
-                        <i class="fa-solid fa-calendar"></i>
-
-                        {{ v.date_pub|date:"d M Y" }}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% empty %}
-
-        <div class="col-lg-8">
-
-            <div class="empty-video">
-
-                <i class="fa-solid fa-video"></i>
-
-                <h4>
-                    Aucune vidéo disponible
-                </h4>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ======================================================
-   AFFICHES PREMIUM
-====================================================== -->
-
-<section class="affiche-section">
-
-<div class="container">
-
-    <div class="section-header text-center mb-5">
-
-        <span class="subtitle">
-            🎨 Promotion digitale
-        </span>
-
-        <h2 class="section-title">
-            Affiches
-            <span>Promotionnelles</span>
-        </h2>
-
-        <p class="section-description">
-            Découvrez nos affiches modernes
-            et campagnes visuelles professionnelles.
-        </p>
-
-    </div>
-
-    <div class="affiche-slider">
-
-        <div class="slides-wrapper">
-
-            {% for a in affiches %}
-
-            <div class="slide">
-
-                <div class="slide-image">
-
-                    <img src="{{ a.image.url }}"
-                    alt="{{ a.titre }}">
-
-                    <div class="slide-overlay"></div>
-
-                </div>
-
-                <div class="slide-content">
-
-                    <h5>
-                        {{ a.titre }}
-                    </h5>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-            <!-- LOOP POUR ANIMATION -->
-
-            {% for a in affiches %}
-
-            <div class="slide">
-
-                <div class="slide-image">
-
-                    <img src="{{ a.image.url }}"
-                    alt="{{ a.titre }}">
-
-                    <div class="slide-overlay"></div>
-
-                </div>
-
-                <div class="slide-content">
-
-                    <h5>
-                        {{ a.titre }}
-                    </h5>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-</section>
-
-<style>
-
-/* ======================================================
-   GLOBAL SECTION
-====================================================== */
-
-.section-title{
-    font-size:64px;
+.section-title,
+.section-header h2,
+.diam-ai-title,
+.partners-title{
+    font-size:58px;
     font-weight:900;
-    margin-bottom:20px;
+    margin-bottom:22px;
 }
 
-.section-title span{
-    background:
-    linear-gradient(
-        to right,
-        #7c5cff,
-        #00d4ff
-    );
-
+.section-title span,
+.section-header h2 span,
+.diam-ai-title span,
+.partners-title span{
+    background:linear-gradient(90deg,#7c5cff,#00d4ff);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
-.section-description{
+.section-description,
+.section-header p,
+.partners-text{
     max-width:850px;
     margin:auto;
-    color:rgba(255,255,255,0.70);
+    color:rgba(255,255,255,.72);
     line-height:1.9;
+    font-size:17px;
 }
 
-.subtitle{
-    display:inline-block;
+/* SERVICES */
 
-    padding:12px 22px;
-
-    border-radius:100px;
-
-    background:rgba(255,255,255,0.06);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    color:#8be9ff;
-
-    font-weight:600;
-
-    margin-bottom:25px;
-}
-
-/* ======================================================
-   SEPARATOR
-====================================================== */
-
-.separator-container{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:18px;
-}
-
-.separator-line{
-    width:120px;
-    height:2px;
-
+.services-section{
     background:
-    linear-gradient(
-        to right,
-        transparent,
-        #00d4ff,
-        transparent
-    );
+        radial-gradient(circle at top left,rgba(124,92,255,.18),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(0,212,255,.14),transparent 35%),
+        linear-gradient(180deg,#060816,#091120);
 }
 
-.separator-icon{
-    width:55px;
-    height:55px;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    color:#fff;
-
-    font-size:18px;
-
-    box-shadow:
-    0 0 30px rgba(0,212,255,0.35);
-}
-
-/* ======================================================
-   ANNONCES
-====================================================== */
-
-.annonces-section{
-    position:relative;
-    padding:120px 0;
-    overflow:hidden;
-
-    background:
-    linear-gradient(
-        180deg,
-        #081120 0%,
-        #050816 100%
-    );
-}
-
-.annonce-bg{
+.services-bg{
     position:absolute;
     inset:0;
-
-    background:
-    radial-gradient(
-        circle at top left,
-        rgba(124,92,255,0.15),
-        transparent 30%
-    ),
-    radial-gradient(
-        circle at bottom right,
-        rgba(0,212,255,0.15),
-        transparent 30%
-    );
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+    background-size:70px 70px;
+    animation:serviceGridMove 18s linear infinite;
 }
 
-.annonce-card{
-    position:relative;
+.services-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:28px;
+}
 
+.service-card{
+    position:relative;
+    min-height:330px;
+    padding:38px;
+    border-radius:34px;
+    overflow:hidden;
+    background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+    border:1px solid rgba(255,255,255,.09);
+    backdrop-filter:blur(24px);
+    box-shadow:0 20px 55px rgba(0,0,0,.30);
+    opacity:0;
+    transform:translateY(35px) scale(.97);
+    transition:.6s ease;
+}
+
+.service-card.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.service-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,212,255,.22),transparent 32%);
+    opacity:0;
+    transition:.35s;
+}
+
+.service-card:hover::before{
+    opacity:1;
+}
+
+.service-number{
+    position:absolute;
+    top:25px;
+    right:28px;
+    font-size:45px;
+    font-weight:900;
+    color:rgba(255,255,255,.06);
+}
+
+.icon{
+    width:82px;
+    height:82px;
+    border-radius:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:28px;
+    font-size:30px;
+    color:#fff;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+    box-shadow:0 18px 40px rgba(0,212,255,.25);
+    position:relative;
+    z-index:2;
+    animation:iconFloat 4s ease-in-out infinite;
+}
+
+.service-card h3,
+.service-card p{
+    position:relative;
+    z-index:2;
+}
+
+.service-card h3{
+    font-size:25px;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+.service-card p{
+    color:rgba(255,255,255,.72);
+    line-height:1.85;
+}
+
+/* CARDS ANNONCES */
+
+.annonces-section{
+    background:linear-gradient(180deg,#081120,#050816);
+}
+
+.annonce-card,
+.video-card,
+.slide,
+.partner-card,
+.ai-chat-box{
     border-radius:30px;
-
     overflow:hidden;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
+    background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.08);
     backdrop-filter:blur(20px);
-
-    transition:.45s ease;
+    transition:.4s ease;
 }
 
-.annonce-card:hover{
-    transform:
-    translateY(-10px)
-    scale(1.02);
-
-    box-shadow:
-    0 25px 50px rgba(0,0,0,0.45);
-
-    border-color:
-    rgba(0,212,255,0.25);
-}
-
-.annonce-image-wrapper{
-    position:relative;
-    overflow:hidden;
+.annonce-card:hover,
+.video-card:hover,
+.slide:hover,
+.partner-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 25px 50px rgba(0,0,0,.45);
 }
 
 .annonce-img{
     width:100%;
     height:260px;
-
     object-fit:cover;
-
-    transition:.6s ease;
-}
-
-.annonce-card:hover .annonce-img{
-    transform:scale(1.08);
-}
-
-.annonce-overlay{
-    position:absolute;
-    inset:0;
-
-    background:
-    linear-gradient(
-        180deg,
-        transparent,
-        rgba(0,0,0,0.65)
-    );
-}
-
-.annonce-badge{
-    position:absolute;
-
-    top:18px;
-    left:18px;
-
-    padding:10px 18px;
-
-    border-radius:100px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    color:#fff;
-
-    font-size:13px;
-    font-weight:700;
 }
 
 .annonce-content{
@@ -2417,731 +489,141 @@ informatiques professionnels.
 
 .annonce-title{
     font-size:24px;
-    font-weight:700;
-
-    margin-bottom:18px;
+    font-weight:800;
 }
 
 .annonce-text{
-    color:rgba(255,255,255,0.70);
-    line-height:1.9;
+    color:rgba(255,255,255,.72);
+    line-height:1.8;
 }
 
 .annonce-date{
-    margin-top:20px;
-
-    display:flex;
-    align-items:center;
-    gap:10px;
-
     color:#8be9ff;
+    margin-top:15px;
 }
 
 .btn-annonce{
     display:inline-flex;
     align-items:center;
-    gap:12px;
-
-    padding:15px 26px;
-
+    gap:10px;
+    padding:14px 24px;
     border-radius:16px;
-
+    color:#fff;
     text-decoration:none;
-
-    color:#fff;
-
-    font-weight:600;
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    transition:.4s ease;
+    font-weight:700;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
 }
 
-.btn-annonce:hover{
-    transform:translateY(-4px);
-
-    color:#fff;
-
-    box-shadow:
-    0 18px 35px rgba(0,0,0,0.35);
-}
-
-.empty-annonce{
+.empty-annonce,
+.empty-video{
     text-align:center;
-
-    padding:80px 20px;
-
+    padding:70px 20px;
     border-radius:30px;
-
-    background:rgba(255,255,255,0.05);
+    background:rgba(255,255,255,.05);
 }
 
-.empty-annonce i{
-    font-size:60px;
-    margin-bottom:20px;
-    color:#00d4ff;
-}
-
-/* ======================================================
-   VIDEO SECTION
-====================================================== */
+/* VIDEO */
 
 .video-section{
-    position:relative;
-    padding:120px 0;
-
-    background:
-    linear-gradient(
-        180deg,
-        #050816 0%,
-        #091120 100%
-    );
-}
-
-.video-bg{
-    position:absolute;
-    inset:0;
-
-    background:
-    radial-gradient(
-        circle,
-        rgba(124,92,255,0.10),
-        transparent 40%
-    );
-}
-
-.video-card{
-    overflow:hidden;
-
-    border-radius:35px;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    transition:.4s ease;
-}
-
-.video-card:hover{
-    transform:translateY(-8px);
-
-    box-shadow:
-    0 25px 50px rgba(0,0,0,0.45);
-}
-
-.video-wrapper{
-    position:relative;
+    background:linear-gradient(180deg,#050816,#091120);
 }
 
 .video-player{
     width:100%;
     max-height:520px;
-
     object-fit:cover;
-
     background:#000;
 }
 
 .video-content{
-    padding:30px;
+    padding:28px;
     text-align:center;
 }
 
 .video-title{
     font-size:28px;
-    font-weight:700;
-
-    margin-bottom:15px;
+    font-weight:800;
 }
 
-.video-date{
-    color:#8be9ff;
-}
-
-.empty-video{
-    text-align:center;
-
-    padding:80px 20px;
-
-    border-radius:30px;
-
-    background:rgba(255,255,255,0.05);
-}
-
-.empty-video i{
-    font-size:70px;
-    margin-bottom:20px;
-    color:#00d4ff;
-}
-
-/* ======================================================
-   AFFICHE SECTION
-====================================================== */
+/* AFFICHE */
 
 .affiche-section{
-    padding:120px 0;
-
-    overflow:hidden;
-
-    background:
-    linear-gradient(
-        180deg,
-        #091120 0%,
-        #050816 100%
-    );
+    background:linear-gradient(180deg,#091120,#050816);
 }
 
 .affiche-slider{
     overflow:hidden;
-    position:relative;
 }
 
 .slides-wrapper{
     display:flex;
     width:max-content;
-
     animation:slideAffiche 35s linear infinite;
 }
 
 .slide{
-    width:360px;
-
-    margin:0 20px;
-
-    border-radius:30px;
-
-    overflow:hidden;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(20px);
-
-    transition:.45s ease;
-}
-
-.slide:hover{
-    transform:
-    translateY(-10px)
-    scale(1.02);
-
-    box-shadow:
-    0 20px 45px rgba(0,0,0,0.45);
-}
-
-.slide-image{
-    position:relative;
-    overflow:hidden;
+    width:350px;
+    margin:0 18px;
 }
 
 .slide img{
     width:100%;
     height:420px;
-
     object-fit:cover;
-
-    transition:.6s ease;
-}
-
-.slide:hover img{
-    transform:scale(1.08);
-}
-
-.slide-overlay{
-    position:absolute;
-    inset:0;
-
-    background:
-    linear-gradient(
-        180deg,
-        transparent,
-        rgba(0,0,0,0.55)
-    );
 }
 
 .slide-content{
-    padding:25px;
+    padding:24px;
     text-align:center;
 }
 
-.slide-content h5{
-    font-size:22px;
-    font-weight:700;
-}
-
-@keyframes slideAffiche{
-
-    0%{
-        transform:translateX(0);
-    }
-
-    100%{
-        transform:translateX(-50%);
-    }
-
-}
-
-/* ======================================================
-   RESPONSIVE
-====================================================== */
-
-@media(max-width:768px){
-
-    .section-title{
-        font-size:38px;
-    }
-
-    .annonce-img{
-        height:220px;
-    }
-
-    .slide{
-        width:280px;
-    }
-
-    .slide img{
-        height:320px;
-    }
-
-    .video-title{
-        font-size:22px;
-    }
-
-}
-
-</style>
-
-<!-- ======================================================
-   DIAM AI - HEXAQUEBEC
-====================================================== -->
-
-<section class="diam-ai-section">
-
-<div class="container">
-
-    <div class="row align-items-center g-5">
-
-        <!-- LEFT -->
-
-        <div class="col-lg-5">
-
-            <div class="diam-ai-card">
-
-                <div class="ai-glow"></div>
-
-                <img src="{% static 'images/diam.jpeg' %}"
-                     class="diam-ai-image"
-                     alt="Diam AI">
-
-                <div class="ai-status">
-                    <span class="pulse"></span>
-                    IA ACTIVE
-                </div>
-
-            </div>
-
-        </div>
-<style>
-.diam-ai-image{
-    width:100%;
-    max-width:420px;
-    border-radius:35px;
-    object-fit:cover;
-
-    border:1px solid rgba(255,255,255,0.12);
-
-    box-shadow:
-        0 25px 70px rgba(0,0,0,0.55),
-        0 0 45px rgba(0,212,255,0.25);
-
-    animation: diamFloat 5s ease-in-out infinite;
-    transition:0.45s ease;
-}
-
-.diam-ai-image:hover{
-    transform:scale(1.04) rotate(-1deg);
-    box-shadow:
-        0 35px 90px rgba(0,0,0,0.65),
-        0 0 70px rgba(124,92,255,0.45);
-}
-
-.diam-ai-card{
-    position:relative;
-    text-align:center;
-}
-
-.diam-ai-card::before{
-    content:"";
-    position:absolute;
-    inset:-18px;
-    border-radius:45px;
-    background:linear-gradient(135deg,#7c5cff,#00d4ff,#d4af37);
-    filter:blur(35px);
-    opacity:.35;
-    z-index:-1;
-    animation: glowMove 4s linear infinite;
-}
-
-@keyframes diamFloat{
-    0%,100%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(-16px);
-    }
-}
-
-@keyframes glowMove{
-    0%{
-        opacity:.25;
-        transform:scale(.96);
-    }
-    50%{
-        opacity:.55;
-        transform:scale(1.03);
-    }
-    100%{
-        opacity:.25;
-        transform:scale(.96);
-    }
-}
-</style>
-        <!-- RIGHT -->
-
-        <div class="col-lg-7">
-
-            <span class="subtitle">
-                🤖 Assistant IA HexaQuébec
-            </span>
-
-            <h2 class="diam-ai-title">
-                Discutez avec
-                <span>Diam AI</span>
-            </h2>
-
-            <p class="diam-ai-text">
-
-                Votre assistant virtuel intelligent HexaQuébec.
-                Il répond automatiquement aux questions sur :
-
-            </p>
-
-            <div class="ai-features">
-
-                <div class="ai-feature">
-                    💻 Développement Web
-                </div>
-
-                <div class="ai-feature">
-                    🤖 Intelligence Artificielle
-                </div>
-
-                <div class="ai-feature">
-                    📱 Applications Mobiles
-                </div>
-
-                <div class="ai-feature">
-                    🎓 Stages HexaQuébec
-                </div>
-
-                <div class="ai-feature">
-                    🛒 E-commerce
-                </div>
-
-                <div class="ai-feature">
-                    🎨 UI/UX Design
-                </div>
-
-            </div>
-
-            <!-- CHAT -->
-
-            <div class="ai-chat-box">
-
-                <div class="chat-header">
-
-                    <img src="{% static 'images/diam.jpeg' %}"
-                         class="chat-avatar">
-
-                    <div>
-
-                        <h5>
-                            Diam AI
-                        </h5>
-
-                        <small>
-                            Assistant intelligent HexaQuébec
-                        </small>
-
-                    </div>
-
-                </div>
-
-                <div class="chat-messages" id="chatMessages">
-
-                    <div class="bot-message">
-                        👋 Bonjour, je suis Diam AI.
-                        Comment puis-je vous aider aujourd’hui ?
-                    </div>
-
-                </div>
-
-                <div class="chat-input-box">
-
-                    <input type="text"
-                           id="userInput"
-                           placeholder="Posez votre question...">
-
-                    <button onclick="sendMessage()">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-</section>
-<style>
-
-.chat-input-box{
-    display:flex;
-    align-items:center;
-    gap:10px;
-
-    width:100%;
-    padding:10px;
-
-    background:#111827;
-    border-radius:16px;
-}
-
-/* INPUT */
-.chat-input-box input{
-    flex:1;
-    min-width:0;
-
-    height:55px;
-    border:none;
-    outline:none;
-
-    padding:0 15px;
-
-    border-radius:14px;
-
-    font-size:15px;
-}
-
-/* BUTTON */
-.chat-input-box button{
-
-    width:55px;
-    min-width:55px;
-
-    height:55px;
-
-    border:none;
-    border-radius:14px;
-
-    background:#c6a87d;
-    color:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:20px;
-
-    cursor:pointer;
-
-    flex-shrink:0;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-
-    .chat-input-box{
-        padding:8px;
-        gap:8px;
-    }
-
-    .chat-input-box input{
-        height:50px;
-        font-size:14px;
-    }
-
-    .chat-input-box button{
-
-        width:50px;
-        min-width:50px;
-
-        height:50px;
-
-        font-size:18px;
-
-        border-radius:12px;
-    }
-
-}
-
-</style>
-<style>
-
-.chat-input-box{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    width:100%;
-}
-
-.chat-input-box input{
-    flex:1;
-    height:55px;
-    border:none;
-    outline:none;
-    padding:0 18px;
-    border-radius:14px;
-    font-size:15px;
-}
-
-.chat-input-box button{
-    min-width:55px;
-    height:55px;
-    border:none;
-    border-radius:14px;
-    background:#c6a87d;
-    color:white;
-    font-size:20px;
-    cursor:pointer;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    transition:0.3s;
-}
-
-.chat-input-box button:hover{
-    transform:scale(1.05);
-}
-
-/* MOBILE */
-@media(max-width:768px){
-
-    .chat-input-box{
-        gap:8px;
-    }
-
-    .chat-input-box input{
-        height:50px;
-        font-size:14px;
-    }
-
-    .chat-input-box button{
-        min-width:50px;
-        height:50px;
-        font-size:18px;
-        border-radius:12px;
-    }
-
-}
-
-</style>
-<style>
-
-/* ======================================================
-   DIAM AI
-====================================================== */
+/* DIAM AI */
 
 .diam-ai-section{
-    padding:120px 0;
-    background:
-    linear-gradient(
-        180deg,
-        #050816 0%,
-        #091120 100%
-    );
+    background:linear-gradient(180deg,#050816,#091120);
 }
 
 .diam-ai-card{
     position:relative;
     text-align:center;
-}
-
-.diam-ai-image{
-    width:100%;
-    max-width:420px;
-    border-radius:35px;
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    box-shadow:
-    0 25px 60px rgba(0,0,0,0.45);
-
-    position:relative;
-    z-index:2;
+    z-index:1;
 }
 
 .ai-glow{
     position:absolute;
-    width:350px;
-    height:350px;
+    width:340px;
+    height:340px;
     border-radius:50%;
-
-    background:
-    radial-gradient(
-        circle,
-        rgba(0,212,255,0.25),
-        transparent 70%
-    );
-
-    filter:blur(50px);
-
-    top:50%;
+    background:radial-gradient(circle,rgba(0,212,255,.28),transparent 70%);
+    filter:blur(55px);
+    top:45%;
     left:50%;
-
     transform:translate(-50%,-50%);
+    z-index:-1;
+}
+
+.diam-ai-image{
+    width:100%;
+    max-width:420px;
+    border-radius:35px;
+    object-fit:cover;
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 25px 70px rgba(0,0,0,.55),0 0 45px rgba(0,212,255,.25);
+    animation:diamFloat 5s ease-in-out infinite;
 }
 
 .ai-status{
     margin-top:20px;
-
     display:inline-flex;
     align-items:center;
     gap:10px;
-
-    padding:12px 20px;
-
+    padding:12px 22px;
     border-radius:100px;
-
-    background:rgba(255,255,255,0.08);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    color:#8be9ff;
+    background:rgba(0,255,136,.10);
+    border:1px solid rgba(0,255,136,.35);
+    color:#00ff88;
+    font-size:14px;
+    font-weight:800;
 }
 
 .pulse{
@@ -3149,84 +631,73 @@ informatiques professionnels.
     height:12px;
     border-radius:50%;
     background:#00ff88;
-
-    animation:pulse 1.5s infinite;
+    box-shadow:0 0 20px #00ff88;
+    animation:pulse 1.4s infinite;
 }
 
-@keyframes pulse{
-    0%{transform:scale(1);opacity:1;}
-    100%{transform:scale(2);opacity:0;}
+.diam-message-box{
+    margin:22px auto 0;
+    max-width:420px;
+    padding:20px 22px;
+    border-radius:24px;
+    background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,255,.10));
+    border:1px solid rgba(255,255,255,.10);
+    color:rgba(255,255,255,.9);
+    line-height:1.8;
+    box-shadow:0 18px 45px rgba(0,0,0,.38);
+    opacity:0;
+    transform:translateY(18px);
+    transition:.6s ease;
 }
 
-.diam-ai-title{
-    font-size:64px;
-    font-weight:900;
-    margin-bottom:25px;
+.diam-message-box.show{
+    opacity:1;
+    transform:translateY(0);
 }
 
-.diam-ai-title span{
-    background:
-    linear-gradient(
-        to right,
-        #7c5cff,
-        #00d4ff
-    );
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+.diam-highlight,
+.diam-message-box span{
+    color:#00d4ff;
+    font-weight:800;
 }
 
 .diam-ai-text{
-    color:rgba(255,255,255,0.72);
+    font-size:18px;
     line-height:1.9;
-    margin-bottom:30px;
+    color:rgba(255,255,255,.78);
+    margin:25px 0 35px;
+    padding-left:18px;
+    border-left:4px solid #00d4ff;
 }
 
 .ai-features{
     display:flex;
     flex-wrap:wrap;
-    gap:15px;
+    gap:16px;
     margin-bottom:35px;
 }
 
 .ai-feature{
-    padding:14px 20px;
+    padding:15px 22px;
     border-radius:18px;
-
-    background:
-    rgba(255,255,255,0.06);
-
-    border:
-    1px solid rgba(255,255,255,0.08);
+    background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,255,.08));
+    border:1px solid rgba(255,255,255,.08);
+    opacity:0;
+    transform:translateY(25px);
+    transition:.45s ease;
 }
 
-/* CHAT */
-
-.ai-chat-box{
-    border-radius:30px;
-
-    overflow:hidden;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
-
-    border:
-    1px solid rgba(255,255,255,0.08);
+.ai-feature.active{
+    opacity:1;
+    transform:translateY(0);
 }
 
 .chat-header{
     display:flex;
     align-items:center;
     gap:15px;
-
     padding:20px;
-
-    border-bottom:
-    1px solid rgba(255,255,255,0.08);
+    border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .chat-avatar{
@@ -3241,88 +712,1569 @@ informatiques professionnels.
     min-height:220px;
 }
 
-.bot-message{
-    background:
-    rgba(255,255,255,0.08);
-
+.bot-message,
+.user-message{
     padding:16px 20px;
-
     border-radius:18px;
-
-    display:inline-block;
-
     max-width:85%;
+    margin-bottom:15px;
+}
+
+.bot-message{
+    background:rgba(255,255,255,.08);
 }
 
 .user-message{
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    padding:16px 20px;
-
-    border-radius:18px;
-
     margin-left:auto;
-    margin-top:15px;
-
-    max-width:85%;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
 }
 
 .chat-input-box{
     display:flex;
     gap:10px;
-
-    padding:20px;
-
-    border-top:
-    1px solid rgba(255,255,255,0.08);
+    padding:18px;
+    border-top:1px solid rgba(255,255,255,.08);
 }
 
 .chat-input-box input{
     flex:1;
-
-    background:
-    rgba(255,255,255,0.06);
-
+    min-width:0;
+    height:55px;
     border:none;
-
-    padding:16px 18px;
-
-    border-radius:16px;
-
+    outline:none;
+    padding:0 18px;
+    border-radius:14px;
+    background:rgba(255,255,255,.06);
     color:#fff;
 }
 
 .chat-input-box button{
-    width:60px;
+    width:55px;
+    min-width:55px;
+    height:55px;
     border:none;
+    border-radius:14px;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+    color:#fff;
+}
 
-    border-radius:16px;
+/* PARTNERS */
+
+.partners-section{
+    background:linear-gradient(180deg,#091120,#050816);
+}
+
+.partners-slider{
+    overflow:hidden;
+}
+
+.partners-track{
+    display:flex;
+    width:max-content;
+    animation:scrollPartners 28s linear infinite;
+}
+
+.partner-card{
+    width:250px;
+    height:220px;
+    margin:0 18px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.partner-logo{
+    width:120px;
+    height:120px;
+    border-radius:24px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.partner-logo img{
+    max-width:100%;
+    max-height:80px;
+    object-fit:contain;
+}
+
+/* FOOTER */
+
+.footer{
+    padding:80px 0 30px;
+    background:#040611;
+    border-top:1px solid rgba(255,255,255,.08);
+}
+
+.footer-title{
+    font-size:24px;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.footer-text{
+    color:rgba(255,255,255,.65);
+    line-height:1.8;
+}
+
+.social-links{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+.social-link{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    text-decoration:none;
+}
+
+.contact-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 18px;
+    border-radius:18px;
+    background:rgba(255,255,255,.05);
+    margin-bottom:14px;
+}
+
+/* POPUP */
+
+.diam-popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:999999;
+    opacity:0;
+    visibility:hidden;
+    transition:.5s;
+}
+
+.diam-popup.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.diam-popup-card{
+    width:92%;
+    max-width:430px;
+    padding:30px;
+    text-align:center;
+    border-radius:30px;
+    background:linear-gradient(135deg,#0b1020,#151d36);
+    border:1px solid rgba(255,255,255,.08);
+    position:relative;
+}
+
+.diam-popup-image{
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #00d4ff;
+    margin-bottom:18px;
+}
+
+.diam-close{
+    position:absolute;
+    top:15px;
+    right:15px;
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+}
+
+.diam-popup-status{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 18px;
+    border-radius:100px;
+    background:rgba(0,255,136,.12);
+    color:#00ff88;
+    margin-bottom:20px;
+}
+
+.diam-popup-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 25px;
+    border-radius:15px;
+    text-decoration:none;
+    color:#fff;
+    font-weight:800;
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+}
+
+/* KEYFRAMES */
+
+@keyframes stageFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-5px);}
+}
+
+@keyframes floatImage{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-18px);}
+}
+
+@keyframes floatingCard{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+}
+
+@keyframes serviceGridMove{
+    from{background-position:0 0;}
+    to{background-position:70px 70px;}
+}
+
+@keyframes iconFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+}
+
+@keyframes diamFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-16px);}
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);opacity:1;}
+    100%{transform:scale(2);opacity:0;}
+}
+
+@keyframes slideAffiche{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+}
+
+@keyframes scrollPartners{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+}
+
+/* RESPONSIVE */
+
+@media(max-width:991px){
+    .hero-section{
+        text-align:center;
+        padding-top:120px;
+    }
+
+    .hero-title{
+        font-size:52px;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .hero-stage-box{
+        text-align:left;
+    }
+
+    .hero-image{
+        margin-top:60px;
+        height:380px;
+    }
+
+    .floating-card{
+    display:flex;
+    }
+}
+
+@media(max-width:768px){
+    .hero-title,
+    .section-title,
+    .section-header h2,
+    .diam-ai-title,
+    .partners-title{
+        font-size:38px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        width:100%;
+    }
+
+    .hero-btn{
+        width:100%;
+    }
+
+    .hero-stage-box{
+        padding:20px;
+        margin-bottom:30px;
+    }
+
+    .stage-icon{
+        min-width:58px;
+        height:58px;
+        font-size:22px;
+    }
+
+    .stage-content h5{
+        font-size:19px;
+    }
+
+    .hero-image{
+        height:280px;
+    }
+
+    .section-block{
+        padding:85px 0;
+    }
+
+    .slide{
+        width:280px;
+    }
+
+    .slide img{
+        height:320px;
+    }
+}
+@media (max-width:991px){
+
+    .navbar-collapse{
+        position:fixed;
+        top:0;
+        right:-100%;
+        width:300px;
+        height:100vh;
+
+        background:#081120;
+
+        padding:80px 20px 20px;
+
+        transition:.4s ease;
+
+        z-index:99999;
+
+        overflow-y:auto;
+
+        box-shadow:
+        -10px 0 40px rgba(0,0,0,.4);
+    }
+
+    .navbar-collapse.show{
+        right:0;
+    }
+
+    .nav-modern{
+        display:flex;
+        flex-direction:column;
+        align-items:stretch !important;
+        gap:12px;
+    }
+
+    .nav-modern .nav-link{
+        padding:14px 18px;
+        border-radius:14px;
+        background:rgba(255,255,255,.05);
+        color:white !important;
+        font-weight:600;
+    }
+
+    .mobile-close-btn{
+        position:absolute;
+        top:20px;
+        right:20px;
+
+        width:45px;
+        height:45px;
+
+        border:none;
+        border-radius:50%;
+
+        background:rgba(255,255,255,.08);
+
+        color:white;
+
+        font-size:22px;
+    }
+}
+.contact-info-premium{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.contact-title{
+    position:relative;
+    display:inline-block;
+}
+
+.contact-title::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-8px;
+    width:45px;
+    height:3px;
+    border-radius:10px;
+    background:linear-gradient(90deg,#7c5cff,#00d4ff);
+}
+
+.contact-item-premium{
+    position:relative;
+
+    display:grid;
+    grid-template-columns:58px 1fr 26px;
+    align-items:center;
+    gap:14px;
+
+    padding:16px 18px;
+
+    border-radius:22px;
 
     background:
     linear-gradient(
         135deg,
-        #7c5cff,
-        #00d4ff
+        rgba(124,92,255,.13),
+        rgba(0,212,255,.07)
     );
 
-    color:#fff;
+    border:1px solid rgba(255,255,255,.09);
+
+    overflow:hidden;
+
+    transition:.4s ease;
+
+    animation:contactFloat 5s ease-in-out infinite;
 }
 
+.contact-item-premium:nth-child(2){
+    animation-delay:.4s;
+}
+
+.contact-item-premium:nth-child(3){
+    animation-delay:.8s;
+}
+
+.contact-item-premium::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-120%;
+    width:80%;
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.14),
+        transparent
+    );
+    transition:.8s;
+}
+
+.contact-item-premium:hover::before{
+    left:120%;
+}
+
+.contact-item-premium:hover{
+    transform:translateX(8px) scale(1.02);
+    border-color:rgba(0,212,255,.28);
+    box-shadow:
+    0 18px 40px rgba(0,0,0,.35),
+    0 0 30px rgba(0,212,255,.12);
+}
+
+.contact-icon{
+    width:58px;
+    height:58px;
+
+    border-radius:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:22px;
+    color:white;
+
+    background:linear-gradient(135deg,#7c5cff,#00d4ff);
+
+    box-shadow:0 12px 28px rgba(0,212,255,.25);
+
+    animation:contactIconPulse 3s ease-in-out infinite;
+}
+
+.contact-item-premium span{
+    display:block;
+    color:#8be9ff;
+    font-size:13px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.contact-item-premium p{
+    margin:0;
+    color:rgba(255,255,255,.78);
+    font-size:14px;
+    line-height:1.5;
+}
+
+.contact-arrow{
+    color:#8be9ff;
+    font-size:15px;
+    animation:arrowMove 1.6s ease-in-out infinite;
+}
+
+@keyframes contactFloat{
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+}
+
+@keyframes contactIconPulse{
+    0%,100%{
+        transform:scale(1);
+        box-shadow:0 12px 28px rgba(0,212,255,.25);
+    }
+
+    50%{
+        transform:scale(1.06);
+        box-shadow:0 15px 35px rgba(0,212,255,.42);
+    }
+}
+
+@keyframes arrowMove{
+    0%,100%{
+        transform:translateX(0);
+    }
+
+    50%{
+        transform:translateX(6px);
+    }
+}
+
+@media(max-width:768px){
+
+    .contact-item-premium{
+        grid-template-columns:50px 1fr 20px;
+        padding:14px;
+    }
+
+    .contact-icon{
+        width:50px;
+        height:50px;
+        font-size:18px;
+    }
+
+    .contact-item-premium p{
+        font-size:13px;
+    }
+
+}
+
+.social-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-top:25px;
+}
+
+.social-link{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:14px 20px;
+
+    border-radius:20px;
+
+    text-decoration:none;
+
+    color:white;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(124,92,255,.14),
+        rgba(0,212,255,.08)
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(20px);
+
+    transition:.4s ease;
+
+    animation:socialFloat 5s ease-in-out infinite;
+}
+
+.social-link:nth-child(2){
+    animation-delay:.4s;
+}
+
+.social-link:nth-child(3){
+    animation-delay:.8s;
+}
+
+.social-link::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:80%;
+    height:100%;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.15),
+        transparent
+    );
+
+    transition:.8s;
+}
+
+.social-link:hover::before{
+    left:120%;
+}
+
+.social-link:hover{
+    transform:
+    translateY(-6px)
+    scale(1.03);
+
+    box-shadow:
+    0 18px 40px rgba(0,0,0,.35);
+}
+
+.social-link i{
+    width:48px;
+    height:48px;
+
+    border-radius:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+
+    color:white;
+}
+
+.social-link span{
+    font-weight:700;
+    font-size:14px;
+}
+
+/* FACEBOOK */
+
+.facebook i{
+    background:
+    linear-gradient(
+        135deg,
+        #1877f2,
+        #0d65d9
+    );
+}
+
+/* INSTAGRAM */
+
+.instagram i{
+    background:
+    linear-gradient(
+        135deg,
+        #f58529,
+        #dd2a7b,
+        #8134af
+    );
+}
+
+/* LINKEDIN */
+
+.linkedin i{
+    background:
+    linear-gradient(
+        135deg,
+        #0077b5,
+        #005582
+    );
+}
+
+@keyframes socialFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+
+}
+
+@media(max-width:768px){
+
+    .social-links{
+        justify-content:center;
+    }
+
+    .social-link{
+        width:100%;
+        justify-content:center;
+    }
+
+}
 </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+        <a href="{% url 'login_hexa' %}" class="navbar-brand logo-hexa">
+            <img src="{% static 'images/logoHexa.png' %}" class="logo-img" alt="HexaQuébec">
+        </a>
+
+        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+    <button class="mobile-close-btn d-lg-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <ul class="navbar-nav ms-auto nav-modern align-items-lg-center">
+
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link active">
+                <i class="fa-solid fa-house me-2"></i>
+                Accueil
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'services' %}" class="nav-link">
+                <i class="fa-solid fa-layer-group me-2"></i>
+                Services
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'produits_list' %}" class="nav-link">
+                <i class="fa-solid fa-newspaper me-2"></i>
+                Articles
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'portfolio' %}" class="nav-link">
+                <i class="fa-solid fa-briefcase me-2"></i>
+                Projets
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'client_login' %}" class="nav-link">
+                <i class="fa-solid fa-users me-2"></i>
+                Clients
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'contact' %}" class="nav-link">
+                <i class="fa-solid fa-envelope me-2"></i>
+                Contact
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+    </div>
+</nav>
+
+<header class="hero-section">
+    <div class="hero-overlay"></div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+
+            <div class="col-lg-6">
+
+                <div class="hero-badge">
+                     Développement • IA • Mobile • UI/UX
+                </div>
+
+                <h1 class="hero-title">
+                    Solutions digitales
+                    <span>modernes & innovantes</span>
+                </h1>
+
+                <p class="hero-text">
+                    HexaQuébec accompagne les entreprises dans la création de solutions numériques professionnelles, performantes et modernes.
+                </p>
+
+                <div class="hero-stage-box">
+
+                    <div class="stage-icon">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+
+                    <div class="stage-content">
+                        <span class="stage-badge"> Opportunités de Stage</span>
+
+                        <h5>Stages disponibles chez HexaQuébec</h5>
+
+                        <p>
+                            Développement Web • Applications Mobiles • UI/UX Design • Infographie
+                        </p>
+
+                        <small>❌ Réseau & Cybersécurité non acceptés</small>
+                    </div>
+
+                </div>
+
+                <div class="hero-buttons">
+
+                    <a href="{% url 'services' %}" class="hero-btn primary-btn">
+                        <i class="fa-solid fa-code"></i>
+                        Services
+                    </a>
+
+                    <a href="{% url 'demande_stage' %}" class="hero-btn secondary-btn">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        Demande de Stage
+                    </a>
+
+                    <a href="{% url 'space' %}" class="hero-btn outline-btn">
+                        <i class="fa-solid fa-users"></i>
+                        Espace
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+                <div class="hero-image-wrapper">
+
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop"
+                         class="hero-image"
+                         alt="Développement Web">
+
+                    <div class="floating-card floating-1">
+                        <i class="fa-solid fa-code"></i>
+                        Développement Web
+                    </div>
+
+                    <div class="floating-card floating-2">
+                        <i class="fa-solid fa-robot"></i>
+                        Intelligence Artificielle
+                    </div>
+
+                    <div class="floating-card floating-3">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                        Applications Mobiles
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<section class="section-block services-section">
+    <div class="services-bg"></div>
+
+    <div class="container position-relative">
+
+        <div class="section-header">
+            <span class="subtitle"> Développement Web • IA • Mobile • UI/UX</span>
+
+            <h2>Services <span>HexaQuébec</span></h2>
+
+            <p>
+                Nous créons des plateformes modernes, rapides et sécurisées : sites web, e-commerce, IA, applications mobiles et expériences UI/UX premium.
+            </p>
+        </div>
+
+        <div class="services-grid">
+
+            <div class="service-card">
+                <div class="service-number">01</div>
+                <div class="icon"><i class="fa-solid fa-code"></i></div>
+                <h3>Développement Web</h3>
+                <p>Sites vitrines, dashboards, plateformes web et systèmes professionnels modernes.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-number">02</div>
+                <div class="icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                <h3>E-commerce</h3>
+                <p>Boutiques modernes avec paiement en ligne, commandes et expérience premium.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-number">03</div>
+                <div class="icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <h3>Applications Mobiles</h3>
+                <p>Applications Android & iOS rapides, fluides, modernes et professionnelles.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-number">04</div>
+                <div class="icon"><i class="fa-solid fa-robot"></i></div>
+                <h3>Intelligence Artificielle</h3>
+                <p>Chatbots intelligents, automatisation, analyse et IA générative moderne.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-number">05</div>
+                <div class="icon"><i class="fa-solid fa-pen-nib"></i></div>
+                <h3>Design UI/UX</h3>
+                <p>Interfaces élégantes, animations fluides et expérience utilisateur haut de gamme.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-number">06</div>
+                <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Maintenance</h3>
+                <p>Sécurisation, optimisation, mises à jour et support informatique professionnel.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="annonces" class="section-block annonces-section">
+    <div class="container">
+
+        <div class="section-header">
+            <span class="subtitle"> Actualités & Informations</span>
+
+            <h2 class="section-title">
+                Nos annonces <span>HexaQuébec</span>
+            </h2>
+
+            <p class="section-description">
+                Découvrez nos dernières annonces, nouveautés, stages et informations importantes.
+            </p>
+        </div>
+
+        {% if annonces %}
+        <div class="row g-4">
+            {% for annonce in annonces %}
+            <div class="col-lg-4 col-md-6">
+                <div class="annonce-card h-100">
+
+                    {% if annonce.image %}
+                    <img src="{{ annonce.image.url }}" class="annonce-img" alt="{{ annonce.title }}">
+                    {% else %}
+                    <img src="{% static 'images/default-annonce.jpg' %}" class="annonce-img" alt="Annonce">
+                    {% endif %}
+
+                    <div class="annonce-content">
+                        <h4 class="annonce-title">{{ annonce.title }}</h4>
+
+                        <p class="annonce-text">
+                            {{ annonce.content|truncatewords:25 }}
+                        </p>
+
+                        {% if annonce.published_at %}
+                        <div class="annonce-date">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            {{ annonce.published_at|date:"d M Y" }}
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4">
+                            <a href="{% url 'annonce_detail' annonce.id %}" class="btn-annonce">
+                                Lire plus
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-annonce">
+            <i class="fa-solid fa-bullhorn fa-3x mb-3"></i>
+            <h4>Aucune annonce disponible</h4>
+            <p>Les nouvelles annonces apparaîtront bientôt.</p>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<section class="section-block video-section">
+    <div class="container">
+
+        <div class="section-header">
+            <span class="subtitle"> Communication digitale</span>
+
+            <h2 class="section-title">
+                Vidéos <span>Annonces</span>
+            </h2>
+
+            <p class="section-description">
+                Regardez nos vidéos de présentation, annonces et démonstrations professionnelles.
+            </p>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            {% for v in videos %}
+            <div class="col-lg-8">
+                <div class="video-card">
+                    <video class="video-player" controls>
+                        <source src="{{ v.video.url }}" type="video/mp4">
+                    </video>
+
+                    <div class="video-content">
+                        <h3 class="video-title">{{ v.titre }}</h3>
+
+                        <div class="video-date">
+                            <i class="fa-solid fa-calendar"></i>
+                            {{ v.date_pub|date:"d M Y" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-lg-8">
+                <div class="empty-video">
+                    <i class="fa-solid fa-video fa-3x mb-3"></i>
+                    <h4>Aucune vidéo disponible</h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<section class="section-block affiche-section">
+    <div class="container">
+
+        <div class="section-header">
+            <span class="subtitle"> Promotion digitale</span>
+
+            <h2 class="section-title">
+                Affiches <span>Promotionnelles</span>
+            </h2>
+
+            <p class="section-description">
+                Découvrez nos affiches modernes et campagnes visuelles professionnelles.
+            </p>
+        </div>
+
+        <div class="affiche-slider">
+            <div class="slides-wrapper">
+
+                {% for a in affiches %}
+                <div class="slide">
+                    <img src="{{ a.image.url }}" alt="{{ a.titre }}">
+                    <div class="slide-content">
+                        <h5>{{ a.titre }}</h5>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% for a in affiches %}
+                <div class="slide">
+                    <img src="{{ a.image.url }}" alt="{{ a.titre }}">
+                    <div class="slide-content">
+                        <h5>{{ a.titre }}</h5>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div id="diamPopup" class="diam-popup">
+    <div class="diam-popup-card">
+
+        <button class="diam-close" onclick="closeDiamPopup()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <img src="{% static 'images/diam.jpeg' %}" alt="Diam AI" class="diam-popup-image">
+
+        <div class="diam-popup-status">
+            <span class="pulse"></span>
+            IA ACTIVE
+        </div>
+
+        <h3>Bonjour 👋</h3>
+
+        <p>
+            Je suis <strong>Diam AI</strong>.<br>
+            Posez votre question,<br>
+            je suis là pour vous aider.
+        </p>
+
+        <button class="diam-popup-btn" onclick="goToDiamAI()">
+            Discuter avec Diam AI
+        </button>
+
+    </div>
+</div>
+
+<section id="diam-ai-section" class="section-block diam-ai-section">
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-5">
+                <div class="diam-ai-card">
+
+                    <div class="ai-glow"></div>
+
+                    <img src="{% static 'images/diam.jpeg' %}" class="diam-ai-image" alt="Diam AI">
+
+                    <div class="ai-status">
+                        <span class="pulse"></span>
+                        <span id="statusText">IA ACTIVE</span>
+                    </div>
+
+                    <div class="diam-message-box" id="diamMessage">
+                        <strong>Bonjour 👋</strong><br>
+                        Je suis <span>Diam AI</span>.<br>
+                        Posez votre question, je suis là pour vous aider.
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+
+                <span class="subtitle"> Assistant IA HexaQuébec</span>
+
+                <h2 class="diam-ai-title">
+                    Discutez avec <span>Diam AI</span>
+                </h2>
+
+                <p class="diam-ai-text">
+                    <span class="diam-highlight">Diam AI</span> est l'assistant intelligent de HexaQuébec.
+                    Disponible 24h/24 et 7j/7, il vous accompagne pour répondre à vos questions concernant nos services,
+                    le développement web, les applications mobiles, l'intelligence artificielle, les stages et les solutions numériques innovantes.
+                </p>
+
+                <div class="ai-features">
+                    <div class="ai-feature">Développement Web</div>
+                    <div class="ai-feature">Intelligence Artificielle</div>
+                    <div class="ai-feature">Applications Mobiles</div>
+                    <div class="ai-feature">Stages HexaQuébec</div>
+                    <div class="ai-feature">E-commerce</div>
+                    <div class="ai-feature">UI/UX Design</div>
+                </div>
+
+                <div class="ai-chat-box">
+
+                    <div class="chat-header">
+                        <img src="{% static 'images/diam.jpeg' %}" class="chat-avatar">
+
+                        <div>
+                            <h5>Diam AI</h5>
+                            <small>Assistant intelligent HexaQuébec</small>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="bot-message">
+                            👋 Bonjour, je suis Diam AI. Comment puis-je vous aider aujourd’hui ?
+                        </div>
+                    </div>
+
+                    <div class="chat-input-box">
+                        <input type="text" id="userInput" placeholder="Posez votre question...">
+
+                        <button onclick="sendMessage()">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<section class="section-block partners-section">
+    <div class="container">
+
+        <div class="section-header">
+            <span class="subtitle"> Entreprises partenaires</span>
+
+            <h2 class="partners-title">
+                Nos partenaires <span>HexaQuébec</span>
+            </h2>
+
+            <p class="partners-text">
+                Nous collaborons avec des entreprises solides pour offrir des services numériques modernes.
+            </p>
+        </div>
+
+        <div class="partners-slider">
+            <div class="partners-track">
+
+                {% for partenaire in partenaires %}
+                <div class="partner-card">
+                    <div class="partner-logo">
+                        {% if partenaire.logo %}
+                        <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}">
+                        {% else %}
+                        <img src="{% static 'images/default_logo.png' %}" alt="Logo">
+                        {% endif %}
+                    </div>
+
+                    <h5>{{ partenaire.nom }}</h5>
+                </div>
+                {% endfor %}
+
+                {% for partenaire in partenaires %}
+                <div class="partner-card">
+                    <div class="partner-logo">
+                        {% if partenaire.logo %}
+                        <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}">
+                        {% else %}
+                        <img src="{% static 'images/default_logo.png' %}" alt="Logo">
+                        {% endif %}
+                    </div>
+
+                    <h5>{{ partenaire.nom }}</h5>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-4 mb-4">
+                <h3 class="footer-title">HexaQuébec</h3>
+
+                <p class="footer-text">
+                    Entreprise spécialisée en développement web, applications mobiles,
+                    intelligence artificielle et solutions numériques modernes.
+                </p>
+
+                <div class="social-links">
+
+    <a href="https://www.facebook.com/profile.php?id=61578598457506"
+       class="social-link facebook"
+       target="_blank">
+
+        <i class="fab fa-facebook-f"></i>
+
+        <span>Facebook</span>
+
+    </a>
+
+    <a href="https://www.instagram.com/hexaquebec/"
+       class="social-link instagram"
+       target="_blank">
+
+        <i class="fab fa-instagram"></i>
+
+        <span>Instagram</span>
+
+    </a>
+
+    <a href="#"
+       class="social-link linkedin"
+       target="_blank">
+
+        <i class="fab fa-linkedin-in"></i>
+
+        <span>LinkedIn</span>
+
+    </a>
+
+</div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+
+    <h3 class="footer-title contact-title">
+        Contact
+    </h3>
+
+    <div class="footer-text contact-info-premium">
+
+        <div class="contact-item-premium">
+            <div class="contact-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+
+            <div>
+                <span>Adresse</span>
+                <p>2186 Rue Roussel, Chicoutimi, QC G7G 1W6</p>
+            </div>
+
+            <i class="fa-solid fa-arrow-right contact-arrow"></i>
+        </div>
+
+        <div class="contact-item-premium">
+            <div class="contact-icon">
+                <i class="fa-solid fa-phone-volume"></i>
+            </div>
+
+            <div>
+                <span>Téléphone</span>
+                <p>+1 514 467 7377</p>
+            </div>
+
+            <i class="fa-solid fa-arrow-right contact-arrow"></i>
+        </div>
+
+        <div class="contact-item-premium">
+            <div class="contact-icon">
+                <i class="fa-solid fa-envelope-open-text"></i>
+            </div>
+
+            <div>
+                <span>Email</span>
+                <p>hexaquebec80@gmail.com</p>
+            </div>
+
+            <i class="fa-solid fa-arrow-right contact-arrow"></i>
+        </div>
+
+    </div>
+
+</div>
+
+            <div class="col-lg-4 mb-4">
+                <h3 class="footer-title">Fondateur & Développeur</h3>
+
+                <p class="footer-text">
+                    <strong style="font-size:20px;color:#fff;">Diambere Kamara</strong>
+                    <br><br>
+                     Développeur Backend spécialisé en
+                    <span style="color:#8be9ff;">Django, Python & Intelligence Artificielle</span>
+                    <br><br>
+                    Création de plateformes web modernes, dashboards professionnels,
+                    systèmes automatisés, applications intelligentes et solutions numériques premium.
+                </p>
+            </div>
+
+        </div>
+
+        <hr style="border-color:rgba(255,255,255,.08);">
+
+        <p class="text-center mt-4" style="color:rgba(255,255,255,.55);">
+            © 2026 HexaQuébec — Tous droits réservés
+        </p>
+
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const navbar = document.querySelector(".navbar");
+
+    window.addEventListener("scroll", function(){
+        navbar.classList.toggle("scrolled", window.scrollY > 50);
+    });
+
+    const serviceCards = document.querySelectorAll(".service-card");
+
+    serviceCards.forEach((card, index) => {
+
+        setTimeout(() => {
+            card.classList.add("show");
+        }, index * 180);
+
+        card.addEventListener("mousemove", function(e){
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty("--x", (e.clientX - rect.left) + "px");
+            card.style.setProperty("--y", (e.clientY - rect.top) + "px");
+        });
+
+    });
+
+    setInterval(() => {
+
+        serviceCards.forEach((card, index) => {
+
+            setTimeout(() => {
+                card.animate([
+                    { transform:"translateY(0) scale(1)" },
+                    { transform:"translateY(-8px) scale(1.01)" },
+                    { transform:"translateY(0) scale(1)" }
+                ],{
+                    duration:1500,
+                    easing:"ease-in-out"
+                });
+            }, index * 150);
+
+        });
+
+    }, 6000);
+
+    const aiFeatures = document.querySelectorAll(".ai-feature");
+
+    aiFeatures.forEach((feature, index) => {
+        setTimeout(() => {
+            feature.classList.add("active");
+        }, index * 220);
+    });
+
+    setInterval(() => {
+
+        aiFeatures.forEach((feature, index) => {
+
+            setTimeout(() => {
+                feature.animate([
+                    { transform:"translateY(0)" },
+                    { transform:"translateY(-8px)" },
+                    { transform:"translateY(0)" }
+                ],{
+                    duration:1300,
+                    easing:"ease-in-out"
+                });
+            }, index * 130);
+
+        });
+
+    }, 5500);
+
+    const statusText = document.getElementById("statusText");
+
+    const states = [
+        "IA ACTIVE",
+        "EN LIGNE",
+        "PRÊT À VOUS AIDER",
+        "DIAM AI CONNECTÉ"
+    ];
+
+    let indexStatus = 0;
+
+    setInterval(function(){
+        indexStatus++;
+
+        if(indexStatus >= states.length){
+            indexStatus = 0;
+        }
+
+        if(statusText){
+            statusText.textContent = states[indexStatus];
+        }
+
+    }, 3000);
+
+    const diamMessage = document.getElementById("diamMessage");
+
+    setTimeout(function(){
+        if(diamMessage){
+            diamMessage.classList.add("show");
+        }
+    }, 800);
+
+});
+
+window.addEventListener("load", function(){
+
+    setTimeout(function(){
+        const popup = document.getElementById("diamPopup");
+
+        if(popup){
+            popup.classList.add("show");
+        }
+    }, 1500);
+
+});
+
+function closeDiamPopup(){
+    const popup = document.getElementById("diamPopup");
+
+    if(popup){
+        popup.classList.remove("show");
+    }
+}
+
+function goToDiamAI(){
+    closeDiamPopup();
+
+    setTimeout(function(){
+        const section = document.getElementById("diam-ai-section");
+
+        if(section){
+            section.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+        }
+    }, 250);
+}
+
 async function sendMessage(){
 
-    let input = document.getElementById("userInput");
-    let chat = document.getElementById("chatMessages");
-    let text = input.value.trim();
+    const input = document.getElementById("userInput");
+    const chat = document.getElementById("chatMessages");
 
-    if(text === "") return;
+    if(!input || !chat){
+        return;
+    }
+
+    const text = input.value.trim();
+
+    if(text === ""){
+        return;
+    }
 
     chat.innerHTML += `
         <div class="user-message">
@@ -3341,18 +2293,22 @@ async function sendMessage(){
     try{
 
         const response = await fetch("{% url 'diam_ai_chat' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
             },
-            body: JSON.stringify({
-                message: text
+            body:JSON.stringify({
+                message:text
             })
         });
 
         const data = await response.json();
 
-        document.getElementById("typing").remove();
+        const typing = document.getElementById("typing");
+
+        if(typing){
+            typing.remove();
+        }
 
         chat.innerHTML += `
             <div class="bot-message">
@@ -3362,7 +2318,11 @@ async function sendMessage(){
 
     }catch(error){
 
-        document.getElementById("typing").remove();
+        const typing = document.getElementById("typing");
+
+        if(typing){
+            typing.remove();
+        }
 
         chat.innerHTML += `
             <div class="bot-message">
@@ -3372,305 +2332,6 @@ async function sendMessage(){
     }
 
     chat.scrollTop = chat.scrollHeight;
-}
-</script>
-
-
-
-
-
-<!-- ======================================================
-     PARTENAIRES
-====================================================== -->
-
-<section class="partners-section">
-
-<div class="container">
-
-<div class="partners-header">
-
-<span class="partners-badge">
-🤝 Entreprises partenaires
-</span>
-
-<h2 class="partners-title">
-
-Nos partenaires
-<span>HexaQuébec</span>
-
-</h2>
-
-<p class="partners-text">
-
-Nous collaborons avec des entreprises solides
-pour offrir des services numériques modernes.
-
-</p>
-
-</div>
-
-<div class="partners-slider">
-
-<div class="partners-track">
-
-<!-- LOOP 1 -->
-
-{% for partenaire in partenaires %}
-
-<div class="partner-card">
-
-<div class="partner-logo">
-
-{% if partenaire.logo %}
-
-<img src="{{ partenaire.logo.url }}"
-alt="{{ partenaire.nom }}">
-
-{% else %}
-
-<img src="{% static 'images/default_logo.png' %}"
-alt="Logo">
-
-{% endif %}
-
-</div>
-
-<h5 class="partner-name">
-{{ partenaire.nom }}
-</h5>
-
-</div>
-
-{% endfor %}
-
-<!-- LOOP 2 -->
-
-{% for partenaire in partenaires %}
-
-<div class="partner-card">
-
-<div class="partner-logo">
-
-{% if partenaire.logo %}
-
-<img src="{{ partenaire.logo.url }}"
-alt="{{ partenaire.nom }}">
-
-{% else %}
-
-<img src="{% static 'images/default_logo.png' %}"
-alt="Logo">
-
-{% endif %}
-
-</div>
-
-<h5 class="partner-name">
-{{ partenaire.nom }}
-</h5>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ======================================================
-     FOOTER
-====================================================== -->
-
-<footer class="footer">
-
-<div class="container">
-
-<div class="row">
-
-<div class="col-lg-4 mb-4">
-
-<h3 class="footer-title">
-HexaQuébec
-</h3>
-
-<p class="footer-text">
-
-Entreprise spécialisée en développement web,
-applications mobiles, intelligence artificielle
-et solutions numériques modernes.
-
-</p>
-
-<div class="social-links">
-
-<a href="https://www.facebook.com/profile.php?id=61578598457506" class="social-link">
-<i class="fab fa-facebook-f"></i>
-</a>
-
-<a href="https://www.instagram.com/hexaquebec/" class="social-link">
-<i class="fab fa-instagram"></i>
-</a>
-
-<a href="https://www.instagram.com/hexaquebec/" class="social-link">
-<i class="fab fa-linkedin-in"></i>
-</a>
-
-</div>
-
-</div>
-
-<div class="col-lg-4 mb-4">
-
-<h3 class="footer-title">
-Contact
-</h3>
-<p class="footer-text contact-info">
-
-<span class="contact-item">
-    <i class="fa-solid fa-location-dot"></i>
-   2186 Rue Roussel, Chicoutimi, QC G7G 1W6
-</span>
-
-<span class="contact-item">
-    <i class="fa-solid fa-phone-volume"></i>
-    +1 514 467 7377
-</span>
-
-<span class="contact-item">
-    <i class="fa-solid fa-envelope-open-text"></i>
-    hexaquebec80@gmail.com
-</span>
-
-</p>
-
-</div>
-
-<div class="col-lg-4 mb-4">
-
-
-
-<p class="footer-text">
-
-<h3 class="footer-title">
-    Fondateur & Développeur
-</h3>
-
-<p class="footer-text">
-
-    <strong style="font-size:20px; color:#fff;">
-        Diambere Kamara
-    </strong>
-
-    <br><br>
-
-    🚀 Développeur Backend spécialisé en
-    <span style="color:#8be9ff;">
-        Django, Python & Intelligence Artificielle
-    </span>
-
-    <br><br>
-
-    💻 Création de plateformes web modernes,
-    dashboards professionnels, systèmes automatisés,
-    applications intelligentes et solutions numériques premium.
-
-    <br><br>
-
-    🎨 Passionné par le développement web moderne,
-    l’expérience utilisateur UI/UX et les technologies innovantes.
-
-</p>
-
-</p>
-
-</div>
-
-</div>
-
-<hr style="border-color:rgba(255,255,255,0.08);">
-
-<p class="text-center mt-4"
-style="color:rgba(255,255,255,0.55);">
-
-© 2026 HexaQuébec — Tous droits réservés
-
-</p>
-
-</div>
-
-</footer>
-
-<!-- ======================================================
-     JS
-====================================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-
-/* NAVBAR */
-
-window.addEventListener("scroll",function(){
-
-    const navbar=document.querySelector(".navbar");
-
-    navbar.classList.toggle(
-        "scrolled",
-        window.scrollY > 50
-    );
-
-});
-
-
-
-/* =========================================================
-   MOBILE MENU PREMIUM
-========================================================= */
-
-const navbarCollapse = document.querySelector('.navbar-collapse');
-const navbarToggler = document.querySelector('.navbar-toggler');
-const overlay = document.querySelector('.mobile-overlay');
-
-if(navbarToggler){
-
-    navbarToggler.addEventListener('click', function(){
-
-        setTimeout(() => {
-
-            if(navbarCollapse.classList.contains('show')){
-                overlay.classList.add('active');
-            }
-            else{
-                overlay.classList.remove('active');
-            }
-
-        }, 200);
-
-    });
-
-}
-
-/* CLOSE MENU */
-
-if(overlay){
-
-    overlay.addEventListener('click', function(){
-
-        overlay.classList.remove('active');
-
-        const bsCollapse =
-        bootstrap.Collapse.getInstance(navbarCollapse);
-
-        if(bsCollapse){
-            bsCollapse.hide();
-        }
-
-    });
-
 }
 </script>
 

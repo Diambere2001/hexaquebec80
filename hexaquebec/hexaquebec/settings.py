@@ -167,7 +167,7 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'Hexa',
+    'CLOUD_NAME': 'dphwd7mie',
     'API_KEY': '823312244837413',
     'API_SECRET': 'HiT-wxTXrsUw8c6IScLzlBmc4_c',
 }
@@ -184,7 +184,14 @@ USE_I18N = True
 USE_TZ = True
 
 
-
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 
 
