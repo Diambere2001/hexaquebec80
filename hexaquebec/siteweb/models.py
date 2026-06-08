@@ -328,11 +328,18 @@ class CommentPro(models.Model):
     def __str__(self):
         return f"Commentaire du {self.date}"
 
-
+from cloudinary.models import CloudinaryField
 
 class VideoAnnonce(models.Model):
     titre = models.CharField(max_length=200)
-    video = models.FileField(upload_to="videos_annonces/")
+
+    video = CloudinaryField(
+        resource_type="video",
+        folder="videos_annonces",
+        blank=True,
+        null=True
+    )
+
     date_pub = models.DateTimeField(auto_now_add=True)
     actif = models.BooleanField(default=True)
 
