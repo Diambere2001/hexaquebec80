@@ -1449,6 +1449,21 @@ body{
     }
 
 }
+.visitor-name-box{
+    margin-top:15px;
+    padding:12px 18px;
+    border-radius:15px;
+    background:rgba(0,212,255,.10);
+    border:1px solid rgba(0,212,255,.25);
+    color:#8be9ff;
+    font-size:14px;
+}
+
+.secondary-diam-btn{
+    margin-left:8px;
+    background:rgba(255,255,255,.08) !important;
+    border:1px solid rgba(255,255,255,.12);
+}
 </style>
 </head>
 
@@ -1830,7 +1845,6 @@ body{
 
     </div>
 </section>
-
 <div id="diamPopup" class="diam-popup">
     <div class="diam-popup-card">
 
@@ -1838,22 +1852,32 @@ body{
             <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <img src="{% static 'images/diam.jpeg' %}" alt="Diam AI" class="diam-popup-image">
+        <img src="{% static 'images/diam.jpeg' %}" 
+             alt="Diam AI" 
+             class="diam-popup-image">
 
         <div class="diam-popup-status">
             <span class="pulse"></span>
             IA ACTIVE
         </div>
 
-        <h3>Bonjour 👋</h3>
+        <h3 id="diamTitle">Bonjour 👋</h3>
 
-        <p>
+        <p id="diamText">
             Je suis <strong>Diam AI</strong>.<br>
             Posez votre question,<br>
             je suis là pour vous aider.
         </p>
 
-        <button class="diam-popup-btn" onclick="goToDiamAI()">
+        <div id="visitorNameBox" class="visitor-name-box" style="display:none;">
+            Visiteur : <strong id="visitorName"></strong>
+        </div>
+
+        <button class="diam-popup-btn" onclick="startDiamVoice()">
+    🎙️ Lancer Diam AI vocal
+</button>
+
+        <button class="diam-popup-btn secondary-diam-btn" onclick="goToDiamAI()">
             Discuter avec Diam AI
         </button>
 
@@ -2335,5 +2359,151 @@ async function sendMessage(){
 }
 </script>
 
+
+
+<script>
+let visitorName = "";
+let recognition = null;
+
+function speak(text, callback = null){
+
+    const voice = new SpeechSynthesisUtterance(text);
+    voice.lang = "fr-FR";
+    voice.rate = 0.95;
+    voice.pitch = 1.1;
+
+    voice.onend = function(){
+        if(callback){
+            callback();
+        }
+    };
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(voice);
+}
+
+function startDiamVoice(){
+
+    speak(
+        "Bienvenue sur la plateforme HexaQuébec. Notre système intelligence artificielle est activé. Dites-moi votre nom.",
+        listenName
+    );
+}
+
+function listenName(){
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    recognition = new SpeechRecognition();
+    recognition.lang = "fr-FR";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event){
+
+        visitorName = event.results[0][0].transcript;
+
+        document.getElementById("diamText").innerHTML =
+            "Merci <strong>" + visitorName + "</strong> 😊<br>Votre nom est enregistré.<br>Posez maintenant votre question.";
+
+        speak(
+            "Merci " + visitorName + ". Votre nom est enregistré. Posez maintenant votre question.",
+            listenQuestion
+        );
+    };
+}
+
+function listenQuestion(){
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    recognition = new SpeechRecognition();
+    recognition.lang = "fr-FR";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event){
+
+        const question = event.results[0][0].transcript;
+
+        document.getElementById("diamText").innerHTML =
+            "<strong>" + visitorName + " :</strong><br>" + question + "<br><br>Diam AI réfléchit...";
+
+        sendToDjangoAI(question);
+    };
+}
+
+async function sendToDjangoAI(question){
+
+    const response = await fetch("{% url 'diam_ai_chat' %}", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body:JSON.stringify({
+            message:question,
+            name:visitorName
+        })
+    });
+
+    const data = await response.json();
+
+    const answer = data.answer || "Désolé, je n'ai pas compris.";
+
+    document.getElementById("diamText").innerHTML =
+        "<strong>Diam AI :</strong><br>" + answer;
+
+    speak(answer, listenQuestion);
+}
+
+function getCookie(name){
+    let cookieValue = null;
+
+    if(document.cookie && document.cookie !== ""){
+        const cookies = document.cookie.split(";");
+
+        for(let i = 0; i < cookies.length; i++){
+            const cookie = cookies[i].trim();
+
+            if(cookie.substring(0, name.length + 1) === (name + "=")){
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+</script>
+<button onclick="testMicro()">Tester micro</button>
+
+<script>
+function testMicro(){
+
+    const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if(!SpeechRecognition){
+        alert("Ce navigateur ne supporte pas la reconnaissance vocale. Utilise Google Chrome.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "fr-FR";
+
+    recognition.start();
+
+    recognition.onresult = function(event){
+        alert("J'ai entendu : " + event.results[0][0].transcript);
+    };
+
+    recognition.onerror = function(event){
+        alert("Erreur micro : " + event.error);
+    };
+}
+</script>
 </body>
 </html>
