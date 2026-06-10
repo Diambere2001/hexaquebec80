@@ -2505,5 +2505,245 @@ function testMicro(){
     };
 }
 </script>
+
+
+<script>
+async function sendToDjangoAI(question){
+
+    const diamText = document.getElementById("diamText");
+
+    diamText.innerHTML =
+        "Question reçue : <strong>" + question + "</strong><br>Diam AI réfléchit...";
+
+    try{
+
+        const response = await fetch("{% url 'diam_ai_chat' %}", {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body:JSON.stringify({
+                message:question
+            })
+        });
+
+        const data = await response.json();
+
+        console.log("Réponse Django :", data);
+
+        const answer = data.answer || data.response || "Désolé, je n'ai pas compris.";
+
+        diamText.innerHTML =
+            "<strong>Diam AI :</strong><br>" + answer;
+
+        speak(answer, listenQuestion);
+
+    }catch(error){
+
+        console.error("Erreur Diam AI :", error);
+
+        diamText.innerHTML =
+            "Erreur : Diam AI ne reçoit pas la réponse de Django.";
+
+        speak("Désolé, je n'arrive pas à contacter le système Diam AI.");
+    }
+}
+
+</script>
+
+<script>
+let diamRecognition = null;
+let diamVisitorName = "";
+
+function getDiamText() {
+    return document.getElementById("diamText");
+}
+
+function speakDiam(text, callback = null) {
+    if (!("speechSynthesis" in window)) {
+        alert("La voix n'est pas supportée par ce navigateur.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "fr-FR";
+    speech.rate = 0.95;
+    speech.pitch = 1.1;
+    speech.volume = 1;
+
+    speech.onend = function () {
+        if (callback) {
+            setTimeout(callback, 700);
+        }
+    };
+
+    window.speechSynthesis.speak(speech);
+}
+
+function startDiamRobot() {
+    getDiamText().innerHTML =
+        "🎙️ Diam AI vocal activé...<br>Veuillez dire votre nom.";
+
+    speakDiam(
+        "Bienvenue sur la plateforme HexaQuébec. Notre système intelligence artificielle est activé. Dites-moi votre nom s'il vous plaît.",
+        listenVisitorName
+    );
+}
+
+function createRecognition() {
+    const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        getDiamText().innerHTML =
+            "Votre navigateur ne supporte pas le micro vocal. Utilisez Google Chrome.";
+        return null;
+    }
+
+    const rec = new SpeechRecognition();
+    rec.lang = "fr-FR";
+    rec.interimResults = false;
+    rec.continuous = false;
+    rec.maxAlternatives = 1;
+
+    return rec;
+}
+
+function listenVisitorName() {
+    diamRecognition = createRecognition();
+
+    if (!diamRecognition) return;
+
+    getDiamText().innerHTML = "🎧 J'écoute votre nom...";
+
+    diamRecognition.start();
+
+    diamRecognition.onresult = function (event) {
+        diamVisitorName = event.results[0][0].transcript;
+
+        getDiamText().innerHTML =
+            "Merci <strong>" + diamVisitorName + "</strong> 😊<br>" +
+            "Votre nom est enregistré.<br>Posez maintenant votre question.";
+
+        speakDiam(
+            "Merci " + diamVisitorName + ". Votre nom est enregistré. Posez maintenant votre question.",
+            listenVisitorQuestion
+        );
+    };
+
+    diamRecognition.onerror = function (event) {
+        getDiamText().innerHTML =
+            "Erreur micro : <strong>" + event.error + "</strong><br>" +
+            "Cliquez encore sur le bouton vocal.";
+
+        speakDiam("Je n'ai pas bien entendu votre nom. Réessayez s'il vous plaît.");
+    };
+}
+
+function listenVisitorQuestion() {
+    diamRecognition = createRecognition();
+
+    if (!diamRecognition) return;
+
+    getDiamText().innerHTML = "🎧 J'écoute votre question...";
+
+    diamRecognition.start();
+
+    diamRecognition.onresult = function (event) {
+        const question = event.results[0][0].transcript;
+
+        getDiamText().innerHTML =
+            "<strong>" + diamVisitorName + " :</strong><br>" +
+            question +
+            "<br><br>🤖 Diam AI réfléchit...";
+
+        sendQuestionToDjango(question);
+    };
+
+    diamRecognition.onerror = function (event) {
+        getDiamText().innerHTML =
+            "Erreur micro : <strong>" + event.error + "</strong><br>" +
+            "Veuillez répéter votre question.";
+
+        speakDiam(
+            "Je n'ai pas bien entendu votre question. Répétez s'il vous plaît.",
+            listenVisitorQuestion
+        );
+    };
+}
+
+async function sendQuestionToDjango(question) {
+    try {
+        const response = await fetch("{% url 'diam_ai_chat' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({
+                message: question,
+                name: diamVisitorName
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        const answer = data.answer || "Désolé, je n'ai pas trouvé de réponse.";
+
+        getDiamText().innerHTML =
+            "<strong>Diam AI :</strong><br>" + answer;
+
+        speakDiam(answer, listenVisitorQuestion);
+
+    } catch (error) {
+        console.error("Erreur Diam AI :", error);
+
+        getDiamText().innerHTML =
+            "Erreur : Diam AI ne reçoit pas la réponse Django.<br>" +
+            error.message;
+
+        speakDiam("Désolé, je n'arrive pas à contacter le système Diam AI.");
+    }
+}
+
+function stopDiamRobot() {
+    if (diamRecognition) {
+        diamRecognition.stop();
+        diamRecognition = null;
+    }
+
+    if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+    }
+
+    getDiamText().innerHTML = "Diam AI vocal est arrêté.";
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+</script>
 </body>
 </html>
