@@ -1106,3 +1106,72 @@ class MessageStagiaire(models.Model):
     def __str__(self):
         return f"{self.auteur} - {self.profil}"
 
+
+
+class GroupeStagiaire(models.Model):
+    nom = models.CharField(max_length=100, default="Groupe Stagiaires")
+    stagiaires = models.ManyToManyField("ProfilStagiaire", blank=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nom
+
+class MessageGroupeStagiaire(models.Model):
+    groupe = models.ForeignKey(
+        GroupeStagiaire,
+        on_delete=models.CASCADE,
+        related_name="messages"
+    )
+
+    auteur = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    message = models.TextField(blank=True)
+
+    fichier = models.FileField(
+        upload_to="groupe_stagiaires/",
+        blank=True,
+        null=True
+    )
+
+    lu = models.BooleanField(default=False)
+
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["date"]
+
+    def __str__(self):
+        return f"{self.auteur.username}"
+    
+
+
+class ReactionMessage(models.Model):
+    message = models.ForeignKey(
+        MessageGroupeStagiaire,
+        on_delete=models.CASCADE
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    emoji = models.CharField(max_length=10)
+
+
+
+class MessageLu(models.Model):
+    message = models.ForeignKey(
+        MessageGroupeStagiaire,
+        on_delete=models.CASCADE
+    )
+
+    utilisateur = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    date_lecture = models.DateTimeField(auto_now_add=True)

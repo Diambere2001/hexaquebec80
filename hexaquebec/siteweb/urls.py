@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.views import LogoutView
+
 
 
 
@@ -138,6 +140,18 @@ urlpatterns = [
     path('supprimer-rapport/<int:id>/', views.supprimer_rapport, name='supprimer_rapport'),
     path('rapport-pdf/', views.rapport_pdf, name='rapport_pdf'),
     path("diam-ai-chat/", views.diam_ai_chat, name="diam_ai_chat"),
+    path("logout/",LogoutView.as_view(next_page="login"),name="logout"),
+    path("groupe-stagiaires/", views.groupe_stagiaires, name="groupe_stagiaires"),
+    path("groupe-stagiaires/reaction/<int:message_id>/", views.reaction_message, name="reaction_message"),
+    path("groupe-stagiaires/login/", views.login_groupe_stagiaire, name="login_groupe_stagiaire"),
+  
+    path("groupe-stagiaires/login/", views.login_groupe_stagiaire, name="login_groupe_stagiaire"),
+
+    path("groupe-stagiaires/admin/", views.groupe_stagiaires_admin, name="groupe_stagiaires_admin"),
+
+    path("groupe-stagiaires/espace/", views.groupe_stagiaires_stagiaire, name="groupe_stagiaires_stagiaire"),
+
+    path("groupe-stagiaires/logout/", views.logout_groupe_stagiaire, name="logout_groupe_stagiaire"),
 
 
     

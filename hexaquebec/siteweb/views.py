@@ -3380,3 +3380,233 @@ def diam_ai_chat(request):
         "answer": "Méthode non autorisée"
     })
 
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import GroupeStagiaire, MessageGroupeStagiaire, ReactionMessage, MessageLu, ProfilStagiaire
+
+@login_required(login_url="login")
+def reaction_message(request, message_id):
+    message = get_object_or_404(MessageGroupeStagiaire, id=message_id)
+
+    emoji = request.POST.get("emoji", "👍")
+
+    ReactionMessage.objects.create(
+        message=message,
+        user=request.user,
+        emoji=emoji
+    )
+
+    return redirect("groupe_stagiaires")
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+def login_groupe_stagiaire(request):
+
+    if request.method == "POST":
+        email = request.POST.get("email")
+        code_stagiaire = request.POST.get("code_stagiaire")
+
+        try:
+            login = Stagiairelogin.objects.get(
+                email=email,
+                code=code_stagiaire
+            )
+
+            profil, created = ProfilStagiaire.objects.get_or_create(
+                stagiaire=login.stagiaire
+            )
+
+            request.session["profil_groupe_id"] = profil.id
+
+            return redirect("groupe_stagiaires_stagiaire")
+
+        except Stagiairelogin.DoesNotExist:
+            messages.error(request, "Email ou code stagiaire incorrect.")
+
+    return render(request, "login_groupe_stagiaire.html")
+
+
+def logout_groupe_stagiaire(request):
+    request.session.pop("profil_groupe_id", None)
+    return redirect("login_groupe_stagiaire")
+
+
+@login_required(login_url="login")
+def groupe_stagiaires_admin(request):
+
+    groupe, created = GroupeStagiaire.objects.get_or_create(
+        nom="Groupe Stagiaires"
+    )
+
+    stagiaires = ProfilStagiaire.objects.select_related("stagiaire").all()
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "ajouter":
+            profil_id = request.POST.get("profil_id")
+            profil = get_object_or_404(ProfilStagiaire, id=profil_id)
+            groupe.stagiaires.add(profil)
+
+        elif action == "retirer":
+            profil_id = request.POST.get("profil_id")
+            profil = get_object_or_404(ProfilStagiaire, id=profil_id)
+            groupe.stagiaires.remove(profil)
+
+        elif action == "message":
+            texte = request.POST.get("message")
+            fichier = request.FILES.get("fichier")
+
+            if texte or fichier:
+                MessageGroupeStagiaire.objects.create(
+                    groupe=groupe,
+                    auteur=request.user,
+                    message=texte,
+                    fichier=fichier
+                )
+
+        return redirect("groupe_stagiaires_admin")
+
+    return render(request, "groupe_stagiaires.html", {
+        "groupe": groupe,
+        "stagiaires": stagiaires,
+        "messages_groupe": groupe.messages.all(),
+        "is_admin": True,
+    })
+
+def groupe_stagiaires_stagiaire(request):
+
+    profil_id = request.session.get("profil_groupe_id")
+
+    if not profil_id:
+        return redirect("login_groupe_stagiaire")
+
+    profil = get_object_or_404(ProfilStagiaire, id=profil_id)
+
+    groupe = GroupeStagiaire.objects.filter(stagiaires=profil).first()
+
+    if not groupe:
+        messages.error(request, "Vous n'êtes pas encore ajouté au groupe.")
+        return redirect("login_groupe_stagiaire")
+
+    if request.method == "POST":
+        texte = request.POST.get("message")
+        fichier = request.FILES.get("fichier")
+
+        if texte or fichier:
+            MessageGroupeStagiaire.objects.create(
+                groupe=groupe,
+                auteur=request.user,
+                message=f"[STG-{profil.stagiaire.code}] {profil.stagiaire.nom} : {texte}",
+                fichier=fichier
+            )
+
+        return redirect("groupe_stagiaires_stagiaire")
+
+    return render(request, "groupe_stagiaires.html", {
+        "groupe": groupe,
+        "messages_groupe": groupe.messages.all(),
+        "profil": profil,
+        "is_admin": False,
+    })
+
+@login_required(login_url="login")
+def groupe_stagiaires(request):
+
+    groupe, created = GroupeStagiaire.objects.get_or_create(
+        nom="Groupe Stagiaires"
+    )
+
+    stagiaires = ProfilStagiaire.objects.select_related(
+        "stagiaire"
+    ).all()
+
+    messages_groupe = groupe.messages.all().order_by("date")
+
+    if request.method == "POST":
+
+        action = request.POST.get("action")
+
+        # ==========================
+        # AJOUT STAGIAIRE
+        # ==========================
+
+        if action == "ajouter":
+
+            profil_id = request.POST.get("profil_id")
+
+            try:
+                profil = ProfilStagiaire.objects.get(
+                    id=profil_id
+                )
+
+                groupe.stagiaires.add(profil)
+
+                messages.success(
+                    request,
+                    "Stagiaire ajouté au groupe."
+                )
+
+            except:
+                pass
+
+            return redirect("groupe_stagiaires")
+
+        # ==========================
+        # RETIRER STAGIAIRE
+        # ==========================
+
+        if action == "retirer":
+
+            profil_id = request.POST.get("profil_id")
+
+            try:
+                profil = ProfilStagiaire.objects.get(
+                    id=profil_id
+                )
+
+                groupe.stagiaires.remove(profil)
+
+                messages.success(
+                    request,
+                    "Stagiaire retiré du groupe."
+                )
+
+            except:
+                pass
+
+            return redirect("groupe_stagiaires")
+
+        # ==========================
+        # MESSAGE
+        # ==========================
+
+        if action == "message":
+
+            texte = request.POST.get("message")
+            fichier = request.FILES.get("fichier")
+
+            if texte or fichier:
+
+                MessageGroupeStagiaire.objects.create(
+                    groupe=groupe,
+                    auteur=request.user,
+                    message=texte,
+                    fichier=fichier
+                )
+
+            return redirect("groupe_stagiaires")
+
+    return render(
+        request,
+        "groupe_stagiaires.html",
+        {
+            "groupe": groupe,
+            "stagiaires": stagiaires,
+            "messages_groupe": messages_groupe,
+            "is_admin": True,
+        }
+    )
+

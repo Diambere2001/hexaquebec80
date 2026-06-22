@@ -1015,3 +1015,32 @@ class MessageStagiaireAdmin(admin.ModelAdmin):
 
 
 
+from django.contrib import admin
+from .models import (
+    GroupeStagiaire,
+    MessageGroupeStagiaire,
+    ReactionMessage,
+    MessageLu,
+)
+
+@admin.register(GroupeStagiaire)
+class GroupeStagiaireAdmin(admin.ModelAdmin):
+    list_display = ("nom", "date_creation")
+    filter_horizontal = ("stagiaires",)
+
+
+@admin.register(MessageGroupeStagiaire)
+class MessageGroupeStagiaireAdmin(admin.ModelAdmin):
+    list_display = ("groupe", "auteur", "message", "fichier", "lu", "date")
+    list_filter = ("groupe", "lu", "date")
+    search_fields = ("message", "auteur__username")
+
+
+@admin.register(ReactionMessage)
+class ReactionMessageAdmin(admin.ModelAdmin):
+    list_display = ("message", "user", "emoji")
+
+
+@admin.register(MessageLu)
+class MessageLuAdmin(admin.ModelAdmin):
+    list_display = ("message", "utilisateur", "date_lecture")

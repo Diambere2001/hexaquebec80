@@ -444,6 +444,25 @@ body{
 .stats-card small{
     font-size:12px;
 }
+.logout-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    margin-top:20px;
+    text-decoration:none;
+    border-radius:14px;
+    color:#fff;
+    font-weight:600;
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    transition:0.3s;
+}
+
+.logout-btn:hover{
+    color:white;
+    transform:translateX(5px);
+    box-shadow:0 10px 25px rgba(239,68,68,.35);
+}
 </style>
 </head>
 
@@ -508,7 +527,15 @@ body{
         <span>Gérer annonces</span>
     </a>
 
+    <a href="{% url 'login_groupe_stagiaire' %}">
+    <i class="fa-solid fa-comments"></i>
+    <span>Groupe stagiaires</span>
+</a>
 
+<a href="{% url 'home' %}" class="logout-btn">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    <span>Déconnexion</span>
+</a>
 
 </div>
 
