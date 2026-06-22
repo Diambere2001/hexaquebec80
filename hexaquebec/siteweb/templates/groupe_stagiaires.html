@@ -41,12 +41,6 @@ body{
     border-radius:32px;
     padding:26px;
     box-shadow:0 35px 90px rgba(0,0,0,.45);
-    animation:fadeUp .5s ease;
-}
-
-@keyframes fadeUp{
-    from{opacity:0;transform:translateY(25px);}
-    to{opacity:1;transform:translateY(0);}
 }
 
 .header{
@@ -97,12 +91,6 @@ body{
     background:linear-gradient(135deg,#ef4444,#dc2626);
 }
 
-.btn-hexa:hover,
-.btn-logout:hover{
-    color:white;
-    transform:translateY(-3px);
-}
-
 .layout{
     display:grid;
     grid-template-columns:340px 1fr;
@@ -138,13 +126,6 @@ body{
     padding:13px;
 }
 
-.form-control:focus{
-    background:#1e293b;
-    color:white;
-    border-color:var(--blue);
-    box-shadow:0 0 0 4px rgba(37,99,235,.15);
-}
-
 .profile-card{
     background:linear-gradient(135deg,#1e293b,#111827);
     border:1px solid var(--border);
@@ -175,12 +156,6 @@ body{
     justify-content:space-between;
     align-items:center;
     gap:10px;
-    transition:.25s;
-}
-
-.member-box:hover{
-    transform:translateX(4px);
-    border-color:#2563eb66;
 }
 
 .member-info{
@@ -203,24 +178,9 @@ body{
     margin-bottom:18px;
 }
 
-.chat-box::-webkit-scrollbar{
-    width:7px;
-}
-
-.chat-box::-webkit-scrollbar-thumb{
-    background:#334155;
-    border-radius:20px;
-}
-
 .message-row{
     display:flex;
     margin-bottom:16px;
-    animation:messageIn .35s ease;
-}
-
-@keyframes messageIn{
-    from{opacity:0;transform:translateY(12px);}
-    to{opacity:1;transform:translateY(0);}
 }
 
 .message-row.me{
@@ -235,6 +195,10 @@ body{
     box-shadow:0 12px 28px rgba(0,0,0,.22);
 }
 
+.message-row.me .message{
+    border-radius:20px 20px 6px 20px;
+}
+
 .message-admin{
     background:linear-gradient(135deg,#2563eb,#1d4ed8);
 }
@@ -243,12 +207,8 @@ body{
     background:linear-gradient(135deg,#059669,#047857);
 }
 
-.message-other{
-    background:linear-gradient(135deg,#7c3aed,#5b21b6);
-}
-
-.message-row.me .message{
-    border-radius:20px 20px 6px 20px;
+.message-deleted{
+    background:linear-gradient(135deg,#334155,#1f2937);
 }
 
 .message strong{
@@ -272,6 +232,11 @@ body{
     white-space:pre-line;
 }
 
+.deleted-text{
+    color:#fde68a;
+    font-weight:800;
+}
+
 .file-link{
     display:inline-flex;
     align-items:center;
@@ -287,6 +252,17 @@ body{
     margin-top:8px;
     font-size:11px;
     color:#e5e7eb;
+}
+
+.delete-message-btn{
+    margin-top:10px;
+    border:none;
+    background:rgba(239,68,68,.95);
+    color:white;
+    border-radius:10px;
+    padding:6px 10px;
+    font-size:12px;
+    font-weight:800;
 }
 
 .send-box{
@@ -465,7 +441,25 @@ body{
 
                 {% for m in messages_groupe %}
 
-                    {% if "[STG-" in m.message %}
+                    {% if m.supprime %}
+
+                        <div class="message-row {% if m.auteur == request.user %}me{% endif %}">
+                            <div class="message message-deleted">
+                                <strong>
+                                    <i class="fa-solid fa-trash"></i>
+                                    Message supprimé
+                                </strong>
+
+                                <div class="message-text deleted-text">
+                                    Message supprimé par {{ m.supprime_par }}
+                                </div>
+
+                                <span class="message-date">{{ m.date }}</span>
+                            </div>
+                        </div>
+
+                    {% elif "[STG-" in m.message %}
+
                         <div class="message-row {% if profil_code_tag and profil_code_tag in m.message %}me{% endif %}">
                             <div class="message message-stagiaire">
                                 <strong>
@@ -482,10 +476,27 @@ body{
                                     </a>
                                 {% endif %}
 
+                                {% if m.auteur == request.user %}
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="supprimer_message">
+                                        <input type="hidden" name="message_id" value="{{ m.id }}">
+
+                                        <button type="submit"
+                                                class="delete-message-btn"
+                                                onclick="return confirm('Supprimer ce message ?');">
+                                            <i class="fa-solid fa-trash"></i>
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                {% endif %}
+
                                 <span class="message-date">{{ m.date }}</span>
                             </div>
                         </div>
+
                     {% else %}
+
                         <div class="message-row {% if m.auteur == request.user %}me{% endif %}">
                             <div class="message message-admin">
                                 <strong>
@@ -503,9 +514,25 @@ body{
                                     </a>
                                 {% endif %}
 
+                                {% if m.auteur == request.user %}
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="supprimer_message">
+                                        <input type="hidden" name="message_id" value="{{ m.id }}">
+
+                                        <button type="submit"
+                                                class="delete-message-btn"
+                                                onclick="return confirm('Supprimer ce message ?');">
+                                            <i class="fa-solid fa-trash"></i>
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                {% endif %}
+
                                 <span class="message-date">{{ m.date }}</span>
                             </div>
                         </div>
+
                     {% endif %}
 
                 {% empty %}

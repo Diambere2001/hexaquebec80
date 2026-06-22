@@ -1140,6 +1140,10 @@ class MessageGroupeStagiaire(models.Model):
 
     date = models.DateTimeField(auto_now_add=True)
 
+    supprime = models.BooleanField(default=False)
+    supprime_par = models.CharField(max_length=150, blank=True, null=True)
+    date_suppression = models.DateTimeField(blank=True, null=True)
+
     class Meta:
         ordering = ["date"]
 

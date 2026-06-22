@@ -3432,7 +3432,6 @@ def logout_groupe_stagiaire(request):
     request.session.pop("profil_groupe_id", None)
     return redirect("login_groupe_stagiaire")
 
-
 @login_required(login_url="login")
 def groupe_stagiaires_admin(request):
 
@@ -3449,11 +3448,13 @@ def groupe_stagiaires_admin(request):
             profil_id = request.POST.get("profil_id")
             profil = get_object_or_404(ProfilStagiaire, id=profil_id)
             groupe.stagiaires.add(profil)
+            return redirect("groupe_stagiaires_admin")
 
         elif action == "retirer":
             profil_id = request.POST.get("profil_id")
             profil = get_object_or_404(ProfilStagiaire, id=profil_id)
             groupe.stagiaires.remove(profil)
+            return redirect("groupe_stagiaires_admin")
 
         elif action == "message":
             texte = request.POST.get("message")
@@ -3467,7 +3468,29 @@ def groupe_stagiaires_admin(request):
                     fichier=fichier
                 )
 
-        return redirect("groupe_stagiaires_admin")
+            return redirect("groupe_stagiaires_admin")
+
+        elif action == "supprimer_message":
+            message_id = request.POST.get("message_id")
+
+            msg = get_object_or_404(
+                MessageGroupeStagiaire,
+                id=message_id,
+                groupe=groupe
+            )
+
+            msg.supprime = True
+            msg.supprime_par = request.user.username
+            msg.date_suppression = timezone.now()
+            msg.message = ""
+
+            if msg.fichier:
+                msg.fichier.delete(save=False)
+                msg.fichier = None
+
+            msg.save()
+
+            return redirect("groupe_stagiaires_admin")
 
     return render(request, "groupe_stagiaires.html", {
         "groupe": groupe,
@@ -3475,6 +3498,9 @@ def groupe_stagiaires_admin(request):
         "messages_groupe": groupe.messages.all(),
         "is_admin": True,
     })
+
+
+from django.utils import timezone
 
 def groupe_stagiaires_stagiaire(request):
 
@@ -3492,25 +3518,53 @@ def groupe_stagiaires_stagiaire(request):
         return redirect("login_groupe_stagiaire")
 
     if request.method == "POST":
-        texte = request.POST.get("message")
-        fichier = request.FILES.get("fichier")
+        action = request.POST.get("action")
 
-        if texte or fichier:
-            MessageGroupeStagiaire.objects.create(
-                groupe=groupe,
-                auteur=request.user,
-                message=f"[STG-{profil.stagiaire.code}] {profil.stagiaire.nom} : {texte}",
-                fichier=fichier
+        if action == "supprimer_message":
+            message_id = request.POST.get("message_id")
+
+            msg = get_object_or_404(
+                MessageGroupeStagiaire,
+                id=message_id,
+                groupe=groupe
             )
 
-        return redirect("groupe_stagiaires_stagiaire")
+            msg.supprime = True
+            msg.supprime_par = profil.stagiaire.nom
+            msg.date_suppression = timezone.now()
+            msg.message = ""
+
+            if msg.fichier:
+                msg.fichier.delete(save=False)
+                msg.fichier = None
+
+            msg.save()
+
+            return redirect("groupe_stagiaires_stagiaire")
+
+        else:
+            texte = request.POST.get("message")
+            fichier = request.FILES.get("fichier")
+
+            if texte or fichier:
+                MessageGroupeStagiaire.objects.create(
+                    groupe=groupe,
+                    auteur=request.user,
+                    message=f"[STG-{profil.stagiaire.code}] {profil.stagiaire.nom} : {texte}",
+                    fichier=fichier
+                )
+
+            return redirect("groupe_stagiaires_stagiaire")
 
     return render(request, "groupe_stagiaires.html", {
         "groupe": groupe,
         "messages_groupe": groupe.messages.all(),
         "profil": profil,
         "is_admin": False,
+        "profil_code_tag": f"[STG-{profil.stagiaire.code}]",
     })
+
+
 
 @login_required(login_url="login")
 def groupe_stagiaires(request):
@@ -3519,77 +3573,29 @@ def groupe_stagiaires(request):
         nom="Groupe Stagiaires"
     )
 
-    stagiaires = ProfilStagiaire.objects.select_related(
-        "stagiaire"
-    ).all()
-
+    stagiaires = ProfilStagiaire.objects.select_related("stagiaire").all()
     messages_groupe = groupe.messages.all().order_by("date")
 
     if request.method == "POST":
-
         action = request.POST.get("action")
 
-        # ==========================
-        # AJOUT STAGIAIRE
-        # ==========================
-
         if action == "ajouter":
-
             profil_id = request.POST.get("profil_id")
-
-            try:
-                profil = ProfilStagiaire.objects.get(
-                    id=profil_id
-                )
-
-                groupe.stagiaires.add(profil)
-
-                messages.success(
-                    request,
-                    "Stagiaire ajouté au groupe."
-                )
-
-            except:
-                pass
-
+            profil = get_object_or_404(ProfilStagiaire, id=profil_id)
+            groupe.stagiaires.add(profil)
             return redirect("groupe_stagiaires")
 
-        # ==========================
-        # RETIRER STAGIAIRE
-        # ==========================
-
-        if action == "retirer":
-
+        elif action == "retirer":
             profil_id = request.POST.get("profil_id")
-
-            try:
-                profil = ProfilStagiaire.objects.get(
-                    id=profil_id
-                )
-
-                groupe.stagiaires.remove(profil)
-
-                messages.success(
-                    request,
-                    "Stagiaire retiré du groupe."
-                )
-
-            except:
-                pass
-
+            profil = get_object_or_404(ProfilStagiaire, id=profil_id)
+            groupe.stagiaires.remove(profil)
             return redirect("groupe_stagiaires")
 
-        # ==========================
-        # MESSAGE
-        # ==========================
-
-        if action == "message":
-
+        elif action == "message":
             texte = request.POST.get("message")
             fichier = request.FILES.get("fichier")
 
             if texte or fichier:
-
                 MessageGroupeStagiaire.objects.create(
                     groupe=groupe,
                     auteur=request.user,
@@ -3598,6 +3604,35 @@ def groupe_stagiaires(request):
                 )
 
             return redirect("groupe_stagiaires")
+
+        elif action == "supprimer_message":
+            message_id = request.POST.get("message_id")
+
+            msg = get_object_or_404(
+                MessageGroupeStagiaire,
+                id=message_id,
+                groupe=groupe
+            )
+
+            msg.supprime = True
+            msg.supprime_par = request.user.username
+            msg.date_suppression = timezone.now()
+            msg.message = ""
+
+            if msg.fichier:
+                msg.fichier.delete(save=False)
+                msg.fichier = None
+
+            msg.save()
+
+            return redirect("groupe_stagiaires")
+
+    return render(request, "groupe_stagiaires.html", {
+        "groupe": groupe,
+        "stagiaires": stagiaires,
+        "messages_groupe": messages_groupe,
+        "is_admin": True,
+    })
 
     return render(
         request,
