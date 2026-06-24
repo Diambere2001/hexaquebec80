@@ -3872,3 +3872,7 @@ def lancer_appel_video_groupe(request):
         )
 
     return redirect("groupe_stagiaires_admin")
+
+
+def a_propos(request):
+    return render(request, "a_propos.html")
