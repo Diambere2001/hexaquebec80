@@ -3432,6 +3432,14 @@ def logout_groupe_stagiaire(request):
     request.session.pop("profil_groupe_id", None)
     return redirect("login_groupe_stagiaire")
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.utils import timezone
+
+
 @login_required(login_url="login")
 def groupe_stagiaires_admin(request):
 
@@ -3468,6 +3476,105 @@ def groupe_stagiaires_admin(request):
                     fichier=fichier
                 )
 
+                emails = list(
+                    groupe.stagiaires
+                    .exclude(stagiaire__email__isnull=True)
+                    .exclude(stagiaire__email="")
+                    .values_list("stagiaire__email", flat=True)
+                    .distinct()
+                )
+
+                if emails:
+                    lien = request.build_absolute_uri(
+                        "/login-groupe-stagiaire/"
+                    )
+
+                    sujet = "Nouveau message dans le groupe HexaQuébec"
+
+                    texte_simple = (
+                        "Bonjour,\n\n"
+                        "Vous avez reçu un nouveau message dans le groupe des stagiaires HexaQuébec.\n\n"
+                        f"Connectez-vous ici : {lien}\n\n"
+                        "Merci,\n"
+                        "HexaQuébec"
+                    )
+
+                    html_message = f"""
+                    <div style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,sans-serif;">
+                        <div style="max-width:620px;margin:30px auto;background:#ffffff;border-radius:22px;overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,0.12);">
+
+                            <div style="background:linear-gradient(135deg,#071a3d,#0057ff);padding:34px 28px;color:white;text-align:center;">
+                                <h1 style="margin:0;font-size:26px;font-weight:900;">
+                                    HexaQuébec
+                                </h1>
+                                <p style="margin:8px 0 0;font-size:15px;opacity:0.9;">
+                                    Groupe des stagiaires
+                                </p>
+                            </div>
+
+                            <div style="padding:32px 28px;color:#1f2937;">
+                                <h2 style="margin:0 0 14px;font-size:22px;color:#071a3d;">
+                                    Nouveau message reçu
+                                </h2>
+
+                                <p style="font-size:16px;line-height:1.7;margin:0 0 18px;">
+                                    Bonjour,
+                                </p>
+
+                                <p style="font-size:16px;line-height:1.7;margin:0 0 18px;">
+                                    Vous avez reçu un nouveau message dans le groupe des stagiaires
+                                    <strong>HexaQuébec</strong>.
+                                </p>
+
+                                <div style="background:#f1f5ff;border-left:5px solid #0057ff;border-radius:14px;padding:16px 18px;margin:24px 0;">
+                                    <p style="margin:0;color:#334155;font-size:15px;line-height:1.6;">
+                                        Connectez-vous à votre espace stagiaire pour consulter le message et répondre dans le groupe.
+                                    </p>
+                                </div>
+
+                                <div style="text-align:center;margin:30px 0;">
+                                    <a href="{lien}"
+                                       style="display:inline-block;background:linear-gradient(135deg,#0057ff,#003bb5);color:#ffffff;text-decoration:none;padding:15px 26px;border-radius:14px;font-weight:800;font-size:15px;">
+                                        Consulter le message
+                                    </a>
+                                </div>
+
+                                <p style="font-size:14px;color:#64748b;line-height:1.6;margin-top:24px;">
+                                    Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                                    <a href="{lien}" style="color:#0057ff;">{lien}</a>
+                                </p>
+                            </div>
+
+                            <div style="background:#f8fafc;padding:18px 28px;text-align:center;border-top:1px solid #e5e7eb;">
+                                <p style="margin:0;color:#64748b;font-size:13px;">
+                                    © HexaQuébec — Communication interne des stagiaires
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                    """
+
+                    email = EmailMultiAlternatives(
+                        subject=sujet,
+                        body=texte_simple,
+                        from_email=settings.EMAIL_HOST_USER,
+                        to=emails
+                    )
+
+                    email.attach_alternative(html_message, "text/html")
+                    email.send(fail_silently=False)
+
+                    messages.success(
+                        request,
+                        "Message envoyé et courriel professionnel envoyé aux stagiaires."
+                    )
+                else:
+                    messages.warning(
+                        request,
+                        "Message envoyé, mais aucun email stagiaire trouvé."
+                    )
+
             return redirect("groupe_stagiaires_admin")
 
         elif action == "supprimer_message":
@@ -3495,9 +3602,11 @@ def groupe_stagiaires_admin(request):
     return render(request, "groupe_stagiaires.html", {
         "groupe": groupe,
         "stagiaires": stagiaires,
-        "messages_groupe": groupe.messages.all(),
+        "messages_groupe": groupe.messages.all().order_by("date"),
         "is_admin": True,
     })
+
+
 
 
 from django.utils import timezone
@@ -3634,14 +3743,132 @@ def groupe_stagiaires(request):
         "is_admin": True,
     })
 
-    return render(
-        request,
-        "groupe_stagiaires.html",
-        {
-            "groupe": groupe,
-            "stagiaires": stagiaires,
-            "messages_groupe": messages_groupe,
-            "is_admin": True,
-        }
+   
+
+
+import uuid
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import redirect
+
+
+@login_required(login_url="login")
+def lancer_appel_video_groupe(request):
+
+    groupe, created = GroupeStagiaire.objects.get_or_create(
+        nom="Groupe Stagiaires"
     )
 
+    room_id = f"hexaquebec-stagiaires-{uuid.uuid4().hex[:10]}"
+    lien_appel = f"https://meet.jit.si/{room_id}"
+
+    MessageGroupeStagiaire.objects.create(
+        groupe=groupe,
+        auteur=request.user,
+        message=(
+            "📹 Appel vidéo lancé par l'admin.\n\n"
+            f"Rejoindre l'appel : {lien_appel}"
+        )
+    )
+
+    emails = list(
+        groupe.stagiaires
+        .exclude(stagiaire__email__isnull=True)
+        .exclude(stagiaire__email="")
+        .values_list("stagiaire__email", flat=True)
+        .distinct()
+    )
+
+    if emails:
+        sujet = "📹 Appel vidéo HexaQuébec"
+
+        texte_simple = (
+            "Bonjour,\n\n"
+            "Un appel vidéo vient d'être lancé dans le groupe des stagiaires HexaQuébec.\n\n"
+            f"Rejoindre l'appel vidéo : {lien_appel}\n\n"
+            "Merci,\n"
+            "HexaQuébec"
+        )
+
+        html_message = f"""
+        <div style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,sans-serif;">
+            <div style="max-width:650px;margin:30px auto;background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,0.15);">
+
+                <div style="background:linear-gradient(135deg,#071a3d,#0057ff);padding:36px 28px;color:white;text-align:center;">
+                    <h1 style="margin:0;font-size:28px;font-weight:900;">
+                        📹 Appel vidéo HexaQuébec
+                    </h1>
+                    <p style="margin:10px 0 0;font-size:15px;opacity:0.9;">
+                        Groupe des stagiaires
+                    </p>
+                </div>
+
+                <div style="padding:34px 30px;color:#1f2937;">
+                    <h2 style="margin:0 0 16px;font-size:22px;color:#071a3d;">
+                        Un appel vidéo vient d'être lancé
+                    </h2>
+
+                    <p style="font-size:16px;line-height:1.7;margin:0 0 18px;">
+                        Bonjour,
+                    </p>
+
+                    <p style="font-size:16px;line-height:1.7;margin:0 0 18px;">
+                        L'administration <strong>HexaQuébec</strong> a lancé un appel vidéo
+                        dans le groupe des stagiaires.
+                    </p>
+
+                    <div style="background:#ecfdf5;border-left:5px solid #16a34a;border-radius:16px;padding:18px;margin:26px 0;">
+                        <p style="margin:0;color:#065f46;font-size:15px;line-height:1.6;font-weight:700;">
+                            Cliquez sur le bouton ci-dessous pour rejoindre directement la réunion vidéo.
+                        </p>
+                    </div>
+
+                    <div style="text-align:center;margin:34px 0;">
+                        <a href="{lien_appel}"
+                           style="display:inline-block;background:linear-gradient(135deg,#16a34a,#22c55e);color:#ffffff;text-decoration:none;padding:16px 30px;border-radius:15px;font-weight:900;font-size:15px;">
+                            Rejoindre l'appel vidéo
+                        </a>
+                    </div>
+
+                    <p style="font-size:14px;color:#64748b;line-height:1.6;margin-top:24px;">
+                        Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                        <a href="{lien_appel}" style="color:#16a34a;font-weight:700;">
+                            {lien_appel}
+                        </a>
+                    </p>
+                </div>
+
+                <div style="background:#f8fafc;padding:18px 28px;text-align:center;border-top:1px solid #e5e7eb;">
+                    <p style="margin:0;color:#64748b;font-size:13px;">
+                        © HexaQuébec — Communication interne des stagiaires
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        """
+
+        email = EmailMultiAlternatives(
+            subject=sujet,
+            body=texte_simple,
+            from_email=settings.EMAIL_HOST_USER,
+            to=emails
+        )
+
+        email.attach_alternative(html_message, "text/html")
+        email.send(fail_silently=False)
+
+        messages.success(
+            request,
+            "Appel vidéo lancé et courriel envoyé aux stagiaires."
+        )
+    else:
+        messages.warning(
+            request,
+            "Appel vidéo lancé, mais aucun email stagiaire trouvé."
+        )
+
+    return redirect("groupe_stagiaires_admin")

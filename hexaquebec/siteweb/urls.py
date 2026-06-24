@@ -152,6 +152,7 @@ urlpatterns = [
     path("groupe-stagiaires/espace/", views.groupe_stagiaires_stagiaire, name="groupe_stagiaires_stagiaire"),
 
     path("groupe-stagiaires/logout/", views.logout_groupe_stagiaire, name="logout_groupe_stagiaire"),
+    path("groupe-stagiaires/appel-video/",views.lancer_appel_video_groupe,name="lancer_appel_video_groupe"),
 
 
     
