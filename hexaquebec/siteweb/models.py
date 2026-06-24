@@ -500,6 +500,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib import colors
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
+
 
 import qrcode
 
@@ -549,7 +551,12 @@ class ProfilStagiaire(models.Model):
     projet_fichier = models.FileField(upload_to="projets/", null=True, blank=True)
     projet_valide = models.BooleanField(default=False)
 
-    attestation = models.FileField(upload_to="attestations/", null=True, blank=True)
+    attestation = models.FileField(
+    upload_to="attestations/",
+    storage=RawMediaCloudinaryStorage(),
+    null=True,
+    blank=True
+    )
     stage_valide = models.BooleanField(default=False)
 
     # 🔢 CODE

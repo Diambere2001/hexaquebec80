@@ -155,6 +155,8 @@ urlpatterns = [
     path("groupe-stagiaires/appel-video/",views.lancer_appel_video_groupe,name="lancer_appel_video_groupe"),
     path("a-propos/", views.a_propos, name="a_propos"),
 
+    
+
 
     
 
