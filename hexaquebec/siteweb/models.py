@@ -505,7 +505,6 @@ from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 import qrcode
 
-
 class ProfilStagiaire(models.Model):
     stagiaire = models.OneToOneField('Stagiaire', on_delete=models.CASCADE)
     code_stagiaire = models.CharField(max_length=10, unique=True, blank=True)
@@ -524,26 +523,26 @@ class ProfilStagiaire(models.Model):
     date_debut = models.DateField(default=timezone.now)
     date_fin = models.DateField(null=True, blank=True)
 
-    
-
     statut_rdv = models.CharField(
-    max_length=20,
-    choices=[
-        ("aucun", "Aucun"),
-        ("en_attente", "En attente"),
-        ("accepte", "Accepté"),
-        ("refuse", "Refusé"),
-    ],
-    default="aucun"
+        max_length=20,
+        choices=[
+            ("aucun", "Aucun"),
+            ("en_attente", "En attente"),
+            ("accepte", "Accepté"),
+            ("refuse", "Refusé"),
+        ],
+        default="aucun"
     )
 
     date_rdv = models.DateTimeField(null=True, blank=True)
 
-    reponse_rdv = models.TextField(blank=True, null=True)
-
     reponse_rdv = models.CharField(
         max_length=50,
-        choices=[('en_attente','En attente'),('accepte','Accepté'),('refuse','Refusé')],
+        choices=[
+            ('en_attente','En attente'),
+            ('accepte','Accepté'),
+            ('refuse','Refusé')
+        ],
         default='en_attente'
     )
 
@@ -552,218 +551,21 @@ class ProfilStagiaire(models.Model):
     projet_valide = models.BooleanField(default=False)
 
     attestation = models.FileField(
-    upload_to="attestations/",
-    storage=RawMediaCloudinaryStorage(),
-    null=True,
-    blank=True
+        upload_to="attestations/",
+        null=True,
+        blank=True
     )
+
     stage_valide = models.BooleanField(default=False)
 
-    # 🔢 CODE
     def generate_code(self):
         if not self.code_stagiaire:
             self.code_stagiaire = "STG-" + ''.join(random.choices(string.digits, k=5))
         return self.code_stagiaire
 
-    # 📄 PDF
-    def generer_attestation(self):
-        self.generate_code()
-
-        buffer = BytesIO()
-
-        doc = SimpleDocTemplate(
-            buffer,
-            pagesize=LETTER,
-            rightMargin=30,
-            leftMargin=30,
-            topMargin=35,
-            bottomMargin=25
-        )
-
-        styles = getSampleStyleSheet()
-        primary = colors.HexColor("#1F3A5F")
-
-        # 🎨 STYLES
-        title_style = ParagraphStyle(
-            'Title',
-            parent=styles['Title'],
-            alignment=TA_CENTER,
-            fontSize=18,
-            textColor=primary
-        )
-
-        subtitle_style = ParagraphStyle(
-            'SubTitle',
-            parent=styles['Normal'],
-            alignment=TA_CENTER,
-            fontSize=11,
-            textColor=primary
-        )
-
-        normal_style = ParagraphStyle(
-            'Normal',
-            parent=styles['Normal'],
-            fontSize=10,
-            leading=14
-        )
-
-        center_style = ParagraphStyle(
-            'Center',
-            parent=styles['Normal'],
-            alignment=TA_CENTER,
-            fontSize=10
-        )
-
-        bold_center = ParagraphStyle(
-            'BoldCenter',
-            parent=center_style,
-            fontSize=12,
-            textColor=primary
-        )
-
-        elements = []
-
-        # 🔷 HEADER
-        logo_path = os.path.join(settings.STATIC_ROOT, "images/logoHexa.png")
-        logo = Image(logo_path, width=140, height=70)
-
-        header = Table([
-            [logo],
-            [Paragraph("<b>HEXACQUÉBEC.</b>", bold_center)],
-            [Paragraph(
-                "Développement Web & Mobile<br/>"
-                "Maintenance Informatique | Intégration IA<br/>"
-                "Chicoutimi, Québec, Canada<br/>"
-                "NEQ : 2281156671",
-                center_style
-            )]
-        ])
-        header.setStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER')])
-
-        elements.append(header)
-        elements.append(Spacer(1, 6))
-
-        # 🔹 Ligne
-        elements.append(Table(
-            [[""]],
-            colWidths=[480],
-            style=[('LINEABOVE', (0, 0), (-1, -1), 1, primary)]
-        ))
-
-        elements.append(Spacer(1, 10))
-
-        # 🎓 TITRE
-        elements.append(Paragraph("ATTESTATION DE STAGE", title_style))
-        elements.append(Spacer(1, 10))
-
-        # TEXTE
-        elements.append(Paragraph("Nous attestons que :", normal_style))
-        elements.append(Spacer(1, 10))
-
-        elements.append(Paragraph(f"<b>{self.stagiaire.nom}</b>", bold_center))
-        elements.append(Spacer(1, 4))
-        elements.append(Paragraph(f"Stagiaire en {self.stagiaire.specialite}", subtitle_style))
-
-        elements.append(Spacer(1, 10))
-
-        # 📅 DATES
-        date_debut = self.date_debut.strftime('%d %B %Y') if self.date_debut else ""
-        date_fin = self.date_fin.strftime('%d %B %Y') if self.date_fin else "En cours"
-
-        elements.append(Paragraph(
-            f"Période : Du {date_debut} au {date_fin}",
-            center_style
-        ))
-
-        elements.append(Spacer(1, 10))
-
-        # 📊 ÉVALUATION
-        elements.append(Paragraph("<b>Évaluation du stage</b>", normal_style))
-        elements.append(Spacer(1, 6))
-
-        evaluation = [
-            "• Compétences techniques solides",
-            "• Sens de l’organisation et du professionnalisme",
-            "• Esprit d’équipe remarquable",
-            "• Excellente capacité d’adaptation"
-        ]
-
-        for item in evaluation:
-            elements.append(Paragraph(item, normal_style))
-
-        elements.append(Spacer(1, 10))
-
-        # 🔢 NUMERO
-        elements.append(Paragraph(
-            f"<b>N° Attestation : {self.code_stagiaire}</b>",
-            center_style
-        ))
-
-        elements.append(Spacer(1, 10))
-
-        # 📍 LIEU
-        elements.append(Paragraph(
-            "Fait à Chicoutimi, Québec (Canada)",
-            center_style
-        ))
-
-        elements.append(Spacer(1, 15))
-
-        # ✍️ SIGNATURE (nom seulement)
-        signature = Paragraph(f"<b>{self.responsable}</b>", center_style)
-
-        # 🔳 QR (infos stagiaire + entreprise)
-        qr_data = f"""
-        HEXAQUEBEC
-        NEQ: 2281156671
-        Nom: {self.stagiaire.nom}
-        Code: {self.code_stagiaire}
-        Vérification: https://hexaquebec.com/verif/{self.code_stagiaire}
-        """
-
-        qr = qrcode.make(qr_data)
-        qr_buffer = BytesIO()
-        qr.save(qr_buffer, format='PNG')
-        qr_buffer.seek(0)
-
-        qr_img = Image(qr_buffer, width=70, height=70)
-
-        bottom_table = Table([
-            [signature, qr_img],
-            [
-                Paragraph("<b>Responsable du stage</b>", center_style),
-                Paragraph("<b>QR Vérification</b>", center_style)
-            ]
-        ], colWidths=[250, 150])
-
-        elements.append(bottom_table)
-
-        # 🧱 DOUBLE BORDURE
-        def draw(canvas, doc):
-            canvas.setStrokeColor(primary)
-
-            canvas.setLineWidth(2)
-            canvas.rect(15, 15, LETTER[0]-30, LETTER[1]-30)
-
-            canvas.setLineWidth(1)
-            canvas.rect(25, 25, LETTER[0]-50, LETTER[1]-50)
-
-        doc.build(elements, onFirstPage=draw)
-
-        pdf = buffer.getvalue()
-        buffer.close()
-
-        return ContentFile(pdf, name=f"attestation_{self.code_stagiaire}.pdf")
-
-    # 💾 SAVE AUTO
     def save(self, *args, **kwargs):
         if not self.code_stagiaire:
             self.generate_code()
-
-        if self.stage_valide and not self.attestation:
-            pdf = self.generer_attestation()
-            self.attestation.save(pdf.name, pdf, save=False)
-
         super().save(*args, **kwargs)
 
     def __str__(self):

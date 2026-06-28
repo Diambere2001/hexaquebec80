@@ -3876,3 +3876,270 @@ def lancer_appel_video_groupe(request):
 
 def a_propos(request):
     return render(request, "a_propos.html")
+
+
+
+
+@login_required(login_url="login")
+def telecharger_attestation(request, profil_id):
+    profil = get_object_or_404(ProfilStagiaire, id=profil_id)
+
+    if not profil.stage_valide:
+        messages.error(request, "Le stage n'est pas encore validé.")
+        return redirect("groupe_stagiaires_admin")
+
+    buffer = BytesIO()
+
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=LETTER,
+        rightMargin=45,
+        leftMargin=45,
+        topMargin=45,
+        bottomMargin=40
+    )
+
+    styles = getSampleStyleSheet()
+
+    bleu = colors.HexColor("#071A3D")
+    bleu2 = colors.HexColor("#0057FF")
+    gris = colors.HexColor("#F4F7FC")
+    texte = colors.HexColor("#1F2937")
+    gold = colors.HexColor("#D4AF37")
+
+    title_style = ParagraphStyle(
+        "TitleModern",
+        parent=styles["Title"],
+        alignment=TA_CENTER,
+        fontSize=22,
+        leading=26,
+        textColor=bleu,
+        spaceAfter=10
+    )
+
+    subtitle_style = ParagraphStyle(
+        "SubtitleModern",
+        parent=styles["Normal"],
+        alignment=TA_CENTER,
+        fontSize=11,
+        leading=16,
+        textColor=texte
+    )
+
+    normal_style = ParagraphStyle(
+        "NormalModern",
+        parent=styles["Normal"],
+        fontSize=11,
+        leading=18,
+        textColor=texte,
+        alignment=TA_CENTER
+    )
+
+    name_style = ParagraphStyle(
+        "NameStyle",
+        parent=styles["Title"],
+        fontSize=20,
+        alignment=TA_CENTER,
+        textColor=bleu2,
+        leading=24
+    )
+
+    small_style = ParagraphStyle(
+        "SmallStyle",
+        parent=styles["Normal"],
+        fontSize=9,
+        alignment=TA_CENTER,
+        textColor=colors.HexColor("#6B7280")
+    )
+
+    elements = []
+
+    # ================= HEADER =================
+    logo_path = os.path.join(settings.STATIC_ROOT, "images/logoHexa.png")
+
+    header_content = []
+
+    if os.path.exists(logo_path):
+        logo = Image(logo_path, width=120, height=60)
+        header_content.append([logo])
+
+    header_content += [
+        [Paragraph("<b>HEXACQUÉBEC</b>", ParagraphStyle(
+            "Company",
+            parent=styles["Title"],
+            fontSize=18,
+            alignment=TA_CENTER,
+            textColor=colors.white
+        ))],
+        [Paragraph(
+            "Développement Web & Mobile • Intelligence Artificielle • Maintenance Informatique",
+            ParagraphStyle(
+                "CompanySub",
+                parent=styles["Normal"],
+                fontSize=9,
+                alignment=TA_CENTER,
+                textColor=colors.white
+            )
+        )],
+    ]
+
+    header = Table(header_content, colWidths=[500])
+    header.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), bleu),
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("TOPPADDING", (0, 0), (-1, -1), 12),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
+        ("BOX", (0, 0), (-1, -1), 1, bleu),
+    ]))
+
+    elements.append(header)
+    elements.append(Spacer(1, 22))
+
+    # ================= TITRE =================
+    elements.append(Paragraph("ATTESTATION DE STAGE", title_style))
+    elements.append(Paragraph("Document officiel délivré par HexaQuébec", subtitle_style))
+
+    elements.append(Spacer(1, 15))
+
+    line = Table([[""]], colWidths=[500])
+    line.setStyle(TableStyle([
+        ("LINEABOVE", (0, 0), (-1, -1), 2, gold),
+    ]))
+    elements.append(line)
+
+    elements.append(Spacer(1, 25))
+
+    # ================= CONTENU =================
+    elements.append(Paragraph("Nous attestons par la présente que :", normal_style))
+    elements.append(Spacer(1, 14))
+
+    elements.append(Paragraph(f"<b>{profil.stagiaire.nom}</b>", name_style))
+    elements.append(Spacer(1, 6))
+
+    elements.append(Paragraph(
+        f"a effectué un stage en <b>{profil.stagiaire.specialite}</b> au sein de notre entreprise.",
+        normal_style
+    ))
+
+    elements.append(Spacer(1, 20))
+
+    date_debut = profil.date_debut.strftime("%d/%m/%Y") if profil.date_debut else ""
+    date_fin = profil.date_fin.strftime("%d/%m/%Y") if profil.date_fin else "En cours"
+
+    infos = Table([
+        ["Code stagiaire", profil.code_stagiaire],
+        ["Période du stage", f"Du {date_debut} au {date_fin}"],
+        ["Lieu", "Chicoutimi, Québec, Canada"],
+        ["Statut", "Stage validé"],
+    ], colWidths=[170, 280])
+
+    infos.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), gris),
+        ("TEXTCOLOR", (0, 0), (0, -1), bleu),
+        ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+        ("FONTNAME", (1, 0), (1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 0), (-1, -1), 10),
+        ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#D9E2F1")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D9E2F1")),
+        ("TOPPADDING", (0, 0), (-1, -1), 10),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+        ("LEFTPADDING", (0, 0), (-1, -1), 12),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+    ]))
+
+    elements.append(infos)
+
+    elements.append(Spacer(1, 22))
+
+    elements.append(Paragraph(
+        "Durant cette période, le stagiaire a fait preuve de sérieux, de professionnalisme, "
+        "d’adaptation et d’engagement dans les missions confiées.",
+        normal_style
+    ))
+
+    elements.append(Spacer(1, 25))
+
+    # ================= ÉVALUATION =================
+    evaluation = Table([
+        ["Compétences techniques", "Très satisfaisant"],
+        ["Organisation", "Très satisfaisant"],
+        ["Esprit d’équipe", "Excellent"],
+        ["Professionnalisme", "Excellent"],
+    ], colWidths=[250, 200])
+
+    evaluation.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), colors.white),
+        ("TEXTCOLOR", (0, 0), (0, -1), bleu),
+        ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+        ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#D9E2F1")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D9E2F1")),
+        ("TOPPADDING", (0, 0), (-1, -1), 9),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
+        ("LEFTPADDING", (0, 0), (-1, -1), 12),
+    ]))
+
+    elements.append(evaluation)
+
+    elements.append(Spacer(1, 30))
+
+    # ================= SIGNATURE =================
+    responsable = profil.responsable or "Responsable HexaQuébec"
+
+    signature_table = Table([
+        [
+            Paragraph(
+                f"Fait à Chicoutimi, Québec<br/><br/><b>{responsable}</b><br/>Responsable du stage",
+                normal_style
+            ),
+            Paragraph(
+                f"<b>N° Attestation</b><br/>{profil.code_stagiaire}<br/><br/>NEQ : 2281156671",
+                small_style
+            )
+        ]
+    ], colWidths=[280, 180])
+
+    signature_table.setStyle(TableStyle([
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("BOX", (1, 0), (1, 0), 1, gold),
+        ("BACKGROUND", (1, 0), (1, 0), colors.HexColor("#FFF8E1")),
+        ("TOPPADDING", (0, 0), (-1, -1), 14),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 14),
+    ]))
+
+    elements.append(signature_table)
+
+    # ================= FOND / BORDURE =================
+    def draw(canvas, doc):
+        width, height = LETTER
+
+        canvas.setFillColor(bleu)
+        canvas.rect(0, height - 18, width, 18, fill=1, stroke=0)
+
+        canvas.setFillColor(bleu2)
+        canvas.rect(0, height - 22, width, 4, fill=1, stroke=0)
+
+        canvas.setStrokeColor(bleu)
+        canvas.setLineWidth(2)
+        canvas.roundRect(20, 20, width - 40, height - 40, 12, stroke=1, fill=0)
+
+        canvas.setStrokeColor(gold)
+        canvas.setLineWidth(1)
+        canvas.roundRect(30, 30, width - 60, height - 60, 8, stroke=1, fill=0)
+
+        canvas.setFillColor(colors.HexColor("#6B7280"))
+        canvas.setFont("Helvetica", 8)
+        canvas.drawCentredString(
+            width / 2,
+            18,
+            "HexaQuébec — Attestation officielle de stage"
+        )
+
+    doc.build(elements, onFirstPage=draw)
+
+    buffer.seek(0)
+
+    response = HttpResponse(buffer, content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="attestation_{profil.code_stagiaire}.pdf"'
+
+    return response

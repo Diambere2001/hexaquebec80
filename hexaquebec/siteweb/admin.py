@@ -491,7 +491,6 @@ class ProfilStagiaireAdmin(admin.ModelAdmin):
         ("📄 Attestation", {
             "fields": (
                 "stage_valide",
-                "attestation",
                 "voir_attestation",
             )
         }),
@@ -507,7 +506,7 @@ class ProfilStagiaireAdmin(admin.ModelAdmin):
     # 🔒 READONLY
     readonly_fields = (
         "code_stagiaire",
-        "attestation",
+       
         "voir_attestation",
         "photo_preview",
         "signature_preview",
