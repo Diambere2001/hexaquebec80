@@ -19,32 +19,44 @@
     --muted:#6B7280;
     --card:#FFFFFF;
     --border:#E5E7EB;
+    --success:#10B981;
+    --warning:#F59E0B;
 }
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,sans-serif;
+    font-family:Arial, sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
     background:var(--bg);
     color:var(--text);
+    overflow-x:hidden;
 }
 
 /* NAVBAR */
-.navbar{
-    background:linear-gradient(135deg,var(--dark),var(--blue));
-    padding:14px 0;
-    box-shadow:0 12px 35px rgba(7,26,61,.22);
-}
 .custom-navbar{
-    background:rgba(7,26,61,.94);
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:999;
+    background:rgba(7,26,61,.92);
     backdrop-filter:blur(18px);
     padding:12px 0;
     border-bottom:1px solid rgba(255,255,255,.12);
-    box-shadow:0 15px 45px rgba(7,26,61,.28);
+    transition:.35s ease;
+}
+
+.custom-navbar.scrolled{
+    padding:8px 0;
+    box-shadow:0 18px 45px rgba(7,26,61,.28);
 }
 
 .nav-container{
@@ -69,7 +81,7 @@ body{
     align-items:center;
     justify-content:center;
     padding:8px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    box-shadow:0 12px 30px rgba(0,0,0,.25);
 }
 
 .logo-img{
@@ -86,15 +98,14 @@ body{
 
 .brand-text strong{
     color:white;
-    font-size:1.2rem;
+    font-size:1.25rem;
     font-weight:900;
 }
 
 .brand-text small{
     color:var(--gold);
-    font-size:.78rem;
+    font-size:.75rem;
     font-weight:800;
-    letter-spacing:.4px;
 }
 
 .nav-menu{
@@ -109,85 +120,136 @@ body{
     font-weight:800;
     font-size:.92rem;
     padding:10px 14px;
-    border-radius:12px;
+    border-radius:14px;
     transition:.3s ease;
 }
 
 .nav-menu a:hover{
-    background:rgba(255,255,255,.10);
+    background:rgba(255,255,255,.12);
     color:white;
 }
 
 .nav-btn{
     background:var(--gold)!important;
     color:#111!important;
-    box-shadow:0 10px 25px rgba(212,175,55,.25);
-}
-
-@media(max-width:768px){
-    .nav-container{
-        gap:15px;
-    }
-
-    .logo-bg{
-        width:54px;
-        height:54px;
-        border-radius:17px;
-    }
-
-    .brand-text strong{
-        font-size:1rem;
-    }
-
-    .brand-text small{
-        font-size:.68rem;
-    }
-
-    .nav-menu{
-        display:none;
-    }
+    box-shadow:0 10px 25px rgba(212,175,55,.28);
 }
 
 /* HERO */
 .hero{
-    padding:140px 20px 90px;
-    background:
-        linear-gradient(135deg,rgba(7,26,61,.96),rgba(0,87,255,.92)),
-        radial-gradient(circle at top right,rgba(212,175,55,.35),transparent 35%);
+    min-height:92vh;
+    padding:150px 20px 90px;
     color:white;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 82% 18%,rgba(212,175,55,.35),transparent 28%),
+        radial-gradient(circle at 10% 80%,rgba(0,87,255,.45),transparent 30%),
+        linear-gradient(135deg,#071A3D,#0057FF);
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size:55px 55px;
+    opacity:.35;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:50px;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.18);
+    font-weight:900;
+    color:#fff;
+    margin-bottom:22px;
 }
 
 .hero h1{
-    font-size:clamp(2.3rem,5vw,4.8rem);
+    font-size:clamp(2.5rem,5vw,5rem);
     font-weight:900;
-    line-height:1.05;
+    line-height:1.04;
     max-width:980px;
+}
+
+.hero h1 span{
+    color:var(--gold);
 }
 
 .hero p{
     max-width:780px;
     color:#e5e7eb;
-    font-size:1.1rem;
+    font-size:1.12rem;
     line-height:1.8;
     margin-top:20px;
 }
 
-.btn-main{
-    background:var(--gold);
-    color:#111;
+.hero-actions{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
+
+.btn-main,
+.btn-light-pro{
     border:none;
-    padding:14px 22px;
-    border-radius:14px;
+    padding:15px 22px;
+    border-radius:16px;
     font-weight:900;
     text-decoration:none;
     display:inline-flex;
     align-items:center;
     gap:10px;
+    transition:.3s ease;
 }
 
-/* SECTIONS */
+.btn-main{
+    background:var(--gold);
+    color:#111;
+    box-shadow:0 18px 40px rgba(212,175,55,.28);
+}
+
+.btn-main:hover{
+    transform:translateY(-4px);
+    color:#111;
+}
+
+.btn-light-pro{
+    color:white;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.20);
+}
+
+.btn-light-pro:hover{
+    background:white;
+    color:var(--dark);
+}
+
+/* COMMON */
+.section-padding{
+    padding:85px 0;
+}
+
+.section-head{
+    max-width:850px;
+    margin-bottom:38px;
+}
+
 .section-title{
-    font-size:clamp(1.8rem,4vw,3rem);
+    font-size:clamp(1.9rem,4vw,3.2rem);
     font-weight:900;
     color:var(--dark);
     margin-bottom:12px;
@@ -195,41 +257,56 @@ body{
 
 .section-subtitle{
     color:var(--muted);
-    max-width:760px;
-    margin-bottom:35px;
+    line-height:1.75;
+    font-size:1.02rem;
 }
 
 /* CARDS */
 .service-card,
 .project-card,
 .stat-card{
-    background:var(--card);
+    background:rgba(255,255,255,.92);
     border:1px solid var(--border);
-    border-radius:26px;
+    border-radius:28px;
     padding:30px;
     height:100%;
-    box-shadow:0 14px 40px rgba(7,26,61,.08);
+    box-shadow:0 18px 45px rgba(7,26,61,.08);
     transition:.35s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.service-card::before,
+.project-card::before{
+    content:"";
+    position:absolute;
+    width:160px;
+    height:160px;
+    right:-70px;
+    top:-70px;
+    background:radial-gradient(circle,rgba(0,87,255,.14),transparent 65%);
 }
 
 .service-card:hover,
 .project-card:hover,
 .stat-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 25px 60px rgba(7,26,61,.16);
+    transform:translateY(-10px);
+    box-shadow:0 30px 70px rgba(7,26,61,.16);
+    border-color:rgba(0,87,255,.25);
 }
 
 .icon-box{
-    width:62px;
-    height:62px;
-    border-radius:20px;
+    width:66px;
+    height:66px;
+    border-radius:22px;
     background:linear-gradient(135deg,var(--dark),var(--blue));
     display:flex;
     align-items:center;
     justify-content:center;
     color:white;
-    font-size:25px;
+    font-size:26px;
     margin-bottom:20px;
+    box-shadow:0 14px 35px rgba(0,87,255,.24);
 }
 
 .service-card h5,
@@ -245,40 +322,79 @@ body{
     line-height:1.7;
 }
 
-/* STATUS */
+/* PROJECT */
 .project-status{
-    display:inline-block;
-    padding:7px 13px;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 14px;
     border-radius:50px;
-    font-size:.8rem;
+    font-size:.78rem;
     font-weight:900;
     margin-bottom:16px;
 }
 
 .done{
-    background:#ecfdf5;
+    background:#ECFDF5;
     color:#047857;
 }
 
 .progress-status{
-    background:#fff7ed;
-    color:#c2410c;
+    background:#FFF7ED;
+    color:#C2410C;
 }
 
 .project-link{
     color:var(--blue);
     font-weight:900;
     text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
 }
 
-/* STATS 90% */
+.project-link:hover{
+    color:var(--dark);
+}
+
+/* FILTERS */
+.filter-box{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.filter-btn{
+    border:none;
+    padding:12px 18px;
+    border-radius:50px;
+    background:white;
+    color:var(--dark);
+    font-weight:900;
+    box-shadow:0 12px 30px rgba(7,26,61,.08);
+    transition:.3s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover{
+    background:linear-gradient(135deg,var(--dark),var(--blue));
+    color:white;
+}
+
+/* STATS */
+.stat-number{
+    font-size:48px;
+    font-weight:900;
+    color:var(--blue);
+}
+
 .quality-circle{
-    width:150px;
-    height:150px;
+    width:155px;
+    height:155px;
     border-radius:50%;
     margin:0 auto 18px;
-    background:
-        conic-gradient(var(--blue) 0deg, #e5e7eb 0deg);
+    background:conic-gradient(var(--blue) 0deg,#e5e7eb 0deg);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -288,8 +404,8 @@ body{
 .quality-circle::before{
     content:"";
     position:absolute;
-    width:118px;
-    height:118px;
+    width:120px;
+    height:120px;
     border-radius:50%;
     background:white;
 }
@@ -302,19 +418,40 @@ body{
     color:var(--dark);
 }
 
-.stat-number{
-    font-size:48px;
+/* PROCESS */
+.process-card{
+    background:white;
+    border-radius:26px;
+    padding:26px;
+    height:100%;
+    border:1px solid var(--border);
+    box-shadow:0 16px 42px rgba(7,26,61,.08);
+}
+
+.step-number{
+    width:46px;
+    height:46px;
+    border-radius:15px;
+    background:linear-gradient(135deg,var(--gold),#FFE08A);
+    color:#111;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     font-weight:900;
-    color:var(--blue);
+    margin-bottom:18px;
 }
 
 /* CTA */
 .cta{
-    background:linear-gradient(135deg,var(--dark),var(--blue));
+    background:
+        radial-gradient(circle at top right,rgba(212,175,55,.30),transparent 30%),
+        linear-gradient(135deg,var(--dark),var(--blue));
     color:white;
-    border-radius:30px;
-    padding:48px;
-    box-shadow:0 25px 70px rgba(7,26,61,.22);
+    border-radius:34px;
+    padding:52px;
+    box-shadow:0 28px 80px rgba(7,26,61,.25);
+    overflow:hidden;
+    position:relative;
 }
 
 .cta p{
@@ -325,12 +462,15 @@ body{
 footer{
     background:var(--dark);
     color:white;
-    padding:50px 0 22px;
-    margin-top:80px;
+    padding:55px 0 24px;
+    margin-top:70px;
 }
 
 .footer-logo-img{
-    height:48px;
+    height:52px;
+    background:white;
+    padding:7px;
+    border-radius:14px;
     margin-bottom:15px;
 }
 
@@ -347,8 +487,8 @@ footer{
 .whatsapp,
 #backTop{
     position:fixed;
-    width:52px;
-    height:52px;
+    width:54px;
+    height:54px;
     border-radius:50%;
     display:flex;
     align-items:center;
@@ -363,6 +503,8 @@ footer{
     background:#25D366;
     color:white;
     font-size:24px;
+    box-shadow:0 15px 35px rgba(37,211,102,.35);
+    animation:pulse 2s infinite;
 }
 
 #backTop{
@@ -372,6 +514,13 @@ footer{
     color:#111;
     cursor:pointer;
     display:none;
+    box-shadow:0 15px 35px rgba(212,175,55,.35);
+}
+
+@keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(37,211,102,.45);}
+    70%{box-shadow:0 0 0 16px rgba(37,211,102,0);}
+    100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}
 }
 
 /* JS REVEAL */
@@ -386,17 +535,182 @@ footer{
     transform:translateY(0);
 }
 
+.project-item.hide{
+    display:none;
+}
+
+@media(max-width:992px){
+    .nav-menu{
+        display:none;
+    }
+}
+
 @media(max-width:768px){
     .hero{
-        padding:120px 15px 65px;
+        min-height:auto;
+        padding:130px 15px 70px;
     }
 
-    .logo-img{
-        height:44px;
+    .logo-bg{
+        width:54px;
+        height:54px;
+    }
+
+    .brand-text strong{
+        font-size:1rem;
+    }
+
+    .brand-text small{
+        font-size:.68rem;
+    }
+
+    .section-padding{
+        padding:60px 0;
     }
 
     .cta{
-        padding:32px 22px;
+        padding:34px 22px;
+        border-radius:26px;
+    }
+}
+
+/* ================================
+   PROJET CERTIFIÉ HEXAQUÉBEC
+================================ */
+.project-title-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:10px;
+}
+
+.project-title-row h5{
+    margin:0;
+}
+
+.verified-project{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:linear-gradient(135deg,#0057FF,#00A3FF);
+    color:#fff;
+    font-size:11px;
+    box-shadow:
+        0 6px 16px rgba(0,87,255,.30),
+        inset 0 0 0 2px rgba(255,255,255,.18);
+    position:relative;
+    cursor:pointer;
+}
+
+.verified-project::after{
+    content:"Projet HexaQuébec";
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 10px);
+    transform:translateX(-50%) translateY(5px);
+    background:#071A3D;
+    color:#fff;
+    padding:7px 10px;
+    border-radius:9px;
+    font-size:.72rem;
+    font-weight:800;
+    white-space:nowrap;
+    opacity:0;
+    visibility:hidden;
+    transition:.25s ease;
+    pointer-events:none;
+    z-index:20;
+}
+
+.verified-project:hover::after{
+    opacity:1;
+    visibility:visible;
+    transform:translateX(-50%) translateY(0);
+}
+
+/* ================================
+   MESSAGE PROJET PROTÉGÉ
+================================ */
+.project-protection{
+    margin-top:18px;
+    padding:13px 14px;
+    border-radius:16px;
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(7,26,61,.06),
+            rgba(0,87,255,.08)
+        );
+
+    border:1px solid rgba(0,87,255,.13);
+}
+
+.project-protection-icon{
+    width:34px;
+    height:34px;
+    border-radius:11px;
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(135deg,#071A3D,#0057FF);
+    color:#fff;
+    font-size:14px;
+
+    box-shadow:0 8px 20px rgba(0,87,255,.20);
+}
+
+.project-protection-content{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.project-protection-content strong{
+    color:#071A3D;
+    font-size:.82rem;
+    font-weight:900;
+}
+
+.project-protection-content span{
+    color:#64748B;
+    font-size:.75rem;
+    line-height:1.45;
+}
+
+/* PETITE ANIMATION */
+.project-card:hover .verified-project{
+    animation:verifiedPulse 1.4s ease infinite;
+}
+
+@keyframes verifiedPulse{
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.12);
+    }
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    .project-protection{
+        padding:12px;
+    }
+
+    .project-protection-content span{
+        font-size:.72rem;
     }
 }
 </style>
@@ -404,11 +718,9 @@ footer{
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar fixed-top custom-navbar">
+<nav class="custom-navbar" id="navbar">
     <div class="container nav-container">
-
-        <a class="navbar-brand logo-box" href="{% url 'home' %}">
+        <a class="logo-box" href="{% url 'home' %}">
             <span class="logo-bg">
                 <img src="{% static 'images/logoHexa.png' %}" class="logo-img" alt="HexaQuébec">
             </span>
@@ -420,175 +732,473 @@ footer{
 
         <div class="nav-menu">
             <a href="#expertise">Expertise</a>
-            <a href="#realises">Réalisés</a>
-            <a href="#encours">En cours</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#process">Méthode</a>
             <a href="#contact" class="nav-btn">Contact</a>
         </div>
-
     </div>
 </nav>
+
 <section class="hero">
-    <div class="container">
-        <h1>Nos projets numériques réalisés avec précision.</h1>
+    <div class="container hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-bolt"></i>
+            Portfolio professionnel HexaQuébec
+        </div>
+
+        <h1>
+            Des projets numériques <span>modernes</span>, rapides et conçus pour attirer vos clients.
+        </h1>
+
         <p>
-            HexaQuébec conçoit des sites web, applications, systèmes de gestion,
-            plateformes e-commerce et solutions numériques professionnelles.
+            HexaQuébec développe des sites web, boutiques en ligne, plateformes de gestion,
+            applications et solutions IA avec une interface professionnelle, claire et performante.
         </p>
 
-        <a href="https://wa.me/15144677377" target="_blank" class="btn-main mt-3">
-            <i class="fa-brands fa-whatsapp"></i>
-            Discuter d’un projet
-        </a>
-    </div>
-</section>
+        <div class="hero-actions">
+            <a href="https://wa.me/15144677377" target="_blank" class="btn-main">
+                <i class="fa-brands fa-whatsapp"></i>
+                Discuter d’un projet
+            </a>
 
-<section class="container py-5 reveal">
-    <h2 class="section-title">Notre expertise</h2>
-    <p class="section-subtitle">
-        Des solutions modernes, sobres, rapides et adaptées aux entreprises.
-    </p>
-
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="service-card">
-                <div class="icon-box"><i class="fa-solid fa-code"></i></div>
-                <h5>Développement web</h5>
-                <p>Sites vitrines, plateformes professionnelles, dashboards et portails clients.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="service-card">
-                <div class="icon-box"><i class="fa-solid fa-cart-shopping"></i></div>
-                <h5>E-commerce</h5>
-                <p>Boutiques en ligne avec panier, paiement, commandes, factures et administration.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="service-card">
-                <div class="icon-box"><i class="fa-solid fa-robot"></i></div>
-                <h5>Intégration IA</h5>
-                <p>Assistants intelligents, automatisation et solutions digitales avancées.</p>
-            </div>
+            <a href="#portfolio" class="btn-light-pro">
+                <i class="fa-solid fa-layer-group"></i>
+                Voir nos projets
+            </a>
         </div>
     </div>
 </section>
 
-<section class="container py-5 reveal">
-    <h2 class="section-title">Nos projets réalisés</h2>
-    <p class="section-subtitle">Quelques projets déjà conçus par HexaQuébec.</p>
-
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="project-card">
-                <span class="project-status done">Réalisé</span>
-                <h5>GafouShop</h5>
-                <p>Boutique e-commerce avec produits, panier, paiement en ligne et espace administration.</p>
-                <a href="https://www.gafoushop.com/" target="_blank" class="project-link">
-                    Voir le projet <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-            </div>
+<section class="section-padding reveal" id="expertise">
+    <div class="container">
+        <div class="section-head">
+            <h2 class="section-title">Notre expertise</h2>
+            <p class="section-subtitle">
+                Nous créons des solutions sobres, modernes et adaptées aux entreprises qui veulent
+                une présence digitale professionnelle.
+            </p>
         </div>
 
-        <div class="col-md-4">
-            <div class="project-card">
-                <span class="project-status done">Réalisé</span>
-                <h5>HexaQuébec</h5>
-                <p>Site professionnel pour présenter les services numériques et recevoir les demandes clients.</p>
-                <a href="https://www.hexaquebec.com/" target="_blank" class="project-link">
-                    Voir le projet <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="project-card">
-                <span class="project-status done">Réalisé</span>
-                <h5>Gestion immobilière</h5>
-                <p>Système de gestion des bâtiments, locataires, locations, paiements et reçus PDF.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container py-5 reveal">
-    <h2 class="section-title">Nos projets en cours</h2>
-    <p class="section-subtitle">Des solutions en développement pour des besoins concrets.</p>
-
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="project-card">
-                <span class="project-status progress-status">En cours</span>
-                <h5>AfroFans</h5>
-                <p>Plateforme pour talents africains avec vidéos, profils, fans, dons et événements.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="project-card">
-                <span class="project-status progress-status">En cours</span>
-                <h5>Intervention+</h5>
-                <p>Solution numérique avec IA pour accompagner certaines interventions sensibles.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="project-card">
-                <span class="project-status progress-status">En cours</span>
-                <h5>Diam AI</h5>
-                <p>Assistant intelligent HexaQuébec pour automatiser et améliorer l’expérience client.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container py-5 reveal">
-    <h2 class="section-title text-center">Qualité & performance</h2>
-
-    <div class="row g-4 justify-content-center">
-        <div class="col-md-4">
-            <div class="stat-card text-center">
-                <div class="stat-number counter" data-target="25">0</div>
-                <p>Sites et plateformes</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="stat-card text-center">
-                <div class="stat-number counter" data-target="12">0</div>
-                <p>Applications et systèmes</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="stat-card text-center">
-                <div class="quality-circle" id="qualityCircle">
-                    <div class="quality-value">
-                        <span id="qualityPercent">0</span>%
-                    </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="icon-box"><i class="fa-solid fa-code"></i></div>
+                    <h5>Développement web</h5>
+                    <p>Sites vitrines, plateformes professionnelles, dashboards, portails clients et systèmes sur mesure.</p>
                 </div>
-                <p>Qualité visée sur chaque projet</p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="icon-box"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <h5>E-commerce</h5>
+                    <p>Boutiques en ligne avec panier, paiement sécurisé, commandes, factures PDF et administration.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="icon-box"><i class="fa-solid fa-robot"></i></div>
+                    <h5>Intégration IA</h5>
+                    <p>Assistants intelligents, automatisation, chatbot et amélioration de l’expérience client.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="container py-5 reveal">
-    <div class="cta">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h2 class="fw-bold mb-3">Vous avez un projet à développer ?</h2>
-                <p class="mb-md-0">
-                    HexaQuébec vous accompagne de l’idée jusqu’au déploiement.
-                </p>
+<section class="section-padding reveal" id="portfolio">
+    <div class="container">
+        <div class="section-head">
+            <h2 class="section-title">Nos projets</h2>
+            <p class="section-subtitle">
+                Une sélection de projets réalisés et en cours de développement chez HexaQuébec.
+            </p>
+        </div>
+
+        <div class="filter-box">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="realise">Réalisés</button>
+            <button class="filter-btn" data-filter="encours">En cours</button>
+        </div>
+<div class="row g-4">
+
+    <!-- =================================
+         GAFOUSHOP
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="realise">
+        <div class="project-card">
+
+            <span class="project-status done">
+                <i class="fa-solid fa-check"></i>
+                Réalisé
+            </span>
+
+            <div class="project-title-row">
+                <h5>GafouShop</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
             </div>
 
-            <div class="col-md-4 text-md-end">
-                <a href="https://wa.me/15144677377" target="_blank" class="btn-main">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    Contacter
-                </a>
+            <p>
+                Boutique e-commerce complète avec produits, panier,
+                paiement en ligne, commandes et espace administration.
+            </p>
+
+            <a
+                href="https://www.gafoushop.com/"
+                target="_blank"
+                class="project-link"
+            >
+                Voir le projet
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+
+        </div>
+    </div>
+
+
+    <!-- =================================
+         HEXAQUÉBEC
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="realise">
+        <div class="project-card">
+
+            <span class="project-status done">
+                <i class="fa-solid fa-check"></i>
+                Réalisé
+            </span>
+
+            <div class="project-title-row">
+                <h5>HexaQuébec</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <p>
+                Site professionnel pour présenter les services numériques,
+                portfolio, annonces et demandes clients.
+            </p>
+
+            <a
+                href="https://www.hexaquebec.com/"
+                target="_blank"
+                class="project-link"
+            >
+                Voir le projet
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+
+        </div>
+    </div>
+
+
+    <!-- =================================
+         GESTION IMMOBILIÈRE
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="realise">
+        <div class="project-card">
+
+            <span class="project-status done">
+                <i class="fa-solid fa-check"></i>
+                Réalisé
+            </span>
+
+            <div class="project-title-row">
+                <h5>Gestion immobilière</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <p>
+                Système de gestion des bâtiments, propriétaires,
+                locataires, paiements, factures et reçus PDF.
+            </p>
+
+        </div>
+    </div>
+
+
+    <!-- =================================
+         AFROFANS
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="encours">
+        <div class="project-card">
+
+            <span class="project-status progress-status">
+                <i class="fa-solid fa-spinner"></i>
+                En cours
+            </span>
+
+            <div class="project-title-row">
+                <h5>AfroFans</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <p>
+                Plateforme numérique dédiée à la visibilité
+                et à la valorisation des talents africains.
+            </p>
+
+            <div class="project-protection">
+                <div class="project-protection-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div class="project-protection-content">
+                    <strong>Projet protégé</strong>
+                    <span>
+                        Concept et développement portés par HexaQuébec.
+                        Informations détaillées non publiques.
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =================================
+         INTERVENTION+
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="encours">
+        <div class="project-card">
+
+            <span class="project-status progress-status">
+                <i class="fa-solid fa-spinner"></i>
+                En cours
+            </span>
+
+            <div class="project-title-row">
+                <h5>Intervention+</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <p>
+                Solution numérique innovante intégrant des technologies
+                intelligentes pour accompagner certains contextes d’intervention.
+            </p>
+
+            <div class="project-protection">
+                <div class="project-protection-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div class="project-protection-content">
+                    <strong>Projet protégé</strong>
+                    <span>
+                        Concept, architecture fonctionnelle et développement
+                        portés par HexaQuébec.
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =================================
+         MALI JAGO SIRA
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="encours">
+        <div class="project-card">
+
+            <span class="project-status progress-status">
+                <i class="fa-solid fa-spinner"></i>
+                En cours
+            </span>
+
+            <div class="project-title-row">
+                <h5>Mali Jago Sira</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <p>
+                Marketplace numérique multi-vendeurs en développement
+                pour le marché malien.
+            </p>
+
+            <div class="project-protection">
+                <div class="project-protection-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div class="project-protection-content">
+                    <strong>Projet protégé</strong>
+                    <span>
+                        Projet porté technologiquement par HexaQuébec.
+                        Architecture et fonctionnalités détaillées confidentielles.
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =================================
+         ZENDOAFRIQUE
+    ================================== -->
+    <div class="col-md-4 project-item" data-category="encours">
+        <div class="project-card">
+
+            <span class="project-status progress-status">
+                <i class="fa-solid fa-spinner"></i>
+                En cours
+            </span>
+
+            <div class="project-title-row">
+                <h5>ZendoAfrique</h5>
+
+                <span class="verified-project">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <p>
+                Plateforme web e-commerce moderne en développement,
+                pensée pour une expérience d’achat fluide et professionnelle.
+            </p>
+
+            <div class="project-protection">
+                <div class="project-protection-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div class="project-protection-content">
+                    <strong>Projet protégé</strong>
+                    <span>
+                        Conception numérique et développement portés
+                        par HexaQuébec.
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+    </div>
+</section>
+
+<section class="section-padding reveal">
+    <div class="container">
+        <div class="section-head text-center mx-auto">
+            <h2 class="section-title">Qualité & performance</h2>
+            <p class="section-subtitle">
+                Nous visons une expérience rapide, propre, responsive et professionnelle.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="stat-card text-center">
+                    <div class="stat-number counter" data-target="25">0</div>
+                    <p>Sites et plateformes</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="stat-card text-center">
+                    <div class="stat-number counter" data-target="12">0</div>
+                    <p>Applications et systèmes</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="stat-card text-center">
+                    <div class="quality-circle" id="qualityCircle">
+                        <div class="quality-value">
+                            <span id="qualityPercent">0</span>%
+                        </div>
+                    </div>
+                    <p>Qualité visée sur chaque projet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding reveal" id="process">
+    <div class="container">
+        <div class="section-head">
+            <h2 class="section-title">Notre méthode</h2>
+            <p class="section-subtitle">
+                Une méthode claire pour transformer votre idée en solution numérique professionnelle.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="process-card">
+                    <div class="step-number">01</div>
+                    <h5 class="fw-bold">Analyse</h5>
+                    <p class="text-muted">Compréhension du besoin, objectifs, public cible et fonctionnalités.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <div class="step-number">02</div>
+                    <h5 class="fw-bold">UI/UX</h5>
+                    <p class="text-muted">Création d’une interface moderne, simple, claire et attirante.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <div class="step-number">03</div>
+                    <h5 class="fw-bold">Développement</h5>
+                    <p class="text-muted">Intégration technique, base de données, sécurité et administration.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <div class="step-number">04</div>
+                    <h5 class="fw-bold">Déploiement</h5>
+                    <p class="text-muted">Mise en ligne, tests, optimisation et accompagnement après livraison.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding reveal" id="contact">
+    <div class="container">
+        <div class="cta">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="fw-bold mb-3">Vous avez un projet à développer ?</h2>
+                    <p class="mb-md-0">
+                        HexaQuébec vous accompagne de l’idée jusqu’au déploiement avec une solution propre,
+                        moderne et adaptée à votre entreprise.
+                    </p>
+                </div>
+
+                <div class="col-md-4 text-md-end">
+                    <a href="https://wa.me/15144677377" target="_blank" class="btn-main">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        Contacter
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -608,8 +1218,7 @@ footer{
             <div class="col-md-4 mb-4">
                 <img src="{% static 'images/logoHexa.png' %}" class="footer-logo-img" alt="HexaQuébec">
                 <p class="footer-text">
-                    Développement web, applications mobiles, e-commerce,
-                    IA et solutions numériques sur mesure.
+                    Développement web, applications mobiles, e-commerce, IA et solutions numériques sur mesure.
                 </p>
             </div>
 
@@ -638,10 +1247,22 @@ footer{
 </footer>
 
 <script>
+/* NAVBAR SCROLL */
+const navbar = document.getElementById("navbar");
+
+window.addEventListener("scroll", function(){
+    if(window.scrollY > 70){
+        navbar.classList.add("scrolled");
+    }else{
+        navbar.classList.remove("scrolled");
+    }
+});
+
+/* REVEAL ANIMATION */
 const revealElements = document.querySelectorAll(".reveal");
 
 function revealOnScroll(){
-    revealElements.forEach(el=>{
+    revealElements.forEach(function(el){
         const top = el.getBoundingClientRect().top;
         if(top < window.innerHeight - 80){
             el.classList.add("active");
@@ -652,12 +1273,39 @@ function revealOnScroll(){
 window.addEventListener("scroll", revealOnScroll);
 window.addEventListener("load", revealOnScroll);
 
-/* COMPTEURS */
+/* FILTER PORTFOLIO */
+const filterButtons = document.querySelectorAll(".filter-btn");
+const projectItems = document.querySelectorAll(".project-item");
+
+filterButtons.forEach(function(button){
+    button.addEventListener("click", function(){
+        filterButtons.forEach(function(btn){
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const filter = button.getAttribute("data-filter");
+
+        projectItems.forEach(function(item){
+            const category = item.getAttribute("data-category");
+
+            if(filter === "all" || filter === category){
+                item.classList.remove("hide");
+                item.style.animation = "fadeIn .45s ease";
+            }else{
+                item.classList.add("hide");
+            }
+        });
+    });
+});
+
+/* COUNTERS */
 const counters = document.querySelectorAll(".counter");
 let countersStarted = false;
 
 function startCounters(){
-    if(countersStarted) return;
+    if(countersStarted || counters.length === 0) return;
 
     const section = counters[0].closest("section");
     const top = section.getBoundingClientRect().top;
@@ -665,12 +1313,12 @@ function startCounters(){
     if(top < window.innerHeight - 80){
         countersStarted = true;
 
-        counters.forEach(counter=>{
+        counters.forEach(function(counter){
             let value = 0;
             const target = parseInt(counter.dataset.target);
 
             function animate(){
-                value += Math.ceil(target / 80);
+                value += Math.ceil(target / 90);
 
                 if(value < target){
                     counter.textContent = value;
@@ -685,7 +1333,7 @@ function startCounters(){
     }
 }
 
-/* ANIMATION 90% */
+/* QUALITY CIRCLE */
 let qualityStarted = false;
 
 function animateQuality(){
@@ -706,7 +1354,6 @@ function animateQuality(){
 
         function update(){
             value++;
-
             const degree = value * 3.6;
 
             circle.style.background =
@@ -723,12 +1370,12 @@ function animateQuality(){
     }
 }
 
-window.addEventListener("scroll", ()=>{
+window.addEventListener("scroll", function(){
     startCounters();
     animateQuality();
 });
 
-window.addEventListener("load", ()=>{
+window.addEventListener("load", function(){
     startCounters();
     animateQuality();
 });
@@ -736,16 +1383,30 @@ window.addEventListener("load", ()=>{
 /* BACK TOP */
 const backTop = document.getElementById("backTop");
 
-window.addEventListener("scroll", ()=>{
-    backTop.style.display = window.scrollY > 400 ? "flex" : "none";
+window.addEventListener("scroll", function(){
+    if(window.scrollY > 400){
+        backTop.style.display = "flex";
+    }else{
+        backTop.style.display = "none";
+    }
 });
 
-backTop.addEventListener("click", ()=>{
+backTop.addEventListener("click", function(){
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
 });
+
+/* FADE FILTER */
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(16px);}
+    to{opacity:1; transform:translateY(0);}
+}
+`;
+document.head.appendChild(style);
 </script>
 
 </body>

@@ -4788,6 +4788,8 @@ document.addEventListener("DOMContentLoaded", function(){
     </div>
 </section>
 
+
+
 <section class="section-block affiche-section">
     <div class="container">
 
@@ -4829,6 +4831,173 @@ document.addEventListener("DOMContentLoaded", function(){
 
     </div>
 </section>
+
+<style>
+.affiche-slider{
+    position:relative;
+    overflow:hidden;
+    padding:35px 0;
+}
+
+.slides-wrapper{
+    display:flex;
+    gap:28px;
+    will-change:transform;
+}
+
+.slide{
+    min-width:320px;
+    height:430px;
+    border-radius:28px;
+    overflow:hidden;
+    position:relative;
+    background:#fff;
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
+    transform:translateY(60px) scale(.92);
+    opacity:0;
+    transition:
+        transform .9s cubic-bezier(.2,1,.3,1),
+        opacity .9s ease,
+        filter .9s ease;
+    filter:blur(6px);
+}
+
+.slide.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    filter:blur(0);
+}
+
+.slide::before{
+    content:"";
+    position:absolute;
+    top:-120px;
+    left:-80px;
+    width:260px;
+    height:260px;
+    border:4px solid rgba(0,87,255,.45);
+    border-radius:45% 55% 65% 35%;
+    animation:curveMove 5s ease-in-out infinite;
+    z-index:2;
+}
+
+.slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform 1.2s ease;
+}
+
+.slide.show img{
+    transform:scale(1.08);
+}
+
+.slide-content{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:18px;
+    padding:18px;
+    border-radius:20px;
+    background:rgba(7,26,61,.72);
+    backdrop-filter:blur(12px);
+    color:white;
+    transform:translateY(35px);
+    opacity:0;
+    transition:.8s ease .35s;
+}
+
+.slide.show .slide-content{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.slide-content h5{
+    margin:0;
+    font-size:20px;
+    font-weight:800;
+}
+
+@keyframes curveMove{
+    0%{
+        transform:translate(0,0) rotate(0deg);
+        border-radius:45% 55% 65% 35%;
+    }
+    50%{
+        transform:translate(70px,55px) rotate(160deg);
+        border-radius:65% 35% 45% 55%;
+    }
+    100%{
+        transform:translate(0,0) rotate(360deg);
+        border-radius:45% 55% 65% 35%;
+    }
+}
+
+@media(max-width:768px){
+    .slide{
+        min-width:260px;
+        height:360px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const wrapper = document.querySelector(".slides-wrapper");
+    const slides = document.querySelectorAll(".slide");
+
+    if(!wrapper || slides.length === 0) return;
+
+    let index = 0;
+    let slideWidth = 0;
+
+    function updateWidth(){
+        slideWidth = slides[0].offsetWidth + 28;
+    }
+
+    function animateSlides(){
+        slides.forEach(slide => slide.classList.remove("show"));
+
+        const activeSlides = [
+            index,
+            index + 1,
+            index + 2
+        ];
+
+        activeSlides.forEach((i, delayIndex) => {
+            const slide = slides[i % slides.length];
+
+            setTimeout(() => {
+                slide.classList.add("show");
+            }, delayIndex * 260);
+        });
+
+        wrapper.style.transition = "transform 1s cubic-bezier(.2,1,.3,1)";
+        wrapper.style.transform = `translateX(-${index * slideWidth}px)`;
+
+        index++;
+
+        if(index >= slides.length / 2){
+            setTimeout(() => {
+                wrapper.style.transition = "none";
+                index = 0;
+                wrapper.style.transform = "translateX(0)";
+            }, 1000);
+        }
+    }
+
+    updateWidth();
+    animateSlides();
+
+    setInterval(animateSlides, 3200);
+
+    window.addEventListener("resize", () => {
+        updateWidth();
+    });
+
+});
+</script>
 <div id="diamPopup" class="diam-popup">
     <div class="diam-popup-card">
 
