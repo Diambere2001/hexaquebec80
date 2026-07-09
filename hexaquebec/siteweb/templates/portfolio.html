@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,252 +6,355 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portfolio | HexaQuébec</title>
 
-<!-- LIBS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
 <style>
 :root{
-    --bg:#050816;
-    --card:#0f172a;
-    --glass:rgba(255,255,255,.07);
-    --border:rgba(255,255,255,.10);
-    --text:#f8fafc;
-    --muted:#cbd5e1;
-    --gold:#d4af37;
-    --blue:#00d4ff;
-    --purple:#7c5cff;
+    --dark:#071A3D;
+    --blue:#0057FF;
+    --gold:#D4AF37;
+    --bg:#F4F7FC;
+    --text:#1F2937;
+    --muted:#6B7280;
+    --card:#FFFFFF;
+    --border:#E5E7EB;
 }
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 body{
-    background:
-    radial-gradient(circle at top left,rgba(124,92,255,.22),transparent 35%),
-    radial-gradient(circle at bottom right,rgba(0,212,255,.18),transparent 35%),
-    linear-gradient(135deg,#050816,#0b132b);
+    background:var(--bg);
     color:var(--text);
-    overflow-x:hidden;
 }
 
 /* NAVBAR */
 .navbar{
-    background:rgba(5,8,22,.88);
+    background:linear-gradient(135deg,var(--dark),var(--blue));
+    padding:14px 0;
+    box-shadow:0 12px 35px rgba(7,26,61,.22);
+}
+.custom-navbar{
+    background:rgba(7,26,61,.94);
     backdrop-filter:blur(18px);
-    border-bottom:1px solid var(--border);
-    padding:16px 0;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    box-shadow:0 15px 45px rgba(7,26,61,.28);
 }
 
-.navbar-brand{
-    color:var(--gold)!important;
-    font-size:1.5rem;
+.nav-container{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo-box{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    text-decoration:none;
+}
+
+.logo-bg{
+    width:62px;
+    height:62px;
+    border-radius:20px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.logo-img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+.brand-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1.1;
+}
+
+.brand-text strong{
+    color:white;
+    font-size:1.2rem;
     font-weight:900;
-    letter-spacing:.5px;
+}
+
+.brand-text small{
+    color:var(--gold);
+    font-size:.78rem;
+    font-weight:800;
+    letter-spacing:.4px;
+}
+
+.nav-menu{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav-menu a{
+    color:#e5e7eb;
+    text-decoration:none;
+    font-weight:800;
+    font-size:.92rem;
+    padding:10px 14px;
+    border-radius:12px;
+    transition:.3s ease;
+}
+
+.nav-menu a:hover{
+    background:rgba(255,255,255,.10);
+    color:white;
+}
+
+.nav-btn{
+    background:var(--gold)!important;
+    color:#111!important;
+    box-shadow:0 10px 25px rgba(212,175,55,.25);
+}
+
+@media(max-width:768px){
+    .nav-container{
+        gap:15px;
+    }
+
+    .logo-bg{
+        width:54px;
+        height:54px;
+        border-radius:17px;
+    }
+
+    .brand-text strong{
+        font-size:1rem;
+    }
+
+    .brand-text small{
+        font-size:.68rem;
+    }
+
+    .nav-menu{
+        display:none;
+    }
 }
 
 /* HERO */
 .hero{
-    min-height:60vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:120px 20px 70px;
+    padding:140px 20px 90px;
+    background:
+        linear-gradient(135deg,rgba(7,26,61,.96),rgba(0,87,255,.92)),
+        radial-gradient(circle at top right,rgba(212,175,55,.35),transparent 35%);
+    color:white;
 }
 
 .hero h1{
-    font-size:clamp(2.4rem,6vw,5rem);
+    font-size:clamp(2.3rem,5vw,4.8rem);
     font-weight:900;
     line-height:1.05;
-    margin-bottom:25px;
-    background:linear-gradient(to right,#fff,#8be9ff,#d4af37);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+    max-width:980px;
 }
 
 .hero p{
     max-width:780px;
-    color:var(--muted);
+    color:#e5e7eb;
     font-size:1.1rem;
-    line-height:1.9;
+    line-height:1.8;
+    margin-top:20px;
 }
 
-/* TITRES */
-.section-title{
-    text-align:center;
-    font-size:clamp(2rem,4vw,3.5rem);
+.btn-main{
+    background:var(--gold);
+    color:#111;
+    border:none;
+    padding:14px 22px;
+    border-radius:14px;
     font-weight:900;
-    margin-bottom:45px;
-    background:linear-gradient(to right,var(--gold),var(--blue));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-/* BOX SERVICES */
-.portfolio-box{
-    background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));
-    border:1px solid var(--border);
-    border-radius:28px;
-    padding:35px 25px;
-    height:100%;
-    text-align:center;
-    backdrop-filter:blur(18px);
-    transition:.4s ease;
-    position:relative;
-    overflow:hidden;
-}
-
-.portfolio-box::before{
-    content:"";
-    position:absolute;
-    inset:-2px;
-    background:linear-gradient(135deg,transparent,var(--blue),transparent);
-    opacity:0;
-    transition:.4s;
-    z-index:-1;
-}
-
-.portfolio-box:hover{
-    transform:translateY(-10px);
-    box-shadow:0 25px 60px rgba(0,0,0,.45);
-}
-
-.portfolio-box:hover::before{
-    opacity:.25;
-}
-
-.portfolio-box .icon{
-    width:78px;
-    height:78px;
-    margin:0 auto 22px;
-    border-radius:24px;
-    display:flex;
+    text-decoration:none;
+    display:inline-flex;
     align-items:center;
-    justify-content:center;
-    font-size:32px;
-    color:white;
-    background:linear-gradient(135deg,var(--purple),var(--blue));
-    box-shadow:0 15px 35px rgba(0,212,255,.25);
+    gap:10px;
 }
 
-.portfolio-box h5{
-    font-weight:800;
+/* SECTIONS */
+.section-title{
+    font-size:clamp(1.8rem,4vw,3rem);
+    font-weight:900;
+    color:var(--dark);
     margin-bottom:12px;
 }
 
-.portfolio-box p{
+.section-subtitle{
+    color:var(--muted);
+    max-width:760px;
+    margin-bottom:35px;
+}
+
+/* CARDS */
+.service-card,
+.project-card,
+.stat-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:26px;
+    padding:30px;
+    height:100%;
+    box-shadow:0 14px 40px rgba(7,26,61,.08);
+    transition:.35s ease;
+}
+
+.service-card:hover,
+.project-card:hover,
+.stat-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 25px 60px rgba(7,26,61,.16);
+}
+
+.icon-box{
+    width:62px;
+    height:62px;
+    border-radius:20px;
+    background:linear-gradient(135deg,var(--dark),var(--blue));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:25px;
+    margin-bottom:20px;
+}
+
+.service-card h5,
+.project-card h5{
+    color:var(--dark);
+    font-weight:900;
+    margin-bottom:10px;
+}
+
+.service-card p,
+.project-card p{
     color:var(--muted);
     line-height:1.7;
 }
 
-/* GALLERY */
-.gallery{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:28px;
-}
-
-.project-card{
-    position:relative;
-    overflow:hidden;
-    border-radius:30px;
-    min-height:360px;
-    background:#111827;
-    border:1px solid var(--border);
-    box-shadow:0 20px 45px rgba(0,0,0,.35);
-    transition:.45s ease;
-}
-
-.project-card:hover{
-    transform:translateY(-12px) scale(1.02);
-    box-shadow:0 30px 70px rgba(0,0,0,.55);
-}
-
-.project-card img{
-    width:100%;
-    height:360px;
-    object-fit:cover;
-    transition:.6s ease;
-}
-
-.project-card:hover img{
-    transform:scale(1.12);
-}
-
-.project-overlay{
-    position:absolute;
-    inset:auto 0 0 0;
-    padding:28px;
-    background:linear-gradient(transparent,rgba(0,0,0,.92));
-    transform:translateY(35%);
-    transition:.45s ease;
-}
-
-.project-card:hover .project-overlay{
-    transform:translateY(0);
-}
-
-.project-overlay h5{
-    font-size:1.25rem;
-    font-weight:800;
-}
-
-.project-overlay i{
-    color:var(--gold);
-}
-
-.price{
-    color:var(--gold);
+/* STATUS */
+.project-status{
+    display:inline-block;
+    padding:7px 13px;
+    border-radius:50px;
+    font-size:.8rem;
     font-weight:900;
-    font-size:1.1rem;
+    margin-bottom:16px;
 }
 
-/* BUTTONS */
-.btn-warning{
-    background:linear-gradient(135deg,var(--gold),#ffb703);
-    border:none;
-    color:#111;
-    font-weight:800;
-    border-radius:14px;
-    padding:10px 16px;
+.done{
+    background:#ecfdf5;
+    color:#047857;
 }
 
-.btn-success{
-    border-radius:14px;
-    font-weight:800;
-    padding:13px;
+.progress-status{
+    background:#fff7ed;
+    color:#c2410c;
 }
 
-/* MODAL */
-.modal-content{
-    background:#0f172a!important;
-    border:1px solid var(--border)!important;
-    border-radius:28px!important;
-    box-shadow:0 30px 80px rgba(0,0,0,.65);
+.project-link{
+    color:var(--blue);
+    font-weight:900;
+    text-decoration:none;
 }
 
-/* WHATSAPP */
+/* STATS 90% */
+.quality-circle{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    margin:0 auto 18px;
+    background:
+        conic-gradient(var(--blue) 0deg, #e5e7eb 0deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.quality-circle::before{
+    content:"";
+    position:absolute;
+    width:118px;
+    height:118px;
+    border-radius:50%;
+    background:white;
+}
+
+.quality-value{
+    position:relative;
+    z-index:2;
+    font-size:38px;
+    font-weight:900;
+    color:var(--dark);
+}
+
+.stat-number{
+    font-size:48px;
+    font-weight:900;
+    color:var(--blue);
+}
+
+/* CTA */
+.cta{
+    background:linear-gradient(135deg,var(--dark),var(--blue));
+    color:white;
+    border-radius:30px;
+    padding:48px;
+    box-shadow:0 25px 70px rgba(7,26,61,.22);
+}
+
+.cta p{
+    color:#e5e7eb;
+}
+
+/* FOOTER */
+footer{
+    background:var(--dark);
+    color:white;
+    padding:50px 0 22px;
+    margin-top:80px;
+}
+
+.footer-logo-img{
+    height:48px;
+    margin-bottom:15px;
+}
+
+.footer-text,
+.footer-link{
+    color:#cbd5e1;
+}
+
+.footer-link{
+    margin-bottom:8px;
+}
+
+/* FLOAT */
 .whatsapp,
 #backTop{
     position:fixed;
-    width:55px;
-    height:55px;
+    width:52px;
+    height:52px;
     border-radius:50%;
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:9999;
-    box-shadow:0 15px 35px rgba(0,0,0,.4);
-    transition:.3s;
+    z-index:999;
+    text-decoration:none;
 }
 
 .whatsapp{
@@ -258,725 +362,391 @@ body{
     bottom:22px;
     background:#25D366;
     color:white;
-    font-size:25px;
+    font-size:24px;
 }
 
 #backTop{
     right:22px;
     bottom:22px;
-    background:linear-gradient(135deg,var(--gold),#ffb703);
+    background:var(--gold);
     color:#111;
     cursor:pointer;
+    display:none;
 }
 
-.whatsapp:hover,
-#backTop:hover{
-    transform:translateY(-6px) scale(1.05);
+/* JS REVEAL */
+.reveal{
+    opacity:0;
+    transform:translateY(35px);
+    transition:.8s ease;
 }
 
-/* FOOTER */
-.footer-modern{
-    background:#040611;
-    border-top:1px solid var(--border);
-    padding:70px 20px 30px;
-    margin-top:80px;
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
 }
 
-.footer-logo{
-    color:var(--gold);
-    font-weight:900;
-    font-size:1.8rem;
-}
-
-.footer-title{
-    color:var(--gold);
-    font-weight:800;
-    margin-bottom:18px;
-}
-
-.footer-text,
-.footer-links li,
-.footer-copy{
-    color:var(--muted);
-}
-
-.footer-links{
-    list-style:none;
-    padding:0;
-}
-
-.footer-links li{
-    margin-bottom:10px;
-    transition:.3s;
-}
-
-.footer-links li:hover{
-    color:var(--gold);
-    transform:translateX(6px);
-}
-
-.footer-divider{
-    border-color:rgba(255,255,255,.12);
-}
-
-/* MOBILE */
 @media(max-width:768px){
-
     .hero{
-        padding:110px 15px 45px;
-        min-height:auto;
+        padding:120px 15px 65px;
     }
 
-    .hero p{
-        font-size:.95rem;
+    .logo-img{
+        height:44px;
     }
 
-    .portfolio-box{
-        padding:28px 20px;
-        border-radius:24px;
-    }
-
-    .project-card,
-    .project-card img{
-        height:330px;
-        min-height:330px;
-    }
-
-    .project-overlay{
-        transform:translateY(0);
-        padding:22px;
-    }
-
-    .whatsapp,
-    #backTop{
-        width:50px;
-        height:50px;
-    }
-}
-
-/* ======================================================
-   CONTACT ICONS FOOTER
-====================================================== */
-
-.contact-item{
-
-    display:flex;
-    align-items:center;
-    gap:15px;
-
-    margin-bottom:18px;
-
-    padding:14px 16px;
-
-    border-radius:18px;
-
-    background:
-    rgba(255,255,255,0.04);
-
-    border:
-    1px solid rgba(255,255,255,0.06);
-
-    transition:.4s ease;
-
-    backdrop-filter:blur(12px);
-}
-
-.contact-item:hover{
-
-    transform:translateX(8px);
-
-    background:
-    rgba(255,255,255,0.07);
-
-    box-shadow:
-    0 12px 30px rgba(0,0,0,0.35);
-}
-
-.contact-icon{
-
-    width:52px;
-    height:52px;
-
-    border-radius:18px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:#fff;
-
-    font-size:20px;
-
-    position:relative;
-
-    overflow:hidden;
-
-    animation:floatIcon 3s ease-in-out infinite;
-}
-
-/* LOCATION */
-
-.location-icon{
-
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
-
-    box-shadow:
-    0 10px 25px rgba(124,92,255,.35);
-}
-
-/* EMAIL */
-
-.email-icon{
-
-    background:
-    linear-gradient(
-        135deg,
-        #ff6b6b,
-        #ffb703
-    );
-
-    box-shadow:
-    0 10px 25px rgba(255,107,107,.35);
-}
-
-/* PHONE */
-
-.phone-icon{
-
-    background:
-    linear-gradient(
-        135deg,
-        #00c853,
-        #25D366
-    );
-
-    box-shadow:
-    0 10px 25px rgba(37,211,102,.35);
-}
-
-/* FLOAT */
-
-@keyframes floatIcon{
-
-    0%,100%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-6px);
-    }
-}
-
-/* ICON GLOW */
-
-.contact-icon::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:120%;
-    height:120%;
-
-    background:
-    linear-gradient(
-        120deg,
-        transparent,
-        rgba(255,255,255,.45),
-        transparent
-    );
-
-    transform:rotate(25deg) translateX(-120%);
-
-    animation:shine 4s infinite;
-}
-
-@keyframes shine{
-
-    100%{
-        transform:rotate(25deg) translateX(180%);
-    }
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .contact-item{
-
-        padding:12px 14px;
-    }
-
-    .contact-icon{
-
-        width:46px;
-        height:46px;
-
-        font-size:18px;
-    }
-}
-
-.project-realise{
-    position:relative;
-    overflow:hidden;
-}
-
-.project-number{
-
-    font-size:70px;
-
-    font-weight:900;
-
-    background:
-    linear-gradient(
-        135deg,
-        #d4af37,
-        #00d4ff
-    );
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-
-    margin-bottom:15px;
-
-    animation:numberFloat 3s ease-in-out infinite;
-}
-
-.project-realise::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:220px;
-    height:220px;
-
-    background:
-    radial-gradient(
-        rgba(0,212,255,.20),
-        transparent
-    );
-
-    top:-80px;
-    right:-80px;
-
-    border-radius:50%;
-}
-
-@keyframes numberFloat{
-
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-10px);
+    .cta{
+        padding:32px 22px;
     }
 }
 </style>
-
-
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">HexaQuébec</a>
+<nav class="navbar fixed-top custom-navbar">
+    <div class="container nav-container">
+
+        <a class="navbar-brand logo-box" href="{% url 'home' %}">
+            <span class="logo-bg">
+                <img src="{% static 'images/logoHexa.png' %}" class="logo-img" alt="HexaQuébec">
+            </span>
+            <span class="brand-text">
+                <strong>HexaQuébec</strong>
+                <small>Solutions numériques</small>
+            </span>
+        </a>
+
+        <div class="nav-menu">
+            <a href="#expertise">Expertise</a>
+            <a href="#realises">Réalisés</a>
+            <a href="#encours">En cours</a>
+            <a href="#contact" class="nav-btn">Contact</a>
+        </div>
+
     </div>
 </nav>
-<div style="height:90px;"></div>
+<section class="hero">
+    <div class="container">
+        <h1>Nos projets numériques réalisés avec précision.</h1>
+        <p>
+            HexaQuébec conçoit des sites web, applications, systèmes de gestion,
+            plateformes e-commerce et solutions numériques professionnelles.
+        </p>
 
-<!-- HERO -->
-<section class="hero" data-aos="fade-up">
-    <h1>Nos Réalisations Digitales</h1>
-    <p>
-        HexaQuébec transforme vos idées en solutions numériques performantes :
-        sites web, applications, intelligence artificielle.
+        <a href="https://wa.me/15144677377" target="_blank" class="btn-main mt-3">
+            <i class="fa-brands fa-whatsapp"></i>
+            Discuter d’un projet
+        </a>
+    </div>
+</section>
+
+<section class="container py-5 reveal">
+    <h2 class="section-title">Notre expertise</h2>
+    <p class="section-subtitle">
+        Des solutions modernes, sobres, rapides et adaptées aux entreprises.
     </p>
-</section>
 
-<!-- PORTFOLIO DETAILS -->
-<section class="portfolio-details container" data-aos="fade-up">
-    <div class="row text-center g-4">
+    <div class="row g-4">
         <div class="col-md-4">
-            <div class="portfolio-box">
-                <i class="fas fa-laptop-code icon"></i>
-                <h5>Développement Web & Apps</h5>
-                <p>Sites web modernes et applications performantes adaptés aux besoins des entreprises.</p>
+            <div class="service-card">
+                <div class="icon-box"><i class="fa-solid fa-code"></i></div>
+                <h5>Développement web</h5>
+                <p>Sites vitrines, plateformes professionnelles, dashboards et portails clients.</p>
             </div>
         </div>
+
         <div class="col-md-4">
-            <div class="portfolio-box">
-                <i class="fas fa-mobile-alt icon"></i>
-                <h5>Applications & Publication</h5>
-                <p>Nous développons et publions nos applications pour répondre aux besoins de nos clients et abonnés.</p>
+            <div class="service-card">
+                <div class="icon-box"><i class="fa-solid fa-cart-shopping"></i></div>
+                <h5>E-commerce</h5>
+                <p>Boutiques en ligne avec panier, paiement, commandes, factures et administration.</p>
             </div>
         </div>
+
         <div class="col-md-4">
-            <div class="portfolio-box">
-                <i class="fas fa-building icon"></i>
-                <h5>Solutions Entreprises</h5>
-                <p>Collaboration avec entreprises commerciales et industrielles pour solutions sur mesure.</p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="portfolio-box">
-                <i class="fas fa-rocket icon"></i>
-                <h5>Performance & Qualité</h5>
-                <p>Solutions modernes, rapides et optimisées pour une excellente UX et haute performance.</p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="portfolio-box">
-                <i class="fas fa-code icon"></i>
-                <h5>Technologies Modernes</h5>
-                <p>Python, Django, UI/UX design, frontend & backend pour transformer vos idées en digital puissant.</p>
+            <div class="service-card">
+                <div class="icon-box"><i class="fa-solid fa-robot"></i></div>
+                <h5>Intégration IA</h5>
+                <p>Assistants intelligents, automatisation et solutions digitales avancées.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- GALERIE PROJETS -->
-<div class="container py-5">
-    <h2 class="section-title">Nos Projets & Tarifs</h2>
-    <div class="gallery">
+<section class="container py-5 reveal">
+    <h2 class="section-title">Nos projets réalisés</h2>
+    <p class="section-subtitle">Quelques projets déjà conçus par HexaQuébec.</p>
 
-        <!-- WEB -->
-<div class="project-card" data-aos="zoom-in-up">
-    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="img-fluid rounded">
-    <div class="project-overlay d-flex flex-column justify-content-end p-3">
-        <h5 class="d-flex align-items-center">
-            <i class="fas fa-laptop-code me-2"></i> Développement Web
-        </h5>
-        <p class="mb-1">Site vitrine / e-commerce</p>
-        <div class="price mb-2">À partir de 1000$</div>
-        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#webModal">
-            <i class="fas fa-eye me-1"></i> Voir détails
-        </button>
-    </div>
-</div>
-
-<!-- MOBILE -->
-<div class="project-card" data-aos="zoom-in-up" data-aos-delay="100">
-    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" class="img-fluid rounded">
-    <div class="project-overlay d-flex flex-column justify-content-end p-3">
-        <h5 class="d-flex align-items-center">
-            <i class="fas fa-mobile-alt me-2"></i> Application Mobile
-        </h5>
-        <p class="mb-1">Android & iOS</p>
-        <div class="price mb-2">À partir de 3000$</div>
-        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#mobileModal">
-            <i class="fas fa-eye me-1"></i> Voir détails
-        </button>
-    </div>
-</div>
-
-
-<script>
-AOS.init({ duration: 800, once: true });
-</script>
-
-    </div>
-</div>
-
-<!-- MODAL WEB -->
-<div class="modal fade" id="webModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white border-0 rounded-4 shadow">
-            <div class="modal-header border-0">
-                <h5 class="fw-bold">💻 Développement Web</h5>
-                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="project-card">
+                <span class="project-status done">Réalisé</span>
+                <h5>GafouShop</h5>
+                <p>Boutique e-commerce avec produits, panier, paiement en ligne et espace administration.</p>
+                <a href="https://www.gafoushop.com/" target="_blank" class="project-link">
+                    Voir le projet <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
             </div>
-            <div class="modal-body">
-                <ul class="list-unstyled mb-3">
-                    <li>✔ Site vitrine professionnel</li>
-                    <li>✔ E-commerce complet</li>
-                    <li>✔ SEO optimisé Google</li>
-                    <li>✔ Design UI/UX moderne</li>
-                </ul>
-                <p class="text-warning fw-bold fs-5">1000$ - 12000$</p>
-               <a href="https://wa.me/15144677377" target="_blank" class="btn btn-success w-100">
-    <i class="fab fa-whatsapp"></i> Commander maintenant
-</a>
+        </div>
+
+        <div class="col-md-4">
+            <div class="project-card">
+                <span class="project-status done">Réalisé</span>
+                <h5>HexaQuébec</h5>
+                <p>Site professionnel pour présenter les services numériques et recevoir les demandes clients.</p>
+                <a href="https://www.hexaquebec.com/" target="_blank" class="project-link">
+                    Voir le projet <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="project-card">
+                <span class="project-status done">Réalisé</span>
+                <h5>Gestion immobilière</h5>
+                <p>Système de gestion des bâtiments, locataires, locations, paiements et reçus PDF.</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
+<section class="container py-5 reveal">
+    <h2 class="section-title">Nos projets en cours</h2>
+    <p class="section-subtitle">Des solutions en développement pour des besoins concrets.</p>
 
-
-
-
-<!-- MODAL MOBILE -->
-<div class="modal fade" id="mobileModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white border-0 rounded-4 shadow">
-            <div class="modal-header border-0">
-                <h5 class="fw-bold">📱 Application Mobile</h5>
-                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="project-card">
+                <span class="project-status progress-status">En cours</span>
+                <h5>AfroFans</h5>
+                <p>Plateforme pour talents africains avec vidéos, profils, fans, dons et événements.</p>
             </div>
-            <div class="modal-body">
-                <ul class="list-unstyled mb-3">
-                    <li>✔ Android & iOS</li>
-                    <li>✔ Backend API sécurisé</li>
-                    <li>✔ Interface moderne</li>
-                    <li>✔ Performance optimisée</li>
-                </ul>
-                <p class="text-warning fw-bold fs-5">3000$ - 40000$</p>
-                <a href="https://wa.me/123456789" class="btn btn-success w-100">
-                    <i class="fab fa-whatsapp"></i> Commander maintenant
+        </div>
+
+        <div class="col-md-4">
+            <div class="project-card">
+                <span class="project-status progress-status">En cours</span>
+                <h5>Intervention+</h5>
+                <p>Solution numérique avec IA pour accompagner certaines interventions sensibles.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="project-card">
+                <span class="project-status progress-status">En cours</span>
+                <h5>Diam AI</h5>
+                <p>Assistant intelligent HexaQuébec pour automatiser et améliorer l’expérience client.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5 reveal">
+    <h2 class="section-title text-center">Qualité & performance</h2>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-number counter" data-target="25">0</div>
+                <p>Sites et plateformes</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="stat-number counter" data-target="12">0</div>
+                <p>Applications et systèmes</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <div class="quality-circle" id="qualityCircle">
+                    <div class="quality-value">
+                        <span id="qualityPercent">0</span>%
+                    </div>
+                </div>
+                <p>Qualité visée sur chaque projet</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5 reveal">
+    <div class="cta">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">Vous avez un projet à développer ?</h2>
+                <p class="mb-md-0">
+                    HexaQuébec vous accompagne de l’idée jusqu’au déploiement.
+                </p>
+            </div>
+
+            <div class="col-md-4 text-md-end">
+                <a href="https://wa.me/15144677377" target="_blank" class="btn-main">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Contacter
                 </a>
             </div>
         </div>
     </div>
-</div>
-
-<section class="container py-5" data-aos="fade-up">
-
-    <h2 class="section-title">
-        Projets Réalisés par HexaQuébec
-    </h2>
-
-    <div class="row g-4">
-
-        <div class="col-md-4">
-            <div class="portfolio-box project-realise">
-
-                <div class="project-number" data-target="25">0</div>
-
-                <div class="icon">
-                    <i class="fas fa-laptop-code"></i>
-                </div>
-
-                <h5>Sites Web Réalisés</h5>
-
-                <p>
-                    Création de sites vitrines, plateformes professionnelles,
-                    boutiques en ligne et dashboards modernes.
-                </p>
-
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="portfolio-box project-realise">
-
-                <div class="project-number" data-target="12">0</div>
-
-                <div class="icon">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-
-                <h5>Applications Développées</h5>
-
-                <p>
-                    Applications Android et solutions mobiles
-                    adaptées aux besoins des entreprises.
-                </p>
-
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="portfolio-box project-realise">
-
-                <div class="project-number" data-target="100">0</div>
-
-                <div class="icon">
-                    <i class="fas fa-users"></i>
-                </div>
-
-                <h5>Clients Satisfaits</h5>
-
-                <p>
-                    Entreprises, commerces et organisations
-                    accompagnés par HexaQuébec.
-                </p>
-
-            </div>
-        </div>
-
-    </div>
-
 </section>
 
+<a href="https://wa.me/15144677377" target="_blank" class="whatsapp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
 
+<div id="backTop">
+    <i class="fa-solid fa-chevron-up"></i>
+</div>
 
-
-
-<!-- WHATSAPP -->
-<a href="https://wa.me/15144677377" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-
-<!-- BACK TO TOP -->
-<div id="backTop"><i class="fas fa-chevron-up"></i></div>
-
-
-
-
-
-<!-- FOOTER -->
-<footer class="footer-modern mt-5">
-
+<footer>
     <div class="container">
-
-        <div class="row text-center text-md-start">
-
-            <!-- LOGO / DESCRIPTION -->
-            <div class="col-md-4 mb-4 footer-animate">
-                <h4 class="footer-logo">HexaQuébec</h4>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <img src="{% static 'images/logoHexa.png' %}" class="footer-logo-img" alt="HexaQuébec">
                 <p class="footer-text">
-                    Nous accompagnons les entreprises industrielles, commerciales et gouvernementales
-                    dans la conception de solutions numériques performantes : sites web, applications
-                    et systèmes digitaux sur mesure.
+                    Développement web, applications mobiles, e-commerce,
+                    IA et solutions numériques sur mesure.
                 </p>
             </div>
 
-            <!-- SERVICES -->
-            <div class="col-md-4 mb-4 footer-animate delay-1">
-                <h6 class="footer-title">Services</h6>
-                <ul class="footer-links">
-                    <li>Développement web</li>
-                    <li>Applications mobiles</li>
-                    <li>Maintenance informatique</li>
-                    <li>Solutions sur mesure</li>
-                </ul>
+            <div class="col-md-4 mb-4">
+                <h6 class="fw-bold text-white">Services</h6>
+                <div class="footer-link">Développement web</div>
+                <div class="footer-link">Applications mobiles</div>
+                <div class="footer-link">E-commerce</div>
+                <div class="footer-link">Intégration IA</div>
             </div>
 
-
-<!-- CONTACT -->
-<div class="col-md-4 mb-4 footer-animate delay-2">
-
-    <h6 class="footer-title">
-        Contact
-    </h6>
-
-    <!-- ADRESSE -->
-
-    <div class="contact-item">
-
-        <div class="contact-icon location-icon">
-            <i class="fa-solid fa-location-dot"></i>
+            <div class="col-md-4 mb-4">
+                <h6 class="fw-bold text-white">Contact</h6>
+                <div class="footer-link">Québec, Canada</div>
+                <div class="footer-link">hexaquebec80@gmail.com</div>
+                <div class="footer-link">+1 514 467 7377</div>
+            </div>
         </div>
 
-        <div>
-            <p class="footer-text mb-0">
-                Québec, Canada
-            </p>
-        </div>
+        <hr style="border-color:rgba(255,255,255,.15);">
 
+        <p class="text-center footer-text mb-0">
+            © 2026 HexaQuébec — Tous droits réservés
+        </p>
     </div>
-
-    <!-- EMAIL -->
-
-    <div class="contact-item">
-
-        <div class="contact-icon email-icon">
-            <i class="fa-solid fa-envelope"></i>
-        </div>
-
-        <div>
-            <p class="footer-text mb-0">
-                hexaquebec80@gmail.com
-            </p>
-        </div>
-
-    </div>
-
-    <!-- PHONE -->
-
-    <div class="contact-item">
-
-        <div class="contact-icon phone-icon">
-            <i class="fa-solid fa-phone"></i>
-        </div>
-
-        <div>
-            <p class="footer-text mb-0">
-                +1 514 467 7377
-            </p>
-        </div>
-
-    </div>
-
-</div>
-
-
-
-        </div>
-
-        <hr class="footer-divider">
-
-        <!-- COPYRIGHT -->
-        <div class="text-center footer-animate delay-3">
-            <p class="footer-copy">
-                © 2026 HexaQuébec — Tous droits réservés
-            </p>
-        </div>
-
-    </div>
-
 </footer>
-<!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
 <script>
-AOS.init();
+const revealElements = document.querySelectorAll(".reveal");
 
-// Back to top
-const backTop = document.getElementById('backTop');
-window.addEventListener('scroll', () => {
-    backTop.style.display = (window.scrollY > 300) ? 'block' : 'none';
-});
-backTop.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
-</script>
-
-
-<script>
-
-const counters =
-document.querySelectorAll(".project-number");
-
-counters.forEach(counter=>{
-
-    let start = 0;
-
-    const target =
-    parseInt(counter.dataset.target);
-
-    const speed =
-    target / 60;
-
-    const updateCounter = ()=>{
-
-        start += speed;
-
-        if(start < target){
-
-            counter.innerText =
-            Math.floor(start);
-
-            requestAnimationFrame(updateCounter);
-
-        }else{
-
-            counter.innerText =
-            target + "+";
-
+function revealOnScroll(){
+    revealElements.forEach(el=>{
+        const top = el.getBoundingClientRect().top;
+        if(top < window.innerHeight - 80){
+            el.classList.add("active");
         }
-    };
+    });
+}
 
-    updateCounter();
+window.addEventListener("scroll", revealOnScroll);
+window.addEventListener("load", revealOnScroll);
 
+/* COMPTEURS */
+const counters = document.querySelectorAll(".counter");
+let countersStarted = false;
+
+function startCounters(){
+    if(countersStarted) return;
+
+    const section = counters[0].closest("section");
+    const top = section.getBoundingClientRect().top;
+
+    if(top < window.innerHeight - 80){
+        countersStarted = true;
+
+        counters.forEach(counter=>{
+            let value = 0;
+            const target = parseInt(counter.dataset.target);
+
+            function animate(){
+                value += Math.ceil(target / 80);
+
+                if(value < target){
+                    counter.textContent = value;
+                    requestAnimationFrame(animate);
+                }else{
+                    counter.textContent = target + "+";
+                }
+            }
+
+            animate();
+        });
+    }
+}
+
+/* ANIMATION 90% */
+let qualityStarted = false;
+
+function animateQuality(){
+    if(qualityStarted) return;
+
+    const circle = document.getElementById("qualityCircle");
+    const percent = document.getElementById("qualityPercent");
+
+    if(!circle || !percent) return;
+
+    const top = circle.getBoundingClientRect().top;
+
+    if(top < window.innerHeight - 80){
+        qualityStarted = true;
+
+        let value = 0;
+        const target = 90;
+
+        function update(){
+            value++;
+
+            const degree = value * 3.6;
+
+            circle.style.background =
+                `conic-gradient(var(--gold) 0deg, var(--blue) ${degree}deg, #e5e7eb ${degree}deg)`;
+
+            percent.textContent = value;
+
+            if(value < target){
+                requestAnimationFrame(update);
+            }
+        }
+
+        update();
+    }
+}
+
+window.addEventListener("scroll", ()=>{
+    startCounters();
+    animateQuality();
 });
 
+window.addEventListener("load", ()=>{
+    startCounters();
+    animateQuality();
+});
+
+/* BACK TOP */
+const backTop = document.getElementById("backTop");
+
+window.addEventListener("scroll", ()=>{
+    backTop.style.display = window.scrollY > 400 ? "flex" : "none";
+});
+
+backTop.addEventListener("click", ()=>{
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+});
 </script>
+
 </body>
 </html>

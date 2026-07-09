@@ -1464,6 +1464,49 @@ body{
     background:rgba(255,255,255,.08) !important;
     border:1px solid rgba(255,255,255,.12);
 }
+.stage-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+    min-height:52px;
+    padding:0 25px;
+
+    border:none;
+    border-radius:14px;
+
+    background:#071a3d;
+    color:#ffffff;
+
+    font-size:15px;
+    font-weight:800;
+
+    cursor:pointer;
+    text-decoration:none;
+
+    box-shadow:
+        0 15px 30px rgba(7,26,61,.18);
+
+    transition:
+        transform .25s ease,
+        background .25s ease;
+}
+
+.stage-btn:hover{
+    transform:translateY(-3px);
+    background:#dc2626;
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.stage-btn i{
+    transition:transform .25s ease;
+}
+
+.stage-btn:hover i{
+    transform:translateX(5px);
+}
 </style>
 </head>
 
@@ -1568,25 +1611,2958 @@ body{
                     HexaQuébec accompagne les entreprises dans la création de solutions numériques professionnelles, performantes et modernes.
                 </p>
 
-                <div class="hero-stage-box">
+<section class="stage-dev" id="stage">
+    <div class="stage-bg-orb stage-orb-1"></div>
+    <div class="stage-bg-orb stage-orb-2"></div>
 
-                    <div class="stage-icon">
-                        <i class="fa-solid fa-user-graduate"></i>
+    <div class="stage-shell">
+
+        <div class="stage-card" id="stageCard">
+
+            <!-- Effets JS -->
+            <div class="stage-spotlight" id="stageSpotlight"></div>
+            <div class="stage-particles" id="stageParticles"></div>
+
+            <!-- =========================
+                 COLONNE GAUCHE
+            ========================== -->
+            <div class="stage-left">
+
+                <div class="stage-badge js-stage-reveal">
+                    <span class="stage-badge-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </span>
+
+                    <span>Opportunités de Stage</span>
+
+                    <span class="stage-live-dot"></span>
+                </div>
+
+                <h2 class="stage-title js-stage-reveal">
+                    Construisez votre avenir avec
+                    <span class="stage-brand">HexaQuébec</span>
+                </h2>
+
+                <p class="stage-description js-stage-reveal">
+                    Développez vos compétences sur des projets réels,
+                    collaborez avec une équipe professionnelle et transformez
+                    votre potentiel en expérience concrète.
+                </p>
+
+                <!-- Stats -->
+                <div class="stage-mini-stats js-stage-reveal">
+
+                    <div class="stage-mini-stat">
+                        <strong id="stageDomainCount">0</strong>
+                        <span>Domaines</span>
                     </div>
 
-                    <div class="stage-content">
-                        <span class="stage-badge"> Opportunités de Stage</span>
+                    <div class="stage-stat-separator"></div>
 
-                        <h5>Stages disponibles chez HexaQuébec</h5>
+                    <div class="stage-mini-stat">
+                        <strong>100%</strong>
+                        <span>Projets réels</span>
+                    </div>
 
-                        <p>
-                            Développement Web • Applications Mobiles • UI/UX Design • Infographie
-                        </p>
+                    <div class="stage-stat-separator"></div>
 
-                        <small>❌ Réseau & Cybersécurité non acceptés</small>
+                    <div class="stage-mini-stat">
+                        <strong>Pro</strong>
+                        <span>Encadrement</span>
                     </div>
 
                 </div>
+
+                <!-- Domaines générés en JS -->
+                <div class="stage-tags" id="stageTags"></div>
+
+                <!-- Zone basse -->
+                <div class="stage-bottom-row js-stage-reveal">
+
+                    <div class="stage-warning">
+                        <div class="stage-warning-icon">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </div>
+
+                        <div>
+                            <strong>Domaines non acceptés</strong>
+                            <span>Réseau & Cybersécurité</span>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'demande_stage' %}"
+                       class="stage-btn"
+                       id="stageBtn">
+
+                       
+
+                        <span class="stage-btn-icon">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- =========================
+                 COLONNE DROITE
+            ========================== -->
+            <div class="stage-right">
+
+                <div class="stage-image-zone">
+
+                    <div class="stage-image-glow"></div>
+
+                    <div class="stage-floating-card stage-floating-card-1">
+                        <span class="floating-icon">
+                            <i class="fa-solid fa-rocket"></i>
+                        </span>
+
+                        <div>
+                            <strong>Expérience</strong>
+                            <small>Projets concrets</small>
+                        </div>
+                    </div>
+
+                    <div class="stage-floating-card stage-floating-card-2">
+                        <span class="floating-icon">
+                            <i class="fa-solid fa-star"></i>
+                        </span>
+
+                        <div>
+                            <strong>Compétences</strong>
+                            <small>Progression réelle</small>
+                        </div>
+                    </div>
+
+                    <div class="stage-floating-card stage-floating-card-3">
+                        <span class="floating-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </span>
+
+                        <div>
+                            <strong>Équipe</strong>
+                            <small>Collaboration</small>
+                        </div>
+                    </div>
+
+                    <img
+                        src="{% static 'images/fille-stage.png' %}"
+                        alt="Stage professionnel chez HexaQuébec"
+                        class="stage-girl"
+                        id="stageGirl"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<style>
+/* =========================================================
+   BASE
+========================================================= */
+
+.stage-dev{
+    --navy:#071a3d;
+    --navy-2:#0b2b61;
+    --blue:#0057ff;
+    --blue-soft:#eaf1ff;
+    --red:#dc2626;
+    --red-soft:#fff1f2;
+    --text:#64748b;
+    --line:#e8edf5;
+    --white:#ffffff;
+
+    position:relative;
+    padding:80px 4%;
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(0,87,255,.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(220,38,38,.06),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #f8faff 0%,
+            #f3f6fb 45%,
+            #ffffff 100%
+        );
+
+    font-family:'Segoe UI', Arial, sans-serif;
+}
+
+
+/* =========================================================
+   ORBES
+========================================================= */
+
+.stage-bg-orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(10px);
+    pointer-events:none;
+}
+
+.stage-orb-1{
+    width:320px;
+    height:320px;
+    top:-120px;
+    left:-100px;
+    background:rgba(0,87,255,.07);
+}
+
+.stage-orb-2{
+    width:380px;
+    height:380px;
+    right:-140px;
+    bottom:-180px;
+    background:rgba(220,38,38,.06);
+}
+
+
+/* =========================================================
+   SHELL
+========================================================= */
+
+.stage-shell{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:1380px;
+    margin:0 auto;
+}
+
+
+/* =========================================================
+   CARTE PRINCIPALE
+   IMPORTANT :
+   gauche = contenu
+   droite = fille
+========================================================= */
+
+.stage-card{
+    position:relative;
+
+    width:100%;
+    min-height:680px;
+
+    display:grid;
+
+    /*
+       Desktop stable :
+       64% texte
+       36% image
+    */
+    grid-template-columns:
+        minmax(0, 64%)
+        minmax(0, 36%);
+
+    align-items:stretch;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.99),
+            rgba(248,251,255,.97)
+        );
+
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:38px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 35px 90px rgba(7,26,61,.14),
+        0 8px 30px rgba(7,26,61,.06);
+
+    /*
+       Ne pas utiliser preserve-3d ici :
+       cela provoque des déplacements visuels
+       sur desktop.
+    */
+    transform:none;
+}
+
+
+/* Ligne premium */
+
+.stage-card::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:8%;
+    right:8%;
+
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(0,87,255,.8),
+            rgba(220,38,38,.8),
+            transparent
+        );
+
+    z-index:20;
+}
+
+
+/* =========================================================
+   SPOTLIGHT
+========================================================= */
+
+.stage-spotlight{
+    position:absolute;
+
+    width:450px;
+    height:450px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,87,255,.10) 0%,
+            rgba(0,87,255,.04) 35%,
+            transparent 70%
+        );
+
+    transform:translate(-50%,-50%);
+
+    pointer-events:none;
+
+    opacity:0;
+
+    transition:opacity .35s ease;
+
+    z-index:0;
+}
+
+
+/* =========================================================
+   PARTICULES
+========================================================= */
+
+.stage-particles{
+    position:absolute;
+    inset:0;
+
+    pointer-events:none;
+
+    overflow:hidden;
+
+    z-index:1;
+}
+
+.stage-particle{
+    position:absolute;
+
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:rgba(0,87,255,.28);
+
+    opacity:0;
+
+    animation:
+        stageParticleFloat
+        linear
+        infinite;
+}
+
+@keyframes stageParticleFloat{
+
+    0%{
+        transform:
+            translateY(30px)
+            scale(.6);
+
+        opacity:0;
+    }
+
+    15%{
+        opacity:.7;
+    }
+
+    80%{
+        opacity:.35;
+    }
+
+    100%{
+        transform:
+            translateY(-180px)
+            scale(1.2);
+
+        opacity:0;
+    }
+}
+
+
+/* =========================================================
+   COLONNE GAUCHE
+========================================================= */
+
+.stage-left{
+    position:relative;
+
+    z-index:10;
+
+    min-width:0;
+
+    padding:
+        58px
+        50px
+        55px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    /*
+       Empêche absolument le contenu
+       de passer dans la zone image
+    */
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.stage-badge{
+    width:max-content;
+    max-width:100%;
+
+    display:inline-flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:
+        8px
+        14px
+        8px
+        8px;
+
+    margin-bottom:20px;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,241,242,.95),
+            rgba(255,255,255,.95)
+        );
+
+    border:
+        1px solid
+        rgba(220,38,38,.13);
+
+    color:#b91c1c;
+
+    font-size:13px;
+    font-weight:900;
+
+    box-shadow:
+        0 10px 25px
+        rgba(220,38,38,.08);
+}
+
+.stage-badge-icon{
+    width:36px;
+    height:36px;
+
+    flex:0 0 36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ef4444
+        );
+
+    color:#fff;
+
+    box-shadow:
+        0 8px 18px
+        rgba(220,38,38,.22);
+}
+
+.stage-live-dot{
+    width:7px;
+    height:7px;
+
+    flex:0 0 7px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    box-shadow:
+        0 0 0 5px
+        rgba(34,197,94,.12);
+
+    animation:
+        stageLivePulse
+        1.8s
+        infinite;
+}
+
+@keyframes stageLivePulse{
+
+    0%,
+    100%{
+        box-shadow:
+            0 0 0 4px
+            rgba(34,197,94,.10);
+    }
+
+    50%{
+        box-shadow:
+            0 0 0 9px
+            rgba(34,197,94,0);
+    }
+}
+
+
+/* =========================================================
+   TITRE
+========================================================= */
+
+.stage-title{
+    width:100%;
+    max-width:720px;
+
+    margin:
+        0
+        0
+        16px;
+
+    color:var(--navy);
+
+    font-size:
+        clamp(
+            38px,
+            3.6vw,
+            56px
+        );
+
+    line-height:1.05;
+
+    letter-spacing:-2px;
+
+    font-weight:900;
+
+    overflow-wrap:break-word;
+}
+
+.stage-brand{
+    position:relative;
+
+    display:inline-block;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--red),
+            #ef4444,
+            var(--blue)
+        );
+
+    background-size:200% auto;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    animation:
+        stageBrandGradient
+        5s
+        linear
+        infinite;
+}
+
+@keyframes stageBrandGradient{
+    to{
+        background-position:
+            200%
+            center;
+    }
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.stage-description{
+    width:100%;
+    max-width:650px;
+
+    margin:0;
+
+    color:var(--text);
+
+    font-size:16px;
+
+    line-height:1.7;
+
+    font-weight:500;
+}
+
+
+/* =========================================================
+   MINI STATS
+========================================================= */
+
+.stage-mini-stats{
+    width:max-content;
+    max-width:100%;
+
+    display:flex;
+    align-items:center;
+
+    gap:16px;
+
+    margin:
+        22px
+        0
+        20px;
+
+    padding:
+        12px
+        16px;
+
+    background:
+        rgba(248,250,252,.88);
+
+    border:
+        1px solid
+        #edf1f7;
+
+    border-radius:18px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.9);
+}
+
+.stage-mini-stat{
+    min-width:0;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.stage-mini-stat strong{
+    color:var(--navy);
+
+    font-size:16px;
+    font-weight:900;
+}
+
+.stage-mini-stat span{
+    color:#94a3b8;
+
+    font-size:10px;
+    font-weight:800;
+
+    text-transform:uppercase;
+
+    letter-spacing:.4px;
+}
+
+.stage-stat-separator{
+    width:1px;
+    height:28px;
+
+    flex:0 0 1px;
+
+    background:#dfe6ef;
+}
+
+
+/* =========================================================
+   DOMAINES
+========================================================= */
+
+.stage-tags{
+    width:100%;
+    max-width:100%;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
+
+    gap:12px;
+
+    margin:
+        0
+        0
+        22px;
+}
+
+
+/* =========================================================
+   CARTE DOMAINE
+========================================================= */
+
+.stage-tag{
+    position:relative;
+
+    width:100%;
+    min-width:0;
+    min-height:72px;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    padding:
+        11px
+        12px;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.97),
+            rgba(247,250,255,.97)
+        );
+
+    border:
+        1px solid
+        #e6ebf3;
+
+    box-shadow:
+        0 10px 24px
+        rgba(7,26,61,.045);
+
+    overflow:hidden;
+
+    opacity:0;
+
+    transform:
+        translateY(28px)
+        scale(.96);
+
+    transition:
+        transform .45s cubic-bezier(.2,.8,.2,1),
+        border-color .35s ease,
+        box-shadow .35s ease,
+        opacity .5s ease;
+
+    cursor:default;
+}
+
+.stage-tag.stage-tag-visible{
+    opacity:1;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* Bande hover */
+
+.stage-tag::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:4px;
+    height:100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--blue),
+            var(--red)
+        );
+
+    transform:scaleY(0);
+
+    transform-origin:bottom;
+
+    transition:
+        transform
+        .35s
+        ease;
+}
+
+
+/* Lumière */
+
+.stage-tag::after{
+    content:"";
+
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    top:-55px;
+    right:-55px;
+
+    border-radius:50%;
+
+    background:
+        rgba(0,87,255,.07);
+
+    transition:
+        transform .4s ease,
+        background .4s ease;
+}
+
+.stage-tag:hover{
+    transform:
+        translateY(-5px)
+        scale(1.01);
+
+    border-color:
+        rgba(0,87,255,.20);
+
+    box-shadow:
+        0 18px 35px
+        rgba(7,26,61,.10);
+}
+
+.stage-tag:hover::before{
+    transform:scaleY(1);
+}
+
+.stage-tag:hover::after{
+    transform:scale(1.4);
+
+    background:
+        rgba(220,38,38,.06);
+}
+
+
+/* =========================================================
+   ICÔNE DOMAINE
+========================================================= */
+
+.stage-tag-icon{
+    position:relative;
+
+    z-index:2;
+
+    width:44px;
+    height:44px;
+
+    flex:
+        0
+        0
+        44px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--navy),
+            var(--navy-2)
+        );
+
+    color:#fff;
+
+    font-size:16px;
+
+    box-shadow:
+        0 10px 22px
+        rgba(7,26,61,.16);
+
+    transition:
+        transform .4s
+        cubic-bezier(.2,.8,.2,1),
+        background .4s ease;
+}
+
+.stage-tag:hover
+.stage-tag-icon{
+    transform:
+        rotate(-7deg)
+        scale(1.08);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--red)
+        );
+}
+
+
+/* =========================================================
+   TEXTE DOMAINE
+========================================================= */
+
+.stage-tag-content{
+    position:relative;
+
+    z-index:2;
+
+    min-width:0;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:3px;
+}
+
+.stage-tag-content strong{
+    display:block;
+
+    color:var(--navy);
+
+    font-size:13px;
+    font-weight:900;
+
+    line-height:1.25;
+
+    overflow-wrap:break-word;
+}
+
+.stage-tag-content small{
+    display:block;
+
+    color:#94a3b8;
+
+    font-size:10px;
+    font-weight:700;
+
+    line-height:1.25;
+}
+
+
+/* =========================================================
+   BAS
+========================================================= */
+
+.stage-bottom-row{
+    width:100%;
+    max-width:100%;
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        auto;
+
+    align-items:center;
+
+    gap:14px;
+}
+
+
+/* =========================================================
+   WARNING
+========================================================= */
+
+.stage-warning{
+    min-width:0;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:
+        11px
+        13px;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff7f7,
+            #ffffff
+        );
+
+    border:
+        1px solid
+        rgba(220,38,38,.12);
+
+    box-shadow:
+        0 10px 24px
+        rgba(220,38,38,.055);
+}
+
+.stage-warning-icon{
+    width:36px;
+    height:36px;
+
+    flex:
+        0
+        0
+        36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:#fee2e2;
+
+    color:var(--red);
+}
+
+.stage-warning div{
+    min-width:0;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.stage-warning strong{
+    color:#991b1b;
+
+    font-size:11px;
+    font-weight:900;
+}
+
+.stage-warning span{
+    color:#64748b;
+
+    font-size:11px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   BOUTON
+========================================================= */
+
+.stage-btn{
+    position:relative;
+
+    flex-shrink:0;
+
+    display:inline-flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:
+        8px
+        9px
+        8px
+        17px;
+
+    border-radius:15px;
+
+    text-decoration:none;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--navy),
+            #0b2b61
+        );
+
+    color:#fff;
+
+    font-size:13px;
+    font-weight:900;
+
+    white-space:nowrap;
+
+    box-shadow:
+        0 16px 35px
+        rgba(7,26,61,.20);
+
+    overflow:hidden;
+
+    transition:
+        box-shadow .35s ease,
+        background .35s ease,
+        transform .25s ease;
+}
+
+.stage-btn::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:70%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.24),
+            transparent
+        );
+
+    transform:skewX(-20deg);
+
+    transition:left .65s ease;
+}
+
+.stage-btn:hover::before{
+    left:150%;
+}
+
+.stage-btn:hover{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--red),
+            #ef4444
+        );
+
+    box-shadow:
+        0 20px 42px
+        rgba(220,38,38,.24);
+}
+
+.stage-btn-text{
+    position:relative;
+    z-index:2;
+}
+
+.stage-btn-icon{
+    position:relative;
+
+    z-index:2;
+
+    width:38px;
+    height:38px;
+
+    flex:
+        0
+        0
+        38px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    transition:
+        transform .35s ease,
+        background .35s ease;
+}
+
+.stage-btn:hover
+.stage-btn-icon{
+    transform:translateX(3px);
+
+    background:
+        rgba(255,255,255,.22);
+}
+
+
+/* =========================================================
+   COLONNE DROITE
+   IMAGE STRICTEMENT DANS CETTE ZONE
+========================================================= */
+
+.stage-right{
+    position:relative;
+
+    z-index:3;
+
+    width:100%;
+    min-width:0;
+    min-height:680px;
+
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+
+    overflow:hidden;
+
+    isolation:isolate;
+
+    background:
+        radial-gradient(
+            circle at 50% 55%,
+            rgba(0,87,255,.12),
+            transparent 43%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(245,249,255,.45),
+            rgba(234,241,255,.82)
+        );
+}
+
+
+/* Séparation */
+
+.stage-right::before{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:8%;
+    bottom:8%;
+
+    width:1px;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            rgba(7,26,61,.12),
+            transparent
+        );
+
+    z-index:10;
+}
+
+
+/* =========================================================
+   ZONE IMAGE
+========================================================= */
+
+.stage-image-zone{
+    position:relative;
+
+    width:100%;
+    height:680px;
+    min-height:680px;
+
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   HALO
+========================================================= */
+
+.stage-image-glow{
+    position:absolute;
+
+    width:min(390px, 90%);
+    aspect-ratio:1;
+
+    left:50%;
+    bottom:45px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,87,255,.20) 0%,
+            rgba(0,87,255,.08) 38%,
+            transparent 70%
+        );
+
+    filter:blur(5px);
+
+    animation:
+        stageGlow
+        4s
+        ease-in-out
+        infinite;
+}
+
+@keyframes stageGlow{
+
+    0%,
+    100%{
+        transform:
+            translateX(-50%)
+            scale(.96);
+
+        opacity:.75;
+    }
+
+    50%{
+        transform:
+            translateX(-50%)
+            scale(1.06);
+
+        opacity:1;
+    }
+}
+
+
+/* =========================================================
+   CERCLE
+========================================================= */
+
+.stage-image-zone::before{
+    content:"";
+
+    position:absolute;
+
+    width:min(390px, 82%);
+    aspect-ratio:1;
+
+    left:50%;
+    bottom:80px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(0,87,255,.12);
+
+    box-shadow:
+        0 0 0 25px
+        rgba(0,87,255,.025),
+
+        0 0 0 55px
+        rgba(0,87,255,.018);
+}
+
+
+/* =========================================================
+   FILLE
+========================================================= */
+
+.stage-girl{
+    position:relative;
+
+    z-index:4;
+
+    width:auto;
+
+    /*
+       Important :
+       jamais plus large que sa colonne
+    */
+    max-width:100%;
+
+    height:auto;
+
+    max-height:625px;
+
+    display:block;
+
+    object-fit:contain;
+    object-position:
+        bottom
+        center;
+
+    filter:
+        drop-shadow(
+            0 28px 28px
+            rgba(7,26,61,.18)
+        );
+
+    opacity:0;
+
+    transform:
+        translateY(55px)
+        scale(.96);
+
+    transition:
+        opacity 1s ease,
+        transform 1.15s
+        cubic-bezier(.16,1,.3,1);
+}
+
+.stage-girl.stage-girl-visible{
+    opacity:1;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* =========================================================
+   CARTES FLOTTANTES
+========================================================= */
+
+.stage-floating-card{
+    position:absolute;
+
+    z-index:7;
+
+    max-width:165px;
+
+    display:flex;
+    align-items:center;
+
+    gap:9px;
+
+    padding:
+        9px
+        11px;
+
+    border-radius:15px;
+
+    background:
+        rgba(255,255,255,.88);
+
+    border:
+        1px solid
+        rgba(255,255,255,.96);
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+    box-shadow:
+        0 16px 35px
+        rgba(7,26,61,.12);
+
+    opacity:0;
+
+    transition:
+        opacity .7s ease,
+        transform .7s
+        cubic-bezier(.2,.8,.2,1);
+}
+
+.stage-floating-card strong{
+    display:block;
+
+    color:var(--navy);
+
+    font-size:11px;
+    font-weight:900;
+}
+
+.stage-floating-card small{
+    display:block;
+
+    margin-top:2px;
+
+    color:#94a3b8;
+
+    font-size:9px;
+    font-weight:700;
+}
+
+.floating-icon{
+    width:34px;
+    height:34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--navy)
+        );
+}
+
+
+/* Positions propres desktop */
+
+.stage-floating-card-1{
+    top:11%;
+    left:4%;
+
+    transform:
+        translateX(-20px);
+}
+
+.stage-floating-card-2{
+    top:37%;
+    right:3%;
+
+    transform:
+        translateX(20px);
+}
+
+.stage-floating-card-3{
+    bottom:11%;
+    left:4%;
+
+    transform:
+        translateX(-20px);
+}
+
+.stage-floating-card.stage-floating-visible{
+    opacity:1;
+    transform:translate(0,0);
+}
+
+
+/* =========================================================
+   FLOAT ANIMATIONS
+========================================================= */
+
+.stage-floating-card-1.stage-floating-visible{
+    animation:
+        stageFloatOne
+        4s
+        ease-in-out
+        infinite;
+}
+
+.stage-floating-card-2.stage-floating-visible{
+    animation:
+        stageFloatTwo
+        4.8s
+        ease-in-out
+        infinite;
+}
+
+.stage-floating-card-3.stage-floating-visible{
+    animation:
+        stageFloatThree
+        4.4s
+        ease-in-out
+        infinite;
+}
+
+@keyframes stageFloatOne{
+
+    0%,
+    100%{
+        transform:
+            translateY(0)
+            rotate(-1deg);
+    }
+
+    50%{
+        transform:
+            translateY(-8px)
+            rotate(1deg);
+    }
+}
+
+@keyframes stageFloatTwo{
+
+    0%,
+    100%{
+        transform:
+            translateY(0)
+            rotate(1deg);
+    }
+
+    50%{
+        transform:
+            translateY(-10px)
+            rotate(-1deg);
+    }
+}
+
+@keyframes stageFloatThree{
+
+    0%,
+    100%{
+        transform:
+            translateY(0);
+    }
+
+    50%{
+        transform:
+            translateY(-8px);
+    }
+}
+
+
+/* =========================================================
+   REVEAL JS
+========================================================= */
+
+.js-stage-reveal{
+    opacity:0;
+
+    transform:
+        translateY(30px);
+
+    transition:
+        opacity .8s ease,
+        transform .9s
+        cubic-bezier(.16,1,.3,1);
+}
+
+.js-stage-reveal.stage-reveal-visible{
+    opacity:1;
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   GRAND DESKTOP
+   1400+
+========================================================= */
+
+@media(min-width:1400px){
+
+    .stage-card{
+        grid-template-columns:
+            minmax(0, 65%)
+            minmax(0, 35%);
+    }
+
+    .stage-left{
+        padding:
+            62px
+            58px;
+    }
+
+    .stage-title{
+        max-width:760px;
+    }
+}
+
+
+/* =========================================================
+   ORDINATEUR STANDARD
+   1101 - 1399
+========================================================= */
+
+@media(
+    min-width:1101px
+)
+and
+(
+    max-width:1399px
+){
+
+    .stage-dev{
+        padding:
+            70px
+            3%;
+    }
+
+    .stage-card{
+        min-height:660px;
+
+        grid-template-columns:
+            minmax(0, 63%)
+            minmax(0, 37%);
+    }
+
+    .stage-left{
+        padding:
+            48px
+            38px;
+    }
+
+    .stage-title{
+        font-size:
+            clamp(
+                40px,
+                3.5vw,
+                50px
+            );
+    }
+
+    .stage-right{
+        min-height:660px;
+    }
+
+    .stage-image-zone{
+        height:660px;
+        min-height:660px;
+    }
+
+    .stage-girl{
+        max-height:600px;
+    }
+}
+
+
+/* =========================================================
+   PETIT ORDINATEUR / GRANDE TABLETTE
+   851 - 1100
+========================================================= */
+
+@media(
+    min-width:851px
+)
+and
+(
+    max-width:1100px
+){
+
+    .stage-dev{
+        padding:
+            55px
+            22px;
+    }
+
+    .stage-card{
+        min-height:620px;
+
+        grid-template-columns:
+            minmax(0, 61%)
+            minmax(0, 39%);
+
+        border-radius:30px;
+    }
+
+    .stage-left{
+        padding:
+            38px
+            28px;
+    }
+
+    .stage-title{
+        font-size:39px;
+
+        line-height:1.06;
+
+        letter-spacing:-1.5px;
+    }
+
+    .stage-description{
+        font-size:15px;
+    }
+
+    .stage-mini-stats{
+        gap:11px;
+
+        margin:
+            18px
+            0;
+
+        padding:
+            10px
+            12px;
+    }
+
+    .stage-mini-stat strong{
+        font-size:14px;
+    }
+
+    .stage-mini-stat span{
+        font-size:9px;
+    }
+
+    .stage-tags{
+        gap:9px;
+    }
+
+    .stage-tag{
+        min-height:65px;
+
+        gap:9px;
+
+        padding:
+            9px
+            10px;
+    }
+
+    .stage-tag-icon{
+        width:39px;
+        height:39px;
+
+        flex-basis:39px;
+
+        font-size:14px;
+    }
+
+    .stage-tag-content strong{
+        font-size:11px;
+    }
+
+    .stage-tag-content small{
+        font-size:9px;
+    }
+
+    /*
+       À cette largeur :
+       warning et bouton l'un sous l'autre
+       pour éviter tout mélange
+    */
+    .stage-bottom-row{
+        grid-template-columns:1fr;
+
+        gap:10px;
+    }
+
+    .stage-btn{
+        width:max-content;
+    }
+
+    .stage-right{
+        min-height:620px;
+    }
+
+    .stage-image-zone{
+        height:620px;
+        min-height:620px;
+    }
+
+    .stage-girl{
+        max-height:565px;
+    }
+
+    .stage-floating-card{
+        max-width:145px;
+
+        padding:
+            8px
+            9px;
+    }
+
+    .stage-floating-card-1{
+        top:9%;
+        left:3%;
+    }
+
+    .stage-floating-card-2{
+        top:38%;
+        right:2%;
+    }
+
+    .stage-floating-card-3{
+        bottom:9%;
+        left:3%;
+    }
+}
+
+
+/* =========================================================
+   TABLETTE
+   651 - 850
+   Toujours 2 colonnes mais adaptées
+========================================================= */
+
+@media(
+    min-width:651px
+)
+and
+(
+    max-width:850px
+){
+
+    .stage-dev{
+        padding:
+            45px
+            16px;
+    }
+
+    .stage-card{
+        min-height:580px;
+
+        grid-template-columns:
+            minmax(0, 60%)
+            minmax(0, 40%);
+
+        border-radius:28px;
+    }
+
+    .stage-left{
+        padding:
+            32px
+            22px;
+    }
+
+    .stage-badge{
+        margin-bottom:14px;
+
+        font-size:11px;
+    }
+
+    .stage-badge-icon{
+        width:32px;
+        height:32px;
+
+        flex-basis:32px;
+    }
+
+    .stage-title{
+        margin-bottom:12px;
+
+        font-size:33px;
+
+        line-height:1.07;
+
+        letter-spacing:-1.2px;
+    }
+
+    .stage-description{
+        font-size:14px;
+
+        line-height:1.55;
+    }
+
+    .stage-mini-stats{
+        width:100%;
+
+        gap:7px;
+
+        margin:
+            15px
+            0;
+
+        padding:
+            9px
+            8px;
+    }
+
+    .stage-mini-stat{
+        flex:1;
+    }
+
+    .stage-mini-stat strong{
+        font-size:12px;
+    }
+
+    .stage-mini-stat span{
+        font-size:8px;
+    }
+
+    .stage-stat-separator{
+        height:24px;
+    }
+
+    /*
+       Tablette :
+       domaines en une colonne.
+       Cela empêche les textes de se mélanger.
+    */
+    .stage-tags{
+        grid-template-columns:1fr;
+
+        gap:7px;
+
+        margin-bottom:15px;
+    }
+
+    .stage-tag{
+        min-height:52px;
+
+        gap:9px;
+
+        padding:
+            7px
+            9px;
+
+        border-radius:14px;
+    }
+
+    .stage-tag-icon{
+        width:36px;
+        height:36px;
+
+        flex-basis:36px;
+
+        border-radius:11px;
+
+        font-size:13px;
+    }
+
+    .stage-tag-content strong{
+        font-size:11px;
+    }
+
+    .stage-tag-content small{
+        font-size:8px;
+    }
+
+    .stage-bottom-row{
+        grid-template-columns:1fr;
+
+        gap:9px;
+    }
+
+    .stage-warning{
+        padding:
+            9px
+            10px;
+    }
+
+    .stage-warning-icon{
+        width:32px;
+        height:32px;
+
+        flex-basis:32px;
+    }
+
+    .stage-btn{
+        width:max-content;
+
+        font-size:12px;
+    }
+
+    .stage-btn-icon{
+        width:34px;
+        height:34px;
+
+        flex-basis:34px;
+    }
+
+    .stage-right{
+        min-height:580px;
+    }
+
+    .stage-image-zone{
+        height:580px;
+        min-height:580px;
+    }
+
+    .stage-girl{
+        max-width:100%;
+        max-height:525px;
+    }
+
+    /*
+       Sur tablette :
+       seulement 2 cartes flottantes
+       pour garder l'image propre
+    */
+    .stage-floating-card{
+        max-width:130px;
+
+        padding:
+            7px
+            8px;
+    }
+
+    .stage-floating-card strong{
+        font-size:9px;
+    }
+
+    .stage-floating-card small{
+        font-size:8px;
+    }
+
+    .floating-icon{
+        width:29px;
+        height:29px;
+
+        flex-basis:29px;
+
+        font-size:11px;
+    }
+
+    .stage-floating-card-1{
+        top:10%;
+        left:2%;
+    }
+
+    .stage-floating-card-2{
+        top:38%;
+        right:2%;
+    }
+
+    .stage-floating-card-3{
+        display:none;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   650px ET MOINS
+
+   CONSERVÉ PROCHE DE TA VERSION
+   QUI FONCTIONNAIT DÉJÀ
+========================================================= */
+
+@media(max-width:650px){
+
+    .stage-dev{
+        padding:35px 12px;
+    }
+
+    .stage-card{
+        grid-template-columns:1fr;
+
+        min-height:auto;
+
+        border-radius:24px;
+
+        transform:none !important;
+    }
+
+    .stage-left{
+        padding:
+            34px
+            18px
+            25px;
+
+        text-align:center;
+
+        overflow:visible;
+    }
+
+    .stage-badge{
+        margin-left:auto;
+        margin-right:auto;
+
+        font-size:11px;
+    }
+
+    .stage-badge-icon{
+        width:32px;
+        height:32px;
+
+        flex-basis:32px;
+    }
+
+    .stage-title{
+        margin-left:auto;
+        margin-right:auto;
+
+        font-size:34px;
+
+        line-height:1.07;
+
+        letter-spacing:-1.4px;
+    }
+
+    .stage-description{
+        margin-left:auto;
+        margin-right:auto;
+
+        font-size:15px;
+
+        line-height:1.65;
+    }
+
+    .stage-mini-stats{
+        width:100%;
+
+        justify-content:center;
+
+        gap:10px;
+
+        padding:
+            12px
+            10px;
+
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .stage-mini-stat{
+        flex:1;
+
+        align-items:center;
+
+        text-align:center;
+    }
+
+    .stage-mini-stat strong{
+        font-size:15px;
+    }
+
+    .stage-mini-stat span{
+        font-size:9px;
+    }
+
+    .stage-tags{
+        grid-template-columns:1fr;
+
+        gap:10px;
+
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .stage-tag{
+        min-height:68px;
+
+        text-align:left;
+    }
+
+    .stage-tag-icon{
+        width:44px;
+        height:44px;
+
+        flex-basis:44px;
+    }
+
+    .stage-tag-content strong{
+        font-size:13px;
+    }
+
+    .stage-tag-content small{
+        font-size:10px;
+    }
+
+    .stage-bottom-row{
+        width:100%;
+
+        display:flex;
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+        gap:12px;
+
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .stage-warning{
+        width:100%;
+
+        text-align:left;
+    }
+
+    .stage-btn{
+        width:100%;
+
+        justify-content:space-between;
+
+        font-size:13px;
+    }
+
+    .stage-right{
+        min-height:410px;
+    }
+
+    .stage-right::before{
+        display:none;
+    }
+
+    .stage-image-zone{
+        height:410px;
+        min-height:410px;
+    }
+
+    .stage-girl{
+        max-width:100%;
+        max-height:405px;
+    }
+
+    .stage-floating-card{
+        padding:
+            8px
+            10px;
+
+        border-radius:13px;
+    }
+
+    .stage-floating-card strong{
+        font-size:10px;
+    }
+
+    .stage-floating-card small{
+        font-size:8px;
+    }
+
+    .floating-icon{
+        width:30px;
+        height:30px;
+
+        flex-basis:30px;
+
+        font-size:12px;
+    }
+
+    .stage-floating-card-1{
+        top:12%;
+        left:3%;
+    }
+
+    .stage-floating-card-2{
+        top:34%;
+        right:2%;
+    }
+
+    .stage-floating-card-3{
+        display:flex;
+
+        bottom:10%;
+        left:2%;
+    }
+}
+
+
+/* =========================================================
+   PETIT MOBILE
+========================================================= */
+
+@media(max-width:390px){
+
+    .stage-title{
+        font-size:30px;
+    }
+
+    .stage-mini-stats{
+        gap:6px;
+    }
+
+    .stage-mini-stat strong{
+        font-size:13px;
+    }
+
+    .stage-floating-card-2{
+        display:none;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITÉ
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    .stage-particle,
+    .stage-live-dot,
+    .stage-image-glow,
+    .stage-brand,
+    .stage-floating-card{
+        animation:none !important;
+    }
+
+    .js-stage-reveal,
+    .stage-tag,
+    .stage-girl{
+        transition:none !important;
+    }
+}
+</style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    /* =====================================================
+       DONNÉES DES DOMAINES
+    ====================================================== */
+
+    const stages = [
+        {
+            icon: "fa-solid fa-code",
+            text: "Développement Web",
+            subtext: "Sites & plateformes"
+        },
+        {
+            icon: "fa-solid fa-mobile-screen-button",
+            text: "Applications Mobiles",
+            subtext: "Android & iOS"
+        },
+        {
+            icon: "fa-solid fa-pen-ruler",
+            text: "UI/UX Design",
+            subtext: "Interfaces modernes"
+        },
+        {
+            icon: "fa-solid fa-palette",
+            text: "Infographie",
+            subtext: "Création visuelle"
+        },
+        {
+            icon: "fa-solid fa-building-user",
+            text: "Administration",
+            subtext: "Gestion & organisation"
+        },
+        {
+            icon: "fa-solid fa-headset",
+            text: "Service à la clientèle",
+            subtext: "Relation client"
+        }
+    ];
+
+
+    /* =====================================================
+       ÉLÉMENTS
+    ====================================================== */
+
+    const section = document.getElementById("stage");
+    const stageCard = document.getElementById("stageCard");
+    const stageTags = document.getElementById("stageTags");
+    const stageGirl = document.getElementById("stageGirl");
+    const stageBtn = document.getElementById("stageBtn");
+    const spotlight = document.getElementById("stageSpotlight");
+    const particlesContainer = document.getElementById("stageParticles");
+    const domainCount = document.getElementById("stageDomainCount");
+
+    if(!section || !stageCard){
+        return;
+    }
+
+
+    /* =====================================================
+       CRÉATION DES DOMAINES EN JS
+    ====================================================== */
+
+    if(stageTags){
+
+        stageTags.innerHTML = "";
+
+        stages.forEach(function(stage, index){
+
+            const item = document.createElement("div");
+
+            item.className = "stage-tag";
+
+            item.dataset.index = index;
+
+            item.innerHTML = `
+                <span class="stage-tag-icon">
+                    <i class="${stage.icon}"></i>
+                </span>
+
+                <span class="stage-tag-content">
+                    <strong>${stage.text}</strong>
+                    <small>${stage.subtext}</small>
+                </span>
+            `;
+
+            stageTags.appendChild(item);
+        });
+    }
+
+
+    /* =====================================================
+       PARTICULES GÉNÉRÉES EN JS
+    ====================================================== */
+
+    function createParticles(){
+
+        if(!particlesContainer){
+            return;
+        }
+
+        const particleCount =
+            window.innerWidth < 650 ? 10 : 22;
+
+        particlesContainer.innerHTML = "";
+
+        for(let i = 0; i < particleCount; i++){
+
+            const particle =
+                document.createElement("span");
+
+            particle.className =
+                "stage-particle";
+
+            const size =
+                Math.random() * 4 + 2;
+
+            const left =
+                Math.random() * 100;
+
+            const top =
+                Math.random() * 100;
+
+            const duration =
+                Math.random() * 7 + 7;
+
+            const delay =
+                Math.random() * 6;
+
+            particle.style.width =
+                size + "px";
+
+            particle.style.height =
+                size + "px";
+
+            particle.style.left =
+                left + "%";
+
+            particle.style.top =
+                top + "%";
+
+            particle.style.animationDuration =
+                duration + "s";
+
+            particle.style.animationDelay =
+                delay + "s";
+
+            particlesContainer.appendChild(
+                particle
+            );
+        }
+    }
+
+    createParticles();
+
+
+    /* =====================================================
+       COMPTEUR ANIMÉ
+    ====================================================== */
+
+    function animateCounter(
+        element,
+        target,
+        duration
+    ){
+
+        if(!element){
+            return;
+        }
+
+        let startTime = null;
+
+        function updateCounter(timestamp){
+
+            if(!startTime){
+                startTime = timestamp;
+            }
+
+            const progress =
+                Math.min(
+                    (timestamp - startTime) / duration,
+                    1
+                );
+
+            const easedProgress =
+                1 - Math.pow(1 - progress, 3);
+
+            const current =
+                Math.floor(
+                    easedProgress * target
+                );
+
+            element.textContent =
+                current;
+
+            if(progress < 1){
+
+                requestAnimationFrame(
+                    updateCounter
+                );
+
+            }else{
+
+                element.textContent =
+                    target;
+
+            }
+        }
+
+        requestAnimationFrame(
+            updateCounter
+        );
+    }
+
+
+    /* =====================================================
+       ANIMATION D'ENTRÉE AU SCROLL
+    ====================================================== */
+
+    let animationStarted = false;
+
+    const observer =
+        new IntersectionObserver(
+            function(entries){
+
+                entries.forEach(function(entry){
+
+                    if(
+                        entry.isIntersecting &&
+                        !animationStarted
+                    ){
+
+                        animationStarted = true;
+
+                        startStageAnimations();
+
+                        observer.unobserve(
+                            entry.target
+                        );
+                    }
+
+                });
+
+            },
+            {
+                threshold:0.20
+            }
+        );
+
+    observer.observe(section);
+
+
+    /* =====================================================
+       LANCEMENT DES ANIMATIONS
+    ====================================================== */
+
+    function startStageAnimations(){
+
+        /* Textes */
+
+        const reveals =
+            section.querySelectorAll(
+                ".js-stage-reveal"
+            );
+
+        reveals.forEach(
+            function(element, index){
+
+                setTimeout(function(){
+
+                    element.classList.add(
+                        "stage-reveal-visible"
+                    );
+
+                }, 120 + index * 140);
+
+            }
+        );
+
+
+        /* Cartes domaines */
+
+        const tags =
+            section.querySelectorAll(
+                ".stage-tag"
+            );
+
+        tags.forEach(
+            function(tag, index){
+
+                setTimeout(function(){
+
+                    tag.classList.add(
+                        "stage-tag-visible"
+                    );
+
+                }, 450 + index * 110);
+
+            }
+        );
+
+
+        /* Image fille */
+
+        if(stageGirl){
+
+            setTimeout(function(){
+
+                stageGirl.classList.add(
+                    "stage-girl-visible"
+                );
+
+            }, 380);
+        }
+
+
+        /* Cartes flottantes */
+
+        const floatingCards =
+            section.querySelectorAll(
+                ".stage-floating-card"
+            );
+
+        floatingCards.forEach(
+            function(card, index){
+
+                setTimeout(function(){
+
+                    card.classList.add(
+                        "stage-floating-visible"
+                    );
+
+                }, 800 + index * 220);
+
+            }
+        );
+
+
+        /* Compteur */
+
+        setTimeout(function(){
+
+            animateCounter(
+                domainCount,
+                stages.length,
+                1200
+            );
+
+        }, 500);
+    }
+
+
+    /* =====================================================
+       EFFET 3D SOURIS SUR DESKTOP
+    ====================================================== */
+
+    const canUse3D =
+        window.matchMedia(
+            "(min-width: 981px)"
+        ).matches;
+
+    if(canUse3D){
+
+        stageCard.addEventListener(
+            "mousemove",
+            function(event){
+
+                const rect =
+                    stageCard.getBoundingClientRect();
+
+                const x =
+                    event.clientX - rect.left;
+
+                const y =
+                    event.clientY - rect.top;
+
+                const centerX =
+                    rect.width / 2;
+
+                const centerY =
+                    rect.height / 2;
+
+                const rotateY =
+                    ((x - centerX) / centerX) * 1.5;
+
+                const rotateX =
+                    -((y - centerY) / centerY) * 1.2;
+
+                stageCard.style.transform = `
+                    perspective(1400px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                `;
+
+
+                /* Spotlight */
+
+                if(spotlight){
+
+                    spotlight.style.left =
+                        x + "px";
+
+                    spotlight.style.top =
+                        y + "px";
+
+                    spotlight.style.opacity =
+                        "1";
+                }
+
+
+                /* Parallaxe fille */
+
+                if(stageGirl){
+
+                    const moveX =
+                        ((x - centerX) / centerX) * 8;
+
+                    const moveY =
+                        ((y - centerY) / centerY) * 4;
+
+                    stageGirl.style.transform = `
+                        translate(
+                            ${moveX}px,
+                            ${moveY}px
+                        )
+                        scale(1.01)
+                    `;
+                }
+            }
+        );
+
+
+        stageCard.addEventListener(
+            "mouseleave",
+            function(){
+
+                stageCard.style.transform = `
+                    perspective(1400px)
+                    rotateX(0deg)
+                    rotateY(0deg)
+                `;
+
+                if(spotlight){
+                    spotlight.style.opacity =
+                        "0";
+                }
+
+                if(stageGirl){
+                    stageGirl.style.transform = `
+                        translate(0,0)
+                        scale(1)
+                    `;
+                }
+            }
+        );
+    }
+
+
+    /* =====================================================
+       BOUTON MAGNÉTIQUE
+    ====================================================== */
+
+    if(stageBtn && canUse3D){
+
+        stageBtn.addEventListener(
+            "mousemove",
+            function(event){
+
+                const rect =
+                    stageBtn.getBoundingClientRect();
+
+                const x =
+                    event.clientX -
+                    rect.left -
+                    rect.width / 2;
+
+                const y =
+                    event.clientY -
+                    rect.top -
+                    rect.height / 2;
+
+                stageBtn.style.transform = `
+                    translate(
+                        ${x * 0.10}px,
+                        ${y * 0.16}px
+                    )
+                `;
+            }
+        );
+
+
+        stageBtn.addEventListener(
+            "mouseleave",
+            function(){
+
+                stageBtn.style.transform =
+                    "translate(0,0)";
+            }
+        );
+    }
+
+
+    /* =====================================================
+       MICRO INTERACTION DES CARTES
+    ====================================================== */
+
+    const stageItems =
+        section.querySelectorAll(
+            ".stage-tag"
+        );
+
+    stageItems.forEach(function(item){
+
+        item.addEventListener(
+            "mouseenter",
+            function(){
+
+                const icon =
+                    item.querySelector(
+                        ".stage-tag-icon i"
+                    );
+
+                if(icon){
+
+                    icon.animate(
+                        [
+                            {
+                                transform:
+                                    "scale(1) rotate(0deg)"
+                            },
+                            {
+                                transform:
+                                    "scale(1.18) rotate(-8deg)"
+                            },
+                            {
+                                transform:
+                                    "scale(1) rotate(0deg)"
+                            }
+                        ],
+                        {
+                            duration:420,
+                            easing:
+                                "cubic-bezier(.2,.8,.2,1)"
+                        }
+                    );
+                }
+            }
+        );
+    });
+
+
+    /* =====================================================
+       RECRÉER PARTICULES AU REDIMENSIONNEMENT
+    ====================================================== */
+
+    let resizeTimer;
+
+    window.addEventListener(
+        "resize",
+        function(){
+
+            clearTimeout(resizeTimer);
+
+            resizeTimer =
+                setTimeout(function(){
+
+                    createParticles();
+
+                }, 250);
+        }
+    );
+
+});
+</script>
+
 
                 <div class="hero-buttons">
 
@@ -1630,6 +4606,7 @@ body{
                         <i class="fa-solid fa-mobile-screen"></i>
                         Applications Mobiles
                     </div>
+
 
                 </div>
             </div>
