@@ -3,10 +3,24 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}HexaQuébec{% endblock %}</title>
 
-    <link rel="icon" href="{% static 'images/HexaQuebec.png' %}" type="image/png">
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="{% static 'images/logoHexa.png' %}?v=20">
 
+    <link rel="shortcut icon"
+          type="image/png"
+          href="{% static 'images/logoHexa.png' %}?v=20">
+
+    <link rel="apple-touch-icon"
+          href="{% static 'images/logoHexa.png' %}?v=20">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
