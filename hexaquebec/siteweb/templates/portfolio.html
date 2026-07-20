@@ -1,1413 +1,3230 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio | HexaQuébec</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-<style>
-:root{
-    --dark:#071A3D;
-    --blue:#0057FF;
-    --gold:#D4AF37;
-    --bg:#F4F7FC;
-    --text:#1F2937;
-    --muted:#6B7280;
-    --card:#FFFFFF;
-    --border:#E5E7EB;
-    --success:#10B981;
-    --warning:#F59E0B;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    background:var(--bg);
-    color:var(--text);
-    overflow-x:hidden;
-}
-
-/* NAVBAR */
-.custom-navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    z-index:999;
-    background:rgba(7,26,61,.92);
-    backdrop-filter:blur(18px);
-    padding:12px 0;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    transition:.35s ease;
-}
-
-.custom-navbar.scrolled{
-    padding:8px 0;
-    box-shadow:0 18px 45px rgba(7,26,61,.28);
-}
-
-.nav-container{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.logo-box{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    text-decoration:none;
-}
-
-.logo-bg{
-    width:62px;
-    height:62px;
-    border-radius:20px;
-    background:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:8px;
-    box-shadow:0 12px 30px rgba(0,0,0,.25);
-}
-
-.logo-img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-}
-
-.brand-text{
-    display:flex;
-    flex-direction:column;
-    line-height:1.1;
-}
-
-.brand-text strong{
-    color:white;
-    font-size:1.25rem;
-    font-weight:900;
-}
-
-.brand-text small{
-    color:var(--gold);
-    font-size:.75rem;
-    font-weight:800;
-}
-
-.nav-menu{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.nav-menu a{
-    color:#e5e7eb;
-    text-decoration:none;
-    font-weight:800;
-    font-size:.92rem;
-    padding:10px 14px;
-    border-radius:14px;
-    transition:.3s ease;
-}
-
-.nav-menu a:hover{
-    background:rgba(255,255,255,.12);
-    color:white;
-}
-
-.nav-btn{
-    background:var(--gold)!important;
-    color:#111!important;
-    box-shadow:0 10px 25px rgba(212,175,55,.28);
-}
-
-/* HERO */
-.hero{
-    min-height:92vh;
-    padding:150px 20px 90px;
-    color:white;
-    position:relative;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 82% 18%,rgba(212,175,55,.35),transparent 28%),
-        radial-gradient(circle at 10% 80%,rgba(0,87,255,.45),transparent 30%),
-        linear-gradient(135deg,#071A3D,#0057FF);
-}
-
-.hero::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:
-        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.06) 1px, transparent 1px);
-    background-size:55px 55px;
-    opacity:.35;
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-}
-
-.hero-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:10px 16px;
-    border-radius:50px;
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.18);
-    font-weight:900;
-    color:#fff;
-    margin-bottom:22px;
-}
-
-.hero h1{
-    font-size:clamp(2.5rem,5vw,5rem);
-    font-weight:900;
-    line-height:1.04;
-    max-width:980px;
-}
-
-.hero h1 span{
-    color:var(--gold);
-}
-
-.hero p{
-    max-width:780px;
-    color:#e5e7eb;
-    font-size:1.12rem;
-    line-height:1.8;
-    margin-top:20px;
-}
-
-.hero-actions{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-    margin-top:30px;
-}
-
-.btn-main,
-.btn-light-pro{
-    border:none;
-    padding:15px 22px;
-    border-radius:16px;
-    font-weight:900;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    transition:.3s ease;
-}
-
-.btn-main{
-    background:var(--gold);
-    color:#111;
-    box-shadow:0 18px 40px rgba(212,175,55,.28);
-}
-
-.btn-main:hover{
-    transform:translateY(-4px);
-    color:#111;
-}
-
-.btn-light-pro{
-    color:white;
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.20);
-}
-
-.btn-light-pro:hover{
-    background:white;
-    color:var(--dark);
-}
-
-/* COMMON */
-.section-padding{
-    padding:85px 0;
-}
-
-.section-head{
-    max-width:850px;
-    margin-bottom:38px;
-}
-
-.section-title{
-    font-size:clamp(1.9rem,4vw,3.2rem);
-    font-weight:900;
-    color:var(--dark);
-    margin-bottom:12px;
-}
-
-.section-subtitle{
-    color:var(--muted);
-    line-height:1.75;
-    font-size:1.02rem;
-}
-
-/* CARDS */
-.service-card,
-.project-card,
-.stat-card{
-    background:rgba(255,255,255,.92);
-    border:1px solid var(--border);
-    border-radius:28px;
-    padding:30px;
-    height:100%;
-    box-shadow:0 18px 45px rgba(7,26,61,.08);
-    transition:.35s ease;
-    position:relative;
-    overflow:hidden;
-}
-
-.service-card::before,
-.project-card::before{
-    content:"";
-    position:absolute;
-    width:160px;
-    height:160px;
-    right:-70px;
-    top:-70px;
-    background:radial-gradient(circle,rgba(0,87,255,.14),transparent 65%);
-}
-
-.service-card:hover,
-.project-card:hover,
-.stat-card:hover{
-    transform:translateY(-10px);
-    box-shadow:0 30px 70px rgba(7,26,61,.16);
-    border-color:rgba(0,87,255,.25);
-}
-
-.icon-box{
-    width:66px;
-    height:66px;
-    border-radius:22px;
-    background:linear-gradient(135deg,var(--dark),var(--blue));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-size:26px;
-    margin-bottom:20px;
-    box-shadow:0 14px 35px rgba(0,87,255,.24);
-}
-
-.service-card h5,
-.project-card h5{
-    color:var(--dark);
-    font-weight:900;
-    margin-bottom:10px;
-}
-
-.service-card p,
-.project-card p{
-    color:var(--muted);
-    line-height:1.7;
-}
-
-/* PROJECT */
-.project-status{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:8px 14px;
-    border-radius:50px;
-    font-size:.78rem;
-    font-weight:900;
-    margin-bottom:16px;
-}
-
-.done{
-    background:#ECFDF5;
-    color:#047857;
-}
-
-.progress-status{
-    background:#FFF7ED;
-    color:#C2410C;
-}
-
-.project-link{
-    color:var(--blue);
-    font-weight:900;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-}
-
-.project-link:hover{
-    color:var(--dark);
-}
-
-/* FILTERS */
-.filter-box{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-bottom:30px;
-}
-
-.filter-btn{
-    border:none;
-    padding:12px 18px;
-    border-radius:50px;
-    background:white;
-    color:var(--dark);
-    font-weight:900;
-    box-shadow:0 12px 30px rgba(7,26,61,.08);
-    transition:.3s ease;
-}
-
-.filter-btn.active,
-.filter-btn:hover{
-    background:linear-gradient(135deg,var(--dark),var(--blue));
-    color:white;
-}
-
-/* STATS */
-.stat-number{
-    font-size:48px;
-    font-weight:900;
-    color:var(--blue);
-}
-
-.quality-circle{
-    width:155px;
-    height:155px;
-    border-radius:50%;
-    margin:0 auto 18px;
-    background:conic-gradient(var(--blue) 0deg,#e5e7eb 0deg);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-}
-
-.quality-circle::before{
-    content:"";
-    position:absolute;
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    background:white;
-}
-
-.quality-value{
-    position:relative;
-    z-index:2;
-    font-size:38px;
-    font-weight:900;
-    color:var(--dark);
-}
-
-/* PROCESS */
-.process-card{
-    background:white;
-    border-radius:26px;
-    padding:26px;
-    height:100%;
-    border:1px solid var(--border);
-    box-shadow:0 16px 42px rgba(7,26,61,.08);
-}
-
-.step-number{
-    width:46px;
-    height:46px;
-    border-radius:15px;
-    background:linear-gradient(135deg,var(--gold),#FFE08A);
-    color:#111;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:900;
-    margin-bottom:18px;
-}
-
-/* CTA */
-.cta{
-    background:
-        radial-gradient(circle at top right,rgba(212,175,55,.30),transparent 30%),
-        linear-gradient(135deg,var(--dark),var(--blue));
-    color:white;
-    border-radius:34px;
-    padding:52px;
-    box-shadow:0 28px 80px rgba(7,26,61,.25);
-    overflow:hidden;
-    position:relative;
-}
-
-.cta p{
-    color:#e5e7eb;
-}
-
-/* FOOTER */
-footer{
-    background:var(--dark);
-    color:white;
-    padding:55px 0 24px;
-    margin-top:70px;
-}
-
-.footer-logo-img{
-    height:52px;
-    background:white;
-    padding:7px;
-    border-radius:14px;
-    margin-bottom:15px;
-}
-
-.footer-text,
-.footer-link{
-    color:#cbd5e1;
-}
-
-.footer-link{
-    margin-bottom:8px;
-}
-
-/* FLOAT */
-.whatsapp,
-#backTop{
-    position:fixed;
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:999;
-    text-decoration:none;
-}
-
-.whatsapp{
-    left:22px;
-    bottom:22px;
-    background:#25D366;
-    color:white;
-    font-size:24px;
-    box-shadow:0 15px 35px rgba(37,211,102,.35);
-    animation:pulse 2s infinite;
-}
-
-#backTop{
-    right:22px;
-    bottom:22px;
-    background:var(--gold);
-    color:#111;
-    cursor:pointer;
-    display:none;
-    box-shadow:0 15px 35px rgba(212,175,55,.35);
-}
-
-@keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(37,211,102,.45);}
-    70%{box-shadow:0 0 0 16px rgba(37,211,102,0);}
-    100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}
-}
-
-/* JS REVEAL */
-.reveal{
-    opacity:0;
-    transform:translateY(35px);
-    transition:.8s ease;
-}
-
-.reveal.active{
-    opacity:1;
-    transform:translateY(0);
-}
-
-.project-item.hide{
-    display:none;
-}
-
-@media(max-width:992px){
-    .nav-menu{
-        display:none;
-    }
-}
-
-@media(max-width:768px){
-    .hero{
-        min-height:auto;
-        padding:130px 15px 70px;
-    }
-
-    .logo-bg{
-        width:54px;
-        height:54px;
-    }
-
-    .brand-text strong{
-        font-size:1rem;
-    }
-
-    .brand-text small{
-        font-size:.68rem;
-    }
-
-    .section-padding{
-        padding:60px 0;
-    }
-
-    .cta{
-        padding:34px 22px;
-        border-radius:26px;
-    }
-}
-
-/* ================================
-   PROJET CERTIFIÉ HEXAQUÉBEC
-================================ */
-.project-title-row{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    margin-bottom:10px;
-}
-
-.project-title-row h5{
-    margin:0;
-}
-
-.verified-project{
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    flex-shrink:0;
-    background:linear-gradient(135deg,#0057FF,#00A3FF);
-    color:#fff;
-    font-size:11px;
-    box-shadow:
-        0 6px 16px rgba(0,87,255,.30),
-        inset 0 0 0 2px rgba(255,255,255,.18);
-    position:relative;
-    cursor:pointer;
-}
-
-.verified-project::after{
-    content:"Projet HexaQuébec";
-    position:absolute;
-    left:50%;
-    bottom:calc(100% + 10px);
-    transform:translateX(-50%) translateY(5px);
-    background:#071A3D;
-    color:#fff;
-    padding:7px 10px;
-    border-radius:9px;
-    font-size:.72rem;
-    font-weight:800;
-    white-space:nowrap;
-    opacity:0;
-    visibility:hidden;
-    transition:.25s ease;
-    pointer-events:none;
-    z-index:20;
-}
-
-.verified-project:hover::after{
-    opacity:1;
-    visibility:visible;
-    transform:translateX(-50%) translateY(0);
-}
-
-/* ================================
-   MESSAGE PROJET PROTÉGÉ
-================================ */
-.project-protection{
-    margin-top:18px;
-    padding:13px 14px;
-    border-radius:16px;
-    display:flex;
-    align-items:flex-start;
-    gap:11px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(7,26,61,.06),
-            rgba(0,87,255,.08)
-        );
-
-    border:1px solid rgba(0,87,255,.13);
-}
-
-.project-protection-icon{
-    width:34px;
-    height:34px;
-    border-radius:11px;
-    flex-shrink:0;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:linear-gradient(135deg,#071A3D,#0057FF);
-    color:#fff;
-    font-size:14px;
-
-    box-shadow:0 8px 20px rgba(0,87,255,.20);
-}
-
-.project-protection-content{
-    display:flex;
-    flex-direction:column;
-    gap:3px;
-}
-
-.project-protection-content strong{
-    color:#071A3D;
-    font-size:.82rem;
-    font-weight:900;
-}
-
-.project-protection-content span{
-    color:#64748B;
-    font-size:.75rem;
-    line-height:1.45;
-}
-
-/* PETITE ANIMATION */
-.project-card:hover .verified-project{
-    animation:verifiedPulse 1.4s ease infinite;
-}
-
-@keyframes verifiedPulse{
-    0%,100%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.12);
-    }
-}
-
-/* MOBILE */
-@media(max-width:768px){
-    .project-protection{
-        padding:12px;
-    }
-
-    .project-protection-content span{
-        font-size:.72rem;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Portfolio officiel de HexaQuébec : développement web, applications mobiles, e-commerce et intelligence artificielle."
+    >
+
+    <title>Portfolio | HexaQuébec</title>
+
+    <!-- BOOTSTRAP -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- FONT AWESOME -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --dark: #071a3d;
+            --dark-light: #0d2a5e;
+            --blue: #0057ff;
+            --blue-light: #2f7bff;
+            --gold: #d4af37;
+            --gold-light: #ffe08a;
+            --background: #f4f7fc;
+            --white: #ffffff;
+            --text: #1f2937;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --warning: #c2410c;
+            --shadow: 0 18px 45px rgba(7, 26, 61, 0.09);
+            --shadow-hover: 0 30px 70px rgba(7, 26, 61, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .custom-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+
+            padding: 12px 0;
+
+            background: rgba(7, 26, 61, 0.94);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            transition: 0.3s ease;
+        }
+
+        .custom-navbar.scrolled {
+            padding: 8px 0;
+            box-shadow: 0 15px 40px rgba(7, 26, 61, 0.28);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-bg {
+            width: 62px;
+            height: 62px;
+
+            padding: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 20px;
+            background: var(--white);
+
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .brand-text strong {
+            color: var(--white);
+            font-size: 1.25rem;
+            font-weight: 900;
+        }
+
+        .brand-text small {
+            margin-top: 4px;
+            color: var(--gold);
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu a {
+            padding: 10px 14px;
+
+            color: #e5e7eb;
+            border-radius: 14px;
+
+            font-size: 0.92rem;
+            font-weight: 800;
+
+            transition: 0.25s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .nav-menu .nav-btn {
+            color: #111827;
+            background: var(--gold);
+
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.28);
+        }
+
+        .nav-menu .nav-btn:hover {
+            color: #111827;
+            background: var(--gold-light);
+        }
+
+        .mobile-menu-button {
+            width: 46px;
+            height: 46px;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            padding-top: 14px;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+
+            padding: 12px 14px;
+            margin-bottom: 7px;
+
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.08);
+
+            border-radius: 12px;
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            min-height: 92vh;
+
+            padding: 155px 20px 95px;
+
+            display: flex;
+            align-items: center;
+
+            color: var(--white);
+
+            position: relative;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 82% 18%,
+                    rgba(212, 175, 55, 0.38),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 10% 82%,
+                    rgba(0, 87, 255, 0.48),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--dark),
+                    var(--blue)
+                );
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.32;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.06) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.06) 1px,
+                    transparent 1px
+                );
+
+            background-size: 55px 55px;
+        }
+
+        .hero::after {
+            content: "";
+
+            position: absolute;
+            right: -170px;
+            bottom: -190px;
+
+            width: 420px;
+            height: 420px;
+
+            border: 70px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 10px 16px;
+            margin-bottom: 22px;
+
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.12);
+
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 50px;
+
+            font-weight: 900;
+        }
+
+        .hero h1 {
+            max-width: 980px;
+
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 900;
+            line-height: 1.04;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            max-width: 800px;
+
+            margin-top: 22px;
+
+            color: #e5e7eb;
+            font-size: 1.12rem;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+
+            margin-top: 32px;
+        }
+
+        .btn-main,
+        .btn-light-pro {
+            min-height: 54px;
+
+            padding: 15px 22px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            border: none;
+            border-radius: 16px;
+
+            font-weight: 900;
+
+            transition: 0.3s ease;
+        }
+
+        .btn-main {
+            color: #111827;
+            background: var(--gold);
+
+            box-shadow: 0 18px 40px rgba(212, 175, 55, 0.28);
+        }
+
+        .btn-main:hover {
+            color: #111827;
+            background: var(--gold-light);
+
+            transform: translateY(-4px);
+        }
+
+        .btn-light-pro {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.12);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-light-pro:hover {
+            color: var(--dark);
+            background: var(--white);
+
+            transform: translateY(-4px);
+        }
+
+        /* =====================================================
+           SECTIONS
+        ===================================================== */
+
+        .section-padding {
+            padding: 85px 0;
+        }
+
+        .section-head {
+            max-width: 860px;
+            margin-bottom: 40px;
+        }
+
+        .section-head.text-center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 14px;
+            margin-bottom: 14px;
+
+            color: var(--blue);
+            background: rgba(0, 87, 255, 0.08);
+
+            border: 1px solid rgba(0, 87, 255, 0.12);
+            border-radius: 50px;
+
+            font-size: 0.78rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .section-title {
+            margin-bottom: 13px;
+
+            color: var(--dark);
+
+            font-size: clamp(1.9rem, 4vw, 3.2rem);
+            font-weight: 900;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+
+            font-size: 1.02rem;
+            line-height: 1.75;
+        }
+
+        /* =====================================================
+           SERVICE CARDS
+        ===================================================== */
+
+        .service-card {
+            height: 100%;
+
+            padding: 30px;
+
+            position: relative;
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.94);
+
+            border: 1px solid var(--border);
+            border-radius: 28px;
+
+            box-shadow: var(--shadow);
+
+            transition: 0.35s ease;
+        }
+
+        .service-card::before {
+            content: "";
+
+            position: absolute;
+            top: -70px;
+            right: -70px;
+
+            width: 160px;
+            height: 160px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0, 87, 255, 0.14),
+                    transparent 65%
+                );
+        }
+
+        .service-card:hover {
+            border-color: rgba(0, 87, 255, 0.25);
+            box-shadow: var(--shadow-hover);
+
+            transform: translateY(-10px);
+        }
+
+        .icon-box {
+            width: 66px;
+            height: 66px;
+
+            margin-bottom: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--white);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--dark),
+                    var(--blue)
+                );
+
+            border-radius: 22px;
+
+            font-size: 26px;
+
+            box-shadow: 0 14px 35px rgba(0, 87, 255, 0.24);
+        }
+
+        .service-card h5 {
+            margin-bottom: 10px;
+
+            color: var(--dark);
+
+            font-size: 1.12rem;
+            font-weight: 900;
+        }
+
+        .service-card p {
+            margin-bottom: 0;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+           FILTRES
+        ===================================================== */
+
+        .filter-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            margin-bottom: 32px;
+        }
+
+        .filter-btn {
+            padding: 12px 19px;
+
+            color: var(--dark);
+            background: var(--white);
+
+            border: none;
+            border-radius: 50px;
+
+            font-weight: 900;
+
+            box-shadow: 0 12px 30px rgba(7, 26, 61, 0.08);
+
+            transition: 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            color: var(--white);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--dark),
+                    var(--blue)
+                );
+
+            transform: translateY(-2px);
+        }
+
+        /* =====================================================
+           CARTES PROJETS
+        ===================================================== */
+
+        .project-item {
+            transition: 0.3s ease;
+        }
+
+        .project-item.hide {
+            display: none;
+        }
+
+        .project-card {
+            height: 100%;
+
+            padding: 28px;
+
+            display: flex;
+            flex-direction: column;
+
+            position: relative;
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border: 1px solid var(--border);
+            border-radius: 28px;
+
+            box-shadow: var(--shadow);
+
+            transition: 0.35s ease;
+        }
+
+        .project-card::before {
+            content: "";
+
+            position: absolute;
+            top: -80px;
+            right: -80px;
+
+            width: 180px;
+            height: 180px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0, 87, 255, 0.14),
+                    transparent 65%
+                );
+        }
+
+        .project-card:hover {
+            border-color: rgba(0, 87, 255, 0.25);
+            box-shadow: var(--shadow-hover);
+
+            transform: translateY(-9px);
+        }
+
+        .project-status {
+            width: fit-content;
+
+            margin-bottom: 17px;
+            padding: 8px 14px;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            border-radius: 50px;
+
+            font-size: 0.78rem;
+            font-weight: 900;
+        }
+
+        .project-status.done {
+            color: #047857;
+            background: #ecfdf5;
+        }
+
+        .project-status.progress-status {
+            color: var(--warning);
+            background: #fff7ed;
+        }
+
+        .project-status.progress-status i {
+            animation: projectSpinner 2s linear infinite;
+        }
+
+        @keyframes projectSpinner {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .project-title-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            margin-bottom: 12px;
+        }
+
+        .project-title-row h5 {
+            margin: 0;
+
+            color: var(--dark);
+
+            font-size: 1.15rem;
+            font-weight: 900;
+        }
+
+        .project-card > p {
+            flex: 1;
+
+            margin-bottom: 18px;
+
+            color: var(--muted);
+
+            line-height: 1.72;
+        }
+
+        .verified-project {
+            width: 23px;
+            height: 23px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            color: var(--white);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--blue),
+                    #00a3ff
+                );
+
+            border-radius: 50%;
+
+            font-size: 11px;
+
+            box-shadow:
+                0 6px 16px rgba(0, 87, 255, 0.3),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.18);
+
+            position: relative;
+            cursor: pointer;
+        }
+
+        .verified-project::after {
+            content: attr(data-tooltip);
+
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+
+            min-width: max-content;
+
+            padding: 7px 10px;
+
+            color: var(--white);
+            background: var(--dark);
+
+            border-radius: 9px;
+
+            font-size: 0.72rem;
+            font-weight: 800;
+            white-space: nowrap;
+
+            opacity: 0;
+            visibility: hidden;
+
+            z-index: 30;
+
+            transform:
+                translateX(-50%)
+                translateY(5px);
+
+            transition: 0.25s ease;
+        }
+
+        .verified-project:hover::after {
+            opacity: 1;
+            visibility: visible;
+
+            transform:
+                translateX(-50%)
+                translateY(0);
+        }
+
+        .project-card:hover .verified-project {
+            animation: verifiedPulse 1.4s ease infinite;
+        }
+
+        @keyframes verifiedPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.12);
+            }
+        }
+
+        .project-link {
+            width: fit-content;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--blue);
+
+            font-weight: 900;
+
+            transition: 0.25s ease;
+        }
+
+        .project-link:hover {
+            color: var(--dark);
+            gap: 11px;
+        }
+
+        /* =====================================================
+           PROTECTION PROJET
+        ===================================================== */
+
+        .project-protection {
+            margin-top: auto;
+            padding: 13px 14px;
+
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(7, 26, 61, 0.06),
+                    rgba(0, 87, 255, 0.08)
+                );
+
+            border: 1px solid rgba(0, 87, 255, 0.13);
+            border-radius: 16px;
+        }
+
+        .project-protection-icon {
+            width: 35px;
+            height: 35px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            color: var(--white);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--dark),
+                    var(--blue)
+                );
+
+            border-radius: 11px;
+
+            font-size: 14px;
+
+            box-shadow: 0 8px 20px rgba(0, 87, 255, 0.2);
+        }
+
+        .project-protection-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .project-protection-content strong {
+            color: var(--dark);
+
+            font-size: 0.82rem;
+            font-weight: 900;
+        }
+
+        .project-protection-content span {
+            color: var(--muted);
+
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        /* =====================================================
+           FRANCOVIE IA — PROJET PHARE
+        ===================================================== */
+
+        .featured-project-card {
+            min-height: 440px;
+
+            padding: 0;
+
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+
+            position: relative;
+            overflow: hidden;
+
+            color: var(--white);
+
+            background:
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(212, 175, 55, 0.38),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 12% 90%,
+                    rgba(0, 163, 255, 0.32),
+                    transparent 34%
+                ),
+                linear-gradient(
+                    135deg,
+                    #061637,
+                    #063da5
+                );
+
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 34px;
+
+            box-shadow: 0 30px 80px rgba(7, 26, 61, 0.24);
+
+            transition: 0.35s ease;
+        }
+
+        .featured-project-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 38px 95px rgba(7, 26, 61, 0.3);
+        }
+
+        .featured-project-card::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.24;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.06) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.06) 1px,
+                    transparent 1px
+                );
+
+            background-size: 42px 42px;
+        }
+
+        .featured-project-content,
+        .featured-project-features {
+            position: relative;
+            z-index: 2;
+        }
+
+        .featured-project-content {
+            padding: 44px;
+        }
+
+        .featured-project-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+
+            margin-bottom: 25px;
+        }
+
+        .featured-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 9px 15px;
+
+            color: #7c2d12;
+            background: #ffedd5;
+
+            border-radius: 50px;
+
+            font-size: 0.78rem;
+            font-weight: 900;
+        }
+
+        .featured-status i {
+            animation: projectSpinner 2s linear infinite;
+        }
+
+        .featured-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 14px;
+
+            color: #111827;
+            background: var(--gold);
+
+            border-radius: 50px;
+
+            font-size: 0.76rem;
+            font-weight: 900;
+
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .featured-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 15px;
+        }
+
+        .featured-title-row h3 {
+            margin: 0;
+
+            color: var(--white);
+
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+        }
+
+        .featured-verified {
+            width: 34px;
+            height: 34px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            color: var(--dark);
+            background: var(--gold);
+
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+
+            font-size: 14px;
+
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.32);
+        }
+
+        .featured-subtitle {
+            max-width: 680px;
+
+            margin-bottom: 20px;
+
+            color: var(--gold-light);
+
+            font-size: 1.08rem;
+            font-weight: 900;
+        }
+
+        .featured-description {
+            max-width: 760px;
+
+            margin-bottom: 25px;
+
+            color: #e2e8f0;
+
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .featured-origin {
+            padding: 16px 17px;
+
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+
+            background: rgba(255, 255, 255, 0.1);
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 18px;
+
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .featured-origin-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            color: var(--dark);
+            background: var(--gold);
+
+            border-radius: 13px;
+
+            font-size: 17px;
+        }
+
+        .featured-origin strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: var(--white);
+
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        .featured-origin span {
+            display: block;
+
+            color: #dbeafe;
+
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .featured-project-features {
+            padding: 42px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            border-left: 1px solid rgba(255, 255, 255, 0.14);
+
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .featured-project-features h4 {
+            margin-bottom: 22px;
+
+            color: var(--white);
+
+            font-size: 1.15rem;
+            font-weight: 900;
+        }
+
+        .featured-list {
+            display: grid;
+            gap: 13px;
+        }
+
+        .featured-list-item {
+            padding: 13px 14px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.09);
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 15px;
+
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .featured-list-item i {
+            width: 34px;
+            height: 34px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            color: var(--dark);
+            background: var(--gold);
+
+            border-radius: 10px;
+        }
+
+        /* =====================================================
+           STATISTIQUES
+        ===================================================== */
+
+        .stat-card {
+            height: 100%;
+
+            padding: 30px;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            border: 1px solid var(--border);
+            border-radius: 28px;
+
+            box-shadow: var(--shadow);
+
+            transition: 0.35s ease;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(0, 87, 255, 0.23);
+            box-shadow: var(--shadow-hover);
+
+            transform: translateY(-8px);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+
+            margin: 0 auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--white);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--dark),
+                    var(--blue)
+                );
+
+            border-radius: 18px;
+
+            font-size: 22px;
+        }
+
+        .stat-number {
+            color: var(--blue);
+
+            font-size: 48px;
+            font-weight: 900;
+        }
+
+        .stat-card p {
+            margin-bottom: 0;
+
+            color: var(--muted);
+
+            font-weight: 700;
+        }
+
+        .quality-circle {
+            width: 155px;
+            height: 155px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            position: relative;
+
+            background:
+                conic-gradient(
+                    var(--blue) 0deg,
+                    #e5e7eb 0deg
+                );
+
+            border-radius: 50%;
+        }
+
+        .quality-circle::before {
+            content: "";
+
+            position: absolute;
+
+            width: 120px;
+            height: 120px;
+
+            background: var(--white);
+
+            border-radius: 50%;
+        }
+
+        .quality-value {
+            position: relative;
+            z-index: 2;
+
+            color: var(--dark);
+
+            font-size: 38px;
+            font-weight: 900;
+        }
+
+        /* =====================================================
+           MÉTHODE
+        ===================================================== */
+
+        .process-card {
+            height: 100%;
+
+            padding: 27px;
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+            border-radius: 26px;
+
+            box-shadow: 0 16px 42px rgba(7, 26, 61, 0.08);
+
+            transition: 0.3s ease;
+        }
+
+        .process-card:hover {
+            border-color: rgba(0, 87, 255, 0.22);
+            box-shadow: var(--shadow-hover);
+
+            transform: translateY(-7px);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+
+            margin-bottom: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #111827;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--gold),
+                    var(--gold-light)
+                );
+
+            border-radius: 15px;
+
+            font-weight: 900;
+        }
+
+        .process-card h5 {
+            margin-bottom: 10px;
+
+            color: var(--dark);
+
+            font-weight: 900;
+        }
+
+        .process-card p {
+            margin-bottom: 0;
+
+            color: var(--muted);
+
+            line-height: 1.65;
+        }
+
+        /* =====================================================
+           CTA
+        ===================================================== */
+
+        .cta {
+            padding: 52px;
+
+            color: var(--white);
+
+            position: relative;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(212, 175, 55, 0.32),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--dark),
+                    var(--blue)
+                );
+
+            border-radius: 34px;
+
+            box-shadow: 0 28px 80px rgba(7, 26, 61, 0.25);
+        }
+
+        .cta::after {
+            content: "";
+
+            position: absolute;
+            right: -90px;
+            bottom: -100px;
+
+            width: 250px;
+            height: 250px;
+
+            border: 45px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta h2 {
+            font-weight: 900;
+        }
+
+        .cta p {
+            color: #e5e7eb;
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            margin-top: 70px;
+            padding: 58px 0 24px;
+
+            color: var(--white);
+            background: var(--dark);
+        }
+
+        .footer-logo-img {
+            height: 54px;
+
+            margin-bottom: 16px;
+            padding: 7px;
+
+            background: var(--white);
+
+            border-radius: 14px;
+        }
+
+        .footer-title {
+            margin-bottom: 15px;
+
+            color: var(--white);
+
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .footer-text,
+        .footer-link {
+            color: #cbd5e1;
+        }
+
+        .footer-text {
+            line-height: 1.7;
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            margin-bottom: 10px;
+        }
+
+        .footer-link i {
+            width: 18px;
+            color: var(--gold);
+        }
+
+        .footer-divider {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* =====================================================
+           BOUTONS FLOTTANTS
+        ===================================================== */
+
+        .whatsapp,
+        #backTop {
+            position: fixed;
+
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            z-index: 999;
+
+            transition: 0.3s ease;
+        }
+
+        .whatsapp {
+            left: 22px;
+            bottom: 22px;
+
+            color: var(--white);
+            background: #25d366;
+
+            font-size: 25px;
+
+            box-shadow: 0 15px 35px rgba(37, 211, 102, 0.35);
+
+            animation: whatsappPulse 2s infinite;
+        }
+
+        .whatsapp:hover {
+            color: var(--white);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        #backTop {
+            right: 22px;
+            bottom: 22px;
+
+            display: none;
+
+            color: #111827;
+            background: var(--gold);
+
+            border: none;
+
+            cursor: pointer;
+
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.35);
+        }
+
+        #backTop:hover {
+            background: var(--gold-light);
+            transform: translateY(-5px);
+        }
+
+        @keyframes whatsappPulse {
+            0% {
+                box-shadow:
+                    0 0 0 0
+                    rgba(37, 211, 102, 0.45);
+            }
+
+            70% {
+                box-shadow:
+                    0 0 0 16px
+                    rgba(37, 211, 102, 0);
+            }
+
+            100% {
+                box-shadow:
+                    0 0 0 0
+                    rgba(37, 211, 102, 0);
+            }
+        }
+
+        /* =====================================================
+           ANIMATIONS
+        ===================================================== */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 992px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-button {
+                display: flex;
+            }
+
+            .featured-project-card {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-project-features {
+                border-top: 1px solid rgba(255, 255, 255, 0.14);
+                border-left: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .custom-navbar {
+                padding: 9px 0;
+            }
+
+            .logo-bg {
+                width: 53px;
+                height: 53px;
+
+                border-radius: 16px;
+            }
+
+            .brand-text strong {
+                font-size: 1rem;
+            }
+
+            .brand-text small {
+                font-size: 0.67rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 135px 15px 75px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-main,
+            .btn-light-pro {
+                width: 100%;
+            }
+
+            .section-padding {
+                padding: 62px 0;
+            }
+
+            .section-head {
+                margin-bottom: 30px;
+            }
+
+            .service-card,
+            .project-card,
+            .stat-card,
+            .process-card {
+                border-radius: 23px;
+            }
+
+            .featured-project-card {
+                border-radius: 27px;
+            }
+
+            .featured-project-content,
+            .featured-project-features {
+                padding: 28px 22px;
+            }
+
+            .featured-project-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .featured-title-row {
+                align-items: flex-start;
+            }
+
+            .featured-title-row h3 {
+                font-size: 2rem;
+            }
+
+            .featured-description {
+                font-size: 0.92rem;
+            }
+
+            .filter-box {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                padding: 10px 14px;
+                font-size: 0.84rem;
+            }
+
+            .project-protection {
+                padding: 12px;
+            }
+
+            .project-protection-content span {
+                font-size: 0.72rem;
+            }
+
+            .cta {
+                padding: 35px 22px;
+                border-radius: 26px;
+            }
+
+            .cta .btn-main {
+                margin-top: 18px;
+            }
+
+            .whatsapp,
+            #backTop {
+                width: 50px;
+                height: 50px;
+            }
+
+            .whatsapp {
+                left: 15px;
+                bottom: 15px;
+            }
+
+            #backTop {
+                right: 15px;
+                bottom: 15px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .brand-text small {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.15rem;
+            }
+
+            .featured-title-row h3 {
+                font-size: 1.75rem;
+            }
+
+            .featured-list-item {
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<nav class="custom-navbar" id="navbar">
-    <div class="container nav-container">
-        <a class="logo-box" href="{% url 'home' %}">
-            <span class="logo-bg">
-                <img src="{% static 'images/logoHexa.png' %}" class="logo-img" alt="HexaQuébec">
-            </span>
-            <span class="brand-text">
-                <strong>HexaQuébec</strong>
-                <small>Solutions numériques</small>
-            </span>
-        </a>
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+    <nav
+        class="custom-navbar"
+        id="navbar"
+    >
+        <div class="container">
+            <div class="nav-container">
 
-        <div class="nav-menu">
-            <a href="#expertise">Expertise</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#process">Méthode</a>
-            <a href="#contact" class="nav-btn">Contact</a>
-        </div>
-    </div>
-</nav>
-
-<section class="hero">
-    <div class="container hero-content">
-        <div class="hero-badge">
-            <i class="fa-solid fa-bolt"></i>
-            Portfolio professionnel HexaQuébec
-        </div>
-
-        <h1>
-            Des projets numériques <span>modernes</span>, rapides et conçus pour attirer vos clients.
-        </h1>
-
-        <p>
-            HexaQuébec développe des sites web, boutiques en ligne, plateformes de gestion,
-            applications et solutions IA avec une interface professionnelle, claire et performante.
-        </p>
-
-        <div class="hero-actions">
-            <a href="https://wa.me/15144677377" target="_blank" class="btn-main">
-                <i class="fa-brands fa-whatsapp"></i>
-                Discuter d’un projet
-            </a>
-
-            <a href="#portfolio" class="btn-light-pro">
-                <i class="fa-solid fa-layer-group"></i>
-                Voir nos projets
-            </a>
-        </div>
-    </div>
-</section>
-
-<section class="section-padding reveal" id="expertise">
-    <div class="container">
-        <div class="section-head">
-            <h2 class="section-title">Notre expertise</h2>
-            <p class="section-subtitle">
-                Nous créons des solutions sobres, modernes et adaptées aux entreprises qui veulent
-                une présence digitale professionnelle.
-            </p>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="service-card">
-                    <div class="icon-box"><i class="fa-solid fa-code"></i></div>
-                    <h5>Développement web</h5>
-                    <p>Sites vitrines, plateformes professionnelles, dashboards, portails clients et systèmes sur mesure.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="service-card">
-                    <div class="icon-box"><i class="fa-solid fa-cart-shopping"></i></div>
-                    <h5>E-commerce</h5>
-                    <p>Boutiques en ligne avec panier, paiement sécurisé, commandes, factures PDF et administration.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="service-card">
-                    <div class="icon-box"><i class="fa-solid fa-robot"></i></div>
-                    <h5>Intégration IA</h5>
-                    <p>Assistants intelligents, automatisation, chatbot et amélioration de l’expérience client.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="section-padding reveal" id="portfolio">
-    <div class="container">
-        <div class="section-head">
-            <h2 class="section-title">Nos projets</h2>
-            <p class="section-subtitle">
-                Une sélection de projets réalisés et en cours de développement chez HexaQuébec.
-            </p>
-        </div>
-
-        <div class="filter-box">
-            <button class="filter-btn active" data-filter="all">Tous</button>
-            <button class="filter-btn" data-filter="realise">Réalisés</button>
-            <button class="filter-btn" data-filter="encours">En cours</button>
-        </div>
-<div class="row g-4">
-
-    <!-- =================================
-         GAFOUSHOP
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="realise">
-        <div class="project-card">
-
-            <span class="project-status done">
-                <i class="fa-solid fa-check"></i>
-                Réalisé
-            </span>
-
-            <div class="project-title-row">
-                <h5>GafouShop</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Boutique e-commerce complète avec produits, panier,
-                paiement en ligne, commandes et espace administration.
-            </p>
-
-            <a
-                href="https://www.gafoushop.com/"
-                target="_blank"
-                class="project-link"
-            >
-                Voir le projet
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-        </div>
-    </div>
-
-
-    <!-- =================================
-         HEXAQUÉBEC
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="realise">
-        <div class="project-card">
-
-            <span class="project-status done">
-                <i class="fa-solid fa-check"></i>
-                Réalisé
-            </span>
-
-            <div class="project-title-row">
-                <h5>HexaQuébec</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Site professionnel pour présenter les services numériques,
-                portfolio, annonces et demandes clients.
-            </p>
-
-            <a
-                href="https://www.hexaquebec.com/"
-                target="_blank"
-                class="project-link"
-            >
-                Voir le projet
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-        </div>
-    </div>
-
-
-    <!-- =================================
-         GESTION IMMOBILIÈRE
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="realise">
-        <div class="project-card">
-
-            <span class="project-status done">
-                <i class="fa-solid fa-check"></i>
-                Réalisé
-            </span>
-
-            <div class="project-title-row">
-                <h5>Gestion immobilière</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Système de gestion des bâtiments, propriétaires,
-                locataires, paiements, factures et reçus PDF.
-            </p>
-
-        </div>
-    </div>
-
-
-    <!-- =================================
-         AFROFANS
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="encours">
-        <div class="project-card">
-
-            <span class="project-status progress-status">
-                <i class="fa-solid fa-spinner"></i>
-                En cours
-            </span>
-
-            <div class="project-title-row">
-                <h5>AfroFans</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Plateforme numérique dédiée à la visibilité
-                et à la valorisation des talents africains.
-            </p>
-
-            <div class="project-protection">
-                <div class="project-protection-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-
-                <div class="project-protection-content">
-                    <strong>Projet protégé</strong>
-                    <span>
-                        Concept et développement portés par HexaQuébec.
-                        Informations détaillées non publiques.
+                <a
+                    class="logo-box"
+                    href="{% url 'home' %}"
+                >
+                    <span class="logo-bg">
+                        <img
+                            src="{% static 'images/logoHexa.png' %}"
+                            class="logo-img"
+                            alt="Logo HexaQuébec"
+                        >
                     </span>
-                </div>
-            </div>
 
-        </div>
-    </div>
-
-
-    <!-- =================================
-         INTERVENTION+
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="encours">
-        <div class="project-card">
-
-            <span class="project-status progress-status">
-                <i class="fa-solid fa-spinner"></i>
-                En cours
-            </span>
-
-            <div class="project-title-row">
-                <h5>Intervention+</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Solution numérique innovante intégrant des technologies
-                intelligentes pour accompagner certains contextes d’intervention.
-            </p>
-
-            <div class="project-protection">
-                <div class="project-protection-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-
-                <div class="project-protection-content">
-                    <strong>Projet protégé</strong>
-                    <span>
-                        Concept, architecture fonctionnelle et développement
-                        portés par HexaQuébec.
+                    <span class="brand-text">
+                        <strong>HexaQuébec</strong>
+                        <small>Solutions numériques</small>
                     </span>
-                </div>
-            </div>
+                </a>
 
-        </div>
-    </div>
+                <div class="nav-menu">
+                    <a href="#expertise">
+                        Expertise
+                    </a>
 
+                    <a href="#portfolio">
+                        Portfolio
+                    </a>
 
-    <!-- =================================
-         MALI JAGO SIRA
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="encours">
-        <div class="project-card">
+                    <a href="#process">
+                        Méthode
+                    </a>
 
-            <span class="project-status progress-status">
-                <i class="fa-solid fa-spinner"></i>
-                En cours
-            </span>
-
-            <div class="project-title-row">
-                <h5>Mali Jago Sira</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Marketplace numérique multi-vendeurs en développement
-                pour le marché malien.
-            </p>
-
-            <div class="project-protection">
-                <div class="project-protection-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-
-                <div class="project-protection-content">
-                    <strong>Projet protégé</strong>
-                    <span>
-                        Projet porté technologiquement par HexaQuébec.
-                        Architecture et fonctionnalités détaillées confidentielles.
-                    </span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-    <!-- =================================
-         ZENDOAFRIQUE
-    ================================== -->
-    <div class="col-md-4 project-item" data-category="encours">
-        <div class="project-card">
-
-            <span class="project-status progress-status">
-                <i class="fa-solid fa-spinner"></i>
-                En cours
-            </span>
-
-            <div class="project-title-row">
-                <h5>ZendoAfrique</h5>
-
-                <span class="verified-project">
-                    <i class="fa-solid fa-check"></i>
-                </span>
-            </div>
-
-            <p>
-                Plateforme web e-commerce moderne en développement,
-                pensée pour une expérience d’achat fluide et professionnelle.
-            </p>
-
-            <div class="project-protection">
-                <div class="project-protection-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-
-                <div class="project-protection-content">
-                    <strong>Projet protégé</strong>
-                    <span>
-                        Conception numérique et développement portés
-                        par HexaQuébec.
-                    </span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-
-    </div>
-</section>
-
-<section class="section-padding reveal">
-    <div class="container">
-        <div class="section-head text-center mx-auto">
-            <h2 class="section-title">Qualité & performance</h2>
-            <p class="section-subtitle">
-                Nous visons une expérience rapide, propre, responsive et professionnelle.
-            </p>
-        </div>
-
-        <div class="row g-4 justify-content-center">
-            <div class="col-md-4">
-                <div class="stat-card text-center">
-                    <div class="stat-number counter" data-target="25">0</div>
-                    <p>Sites et plateformes</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="stat-card text-center">
-                    <div class="stat-number counter" data-target="12">0</div>
-                    <p>Applications et systèmes</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="stat-card text-center">
-                    <div class="quality-circle" id="qualityCircle">
-                        <div class="quality-value">
-                            <span id="qualityPercent">0</span>%
-                        </div>
-                    </div>
-                    <p>Qualité visée sur chaque projet</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="section-padding reveal" id="process">
-    <div class="container">
-        <div class="section-head">
-            <h2 class="section-title">Notre méthode</h2>
-            <p class="section-subtitle">
-                Une méthode claire pour transformer votre idée en solution numérique professionnelle.
-            </p>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="process-card">
-                    <div class="step-number">01</div>
-                    <h5 class="fw-bold">Analyse</h5>
-                    <p class="text-muted">Compréhension du besoin, objectifs, public cible et fonctionnalités.</p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="process-card">
-                    <div class="step-number">02</div>
-                    <h5 class="fw-bold">UI/UX</h5>
-                    <p class="text-muted">Création d’une interface moderne, simple, claire et attirante.</p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="process-card">
-                    <div class="step-number">03</div>
-                    <h5 class="fw-bold">Développement</h5>
-                    <p class="text-muted">Intégration technique, base de données, sécurité et administration.</p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="process-card">
-                    <div class="step-number">04</div>
-                    <h5 class="fw-bold">Déploiement</h5>
-                    <p class="text-muted">Mise en ligne, tests, optimisation et accompagnement après livraison.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="section-padding reveal" id="contact">
-    <div class="container">
-        <div class="cta">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h2 class="fw-bold mb-3">Vous avez un projet à développer ?</h2>
-                    <p class="mb-md-0">
-                        HexaQuébec vous accompagne de l’idée jusqu’au déploiement avec une solution propre,
-                        moderne et adaptée à votre entreprise.
-                    </p>
-                </div>
-
-                <div class="col-md-4 text-md-end">
-                    <a href="https://wa.me/15144677377" target="_blank" class="btn-main">
-                        <i class="fa-brands fa-whatsapp"></i>
-                        Contacter
+                    <a
+                        href="#contact"
+                        class="nav-btn"
+                    >
+                        Contact
                     </a>
                 </div>
+
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    aria-label="Ouvrir le menu"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+            </div>
+
+            <div
+                class="mobile-menu"
+                id="mobileMenu"
+            >
+                <a href="#expertise">
+                    Expertise
+                </a>
+
+                <a href="#portfolio">
+                    Portfolio
+                </a>
+
+                <a href="#process">
+                    Méthode
+                </a>
+
+                <a href="#contact">
+                    Contact
+                </a>
             </div>
         </div>
-    </div>
-</section>
+    </nav>
 
-<a href="https://wa.me/15144677377" target="_blank" class="whatsapp">
-    <i class="fa-brands fa-whatsapp"></i>
-</a>
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+    <section class="hero">
+        <div class="container hero-content">
 
-<div id="backTop">
-    <i class="fa-solid fa-chevron-up"></i>
-</div>
+            <div class="hero-badge">
+                <i class="fa-solid fa-bolt"></i>
+                Portfolio professionnel HexaQuébec
+            </div>
 
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <img src="{% static 'images/logoHexa.png' %}" class="footer-logo-img" alt="HexaQuébec">
-                <p class="footer-text">
-                    Développement web, applications mobiles, e-commerce, IA et solutions numériques sur mesure.
+            <h1>
+                Des projets numériques
+                <span>modernes</span>,
+                performants et pensés pour l’avenir.
+            </h1>
+
+            <p>
+                HexaQuébec développe des sites web, des boutiques en ligne,
+                des plateformes de gestion, des applications mobiles et des
+                solutions utilisant l’intelligence artificielle.
+            </p>
+
+            <div class="hero-actions">
+                <a
+                    href="https://wa.me/15144677377"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-main"
+                >
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Discuter d’un projet
+                </a>
+
+                <a
+                    href="#portfolio"
+                    class="btn-light-pro"
+                >
+                    <i class="fa-solid fa-layer-group"></i>
+                    Voir nos projets
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =====================================================
+         EXPERTISE
+    ====================================================== -->
+    <section
+        class="section-padding reveal"
+        id="expertise"
+    >
+        <div class="container">
+
+            <div class="section-head">
+                <div class="section-label">
+                    <i class="fa-solid fa-code"></i>
+                    Nos compétences
+                </div>
+
+                <h2 class="section-title">
+                    Notre expertise
+                </h2>
+
+                <p class="section-subtitle">
+                    Nous créons des solutions numériques modernes, sécurisées
+                    et adaptées aux entreprises, aux organisations et aux
+                    porteurs de projets.
                 </p>
             </div>
 
-            <div class="col-md-4 mb-4">
-                <h6 class="fw-bold text-white">Services</h6>
-                <div class="footer-link">Développement web</div>
-                <div class="footer-link">Applications mobiles</div>
-                <div class="footer-link">E-commerce</div>
-                <div class="footer-link">Intégration IA</div>
-            </div>
+            <div class="row g-4">
 
-            <div class="col-md-4 mb-4">
-                <h6 class="fw-bold text-white">Contact</h6>
-                <div class="footer-link">Québec, Canada</div>
-                <div class="footer-link">hexaquebec80@gmail.com</div>
-                <div class="footer-link">+1 514 467 7377</div>
+                <div class="col-md-4">
+                    <div class="service-card">
+
+                        <div class="icon-box">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+
+                        <h5>
+                            Développement web
+                        </h5>
+
+                        <p>
+                            Sites vitrines, plateformes professionnelles,
+                            portails clients, tableaux de bord et systèmes
+                            développés sur mesure.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="service-card">
+
+                        <div class="icon-box">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+
+                        <h5>
+                            E-commerce
+                        </h5>
+
+                        <p>
+                            Boutiques en ligne avec panier, paiement sécurisé,
+                            gestion des commandes, factures PDF et espace
+                            d’administration.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="service-card">
+
+                        <div class="icon-box">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+
+                        <h5>
+                            Intelligence artificielle
+                        </h5>
+
+                        <p>
+                            Assistants intelligents, automatisation, chatbots,
+                            analyse de données et amélioration de l’expérience
+                            utilisateur.
+                        </p>
+
+                    </div>
+                </div>
+
             </div>
         </div>
+    </section>
 
-        <hr style="border-color:rgba(255,255,255,.15);">
+    <!-- =====================================================
+         PORTFOLIO
+    ====================================================== -->
+    <section
+        class="section-padding reveal"
+        id="portfolio"
+    >
+        <div class="container">
 
-        <p class="text-center footer-text mb-0">
-            © 2026 HexaQuébec — Tous droits réservés
-        </p>
-    </div>
-</footer>
+            <div class="section-head">
+                <div class="section-label">
+                    <i class="fa-solid fa-layer-group"></i>
+                    Nos réalisations
+                </div>
 
-<script>
-/* NAVBAR SCROLL */
-const navbar = document.getElementById("navbar");
+                <h2 class="section-title">
+                    Nos projets
+                </h2>
 
-window.addEventListener("scroll", function(){
-    if(window.scrollY > 70){
-        navbar.classList.add("scrolled");
-    }else{
-        navbar.classList.remove("scrolled");
-    }
-});
+                <p class="section-subtitle">
+                    Découvrez une sélection de projets réalisés, de solutions
+                    en développement et d’initiatives technologiques portées
+                    par HexaQuébec.
+                </p>
+            </div>
 
-/* REVEAL ANIMATION */
-const revealElements = document.querySelectorAll(".reveal");
+            <!-- FILTRES -->
+            <div class="filter-box">
 
-function revealOnScroll(){
-    revealElements.forEach(function(el){
-        const top = el.getBoundingClientRect().top;
-        if(top < window.innerHeight - 80){
-            el.classList.add("active");
-        }
-    });
-}
+                <button
+                    type="button"
+                    class="filter-btn active"
+                    data-filter="all"
+                >
+                    Tous
+                </button>
 
-window.addEventListener("scroll", revealOnScroll);
-window.addEventListener("load", revealOnScroll);
+                <button
+                    type="button"
+                    class="filter-btn"
+                    data-filter="realise"
+                >
+                    Réalisés
+                </button>
 
-/* FILTER PORTFOLIO */
-const filterButtons = document.querySelectorAll(".filter-btn");
-const projectItems = document.querySelectorAll(".project-item");
+                <button
+                    type="button"
+                    class="filter-btn"
+                    data-filter="encours"
+                >
+                    En cours
+                </button>
 
-filterButtons.forEach(function(button){
-    button.addEventListener("click", function(){
-        filterButtons.forEach(function(btn){
-            btn.classList.remove("active");
-        });
+            </div>
 
-        button.classList.add("active");
+            <div class="row g-4">
 
-        const filter = button.getAttribute("data-filter");
+                <!-- ==========================================
+                     FRANCOVIE IA — PROJET PHARE
+                =========================================== -->
+                <div
+                    class="col-12 project-item"
+                    data-category="encours"
+                >
+                    <div class="featured-project-card">
 
-        projectItems.forEach(function(item){
-            const category = item.getAttribute("data-category");
+                        <div class="featured-project-content">
 
-            if(filter === "all" || filter === category){
-                item.classList.remove("hide");
-                item.style.animation = "fadeIn .45s ease";
-            }else{
-                item.classList.add("hide");
-            }
-        });
-    });
-});
+                            <div class="featured-project-header">
 
-/* COUNTERS */
-const counters = document.querySelectorAll(".counter");
-let countersStarted = false;
+                                <span class="featured-status">
+                                    <i class="fa-solid fa-spinner"></i>
+                                    En cours de développement
+                                </span>
 
-function startCounters(){
-    if(countersStarted || counters.length === 0) return;
+                                <span class="featured-label">
+                                    <i class="fa-solid fa-star"></i>
+                                    Projet phare HexaQuébec
+                                </span>
 
-    const section = counters[0].closest("section");
-    const top = section.getBoundingClientRect().top;
+                            </div>
 
-    if(top < window.innerHeight - 80){
-        countersStarted = true;
+                            <div class="featured-title-row">
 
-        counters.forEach(function(counter){
-            let value = 0;
-            const target = parseInt(counter.dataset.target);
+                                <h3>
+                                    FrancoVie IA
+                                </h3>
 
-            function animate(){
-                value += Math.ceil(target / 90);
+                                <span
+                                    class="featured-verified"
+                                    title="Projet officiel HexaQuébec"
+                                >
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
 
-                if(value < target){
-                    counter.textContent = value;
-                    requestAnimationFrame(animate);
-                }else{
-                    counter.textContent = target + "+";
+                            </div>
+
+                            <div class="featured-subtitle">
+                                Apprendre le français pour vivre et travailler
+                                au Québec
+                            </div>
+
+                            <p class="featured-description">
+                                FrancoVie IA est une application web et mobile
+                                utilisant l’intelligence artificielle pour aider
+                                les nouveaux arrivants à améliorer leur français,
+                                pratiquer des conversations réelles, comprendre
+                                le français parlé au Québec et faciliter leur
+                                intégration sociale et professionnelle.
+                            </p>
+
+                            <div class="featured-origin">
+
+                                <div class="featured-origin-icon">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Initiative originale de HexaQuébec
+                                    </strong>
+
+                                    <span>
+                                        FrancoVie IA est une idée principale
+                                        imaginée, conçue et développée au Canada
+                                        par HexaQuébec. Le concept, la vision,
+                                        l’architecture et la réalisation
+                                        technologique sont portés par
+                                        l’entreprise.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="featured-project-features">
+
+                            <h4>
+                                Fonctionnalités principales
+                            </h4>
+
+                            <div class="featured-list">
+
+                                <div class="featured-list-item">
+                                    <i class="fa-solid fa-comments"></i>
+
+                                    <span>
+                                        Conversations vocales et textuelles
+                                        avec un assistant IA
+                                    </span>
+                                </div>
+
+                                <div class="featured-list-item">
+                                    <i class="fa-solid fa-microphone-lines"></i>
+
+                                    <span>
+                                        Analyse et correction personnalisée
+                                        de la prononciation
+                                    </span>
+                                </div>
+
+                                <div class="featured-list-item">
+                                    <i class="fa-solid fa-briefcase"></i>
+
+                                    <span>
+                                        Parcours de français adaptés aux
+                                        différents métiers
+                                    </span>
+                                </div>
+
+                                <div class="featured-list-item">
+                                    <i class="fa-solid fa-file-circle-check"></i>
+
+                                    <span>
+                                        Explication simplifiée des documents
+                                        du quotidien
+                                    </span>
+                                </div>
+
+                                <div class="featured-list-item">
+                                    <i class="fa-solid fa-chart-line"></i>
+
+                                    <span>
+                                        Suivi du niveau, des progrès et des
+                                        objectifs atteints
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     GAFOUSHOP
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="realise"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status done">
+                            <i class="fa-solid fa-check"></i>
+                            Réalisé
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                GafouShop
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Projet développé par HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Boutique e-commerce complète avec catalogue de
+                            produits, panier, paiement en ligne, gestion des
+                            commandes et espace d’administration.
+                        </p>
+
+                        <a
+                            href="https://www.gafoushop.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="project-link"
+                        >
+                            Voir le projet
+
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     HEXAQUÉBEC
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="realise"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status done">
+                            <i class="fa-solid fa-check"></i>
+                            Réalisé
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                HexaQuébec
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Site officiel HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Site professionnel présentant les services
+                            numériques, le portfolio, les annonces, les
+                            opportunités de stage et les demandes clients.
+                        </p>
+
+                        <a
+                            href="https://www.hexaquebec.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="project-link"
+                        >
+                            Voir le projet
+
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     GESTION IMMOBILIÈRE
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="realise"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status done">
+                            <i class="fa-solid fa-check"></i>
+                            Réalisé
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                Gestion immobilière
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Solution HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Système professionnel pour gérer les agences,
+                            bâtiments, propriétaires, locataires, contrats,
+                            paiements, dépenses, rapports et reçus PDF.
+                        </p>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     AFROFANS
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="encours"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status progress-status">
+                            <i class="fa-solid fa-spinner"></i>
+                            En cours
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                AfroFans
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Projet original HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Plateforme numérique destinée à renforcer la
+                            visibilité, la promotion et la valorisation des
+                            talents africains auprès de leurs communautés.
+                        </p>
+
+                        <div class="project-protection">
+
+                            <div class="project-protection-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+
+                            <div class="project-protection-content">
+
+                                <strong>
+                                    Projet protégé
+                                </strong>
+
+                                <span>
+                                    Concept et développement portés par
+                                    HexaQuébec. Les informations détaillées
+                                    ne sont pas encore publiques.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     INTERVENTION+
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="encours"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status progress-status">
+                            <i class="fa-solid fa-spinner"></i>
+                            En cours
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                Intervention+
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Projet original HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Solution numérique innovante intégrant des
+                            technologies intelligentes pour accompagner
+                            différents contextes d’intervention et améliorer
+                            l’accès à l’information.
+                        </p>
+
+                        <div class="project-protection">
+
+                            <div class="project-protection-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+
+                            <div class="project-protection-content">
+
+                                <strong>
+                                    Projet protégé
+                                </strong>
+
+                                <span>
+                                    Concept, architecture fonctionnelle et
+                                    développement technologique portés par
+                                    HexaQuébec.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     MALI JAGO SIRA
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="encours"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status progress-status">
+                            <i class="fa-solid fa-spinner"></i>
+                            En cours
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                Mali Jago Sira
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Projet client développé par HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Marketplace numérique multi-vendeurs destinée
+                            au marché malien, développée et réalisée au Canada
+                            par HexaQuébec à la demande et pour le compte de
+                            son client.
+                        </p>
+
+                        <div class="project-protection">
+
+                            <div class="project-protection-icon">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+
+                            <div class="project-protection-content">
+
+                                <strong>
+                                    Projet client confidentiel
+                                </strong>
+
+                                <span>
+                                    HexaQuébec assure la conception et le
+                                    développement technologique du projet sans
+                                    en être l’initiateur ou le propriétaire.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     ZENDOAFRIQUE
+                =========================================== -->
+                <div
+                    class="col-md-6 col-xl-4 project-item"
+                    data-category="encours"
+                >
+                    <div class="project-card">
+
+                        <span class="project-status progress-status">
+                            <i class="fa-solid fa-spinner"></i>
+                            En cours
+                        </span>
+
+                        <div class="project-title-row">
+
+                            <h5>
+                                ZendoAfrique
+                            </h5>
+
+                            <span
+                                class="verified-project"
+                                data-tooltip="Projet développé par HexaQuébec"
+                            >
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Plateforme web e-commerce moderne pensée pour
+                            proposer une expérience d’achat simple, fluide,
+                            sécurisée et professionnelle.
+                        </p>
+
+                        <div class="project-protection">
+
+                            <div class="project-protection-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+
+                            <div class="project-protection-content">
+
+                                <strong>
+                                    Projet protégé
+                                </strong>
+
+                                <span>
+                                    Conception numérique et développement
+                                    technologique portés par HexaQuébec.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         QUALITÉ ET STATISTIQUES
+    ====================================================== -->
+    <section class="section-padding reveal">
+        <div class="container">
+
+            <div class="section-head text-center">
+
+                <div class="section-label">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Notre engagement
+                </div>
+
+                <h2 class="section-title">
+                    Qualité et performance
+                </h2>
+
+                <p class="section-subtitle">
+                    Nous travaillons pour offrir des solutions rapides,
+                    propres, sécurisées, adaptables et professionnelles.
+                </p>
+
+            </div>
+
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+
+                        <div
+                            class="stat-number counter"
+                            data-target="25"
+                        >
+                            0
+                        </div>
+
+                        <p>
+                            Sites et plateformes
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+
+                        <div
+                            class="stat-number counter"
+                            data-target="12"
+                        >
+                            0
+                        </div>
+
+                        <p>
+                            Applications et systèmes
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+
+                        <div
+                            class="quality-circle"
+                            id="qualityCircle"
+                        >
+                            <div class="quality-value">
+                                <span id="qualityPercent">
+                                    0
+                                </span>%
+                            </div>
+                        </div>
+
+                        <p>
+                            Qualité visée sur chaque projet
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         MÉTHODE
+    ====================================================== -->
+    <section
+        class="section-padding reveal"
+        id="process"
+    >
+        <div class="container">
+
+            <div class="section-head">
+
+                <div class="section-label">
+                    <i class="fa-solid fa-list-check"></i>
+                    Notre processus
+                </div>
+
+                <h2 class="section-title">
+                    Notre méthode
+                </h2>
+
+                <p class="section-subtitle">
+                    Une méthode claire et structurée pour transformer une idée
+                    en solution numérique professionnelle.
+                </p>
+
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="process-card">
+
+                        <div class="step-number">
+                            01
+                        </div>
+
+                        <h5>
+                            Analyse
+                        </h5>
+
+                        <p>
+                            Compréhension du besoin, du public cible, des
+                            objectifs et des fonctionnalités importantes.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="process-card">
+
+                        <div class="step-number">
+                            02
+                        </div>
+
+                        <h5>
+                            UI/UX
+                        </h5>
+
+                        <p>
+                            Création d’une interface moderne, simple, claire,
+                            professionnelle et adaptée aux utilisateurs.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="process-card">
+
+                        <div class="step-number">
+                            03
+                        </div>
+
+                        <h5>
+                            Développement
+                        </h5>
+
+                        <p>
+                            Intégration technique, base de données, sécurité,
+                            automatisation et tableau d’administration.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="process-card">
+
+                        <div class="step-number">
+                            04
+                        </div>
+
+                        <h5>
+                            Déploiement
+                        </h5>
+
+                        <p>
+                            Tests, optimisation, mise en ligne, maintenance
+                            et accompagnement après la livraison.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         CONTACT
+    ====================================================== -->
+    <section
+        class="section-padding reveal"
+        id="contact"
+    >
+        <div class="container">
+
+            <div class="cta">
+                <div class="cta-content">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-lg-8">
+
+                            <h2 class="mb-3">
+                                Vous avez un projet à développer ?
+                            </h2>
+
+                            <p class="mb-lg-0">
+                                HexaQuébec vous accompagne de l’analyse de votre
+                                idée jusqu’au déploiement d’une solution moderne,
+                                sécurisée et adaptée à votre entreprise.
+                            </p>
+
+                        </div>
+
+                        <div class="col-lg-4 text-lg-end">
+
+                            <a
+                                href="https://wa.me/15144677377"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn-main"
+                            >
+                                <i class="fa-brands fa-whatsapp"></i>
+                                Nous contacter
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =====================================================
+         WHATSAPP
+    ====================================================== -->
+    <a
+        href="https://wa.me/15144677377"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="whatsapp"
+        aria-label="Contacter HexaQuébec sur WhatsApp"
+    >
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- =====================================================
+         RETOUR EN HAUT
+    ====================================================== -->
+    <button
+        type="button"
+        id="backTop"
+        aria-label="Retour en haut"
+    >
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    <footer>
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-4 mb-4">
+
+                    <img
+                        src="{% static 'images/logoHexa.png' %}"
+                        class="footer-logo-img"
+                        alt="Logo HexaQuébec"
+                    >
+
+                    <p class="footer-text">
+                        Développement web, applications mobiles, e-commerce,
+                        intelligence artificielle et solutions numériques
+                        développées sur mesure.
+                    </p>
+
+                </div>
+
+                <div class="col-md-4 mb-4">
+
+                    <h6 class="footer-title">
+                        Nos services
+                    </h6>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-code"></i>
+                        Développement web
+                    </div>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                        Applications mobiles
+                    </div>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        E-commerce
+                    </div>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-robot"></i>
+                        Intégration IA
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 mb-4">
+
+                    <h6 class="footer-title">
+                        Contact
+                    </h6>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Québec, Canada
+                    </div>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-envelope"></i>
+                        hexaquebec80@gmail.com
+                    </div>
+
+                    <div class="footer-link">
+                        <i class="fa-solid fa-phone"></i>
+                        +1 514 467 7377
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="text-center footer-text mb-0">
+                © 2026 HexaQuébec — Tous droits réservés
+            </p>
+
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /* =================================================
+               NAVBAR AU DÉFILEMENT
+            ================================================= */
+            const navbar = document.getElementById("navbar");
+
+            function updateNavbar() {
+                if (window.scrollY > 70) {
+                    navbar.classList.add("scrolled");
+                } else {
+                    navbar.classList.remove("scrolled");
                 }
             }
 
-            animate();
-        });
-    }
-}
+            window.addEventListener("scroll", updateNavbar);
+            updateNavbar();
 
-/* QUALITY CIRCLE */
-let qualityStarted = false;
 
-function animateQuality(){
-    if(qualityStarted) return;
+            /* =================================================
+               MENU MOBILE
+            ================================================= */
+            const mobileMenuButton =
+                document.getElementById("mobileMenuButton");
 
-    const circle = document.getElementById("qualityCircle");
-    const percent = document.getElementById("qualityPercent");
+            const mobileMenu =
+                document.getElementById("mobileMenu");
 
-    if(!circle || !percent) return;
+            const mobileMenuIcon =
+                mobileMenuButton.querySelector("i");
 
-    const top = circle.getBoundingClientRect().top;
+            mobileMenuButton.addEventListener("click", function () {
+                mobileMenu.classList.toggle("active");
 
-    if(top < window.innerHeight - 80){
-        qualityStarted = true;
+                if (mobileMenu.classList.contains("active")) {
+                    mobileMenuIcon.classList.remove("fa-bars");
+                    mobileMenuIcon.classList.add("fa-xmark");
+                } else {
+                    mobileMenuIcon.classList.remove("fa-xmark");
+                    mobileMenuIcon.classList.add("fa-bars");
+                }
+            });
 
-        let value = 0;
-        const target = 90;
+            mobileMenu
+                .querySelectorAll("a")
+                .forEach(function (link) {
+                    link.addEventListener("click", function () {
+                        mobileMenu.classList.remove("active");
 
-        function update(){
-            value++;
-            const degree = value * 3.6;
+                        mobileMenuIcon.classList.remove("fa-xmark");
+                        mobileMenuIcon.classList.add("fa-bars");
+                    });
+                });
 
-            circle.style.background =
-                `conic-gradient(var(--gold) 0deg, var(--blue) ${degree}deg, #e5e7eb ${degree}deg)`;
 
-            percent.textContent = value;
+            /* =================================================
+               ANIMATION DES SECTIONS
+            ================================================= */
+            const revealElements =
+                document.querySelectorAll(".reveal");
 
-            if(value < target){
-                requestAnimationFrame(update);
+            function revealOnScroll() {
+                revealElements.forEach(function (element) {
+                    const elementTop =
+                        element.getBoundingClientRect().top;
+
+                    if (elementTop < window.innerHeight - 80) {
+                        element.classList.add("active");
+                    }
+                });
             }
-        }
 
-        update();
-    }
-}
+            window.addEventListener(
+                "scroll",
+                revealOnScroll
+            );
 
-window.addEventListener("scroll", function(){
-    startCounters();
-    animateQuality();
-});
+            revealOnScroll();
 
-window.addEventListener("load", function(){
-    startCounters();
-    animateQuality();
-});
 
-/* BACK TOP */
-const backTop = document.getElementById("backTop");
+            /* =================================================
+               FILTRES DU PORTFOLIO
+            ================================================= */
+            const filterButtons =
+                document.querySelectorAll(".filter-btn");
 
-window.addEventListener("scroll", function(){
-    if(window.scrollY > 400){
-        backTop.style.display = "flex";
-    }else{
-        backTop.style.display = "none";
-    }
-});
+            const projectItems =
+                document.querySelectorAll(".project-item");
 
-backTop.addEventListener("click", function(){
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-});
+            filterButtons.forEach(function (button) {
 
-/* FADE FILTER */
-const style = document.createElement("style");
-style.innerHTML = `
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(16px);}
-    to{opacity:1; transform:translateY(0);}
-}
-`;
-document.head.appendChild(style);
-</script>
+                button.addEventListener("click", function () {
+
+                    filterButtons.forEach(function (currentButton) {
+                        currentButton.classList.remove("active");
+                    });
+
+                    button.classList.add("active");
+
+                    const selectedFilter =
+                        button.getAttribute("data-filter");
+
+                    projectItems.forEach(function (project) {
+
+                        const projectCategory =
+                            project.getAttribute("data-category");
+
+                        if (
+                            selectedFilter === "all" ||
+                            selectedFilter === projectCategory
+                        ) {
+                            project.classList.remove("hide");
+                            project.style.animation =
+                                "fadeIn 0.45s ease";
+                        } else {
+                            project.classList.add("hide");
+                        }
+
+                    });
+
+                });
+
+            });
+
+
+            /* =================================================
+               COMPTEURS
+            ================================================= */
+            const counters =
+                document.querySelectorAll(".counter");
+
+            let countersStarted = false;
+
+            function startCounters() {
+
+                if (
+                    countersStarted ||
+                    counters.length === 0
+                ) {
+                    return;
+                }
+
+                const countersSection =
+                    counters[0].closest("section");
+
+                const sectionTop =
+                    countersSection
+                        .getBoundingClientRect()
+                        .top;
+
+                if (sectionTop < window.innerHeight - 80) {
+
+                    countersStarted = true;
+
+                    counters.forEach(function (counter) {
+
+                        let currentValue = 0;
+
+                        const targetValue =
+                            parseInt(
+                                counter.dataset.target,
+                                10
+                            );
+
+                        const increment =
+                            Math.max(
+                                1,
+                                Math.ceil(targetValue / 80)
+                            );
+
+                        function animateCounter() {
+
+                            currentValue += increment;
+
+                            if (currentValue < targetValue) {
+                                counter.textContent =
+                                    currentValue;
+
+                                requestAnimationFrame(
+                                    animateCounter
+                                );
+                            } else {
+                                counter.textContent =
+                                    targetValue + "+";
+                            }
+
+                        }
+
+                        animateCounter();
+
+                    });
+
+                }
+            }
+
+
+            /* =================================================
+               CERCLE QUALITÉ
+            ================================================= */
+            let qualityStarted = false;
+
+            function animateQuality() {
+
+                if (qualityStarted) {
+                    return;
+                }
+
+                const qualityCircle =
+                    document.getElementById(
+                        "qualityCircle"
+                    );
+
+                const qualityPercent =
+                    document.getElementById(
+                        "qualityPercent"
+                    );
+
+                if (
+                    !qualityCircle ||
+                    !qualityPercent
+                ) {
+                    return;
+                }
+
+                const circleTop =
+                    qualityCircle
+                        .getBoundingClientRect()
+                        .top;
+
+                if (circleTop < window.innerHeight - 80) {
+
+                    qualityStarted = true;
+
+                    let currentValue = 0;
+                    const targetValue = 90;
+
+                    function updateQuality() {
+
+                        currentValue++;
+
+                        const degree =
+                            currentValue * 3.6;
+
+                        qualityCircle.style.background =
+                            `conic-gradient(
+                                var(--gold) 0deg,
+                                var(--blue) ${degree}deg,
+                                #e5e7eb ${degree}deg
+                            )`;
+
+                        qualityPercent.textContent =
+                            currentValue;
+
+                        if (currentValue < targetValue) {
+                            requestAnimationFrame(
+                                updateQuality
+                            );
+                        }
+
+                    }
+
+                    updateQuality();
+
+                }
+            }
+
+
+            /* =================================================
+               RETOUR EN HAUT
+            ================================================= */
+            const backTop =
+                document.getElementById("backTop");
+
+            function updateBackTop() {
+
+                if (window.scrollY > 400) {
+                    backTop.style.display = "flex";
+                } else {
+                    backTop.style.display = "none";
+                }
+
+            }
+
+            backTop.addEventListener("click", function () {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+
+
+            /* =================================================
+               ÉVÉNEMENTS AU DÉFILEMENT
+            ================================================= */
+            window.addEventListener("scroll", function () {
+                startCounters();
+                animateQuality();
+                updateBackTop();
+            });
+
+            startCounters();
+            animateQuality();
+            updateBackTop();
+
+        });
+    </script>
 
 </body>
 </html>
