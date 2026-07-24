@@ -571,6 +571,106 @@ class ProfilStagiaireAdmin(admin.ModelAdmin):
     valider_projet.short_description = "Valider projet"
 
 
+
+from django.contrib import admin
+
+from .models import AttestationStage
+
+
+@admin.register(AttestationStage)
+class AttestationStageAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "numero_attestation",
+        "numero_stagiaire",
+        "nom",
+        "prenom",
+        "programme",
+        "date_debut",
+        "date_fin",
+        "date_delivrance",
+        "actif",
+    )
+
+    list_filter = (
+        "actif",
+        "date_delivrance",
+        "date_debut",
+        "date_fin",
+    )
+
+    search_fields = (
+        "numero_attestation",
+        "numero_stagiaire",
+        "nom",
+        "prenom",
+        "programme",
+        "responsable",
+    )
+
+    readonly_fields = (
+        "numero_attestation",
+        "date_delivrance",
+        "created_at",
+        "updated_at",
+    )
+
+    ordering = (
+        "-date_delivrance",
+        "-id",
+    )
+
+    fieldsets = (
+
+        (
+            "Informations du stagiaire",
+            {
+                "fields": (
+                    "numero_stagiaire",
+                    "nom",
+                    "prenom",
+                    "programme",
+                )
+            },
+        ),
+
+        (
+            "Période du stage",
+            {
+                "fields": (
+                    "date_debut",
+                    "date_fin",
+                )
+            },
+        ),
+
+        (
+            "Attestation",
+            {
+                "fields": (
+                    "numero_attestation",
+                    "date_delivrance",
+                    "lieu_delivrance",
+                    "responsable",
+                    "fonction_responsable",
+                    "signature_data",
+                    "actif",
+                )
+            },
+        ),
+
+        (
+            "Gestion interne",
+            {
+                "fields": (
+                    "cree_par",
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
+
 class CompteStagiaireAdmin(admin.ModelAdmin):
     list_display = ('nom', 'email', 'code_stagiaire', 'autorise', 'is_admin')
     list_filter = ('autorise', 'is_admin')

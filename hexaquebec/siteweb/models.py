@@ -573,6 +573,153 @@ class ProfilStagiaire(models.Model):
 
 
 
+
+
+
+
+class AttestationStage(models.Model):
+
+    numero_attestation = models.CharField(
+        max_length=30,
+        unique=True,
+        editable=False,
+        verbose_name="Numéro de l’attestation",
+    )
+
+    numero_stagiaire = models.CharField(
+        max_length=20,
+        db_index=True,
+        verbose_name="Numéro du stagiaire",
+        help_text="Exemple : STG-12345",
+    )
+
+    nom = models.CharField(
+        max_length=100,
+        verbose_name="Nom",
+    )
+
+    prenom = models.CharField(
+        max_length=100,
+        verbose_name="Prénom",
+    )
+
+    programme = models.CharField(
+        max_length=200,
+        verbose_name="Programme ou domaine du stage",
+    )
+
+    date_debut = models.DateField(
+        verbose_name="Date de début",
+    )
+
+    date_fin = models.DateField(
+        verbose_name="Date de fin",
+    )
+
+    date_delivrance = models.DateField(
+        default=timezone.localdate,
+        editable=False,
+        verbose_name="Date de délivrance",
+    )
+
+    lieu_delivrance = models.CharField(
+        max_length=150,
+        default="Saguenay, Québec, Canada",
+        verbose_name="Lieu de délivrance",
+    )
+
+    responsable = models.CharField(
+        max_length=150,
+        default="Diambere Kamara",
+        verbose_name="Nom du responsable",
+    )
+
+    fonction_responsable = models.CharField(
+        max_length=150,
+        default="Directeur fondateur",
+        verbose_name="Fonction du responsable",
+    )
+
+    signature_data = models.TextField(
+        verbose_name="Signature électronique",
+    )
+
+    cree_par = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="attestations_stage_creees",
+        verbose_name="Créée par",
+    )
+
+    actif = models.BooleanField(
+        default=True,
+        verbose_name="Attestation active",
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Date de création",
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Dernière modification",
+    )
+
+    class Meta:
+        ordering = [
+            "-date_delivrance",
+            "-id",
+        ]
+
+        verbose_name = "Attestation de stage"
+        verbose_name_plural = "Attestations de stage"
+
+    def clean(self):
+
+        super().clean()
+
+        if (
+            self.date_debut
+            and self.date_fin
+            and self.date_fin < self.date_debut
+        ):
+            raise ValidationError({
+                "date_fin": (
+                    "La date de fin ne peut pas être "
+                    "antérieure à la date de début."
+                )
+            })
+
+    def generer_numero_attestation(self):
+
+        annee = timezone.localdate().year
+        identifiant = uuid.uuid4().hex[:8].upper()
+
+        return f"ATT-{annee}-{identifiant}"
+
+    def save(self, *args, **kwargs):
+
+        if not self.numero_attestation:
+            self.numero_attestation = (
+                self.generer_numero_attestation()
+            )
+
+        super().save(*args, **kwargs)
+
+    @property
+    def nom_complet(self):
+        return f"{self.prenom} {self.nom}".strip()
+
+    def __str__(self):
+
+        return (
+            f"{self.numero_attestation} - "
+            f"{self.prenom} {self.nom}"
+        )
+
 class DocumentStagiaire(models.Model):
     profil = models.ForeignKey(
         ProfilStagiaire,

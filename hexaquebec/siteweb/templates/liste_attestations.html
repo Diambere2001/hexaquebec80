@@ -1,0 +1,1413 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Attestations de stage
+{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --att-primary: #0b3a61;
+        --att-primary-dark: #062845;
+        --att-secondary: #176fa8;
+        --att-accent: #d6a440;
+        --att-success: #168965;
+        --att-danger: #d44353;
+
+        --att-text: #152134;
+        --att-muted: #6b7687;
+        --att-soft: #f5f8fc;
+        --att-card: #ffffff;
+        --att-border: #dde5ef;
+
+        --att-shadow-sm: 0 10px 28px rgba(16, 44, 72, 0.08);
+        --att-shadow-md: 0 20px 55px rgba(16, 44, 72, 0.12);
+        --att-shadow-lg: 0 30px 85px rgba(16, 44, 72, 0.16);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .att-list-page {
+        min-height: 100vh;
+        padding: 34px 20px 70px;
+        color: var(--att-text);
+        background:
+            radial-gradient(
+                circle at 0% 0%,
+                rgba(23, 111, 168, 0.12),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 100% 8%,
+                rgba(214, 164, 64, 0.12),
+                transparent 28%
+            ),
+            linear-gradient(
+                180deg,
+                #f9fbfe 0%,
+                #f1f5fa 100%
+            );
+    }
+
+    .att-list-shell {
+        width: min(1240px, 100%);
+        margin: 0 auto;
+    }
+
+    /* =====================================================
+       EN-TÊTE
+    ====================================================== */
+
+    .att-list-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .att-list-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 9px;
+        color: var(--att-secondary);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .att-list-eyebrow i {
+        width: 31px;
+        height: 31px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: rgba(23, 111, 168, 0.10);
+    }
+
+    .att-list-title {
+        margin: 0;
+        color: var(--att-text);
+        font-size: clamp(30px, 4vw, 43px);
+        font-weight: 950;
+        letter-spacing: -0.035em;
+        line-height: 1.12;
+    }
+
+    .att-list-subtitle {
+        max-width: 720px;
+        margin: 9px 0 0;
+        color: var(--att-muted);
+        font-size: 15px;
+        line-height: 1.75;
+    }
+
+    .att-new-button {
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex: 0 0 auto;
+        padding: 0 21px;
+        border-radius: 15px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary-dark),
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 15px 32px rgba(11, 58, 97, 0.24);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 900;
+        transition:
+            transform 0.24s ease,
+            box-shadow 0.24s ease;
+    }
+
+    .att-new-button:hover {
+        transform: translateY(-2px);
+        color: white;
+        box-shadow: 0 20px 40px rgba(11, 58, 97, 0.30);
+    }
+
+    /* =====================================================
+       HERO
+    ====================================================== */
+
+    .att-list-hero {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+        gap: 25px;
+        margin-bottom: 22px;
+        padding: 27px;
+        border-radius: 25px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary-dark) 0%,
+                var(--att-primary) 55%,
+                var(--att-secondary) 100%
+            );
+        box-shadow: var(--att-shadow-lg);
+    }
+
+    .att-list-hero::before,
+    .att-list-hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .att-list-hero::before {
+        width: 260px;
+        height: 260px;
+        top: -155px;
+        right: 90px;
+        border: 42px solid rgba(255, 255, 255, 0.055);
+    }
+
+    .att-list-hero::after {
+        width: 190px;
+        height: 190px;
+        right: -90px;
+        bottom: -100px;
+        background: rgba(214, 164, 64, 0.14);
+    }
+
+    .att-list-hero-content,
+    .att-list-hero-stats {
+        position: relative;
+        z-index: 2;
+    }
+
+    .att-list-hero-badge {
+        width: max-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+        padding: 7px 11px;
+        border: 1px solid rgba(255, 255, 255, 0.17);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.94);
+        background: rgba(255, 255, 255, 0.09);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.04em;
+    }
+
+    .att-list-hero h2 {
+        max-width: 690px;
+        margin: 0;
+        font-size: clamp(23px, 3vw, 32px);
+        font-weight: 950;
+        line-height: 1.2;
+    }
+
+    .att-list-hero p {
+        max-width: 740px;
+        margin: 12px 0 0;
+        color: rgba(255, 255, 255, 0.73);
+        font-size: 14px;
+        line-height: 1.75;
+    }
+
+    .att-list-hero-stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        align-content: center;
+    }
+
+    .att-stat-card {
+        min-height: 112px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 17px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+    }
+
+    .att-stat-icon {
+        width: 39px;
+        height: 39px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 10px;
+        border-radius: 12px;
+        color: #ffe5a1;
+        background: rgba(214, 164, 64, 0.16);
+    }
+
+    .att-stat-value {
+        color: white;
+        font-size: 23px;
+        font-weight: 950;
+        line-height: 1;
+    }
+
+    .att-stat-label {
+        margin-top: 5px;
+        color: rgba(255, 255, 255, 0.66);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    /* =====================================================
+       RECHERCHE
+    ====================================================== */
+
+    .att-search-card {
+        margin-bottom: 21px;
+        padding: 16px;
+        border: 1px solid rgba(11, 58, 97, 0.10);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.90);
+        backdrop-filter: blur(14px);
+        box-shadow: var(--att-shadow-sm);
+    }
+
+    .att-search-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 10px;
+    }
+
+    .att-search-field {
+        position: relative;
+        min-width: 0;
+    }
+
+    .att-search-field > i {
+        position: absolute;
+        top: 50%;
+        left: 16px;
+        z-index: 2;
+        color: #8b96a5;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .att-search-input {
+        width: 100%;
+        min-height: 50px;
+        padding: 0 17px 0 45px;
+        border: 1px solid var(--att-border);
+        border-radius: 14px;
+        outline: none;
+        color: var(--att-text);
+        background: #fbfcfe;
+        font: inherit;
+        font-size: 14px;
+        transition:
+            border-color 0.20s ease,
+            box-shadow 0.20s ease,
+            background 0.20s ease;
+    }
+
+    .att-search-input:focus {
+        border-color: var(--att-secondary);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(23, 111, 168, 0.10);
+    }
+
+    .att-search-input::placeholder {
+        color: #9ba4b0;
+    }
+
+    .att-search-button,
+    .att-reset-button {
+        min-height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 18px;
+        border-radius: 14px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 850;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+            transform 0.22s ease,
+            box-shadow 0.22s ease;
+    }
+
+    .att-search-button {
+        border: none;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 11px 24px rgba(11, 58, 97, 0.18);
+    }
+
+    .att-search-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 28px rgba(11, 58, 97, 0.23);
+    }
+
+    .att-reset-button {
+        border: 1px solid var(--att-border);
+        color: var(--att-muted);
+        background: white;
+    }
+
+    .att-reset-button:hover {
+        transform: translateY(-1px);
+        color: var(--att-primary);
+    }
+
+    .att-search-result {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        color: var(--att-muted);
+        font-size: 12px;
+    }
+
+    .att-search-result i {
+        color: var(--att-secondary);
+    }
+
+    /* =====================================================
+       CARTE TABLEAU
+    ====================================================== */
+
+    .att-list-card {
+        overflow: hidden;
+        border: 1px solid rgba(11, 58, 97, 0.10);
+        border-radius: 23px;
+        background: white;
+        box-shadow: var(--att-shadow-md);
+    }
+
+    .att-list-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 19px 22px;
+        border-bottom: 1px solid var(--att-border);
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #fbfdff
+            );
+    }
+
+    .att-list-card-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .att-list-card-icon {
+        width: 43px;
+        height: 43px;
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 10px 22px rgba(11, 58, 97, 0.17);
+    }
+
+    .att-list-card-title h3 {
+        margin: 0;
+        color: var(--att-text);
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    .att-list-card-title p {
+        margin: 4px 0 0;
+        color: var(--att-muted);
+        font-size: 12px;
+    }
+
+    .att-list-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 11px;
+        border-radius: 999px;
+        color: var(--att-primary);
+        background: rgba(23, 111, 168, 0.08);
+        font-size: 11px;
+        font-weight: 850;
+    }
+
+    /* =====================================================
+       TABLEAU DESKTOP
+    ====================================================== */
+
+    .att-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .att-table {
+        width: 100%;
+        min-width: 950px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .att-table th {
+        padding: 14px 18px;
+        color: #697484;
+        background: #f6f9fc;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.075em;
+        text-align: left;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .att-table td {
+        padding: 16px 18px;
+        border-top: 1px solid #edf1f5;
+        color: #2a3546;
+        font-size: 13px;
+        vertical-align: middle;
+    }
+
+    .att-table tbody tr {
+        transition:
+            background 0.20s ease,
+            transform 0.20s ease;
+    }
+
+    .att-table tbody tr:hover {
+        background: #fbfdff;
+    }
+
+    .att-table tbody tr:first-child td {
+        border-top: none;
+    }
+
+    .att-number-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 10px;
+        border: 1px solid rgba(23, 111, 168, 0.12);
+        border-radius: 10px;
+        color: var(--att-primary);
+        background: rgba(23, 111, 168, 0.055);
+        font-size: 11px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .att-number-badge i {
+        color: var(--att-accent);
+    }
+
+    .att-person {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 190px;
+    }
+
+    .att-person-avatar {
+        flex: 0 0 39px;
+        width: 39px;
+        height: 39px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 7px 17px rgba(11, 58, 97, 0.15);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .att-person strong {
+        display: block;
+        color: var(--att-text);
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+    .att-person span {
+        display: block;
+        margin-top: 3px;
+        color: var(--att-muted);
+        font-size: 10px;
+    }
+
+    .att-student-code {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--att-muted);
+        font-size: 12px;
+        font-weight: 750;
+        white-space: nowrap;
+    }
+
+    .att-student-code i {
+        color: var(--att-secondary);
+    }
+
+    .att-program {
+        max-width: 270px;
+        color: #394557;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .att-date {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--att-muted);
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .att-date i {
+        color: var(--att-accent);
+    }
+
+    .att-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: var(--att-success);
+        background: rgba(22, 137, 101, 0.08);
+        font-size: 10px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .att-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .att-action-button {
+        width: 40px;
+        height: 40px;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid rgba(23, 111, 168, 0.13);
+        border-radius: 11px;
+        color: var(--att-secondary);
+        background: rgba(23, 111, 168, 0.055);
+        text-decoration: none;
+        transition:
+            transform 0.20s ease,
+            color 0.20s ease,
+            background 0.20s ease,
+            box-shadow 0.20s ease;
+    }
+
+    .att-action-button:hover {
+        transform: translateY(-2px);
+        color: white;
+        background: var(--att-secondary);
+        box-shadow: 0 10px 22px rgba(23, 111, 168, 0.20);
+    }
+
+    /* =====================================================
+       CARTES MOBILE
+    ====================================================== */
+
+    .att-mobile-list {
+        display: none;
+        padding: 14px;
+    }
+
+    .att-mobile-card {
+        padding: 16px;
+        border: 1px solid var(--att-border);
+        border-radius: 17px;
+        background: #fcfdff;
+    }
+
+    .att-mobile-card + .att-mobile-card {
+        margin-top: 12px;
+    }
+
+    .att-mobile-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .att-mobile-identity {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .att-mobile-avatar {
+        flex: 0 0 43px;
+        width: 43px;
+        height: 43px;
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    .att-mobile-name {
+        color: var(--att-text);
+        font-size: 14px;
+        font-weight: 900;
+    }
+
+    .att-mobile-code {
+        margin-top: 3px;
+        color: var(--att-muted);
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .att-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .att-mobile-info {
+        padding: 11px;
+        border-radius: 12px;
+        background: white;
+    }
+
+    .att-mobile-info.full {
+        grid-column: 1 / -1;
+    }
+
+    .att-mobile-info span {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--att-muted);
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .att-mobile-info strong {
+        color: var(--att-text);
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .att-mobile-action {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 13px;
+        border-radius: 12px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    /* =====================================================
+       ÉTAT VIDE
+    ====================================================== */
+
+    .att-empty {
+        padding: 70px 25px;
+        text-align: center;
+    }
+
+    .att-empty-icon {
+        width: 84px;
+        height: 84px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 17px;
+        border-radius: 25px;
+        color: var(--att-secondary);
+        background: rgba(23, 111, 168, 0.08);
+        font-size: 32px;
+    }
+
+    .att-empty h3 {
+        margin: 0;
+        color: var(--att-text);
+        font-size: 19px;
+        font-weight: 900;
+    }
+
+    .att-empty p {
+        max-width: 520px;
+        margin: 8px auto 19px;
+        color: var(--att-muted);
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+    .att-empty-button {
+        min-height: 47px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 18px;
+        border-radius: 13px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    /* =====================================================
+       ANIMATIONS
+    ====================================================== */
+
+    @keyframes attListFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .att-list-hero,
+    .att-search-card,
+    .att-list-card {
+        animation: attListFadeUp 0.5s ease both;
+    }
+
+    .att-search-card {
+        animation-delay: 0.06s;
+    }
+
+    .att-list-card {
+        animation-delay: 0.12s;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
+    @media (max-width: 900px) {
+        .att-list-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .att-list-hero-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 760px) {
+        .att-list-page {
+            padding: 23px 13px 50px;
+        }
+
+        .att-list-header {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .att-new-button {
+            width: 100%;
+        }
+
+        .att-list-hero {
+            padding: 22px 18px;
+            border-radius: 21px;
+        }
+
+        .att-search-form {
+            grid-template-columns: 1fr;
+        }
+
+        .att-search-button,
+        .att-reset-button {
+            width: 100%;
+        }
+
+        .att-list-card-head {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .att-table-wrapper {
+            display: none;
+        }
+
+        .att-mobile-list {
+            display: block;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .att-list-title {
+            font-size: 29px;
+        }
+
+        .att-list-hero-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .att-mobile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .att-mobile-info.full {
+            grid-column: auto;
+        }
+    }
+</style>
+
+<section class="att-list-page">
+
+    <div class="att-list-shell">
+
+        <!-- ==============================================
+             EN-TÊTE
+        =============================================== -->
+
+        <header class="att-list-header">
+
+            <div>
+
+                <div class="att-list-eyebrow">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    Gestion des stages
+                </div>
+
+                <h1 class="att-list-title">
+                    Attestations de stage
+                </h1>
+
+                <p class="att-list-subtitle">
+                    Consultez, recherchez et ouvrez toutes les
+                    attestations officielles délivrées aux stagiaires
+                    par HexaQuébec.
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'creer_attestation_stagiaire' %}"
+                class="att-new-button"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Nouvelle attestation
+            </a>
+
+        </header>
+
+        <!-- ==============================================
+             HERO
+        =============================================== -->
+
+        <section class="att-list-hero">
+
+            <div class="att-list-hero-content">
+
+                <div class="att-list-hero-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    DOCUMENTS OFFICIELS HEXAQUÉBEC
+                </div>
+
+                <h2>
+                    Gérez facilement les attestations délivrées
+                    à vos stagiaires.
+                </h2>
+
+                <p>
+                    Chaque document possède un numéro officiel,
+                    une date de délivrance, une signature électronique
+                    et un accès direct à la version imprimable.
+                </p>
+
+            </div>
+
+            <div class="att-list-hero-stats">
+
+                <div class="att-stat-card">
+
+                    <div class="att-stat-icon">
+                        <i class="fa-solid fa-certificate"></i>
+                    </div>
+
+                    <div class="att-stat-value">
+                        {{ attestations|length }}
+                    </div>
+
+                    <div class="att-stat-label">
+                        Attestation{{ attestations|length|pluralize }}
+                        affichée{{ attestations|length|pluralize }}
+                    </div>
+
+                </div>
+
+                <div class="att-stat-card">
+
+                    <div class="att-stat-icon">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+
+                    <div class="att-stat-value">
+                        100 %
+                    </div>
+
+                    <div class="att-stat-label">
+                        Documents signés électroniquement
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==============================================
+             RECHERCHE
+        =============================================== -->
+
+        <div class="att-search-card">
+
+            <form
+                method="get"
+                class="att-search-form"
+                role="search"
+            >
+
+                <div class="att-search-field">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="search"
+                        name="q"
+                        value="{{ recherche }}"
+                        class="att-search-input"
+                        placeholder="Rechercher par nom, numéro, programme..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="att-search-button"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Rechercher
+                </button>
+
+                {% if recherche %}
+
+                    <a
+                        href="{% url 'liste_attestations_stagiaires' %}"
+                        class="att-reset-button"
+                    >
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Réinitialiser
+                    </a>
+
+                {% endif %}
+
+            </form>
+
+            {% if recherche %}
+
+                <div class="att-search-result">
+                    <i class="fa-solid fa-filter"></i>
+
+                    Résultats pour :
+                    <strong>« {{ recherche }} »</strong>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <!-- ==============================================
+             LISTE
+        =============================================== -->
+
+        <div class="att-list-card">
+
+            <div class="att-list-card-head">
+
+                <div class="att-list-card-title">
+
+                    <div class="att-list-card-icon">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+
+                    <div>
+                        <h3>Documents délivrés</h3>
+
+                        <p>
+                            Ouvrez une attestation pour la consulter,
+                            l’imprimer ou la télécharger.
+                        </p>
+                    </div>
+
+                </div>
+
+                <span class="att-list-count">
+                    <i class="fa-solid fa-layer-group"></i>
+
+                    {{ attestations|length }}
+                    document{{ attestations|length|pluralize }}
+                </span>
+
+            </div>
+
+            {% if attestations %}
+
+                <!-- TABLEAU DESKTOP -->
+
+                <div class="att-table-wrapper">
+
+                    <table class="att-table">
+
+                        <thead>
+                            <tr>
+                                <th>Attestation</th>
+                                <th>Stagiaire</th>
+                                <th>Numéro stagiaire</th>
+                                <th>Programme</th>
+                                <th>Délivrée le</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for attestation in attestations %}
+
+                                <tr>
+
+                                    <td>
+
+                                        <span class="att-number-badge">
+                                            <i class="fa-solid fa-award"></i>
+
+                                            {{ attestation.numero_attestation }}
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="att-person">
+
+                                            <div class="att-person-avatar">
+                                                {{ attestation.prenom|slice:":1" }}
+                                                {{ attestation.nom|slice:":1" }}
+                                            </div>
+
+                                            <div>
+                                                <strong>
+                                                    {{ attestation.prenom }}
+                                                    {{ attestation.nom }}
+                                                </strong>
+
+                                                <span>
+                                                    Stagiaire HexaQuébec
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="att-student-code">
+                                            <i class="fa-solid fa-id-badge"></i>
+
+                                            {{ attestation.numero_stagiaire }}
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="att-program">
+                                            {{ attestation.programme }}
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="att-date">
+                                            <i class="fa-regular fa-calendar-check"></i>
+
+                                            {{ attestation.date_delivrance|date:"d/m/Y" }}
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="att-status-badge">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            Officielle
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="att-actions">
+
+                                            <a
+                                                href="{% url 'detail_attestation_stagiaire' attestation.pk %}"
+                                                class="att-action-button"
+                                                title="Voir l’attestation"
+                                                aria-label="Voir l’attestation de {{ attestation.prenom }} {{ attestation.nom }}"
+                                            >
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- CARTES MOBILE -->
+
+                <div class="att-mobile-list">
+
+                    {% for attestation in attestations %}
+
+                        <article class="att-mobile-card">
+
+                            <div class="att-mobile-head">
+
+                                <div class="att-mobile-identity">
+
+                                    <div class="att-mobile-avatar">
+                                        {{ attestation.prenom|slice:":1" }}
+                                        {{ attestation.nom|slice:":1" }}
+                                    </div>
+
+                                    <div>
+                                        <div class="att-mobile-name">
+                                            {{ attestation.prenom }}
+                                            {{ attestation.nom }}
+                                        </div>
+
+                                        <div class="att-mobile-code">
+                                            {{ attestation.numero_stagiaire }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <span class="att-status-badge">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Officielle
+                                </span>
+
+                            </div>
+
+                            <div class="att-mobile-grid">
+
+                                <div class="att-mobile-info full">
+
+                                    <span>Numéro d’attestation</span>
+
+                                    <strong>
+                                        {{ attestation.numero_attestation }}
+                                    </strong>
+
+                                </div>
+
+                                <div class="att-mobile-info full">
+
+                                    <span>Programme</span>
+
+                                    <strong>
+                                        {{ attestation.programme }}
+                                    </strong>
+
+                                </div>
+
+                                <div class="att-mobile-info">
+
+                                    <span>Délivrée le</span>
+
+                                    <strong>
+                                        {{ attestation.date_delivrance|date:"d/m/Y" }}
+                                    </strong>
+
+                                </div>
+
+                                <div class="att-mobile-info">
+
+                                    <span>Entreprise</span>
+
+                                    <strong>
+                                        HexaQuébec
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                            <a
+                                href="{% url 'detail_attestation_stagiaire' attestation.pk %}"
+                                class="att-mobile-action"
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                                Voir l’attestation
+                            </a>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <!-- ÉTAT VIDE -->
+
+                <div class="att-empty">
+
+                    <div class="att-empty-icon">
+                        <i class="fa-solid fa-certificate"></i>
+                    </div>
+
+                    {% if recherche %}
+
+                        <h3>
+                            Aucun résultat trouvé
+                        </h3>
+
+                        <p>
+                            Aucune attestation ne correspond à
+                            « {{ recherche }} ». Vérifiez l’orthographe
+                            ou réinitialisez la recherche.
+                        </p>
+
+                        <a
+                            href="{% url 'liste_attestations_stagiaires' %}"
+                            class="att-empty-button"
+                        >
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Réinitialiser la recherche
+                        </a>
+
+                    {% else %}
+
+                        <h3>
+                            Aucune attestation créée
+                        </h3>
+
+                        <p>
+                            Créez la première attestation officielle
+                            de stage avec numéro automatique et
+                            signature électronique.
+                        </p>
+
+                        <a
+                            href="{% url 'creer_attestation_stagiaire' %}"
+                            class="att-empty-button"
+                        >
+                            <i class="fa-solid fa-plus"></i>
+                            Créer une attestation
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

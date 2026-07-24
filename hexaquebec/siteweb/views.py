@@ -4143,3 +4143,152 @@ def telecharger_attestation(request, profil_id):
     response["Content-Disposition"] = f'inline; filename="attestation_{profil.code_stagiaire}.pdf"'
 
     return response
+
+
+
+
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
+
+from .forms import AttestationStageForm
+from .models import AttestationStage
+
+
+@login_required
+def liste_attestations_stagiaires(request):
+
+    attestations = AttestationStage.objects.filter(
+        actif=True,
+    ).select_related(
+        "cree_par",
+    )
+
+    recherche = request.GET.get(
+        "q",
+        "",
+    ).strip()
+
+    if recherche:
+
+        attestations = attestations.filter(
+            Q(
+                numero_attestation__icontains=recherche,
+            )
+            |
+            Q(
+                numero_stagiaire__icontains=recherche,
+            )
+            |
+            Q(
+                nom__icontains=recherche,
+            )
+            |
+            Q(
+                prenom__icontains=recherche,
+            )
+            |
+            Q(
+                programme__icontains=recherche,
+            )
+        )
+
+    context = {
+        "attestations": attestations,
+        "recherche": recherche,
+    }
+
+    return render(
+        request,
+        "liste_attestations.html",
+        context,
+    )
+
+
+@login_required
+def creer_attestation_stagiaire(request):
+
+    if request.method == "POST":
+
+        form = AttestationStageForm(
+            request.POST,
+        )
+
+        if form.is_valid():
+
+            attestation = form.save(
+                commit=False,
+            )
+
+            attestation.cree_par = request.user
+            attestation.save()
+
+            messages.success(
+                request,
+                (
+                    "L’attestation de stage a été "
+                    "créée avec succès."
+                ),
+            )
+
+            return redirect(
+                "detail_attestation_stagiaire",
+                pk=attestation.pk,
+            )
+
+    else:
+
+        valeurs_initiales = {}
+
+        nom_utilisateur = (
+            request.user.get_full_name().strip()
+        )
+
+        if nom_utilisateur:
+
+            valeurs_initiales["responsable"] = (
+                nom_utilisateur
+            )
+
+        form = AttestationStageForm(
+            initial=valeurs_initiales,
+        )
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "creer_attestation.html",
+        context,
+    )
+
+
+@login_required
+def detail_attestation_stagiaire(
+    request,
+    pk,
+):
+
+    attestation = get_object_or_404(
+        AttestationStage.objects.select_related(
+            "cree_par",
+        ),
+        pk=pk,
+        actif=True,
+    )
+
+    context = {
+        "attestation": attestation,
+    }
+
+    return render(
+        request,
+        "detail_attestation.html",
+        context,
+    )

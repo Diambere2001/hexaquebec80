@@ -160,39 +160,24 @@ urlpatterns = [
         name="telecharger_attestation",
     ),
 
-    
 
+    path(
+        "attestations-stagiaires/",
+        views.liste_attestations_stagiaires,
+        name="liste_attestations_stagiaires",
+    ),
 
-    
+    path(
+        "attestations-stagiaires/nouvelle/",
+        views.creer_attestation_stagiaire,
+        name="creer_attestation_stagiaire",
+    ),
 
- 
-
-    
-
-
-
-    
-
-
-
-    
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
+    path(
+        "attestations-stagiaires/<int:pk>/",
+        views.detail_attestation_stagiaire,
+        name="detail_attestation_stagiaire",
+    ),
 
     path("chatbot_ai/", views.chatbot_ai, name="chatbot_ai"),
 ]

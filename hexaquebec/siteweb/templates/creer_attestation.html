@@ -1,0 +1,2411 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Créer une attestation de stage
+{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --att-primary: #0f3f68;
+        --att-primary-dark: #082b49;
+        --att-secondary: #1f79b8;
+        --att-accent: #d6a63c;
+        --att-success: #169873;
+        --att-danger: #d83d4d;
+        --att-warning: #ef9f2f;
+
+        --att-text: #172133;
+        --att-muted: #6c7788;
+        --att-soft: #f5f8fc;
+        --att-card: #ffffff;
+        --att-border: #dde5ef;
+
+        --att-shadow-sm: 0 10px 28px rgba(18, 49, 78, 0.08);
+        --att-shadow-md: 0 22px 55px rgba(18, 49, 78, 0.12);
+        --att-shadow-lg: 0 32px 90px rgba(18, 49, 78, 0.16);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .att-page {
+        min-height: 100vh;
+        padding: 34px 20px 70px;
+        color: var(--att-text);
+        background:
+            radial-gradient(
+                circle at 0% 0%,
+                rgba(31, 121, 184, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 100% 15%,
+                rgba(214, 166, 60, 0.13),
+                transparent 28%
+            ),
+            linear-gradient(
+                180deg,
+                #f9fbfe 0%,
+                #f2f6fb 100%
+            );
+    }
+
+    .att-shell {
+        width: min(1240px, 100%);
+        margin: 0 auto;
+    }
+
+    /* =====================================================
+       EN-TÊTE
+    ====================================================== */
+
+    .att-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        margin-bottom: 25px;
+    }
+
+    .att-breadcrumb {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 9px;
+        color: var(--att-secondary);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .att-breadcrumb i {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        background: rgba(31, 121, 184, 0.10);
+    }
+
+    .att-title {
+        margin: 0;
+        color: var(--att-text);
+        font-size: clamp(29px, 4vw, 43px);
+        font-weight: 900;
+        letter-spacing: -0.035em;
+        line-height: 1.12;
+    }
+
+    .att-subtitle {
+        max-width: 720px;
+        margin: 9px 0 0;
+        color: var(--att-muted);
+        font-size: 15px;
+        line-height: 1.75;
+    }
+
+    .att-list-button {
+        min-height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex: 0 0 auto;
+        padding: 0 19px;
+        border: 1px solid rgba(15, 63, 104, 0.12);
+        border-radius: 15px;
+        color: var(--att-primary);
+        background: rgba(255, 255, 255, 0.84);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--att-shadow-sm);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 800;
+        transition:
+            transform 0.24s ease,
+            color 0.24s ease,
+            background 0.24s ease,
+            box-shadow 0.24s ease;
+    }
+
+    .att-list-button:hover {
+        transform: translateY(-2px);
+        color: white;
+        background: var(--att-primary);
+        box-shadow: 0 16px 34px rgba(15, 63, 104, 0.20);
+    }
+
+    /* =====================================================
+       HERO
+    ====================================================== */
+
+    .att-hero {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(270px, 0.75fr);
+        gap: 30px;
+        margin-bottom: 24px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        border-radius: 27px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary-dark) 0%,
+                var(--att-primary) 54%,
+                var(--att-secondary) 100%
+            );
+        box-shadow: var(--att-shadow-lg);
+    }
+
+    .att-hero::before,
+    .att-hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .att-hero::before {
+        width: 280px;
+        height: 280px;
+        top: -165px;
+        right: 100px;
+        border: 42px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .att-hero::after {
+        width: 210px;
+        height: 210px;
+        right: -95px;
+        bottom: -115px;
+        background: rgba(214, 166, 60, 0.14);
+    }
+
+    .att-hero-main,
+    .att-hero-meta {
+        position: relative;
+        z-index: 2;
+    }
+
+    .att-hero-badge {
+        width: max-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 17px;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.94);
+        background: rgba(255, 255, 255, 0.10);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.035em;
+    }
+
+    .att-hero h2 {
+        max-width: 690px;
+        margin: 0;
+        font-size: clamp(24px, 3vw, 34px);
+        font-weight: 900;
+        line-height: 1.18;
+    }
+
+    .att-hero p {
+        max-width: 720px;
+        margin: 13px 0 0;
+        color: rgba(255, 255, 255, 0.74);
+        font-size: 14px;
+        line-height: 1.8;
+    }
+
+    .att-hero-meta {
+        align-self: stretch;
+        display: grid;
+        gap: 11px;
+    }
+
+    .att-hero-stat {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 14px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+    }
+
+    .att-hero-stat-icon {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        color: #ffe6a8;
+        background: rgba(214, 166, 60, 0.16);
+    }
+
+    .att-hero-stat strong {
+        display: block;
+        margin-bottom: 3px;
+        color: white;
+        font-size: 13px;
+    }
+
+    .att-hero-stat span {
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    /* =====================================================
+       LAYOUT PRINCIPAL
+    ====================================================== */
+
+    .att-layout {
+        display: grid;
+        grid-template-columns: 305px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .att-sidebar {
+        position: sticky;
+        top: 20px;
+        display: grid;
+        gap: 16px;
+    }
+
+    .att-side-card {
+        padding: 20px;
+        border: 1px solid rgba(15, 63, 104, 0.10);
+        border-radius: 21px;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(15px);
+        box-shadow: var(--att-shadow-sm);
+    }
+
+    .att-side-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 16px;
+        color: var(--att-text);
+        font-size: 15px;
+        font-weight: 900;
+    }
+
+    .att-side-card-title i {
+        color: var(--att-secondary);
+    }
+
+    .att-progress-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+        color: var(--att-muted);
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .att-progress-head strong {
+        color: var(--att-primary);
+    }
+
+    .att-progress-track {
+        height: 9px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e8edf4;
+    }
+
+    .att-progress-bar {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background:
+            linear-gradient(
+                90deg,
+                var(--att-secondary),
+                var(--att-success)
+            );
+        transition: width 0.35s ease;
+    }
+
+    .att-steps {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .att-step {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 11px 12px;
+        border-radius: 13px;
+        color: var(--att-muted);
+        background: var(--att-soft);
+        font-size: 13px;
+        font-weight: 750;
+        transition:
+            color 0.22s ease,
+            background 0.22s ease,
+            transform 0.22s ease;
+    }
+
+    .att-step-number {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        color: var(--att-primary);
+        background: white;
+        box-shadow: 0 4px 12px rgba(18, 49, 78, 0.08);
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    .att-step.done {
+        color: #10775b;
+        background: rgba(22, 152, 115, 0.09);
+    }
+
+    .att-step.done .att-step-number {
+        color: white;
+        background: var(--att-success);
+    }
+
+    .att-mini-preview {
+        text-align: center;
+    }
+
+    .att-preview-avatar {
+        width: 82px;
+        height: 82px;
+        display: grid;
+        place-items: center;
+        margin: 2px auto 13px;
+        border: 6px solid #eef4f9;
+        border-radius: 24px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 14px 30px rgba(15, 63, 104, 0.16);
+        font-size: 25px;
+        font-weight: 900;
+    }
+
+    .att-preview-name {
+        margin: 0;
+        color: var(--att-text);
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    .att-preview-code {
+        display: inline-flex;
+        margin-top: 7px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: var(--att-primary);
+        background: rgba(31, 121, 184, 0.09);
+        font-size: 11px;
+        font-weight: 850;
+    }
+
+    .att-preview-program {
+        min-height: 20px;
+        margin: 12px 0 0;
+        color: var(--att-muted);
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .att-security-list {
+        display: grid;
+        gap: 12px;
+    }
+
+    .att-security-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: var(--att-muted);
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .att-security-item i {
+        margin-top: 2px;
+        color: var(--att-success);
+    }
+
+    /* =====================================================
+       FORMULAIRE
+    ====================================================== */
+
+    .att-form-card {
+        overflow: hidden;
+        border: 1px solid rgba(15, 63, 104, 0.10);
+        border-radius: 25px;
+        background: var(--att-card);
+        box-shadow: var(--att-shadow-md);
+    }
+
+    .att-form-top {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 22px 25px;
+        border-bottom: 1px solid var(--att-border);
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #fbfdff
+            );
+    }
+
+    .att-form-top-icon {
+        flex: 0 0 50px;
+        width: 50px;
+        height: 50px;
+        display: grid;
+        place-items: center;
+        border-radius: 15px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 12px 26px rgba(15, 63, 104, 0.18);
+        font-size: 20px;
+    }
+
+    .att-form-top h3 {
+        margin: 0;
+        color: var(--att-text);
+        font-size: 19px;
+        font-weight: 900;
+    }
+
+    .att-form-top p {
+        margin: 5px 0 0;
+        color: var(--att-muted);
+        font-size: 13px;
+    }
+
+    .att-form-body {
+        padding: 25px;
+    }
+
+    .att-alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-bottom: 20px;
+        padding: 15px 16px;
+        border: 1px solid rgba(31, 121, 184, 0.18);
+        border-radius: 15px;
+        color: #275978;
+        background: rgba(31, 121, 184, 0.07);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .att-alert.error {
+        border-color: rgba(216, 61, 77, 0.23);
+        color: #9f2737;
+        background: rgba(216, 61, 77, 0.07);
+    }
+
+    .att-alert i {
+        margin-top: 3px;
+        color: var(--att-secondary);
+    }
+
+    .att-alert.error i {
+        color: var(--att-danger);
+    }
+
+    .att-section {
+        padding: 22px;
+        border: 1px solid var(--att-border);
+        border-radius: 20px;
+        background: #fcfdff;
+    }
+
+    .att-section + .att-section {
+        margin-top: 18px;
+    }
+
+    .att-section-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-bottom: 20px;
+    }
+
+    .att-section-index {
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 9px 20px rgba(15, 63, 104, 0.15);
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+    .att-section-title {
+        margin: 0;
+        color: var(--att-text);
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    .att-section-subtitle {
+        margin: 5px 0 0;
+        color: var(--att-muted);
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .att-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .att-field {
+        min-width: 0;
+    }
+
+    .att-field.full {
+        grid-column: 1 / -1;
+    }
+
+    .att-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+        color: var(--att-text);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .att-label-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .att-label-text i {
+        color: var(--att-secondary);
+        font-size: 12px;
+    }
+
+    .att-required {
+        color: var(--att-danger);
+    }
+
+    .att-field-hint {
+        color: #98a1af;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+    .form-control-pro,
+    .att-form-body input:not([type="hidden"]),
+    .att-form-body select,
+    .att-form-body textarea {
+        width: 100%;
+        min-height: 52px;
+        padding: 12px 14px;
+        border: 1px solid var(--att-border);
+        border-radius: 14px;
+        outline: none;
+        color: var(--att-text);
+        background: white;
+        font: inherit;
+        font-size: 14px;
+        box-shadow: 0 1px 0 rgba(18, 49, 78, 0.02);
+        transition:
+            border-color 0.20s ease,
+            box-shadow 0.20s ease,
+            transform 0.20s ease,
+            background 0.20s ease;
+    }
+
+    .form-control-pro:hover,
+    .att-form-body input:not([type="hidden"]):hover,
+    .att-form-body select:hover,
+    .att-form-body textarea:hover {
+        border-color: #c4d0de;
+    }
+
+    .form-control-pro:focus,
+    .att-form-body input:not([type="hidden"]):focus,
+    .att-form-body select:focus,
+    .att-form-body textarea:focus {
+        transform: translateY(-1px);
+        border-color: var(--att-secondary);
+        background: #ffffff;
+        box-shadow:
+            0 0 0 4px rgba(31, 121, 184, 0.10),
+            0 8px 18px rgba(18, 49, 78, 0.06);
+    }
+
+    .att-form-body input::placeholder,
+    .att-form-body textarea::placeholder {
+        color: #a2aab6;
+    }
+
+    .errorlist,
+    .field-error {
+        margin: 8px 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--att-danger);
+        font-size: 12px;
+        font-weight: 750;
+        line-height: 1.5;
+    }
+
+    .att-field.has-error input,
+    .att-field.has-error select,
+    .att-field.has-error textarea {
+        border-color: rgba(216, 61, 77, 0.55);
+        box-shadow: 0 0 0 4px rgba(216, 61, 77, 0.07);
+    }
+
+    /* =====================================================
+       SIGNATURE
+    ====================================================== */
+
+    .att-signature-panel {
+        padding: 18px;
+        border: 1px solid var(--att-border);
+        border-radius: 17px;
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #f8fbfe
+            );
+    }
+
+    .att-signature-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 13px;
+    }
+
+    .att-signature-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--att-text);
+        font-size: 14px;
+        font-weight: 900;
+    }
+
+    .att-signature-title i {
+        color: var(--att-accent);
+    }
+
+    .att-clear-signature {
+        min-height: 39px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 0 13px;
+        border: 1px solid rgba(216, 61, 77, 0.18);
+        border-radius: 11px;
+        color: var(--att-danger);
+        background: rgba(216, 61, 77, 0.05);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+            color 0.20s ease,
+            background 0.20s ease,
+            transform 0.20s ease;
+    }
+
+    .att-clear-signature:hover {
+        transform: translateY(-1px);
+        color: white;
+        background: var(--att-danger);
+    }
+
+    .att-canvas-shell {
+        position: relative;
+        overflow: hidden;
+        min-height: 225px;
+        border: 2px dashed #c9d5e2;
+        border-radius: 16px;
+        background:
+            linear-gradient(
+                rgba(15, 63, 104, 0.025) 1px,
+                transparent 1px
+            ),
+            linear-gradient(
+                90deg,
+                rgba(15, 63, 104, 0.025) 1px,
+                transparent 1px
+            ),
+            #ffffff;
+        background-size: 24px 24px;
+        transition:
+            border-color 0.22s ease,
+            box-shadow 0.22s ease;
+    }
+
+    .att-canvas-shell.active {
+        border-color: var(--att-success);
+        box-shadow: 0 0 0 4px rgba(22, 152, 115, 0.08);
+    }
+
+    #signatureCanvas {
+        display: block;
+        width: 100%;
+        height: 225px;
+        cursor: crosshair;
+        touch-action: none;
+    }
+
+    .att-signature-placeholder {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        color: #a0a9b6;
+        text-align: center;
+        transition: opacity 0.20s ease;
+    }
+
+    .att-signature-placeholder.hidden {
+        opacity: 0;
+    }
+
+    .att-signature-placeholder i {
+        display: block;
+        margin-bottom: 9px;
+        color: #bcc6d2;
+        font-size: 26px;
+    }
+
+    .att-signature-placeholder strong {
+        display: block;
+        color: #8d97a5;
+        font-size: 13px;
+    }
+
+    .att-signature-placeholder span {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+    }
+
+    .att-signature-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 11px;
+    }
+
+    .att-signature-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--att-muted);
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .att-signature-status.valid {
+        color: var(--att-success);
+    }
+
+    .att-signature-status.invalid {
+        color: var(--att-danger);
+    }
+
+    .att-signature-help {
+        color: #9ba4b1;
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       ACTIONS
+    ====================================================== */
+
+    .att-form-actions {
+        position: sticky;
+        bottom: 14px;
+        z-index: 15;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-top: 21px;
+        padding: 14px;
+        border: 1px solid rgba(15, 63, 104, 0.12);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 18px 50px rgba(18, 49, 78, 0.14);
+    }
+
+    .att-actions-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--att-muted);
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .att-actions-info i {
+        color: var(--att-success);
+    }
+
+    .att-actions-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .att-btn {
+        min-height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 18px;
+        border-radius: 14px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 900;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+            transform 0.22s ease,
+            box-shadow 0.22s ease,
+            color 0.22s ease,
+            background 0.22s ease;
+    }
+
+    .att-btn-secondary {
+        border: 1px solid var(--att-border);
+        color: var(--att-text);
+        background: white;
+    }
+
+    .att-btn-secondary:hover {
+        transform: translateY(-2px);
+        color: var(--att-primary);
+        box-shadow: 0 11px 24px rgba(18, 49, 78, 0.10);
+    }
+
+    .att-btn-primary {
+        min-width: 195px;
+        border: none;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                var(--att-primary),
+                var(--att-secondary)
+            );
+        box-shadow: 0 13px 28px rgba(15, 63, 104, 0.22);
+    }
+
+    .att-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 36px rgba(15, 63, 104, 0.28);
+    }
+
+    .att-btn-primary:disabled {
+        opacity: 0.72;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* =====================================================
+       ANIMATIONS
+    ====================================================== */
+
+    @keyframes attFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .att-hero,
+    .att-sidebar,
+    .att-form-card {
+        animation: attFadeUp 0.55s ease both;
+    }
+
+    .att-sidebar {
+        animation-delay: 0.06s;
+    }
+
+    .att-form-card {
+        animation-delay: 0.12s;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
+    @media (max-width: 1040px) {
+        .att-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .att-sidebar {
+            position: static;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 850px) {
+        .att-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .att-hero-meta {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .att-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .att-side-card:nth-child(2),
+        .att-side-card:nth-child(3) {
+            display: none;
+        }
+    }
+
+    @media (max-width: 720px) {
+        .att-page {
+            padding: 23px 13px 50px;
+        }
+
+        .att-topbar {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .att-list-button {
+            width: 100%;
+        }
+
+        .att-hero {
+            padding: 24px 20px;
+            border-radius: 22px;
+        }
+
+        .att-hero-meta {
+            grid-template-columns: 1fr;
+        }
+
+        .att-form-body,
+        .att-form-top {
+            padding-left: 17px;
+            padding-right: 17px;
+        }
+
+        .att-section {
+            padding: 18px 15px;
+        }
+
+        .att-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .att-field.full {
+            grid-column: auto;
+        }
+
+        .att-signature-head,
+        .att-signature-footer {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .att-form-actions {
+            position: static;
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .att-actions-info {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .att-actions-buttons {
+            width: 100%;
+            flex-direction: column-reverse;
+        }
+
+        .att-btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .att-title {
+            font-size: 29px;
+        }
+
+        .att-hero h2 {
+            font-size: 23px;
+        }
+
+        .att-form-top {
+            align-items: flex-start;
+        }
+
+        .att-form-top-icon {
+            width: 45px;
+            height: 45px;
+            flex-basis: 45px;
+        }
+    }
+</style>
+
+<section class="att-page">
+
+    <div class="att-shell">
+
+        <!-- ==============================================
+             EN-TÊTE
+        =============================================== -->
+
+        <header class="att-topbar">
+
+            <div>
+
+                <div class="att-breadcrumb">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    Gestion des stages
+                </div>
+
+                <h1 class="att-title">
+                    Attester un stagiaire
+                </h1>
+
+                <p class="att-subtitle">
+                    Créez une attestation officielle, ajoutez une
+                    signature électronique dessinée et affichez le
+                    document immédiatement après l’enregistrement.
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'liste_attestations_stagiaires' %}"
+                class="att-list-button"
+            >
+                <i class="fa-solid fa-folder-open"></i>
+
+                Voir les attestations
+            </a>
+
+        </header>
+
+        <!-- ==============================================
+             HERO
+        =============================================== -->
+
+        <section class="att-hero">
+
+            <div class="att-hero-main">
+
+                <div class="att-hero-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    DOCUMENT OFFICIEL HEXAQUÉBEC
+                </div>
+
+                <h2>
+                    Une attestation professionnelle prête à
+                    consulter, imprimer ou télécharger.
+                </h2>
+
+                <p>
+                    Le numéro officiel et la date de délivrance sont
+                    générés automatiquement. Les informations du
+                    stagiaire et la signature sont enregistrées de
+                    façon sécurisée dans votre système.
+                </p>
+
+            </div>
+
+            <div class="att-hero-meta">
+
+                <div class="att-hero-stat">
+
+                    <div class="att-hero-stat-icon">
+                        <i class="fa-solid fa-hashtag"></i>
+                    </div>
+
+                    <div>
+                        <strong>Numéro automatique</strong>
+                        <span>Créé à l’enregistrement</span>
+                    </div>
+
+                </div>
+
+                <div class="att-hero-stat">
+
+                    <div class="att-hero-stat-icon">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+
+                    <div>
+                        <strong>Signature électronique</strong>
+                        <span>Souris, stylet ou écran tactile</span>
+                    </div>
+
+                </div>
+
+                <div class="att-hero-stat">
+
+                    <div class="att-hero-stat-icon">
+                        <i class="fa-solid fa-print"></i>
+                    </div>
+
+                    <div>
+                        <strong>Document immédiat</strong>
+                        <span>Affichage et impression directe</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==============================================
+             CONTENU PRINCIPAL
+        =============================================== -->
+
+        <div class="att-layout">
+
+            <!-- SIDEBAR -->
+
+            <aside class="att-sidebar">
+
+                <div class="att-side-card">
+
+                    <h3 class="att-side-card-title">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Progression du formulaire
+                    </h3>
+
+                    <div class="att-progress-head">
+                        <span>Informations complétées</span>
+                        <strong id="progressPercent">0 %</strong>
+                    </div>
+
+                    <div class="att-progress-track">
+                        <div
+                            class="att-progress-bar"
+                            id="progressBar"
+                        ></div>
+                    </div>
+
+                    <div class="att-steps">
+
+                        <div
+                            class="att-step"
+                            id="stepStagiaire"
+                        >
+                            <span class="att-step-number">1</span>
+                            Identité du stagiaire
+                        </div>
+
+                        <div
+                            class="att-step"
+                            id="stepStage"
+                        >
+                            <span class="att-step-number">2</span>
+                            Informations du stage
+                        </div>
+
+                        <div
+                            class="att-step"
+                            id="stepSignature"
+                        >
+                            <span class="att-step-number">3</span>
+                            Signature électronique
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="att-side-card att-mini-preview">
+
+                    <h3 class="att-side-card-title">
+                        <i class="fa-regular fa-id-card"></i>
+                        Aperçu rapide
+                    </h3>
+
+                    <div
+                        class="att-preview-avatar"
+                        id="previewAvatar"
+                    >
+                        ST
+                    </div>
+
+                    <p
+                        class="att-preview-name"
+                        id="previewName"
+                    >
+                        Nom du stagiaire
+                    </p>
+
+                    <span
+                        class="att-preview-code"
+                        id="previewCode"
+                    >
+                        STG-XXXXX
+                    </span>
+
+                    <p
+                        class="att-preview-program"
+                        id="previewProgram"
+                    >
+                        Le programme du stage apparaîtra ici.
+                    </p>
+
+                </div>
+
+                <div class="att-side-card">
+
+                    <h3 class="att-side-card-title">
+                        <i class="fa-solid fa-lock"></i>
+                        Document sécurisé
+                    </h3>
+
+                    <div class="att-security-list">
+
+                        <div class="att-security-item">
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            <span>
+                                Numéro d’attestation unique généré
+                                automatiquement.
+                            </span>
+                        </div>
+
+                        <div class="att-security-item">
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            <span>
+                                Signature enregistrée avec le document.
+                            </span>
+                        </div>
+
+                        <div class="att-security-item">
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            <span>
+                                Date de délivrance ajoutée automatiquement.
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+            <!-- FORMULAIRE -->
+
+            <div class="att-form-card">
+
+                <div class="att-form-top">
+
+                    <div class="att-form-top-icon">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+
+                    <div>
+                        <h3>Nouvelle attestation de stage</h3>
+
+                        <p>
+                            Les champs marqués d’un astérisque sont obligatoires.
+                        </p>
+                    </div>
+
+                </div>
+
+                <form
+                    method="post"
+                    id="attestationForm"
+                    class="att-form-body"
+                    novalidate
+                >
+
+                    {% csrf_token %}
+
+                    {{ form.signature_data }}
+
+                    {% if form.non_field_errors %}
+
+                        <div class="att-alert error">
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                            <div>
+                                {{ form.non_field_errors }}
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="att-alert">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        <div>
+                            La date de délivrance et le numéro officiel
+                            de l’attestation seront créés automatiquement
+                            après la validation du formulaire.
+                        </div>
+
+                    </div>
+
+                    <!-- ======================================
+                         SECTION 1 : STAGIAIRE
+                    ======================================= -->
+
+                    <section
+                        class="att-section"
+                        data-section="stagiaire"
+                    >
+
+                        <div class="att-section-head">
+
+                            <div class="att-section-index">
+                                01
+                            </div>
+
+                            <div>
+                                <h4 class="att-section-title">
+                                    Identité du stagiaire
+                                </h4>
+
+                                <p class="att-section-subtitle">
+                                    Renseignez les informations qui seront
+                                    affichées sur l’attestation.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="att-grid">
+
+                            <div
+                                class="att-field {% if form.numero_stagiaire.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.numero_stagiaire.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        Numéro du stagiaire
+                                        <span class="att-required">*</span>
+                                    </span>
+
+                                    <span class="att-field-hint">
+                                        Exemple : STG-12345
+                                    </span>
+                                </label>
+
+                                {{ form.numero_stagiaire }}
+                                {{ form.numero_stagiaire.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field {% if form.programme.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.programme.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-solid fa-book-open"></i>
+                                        Programme ou domaine
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.programme }}
+                                {{ form.programme.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field {% if form.prenom.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.prenom.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-regular fa-user"></i>
+                                        Prénom
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.prenom }}
+                                {{ form.prenom.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field {% if form.nom.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.nom.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-regular fa-user"></i>
+                                        Nom
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.nom }}
+                                {{ form.nom.errors }}
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- ======================================
+                         SECTION 2 : STAGE
+                    ======================================= -->
+
+                    <section
+                        class="att-section"
+                        data-section="stage"
+                    >
+
+                        <div class="att-section-head">
+
+                            <div class="att-section-index">
+                                02
+                            </div>
+
+                            <div>
+                                <h4 class="att-section-title">
+                                    Période et délivrance
+                                </h4>
+
+                                <p class="att-section-subtitle">
+                                    Indiquez la période officielle du stage
+                                    ainsi que le responsable signataire.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="att-grid">
+
+                            <div
+                                class="att-field {% if form.date_debut.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.date_debut.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        Date de début
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.date_debut }}
+                                {{ form.date_debut.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field {% if form.date_fin.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.date_fin.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-regular fa-calendar-check"></i>
+                                        Date de fin
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.date_fin }}
+                                {{ form.date_fin.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field full {% if form.lieu_delivrance.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.lieu_delivrance.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        Lieu de délivrance
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.lieu_delivrance }}
+                                {{ form.lieu_delivrance.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field {% if form.responsable.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.responsable.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                        Nom du responsable
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.responsable }}
+                                {{ form.responsable.errors }}
+
+                            </div>
+
+                            <div
+                                class="att-field {% if form.fonction_responsable.errors %}has-error{% endif %}"
+                            >
+
+                                <label
+                                    class="att-label"
+                                    for="{{ form.fonction_responsable.id_for_label }}"
+                                >
+                                    <span class="att-label-text">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                        Fonction du responsable
+                                        <span class="att-required">*</span>
+                                    </span>
+                                </label>
+
+                                {{ form.fonction_responsable }}
+                                {{ form.fonction_responsable.errors }}
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- ======================================
+                         SECTION 3 : SIGNATURE
+                    ======================================= -->
+
+                    <section
+                        class="att-section"
+                        data-section="signature"
+                    >
+
+                        <div class="att-section-head">
+
+                            <div class="att-section-index">
+                                03
+                            </div>
+
+                            <div>
+                                <h4 class="att-section-title">
+                                    Signature électronique
+                                </h4>
+
+                                <p class="att-section-subtitle">
+                                    Dessinez la signature avec la souris,
+                                    un stylet ou votre doigt.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="att-signature-panel">
+
+                            <div class="att-signature-head">
+
+                                <div class="att-signature-title">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                    Zone de signature du responsable
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="att-clear-signature"
+                                    id="clearSignature"
+                                >
+                                    <i class="fa-solid fa-eraser"></i>
+                                    Effacer
+                                </button>
+
+                            </div>
+
+                            <div
+                                class="att-canvas-shell"
+                                id="canvasShell"
+                            >
+
+                                <canvas
+                                    id="signatureCanvas"
+                                    width="1400"
+                                    height="360"
+                                    aria-label="Zone de signature électronique"
+                                ></canvas>
+
+                                <div
+                                    class="att-signature-placeholder"
+                                    id="signatureHelp"
+                                >
+                                    <div>
+                                        <i class="fa-solid fa-signature"></i>
+
+                                        <strong>
+                                            Dessinez la signature ici
+                                        </strong>
+
+                                        <span>
+                                            Maintenez la souris ou le doigt
+                                            pendant le dessin
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="att-signature-footer">
+
+                                <div
+                                    class="att-signature-status"
+                                    id="signatureStatus"
+                                    aria-live="polite"
+                                >
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                    Aucune signature dessinée
+                                </div>
+
+                                <div class="att-signature-help">
+                                    La signature sera enregistrée au format PNG.
+                                </div>
+
+                            </div>
+
+                            {{ form.signature_data.errors }}
+
+                        </div>
+
+                    </section>
+
+                    <!-- ======================================
+                         ACTIONS
+                    ======================================= -->
+
+                    <div class="att-form-actions">
+
+                        <div class="att-actions-info">
+                            <i class="fa-solid fa-shield-check"></i>
+
+                            <span>
+                                Vérifiez les informations avant de
+                                créer le document officiel.
+                            </span>
+                        </div>
+
+                        <div class="att-actions-buttons">
+
+                            <a
+                                href="{% url 'liste_attestations_stagiaires' %}"
+                                class="att-btn att-btn-secondary"
+                            >
+                                <i class="fa-solid fa-xmark"></i>
+                                Annuler
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="att-btn att-btn-primary"
+                                id="submitAttestation"
+                            >
+                                <i class="fa-solid fa-certificate"></i>
+
+                                <span>
+                                    Créer l’attestation
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const form = document.getElementById("attestationForm");
+        const canvas = document.getElementById("signatureCanvas");
+        const canvasShell = document.getElementById("canvasShell");
+        const clearButton = document.getElementById("clearSignature");
+        const hiddenInput = document.getElementById("id_signature_data");
+        const signatureHelp = document.getElementById("signatureHelp");
+        const signatureStatus = document.getElementById("signatureStatus");
+        const submitButton = document.getElementById("submitAttestation");
+
+        const progressBar = document.getElementById("progressBar");
+        const progressPercent = document.getElementById("progressPercent");
+
+        const stepStagiaire = document.getElementById("stepStagiaire");
+        const stepStage = document.getElementById("stepStage");
+        const stepSignature = document.getElementById("stepSignature");
+
+        const previewAvatar = document.getElementById("previewAvatar");
+        const previewName = document.getElementById("previewName");
+        const previewCode = document.getElementById("previewCode");
+        const previewProgram = document.getElementById("previewProgram");
+
+        if (
+            !form ||
+            !canvas ||
+            !hiddenInput
+        ) {
+            return;
+        }
+
+        const context = canvas.getContext("2d");
+
+        let dessinEnCours = false;
+        let signaturePresente = false;
+        let dernierePosition = null;
+
+        context.lineWidth = 5;
+        context.lineCap = "round";
+        context.lineJoin = "round";
+        context.strokeStyle = "#10253a";
+
+        const fields = {
+            numero: document.getElementById("id_numero_stagiaire"),
+            programme: document.getElementById("id_programme"),
+            prenom: document.getElementById("id_prenom"),
+            nom: document.getElementById("id_nom"),
+            dateDebut: document.getElementById("id_date_debut"),
+            dateFin: document.getElementById("id_date_fin"),
+            lieu: document.getElementById("id_lieu_delivrance"),
+            responsable: document.getElementById("id_responsable"),
+            fonction: document.getElementById("id_fonction_responsable"),
+        };
+
+        function valeurPresente(champ) {
+
+            return Boolean(
+                champ &&
+                String(champ.value || "").trim()
+            );
+        }
+
+        function obtenirInitiales() {
+
+            const prenom = fields.prenom
+                ? fields.prenom.value.trim()
+                : "";
+
+            const nom = fields.nom
+                ? fields.nom.value.trim()
+                : "";
+
+            const premiereLettrePrenom = prenom
+                ? prenom.charAt(0).toUpperCase()
+                : "";
+
+            const premiereLettreNom = nom
+                ? nom.charAt(0).toUpperCase()
+                : "";
+
+            return (
+                premiereLettrePrenom +
+                premiereLettreNom
+            ) || "ST";
+        }
+
+        function mettreAJourApercu() {
+
+            const prenom = fields.prenom
+                ? fields.prenom.value.trim()
+                : "";
+
+            const nom = fields.nom
+                ? fields.nom.value.trim()
+                : "";
+
+            const numero = fields.numero
+                ? fields.numero.value.trim()
+                : "";
+
+            const programme = fields.programme
+                ? fields.programme.value.trim()
+                : "";
+
+            previewAvatar.textContent = obtenirInitiales();
+
+            previewName.textContent = (
+                [prenom, nom]
+                    .filter(Boolean)
+                    .join(" ")
+            ) || "Nom du stagiaire";
+
+            previewCode.textContent = (
+                numero || "STG-XXXXX"
+            ).toUpperCase();
+
+            previewProgram.textContent = (
+                programme ||
+                "Le programme du stage apparaîtra ici."
+            );
+        }
+
+        function mettreAJourProgression() {
+
+            const champsObligatoires = [
+                fields.numero,
+                fields.programme,
+                fields.prenom,
+                fields.nom,
+                fields.dateDebut,
+                fields.dateFin,
+                fields.lieu,
+                fields.responsable,
+                fields.fonction,
+            ];
+
+            const total = champsObligatoires.length + 1;
+
+            let remplis = champsObligatoires.filter(
+                valeurPresente
+            ).length;
+
+            if (signaturePresente) {
+                remplis += 1;
+            }
+
+            const pourcentage = Math.round(
+                (remplis / total) * 100
+            );
+
+            progressBar.style.width = `${pourcentage}%`;
+            progressPercent.textContent = `${pourcentage} %`;
+
+            const identiteComplete = [
+                fields.numero,
+                fields.programme,
+                fields.prenom,
+                fields.nom,
+            ].every(valeurPresente);
+
+            const stageComplet = [
+                fields.dateDebut,
+                fields.dateFin,
+                fields.lieu,
+                fields.responsable,
+                fields.fonction,
+            ].every(valeurPresente);
+
+            stepStagiaire.classList.toggle(
+                "done",
+                identiteComplete
+            );
+
+            stepStage.classList.toggle(
+                "done",
+                stageComplet
+            );
+
+            stepSignature.classList.toggle(
+                "done",
+                signaturePresente
+            );
+
+            if (identiteComplete) {
+                stepStagiaire.querySelector(
+                    ".att-step-number"
+                ).innerHTML =
+                    '<i class="fa-solid fa-check"></i>';
+            } else {
+                stepStagiaire.querySelector(
+                    ".att-step-number"
+                ).textContent = "1";
+            }
+
+            if (stageComplet) {
+                stepStage.querySelector(
+                    ".att-step-number"
+                ).innerHTML =
+                    '<i class="fa-solid fa-check"></i>';
+            } else {
+                stepStage.querySelector(
+                    ".att-step-number"
+                ).textContent = "2";
+            }
+
+            if (signaturePresente) {
+                stepSignature.querySelector(
+                    ".att-step-number"
+                ).innerHTML =
+                    '<i class="fa-solid fa-check"></i>';
+            } else {
+                stepSignature.querySelector(
+                    ".att-step-number"
+                ).textContent = "3";
+            }
+        }
+
+        function obtenirPosition(event) {
+
+            const rectangle = canvas.getBoundingClientRect();
+
+            return {
+                x: (
+                    event.clientX - rectangle.left
+                ) * (
+                    canvas.width / rectangle.width
+                ),
+
+                y: (
+                    event.clientY - rectangle.top
+                ) * (
+                    canvas.height / rectangle.height
+                ),
+            };
+        }
+
+        function afficherStatutSignature(
+            etat,
+            message
+        ) {
+
+            signatureStatus.classList.remove(
+                "valid",
+                "invalid"
+            );
+
+            if (etat) {
+                signatureStatus.classList.add(etat);
+            }
+
+            if (etat === "valid") {
+                signatureStatus.innerHTML = `
+                    <i class="fa-solid fa-circle-check"></i>
+                    ${message}
+                `;
+            } else if (etat === "invalid") {
+                signatureStatus.innerHTML = `
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    ${message}
+                `;
+            } else {
+                signatureStatus.innerHTML = `
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    ${message}
+                `;
+            }
+        }
+
+        function mettreAJourEtatSignature() {
+
+            if (signaturePresente) {
+
+                signatureHelp.classList.add("hidden");
+                canvasShell.classList.add("active");
+
+                afficherStatutSignature(
+                    "valid",
+                    "Signature prête à être enregistrée"
+                );
+
+            } else {
+
+                signatureHelp.classList.remove("hidden");
+                canvasShell.classList.remove("active");
+
+                afficherStatutSignature(
+                    "",
+                    "Aucune signature dessinée"
+                );
+            }
+
+            mettreAJourProgression();
+        }
+
+        function commencerSignature(event) {
+
+            event.preventDefault();
+
+            dessinEnCours = true;
+            signaturePresente = true;
+
+            const position = obtenirPosition(event);
+            dernierePosition = position;
+
+            context.beginPath();
+            context.moveTo(
+                position.x,
+                position.y
+            );
+
+            if (canvas.setPointerCapture) {
+                canvas.setPointerCapture(
+                    event.pointerId
+                );
+            }
+
+            mettreAJourEtatSignature();
+        }
+
+        function dessinerSignature(event) {
+
+            if (!dessinEnCours) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const position = obtenirPosition(event);
+
+            context.quadraticCurveTo(
+                dernierePosition.x,
+                dernierePosition.y,
+                (
+                    dernierePosition.x +
+                    position.x
+                ) / 2,
+                (
+                    dernierePosition.y +
+                    position.y
+                ) / 2
+            );
+
+            context.stroke();
+
+            dernierePosition = position;
+        }
+
+        function terminerSignature(event) {
+
+            if (!dessinEnCours) {
+                return;
+            }
+
+            dessinEnCours = false;
+            dernierePosition = null;
+
+            context.closePath();
+
+            if (
+                event &&
+                canvas.releasePointerCapture
+            ) {
+                try {
+                    canvas.releasePointerCapture(
+                        event.pointerId
+                    );
+                } catch (erreur) {
+                    // Le pointeur peut déjà avoir été libéré.
+                }
+            }
+        }
+
+        function effacerSignature() {
+
+            context.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            hiddenInput.value = "";
+            signaturePresente = false;
+            dernierePosition = null;
+
+            mettreAJourEtatSignature();
+        }
+
+        function chargerSignatureExistante() {
+
+            const signatureExistante = (
+                hiddenInput.value || ""
+            ).trim();
+
+            if (
+                !signatureExistante.startsWith(
+                    "data:image/png;base64,"
+                )
+            ) {
+                return;
+            }
+
+            const image = new Image();
+
+            image.onload = function () {
+
+                context.clearRect(
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                context.drawImage(
+                    image,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                signaturePresente = true;
+
+                mettreAJourEtatSignature();
+            };
+
+            image.src = signatureExistante;
+        }
+
+        function verifierDates() {
+
+            if (
+                !fields.dateDebut ||
+                !fields.dateFin ||
+                !fields.dateDebut.value ||
+                !fields.dateFin.value
+            ) {
+                return true;
+            }
+
+            const debut = new Date(
+                fields.dateDebut.value + "T00:00:00"
+            );
+
+            const fin = new Date(
+                fields.dateFin.value + "T00:00:00"
+            );
+
+            if (fin < debut) {
+
+                fields.dateFin.setCustomValidity(
+                    "La date de fin doit être égale ou postérieure à la date de début."
+                );
+
+                fields.dateFin.reportValidity();
+
+                return false;
+            }
+
+            fields.dateFin.setCustomValidity("");
+
+            return true;
+        }
+
+        Object.values(fields).forEach(function (champ) {
+
+            if (!champ) {
+                return;
+            }
+
+            champ.addEventListener(
+                "input",
+                function () {
+                    mettreAJourApercu();
+                    mettreAJourProgression();
+                }
+            );
+
+            champ.addEventListener(
+                "change",
+                function () {
+                    mettreAJourApercu();
+                    mettreAJourProgression();
+                }
+            );
+        });
+
+        if (fields.dateDebut) {
+            fields.dateDebut.addEventListener(
+                "change",
+                verifierDates
+            );
+        }
+
+        if (fields.dateFin) {
+            fields.dateFin.addEventListener(
+                "change",
+                verifierDates
+            );
+        }
+
+        canvas.addEventListener(
+            "pointerdown",
+            commencerSignature
+        );
+
+        canvas.addEventListener(
+            "pointermove",
+            dessinerSignature
+        );
+
+        canvas.addEventListener(
+            "pointerup",
+            terminerSignature
+        );
+
+        canvas.addEventListener(
+            "pointercancel",
+            terminerSignature
+        );
+
+        canvas.addEventListener(
+            "pointerleave",
+            terminerSignature
+        );
+
+        clearButton.addEventListener(
+            "click",
+            effacerSignature
+        );
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+                if (!verifierDates()) {
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!signaturePresente) {
+
+                    event.preventDefault();
+
+                    afficherStatutSignature(
+                        "invalid",
+                        "Veuillez dessiner la signature du responsable"
+                    );
+
+                    canvasShell.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+
+                    return;
+                }
+
+                hiddenInput.value = canvas.toDataURL(
+                    "image/png"
+                );
+
+                submitButton.disabled = true;
+
+                submitButton.innerHTML = `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Création en cours...</span>
+                `;
+            }
+        );
+
+        chargerSignatureExistante();
+        mettreAJourApercu();
+        mettreAJourEtatSignature();
+    });
+</script>
+
+{% endblock %}

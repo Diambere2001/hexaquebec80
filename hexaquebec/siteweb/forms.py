@@ -238,3 +238,185 @@ class PaiementClientForm(forms.ModelForm):
     class Meta:
         model = PaiementClient
         fields = '__all__'
+
+
+
+
+import base64
+import binascii
+
+from django import forms
+
+from .models import AttestationStage
+
+
+class AttestationStageForm(forms.ModelForm):
+
+    signature_data = forms.CharField(
+        required=True,
+        widget=forms.HiddenInput(),
+    )
+
+    class Meta:
+
+        model = AttestationStage
+
+        fields = [
+            "numero_stagiaire",
+            "nom",
+            "prenom",
+            "programme",
+            "date_debut",
+            "date_fin",
+            "lieu_delivrance",
+            "responsable",
+            "fonction_responsable",
+            "signature_data",
+        ]
+
+        labels = {
+            "numero_stagiaire": "Numéro du stagiaire",
+            "nom": "Nom du stagiaire",
+            "prenom": "Prénom du stagiaire",
+            "programme": "Programme ou domaine du stage",
+            "date_debut": "Date de début du stage",
+            "date_fin": "Date de fin du stage",
+            "lieu_delivrance": "Lieu de délivrance",
+            "responsable": "Nom du responsable",
+            "fonction_responsable": "Fonction du responsable",
+        }
+
+        widgets = {
+            "numero_stagiaire": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": "Exemple : STG-12345",
+                "autocomplete": "off",
+            }),
+
+            "nom": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": "Nom du stagiaire",
+                "autocomplete": "off",
+            }),
+
+            "prenom": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": "Prénom du stagiaire",
+                "autocomplete": "off",
+            }),
+
+            "programme": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": (
+                    "Exemple : Développement web et applications"
+                ),
+                "autocomplete": "off",
+            }),
+
+            "date_debut": forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={
+                    "class": "form-control-pro",
+                    "type": "date",
+                },
+            ),
+
+            "date_fin": forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={
+                    "class": "form-control-pro",
+                    "type": "date",
+                },
+            ),
+
+            "lieu_delivrance": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": "Saguenay, Québec, Canada",
+            }),
+
+            "responsable": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": "Nom du responsable",
+            }),
+
+            "fonction_responsable": forms.TextInput(attrs={
+                "class": "form-control-pro",
+                "placeholder": "Fonction du responsable",
+            }),
+        }
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        date_debut = cleaned_data.get("date_debut")
+        date_fin = cleaned_data.get("date_fin")
+
+        if (
+            date_debut
+            and date_fin
+            and date_fin < date_debut
+        ):
+            self.add_error(
+                "date_fin",
+                (
+                    "La date de fin ne peut pas être "
+                    "antérieure à la date de début."
+                ),
+            )
+
+        return cleaned_data
+
+    def clean_signature_data(self):
+
+        signature = self.cleaned_data.get(
+            "signature_data",
+            "",
+        ).strip()
+
+        prefixe = "data:image/png;base64,"
+
+        if not signature:
+            raise forms.ValidationError(
+                "Veuillez dessiner la signature."
+            )
+
+        if not signature.startswith(prefixe):
+            raise forms.ValidationError(
+                "Le format de la signature est invalide."
+            )
+
+        try:
+
+            contenu_base64 = signature.split(",", 1)[1]
+
+            image_decodee = base64.b64decode(
+                contenu_base64,
+                validate=True,
+            )
+
+        except (
+            ValueError,
+            binascii.Error,
+            IndexError,
+        ):
+
+            raise forms.ValidationError(
+                "La signature électronique est invalide."
+            )
+
+        if not image_decodee.startswith(
+            b"\x89PNG\r\n\x1a\n"
+        ):
+            raise forms.ValidationError(
+                "La signature doit être une image PNG."
+            )
+
+        taille_maximale = 2 * 1024 * 1024
+
+        if len(image_decodee) > taille_maximale:
+            raise forms.ValidationError(
+                "La signature est trop volumineuse."
+            )
+
+        return signature

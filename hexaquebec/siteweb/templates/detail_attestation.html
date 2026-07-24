@@ -1,0 +1,1573 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Attestation de stage — {{ attestation.prenom }} {{ attestation.nom }}
+{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --hexa-navy: #082c4c;
+        --hexa-blue: #0f4f7e;
+        --hexa-sky: #1d7fbb;
+        --hexa-gold: #d5a33a;
+        --hexa-gold-light: #f0cf7d;
+        --hexa-ink: #152235;
+        --hexa-muted: #657184;
+        --hexa-line: #dce4ed;
+        --hexa-paper: #fffefb;
+        --hexa-bg: #eef3f8;
+        --hexa-success: #178a67;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background:
+            radial-gradient(
+                circle at 10% 5%,
+                rgba(29, 127, 187, 0.10),
+                transparent 27%
+            ),
+            radial-gradient(
+                circle at 90% 5%,
+                rgba(213, 163, 58, 0.11),
+                transparent 28%
+            ),
+            var(--hexa-bg);
+    }
+
+    /* =====================================================
+       PAGE ET BARRE D’ACTIONS
+    ====================================================== */
+
+    .certificate-page {
+        min-height: 100vh;
+        padding: 26px 16px 58px;
+    }
+
+    .certificate-toolbar {
+        width: min(1180px, 100%);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin: 0 auto 18px;
+        padding: 13px;
+        border: 1px solid rgba(8, 44, 76, 0.10);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 45px rgba(17, 48, 79, 0.10);
+    }
+
+    .certificate-toolbar-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+    }
+
+    .certificate-button {
+        min-height: 47px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 17px;
+        border: 1px solid var(--hexa-line);
+        border-radius: 13px;
+        color: var(--hexa-ink);
+        background: white;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 850;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+            transform 0.22s ease,
+            box-shadow 0.22s ease,
+            color 0.22s ease,
+            background 0.22s ease,
+            border-color 0.22s ease;
+    }
+
+    .certificate-button:hover {
+        transform: translateY(-2px);
+        color: var(--hexa-blue);
+        border-color: rgba(15, 79, 126, 0.30);
+        box-shadow: 0 12px 28px rgba(17, 48, 79, 0.12);
+    }
+
+    .certificate-button.primary {
+        color: white;
+        border-color: transparent;
+        background:
+            linear-gradient(
+                135deg,
+                var(--hexa-navy),
+                var(--hexa-blue),
+                var(--hexa-sky)
+            );
+        box-shadow: 0 13px 28px rgba(8, 44, 76, 0.22);
+    }
+
+    .certificate-button.primary:hover {
+        color: white;
+        box-shadow: 0 17px 34px rgba(8, 44, 76, 0.28);
+    }
+
+    .certificate-toolbar-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--hexa-success);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .certificate-toolbar-status i {
+        width: 31px;
+        height: 31px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: rgba(23, 138, 103, 0.10);
+    }
+
+    /* =====================================================
+       CONTENEUR
+    ====================================================== */
+
+    .certificate-wrapper {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+        overflow-x: auto;
+        border-radius: 18px;
+        box-shadow:
+            0 30px 90px rgba(15, 44, 73, 0.20),
+            0 3px 10px rgba(15, 44, 73, 0.08);
+    }
+
+    .certificate {
+        position: relative;
+        width: 1180px;
+        height: 834px;
+        overflow: hidden;
+        color: var(--hexa-ink);
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.96),
+                rgba(255, 254, 249, 0.98)
+            );
+        isolation: isolate;
+    }
+
+    /* =====================================================
+       BORDURES ET DÉCORATIONS
+    ====================================================== */
+
+    .certificate-outer-frame {
+        position: absolute;
+        inset: 17px;
+        z-index: 3;
+        pointer-events: none;
+        border: 3px solid var(--hexa-navy);
+    }
+
+    .certificate-inner-frame {
+        position: absolute;
+        inset: 27px;
+        z-index: 3;
+        pointer-events: none;
+        border: 1px solid rgba(213, 163, 58, 0.95);
+    }
+
+    .certificate-corner {
+        position: absolute;
+        z-index: 4;
+        width: 84px;
+        height: 84px;
+        pointer-events: none;
+    }
+
+    .certificate-corner::before,
+    .certificate-corner::after {
+        content: "";
+        position: absolute;
+        background: var(--hexa-gold);
+    }
+
+    .certificate-corner.top-left {
+        top: 27px;
+        left: 27px;
+    }
+
+    .certificate-corner.top-right {
+        top: 27px;
+        right: 27px;
+        transform: rotate(90deg);
+    }
+
+    .certificate-corner.bottom-right {
+        right: 27px;
+        bottom: 27px;
+        transform: rotate(180deg);
+    }
+
+    .certificate-corner.bottom-left {
+        bottom: 27px;
+        left: 27px;
+        transform: rotate(270deg);
+    }
+
+    .certificate-corner::before {
+        top: 0;
+        left: 0;
+        width: 55px;
+        height: 4px;
+    }
+
+    .certificate-corner::after {
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 55px;
+    }
+
+    .certificate-ribbon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 12px;
+        background:
+            linear-gradient(
+                90deg,
+                var(--hexa-navy) 0 48%,
+                var(--hexa-gold) 48% 52%,
+                var(--hexa-navy) 52% 100%
+            );
+    }
+
+    .certificate-shape-one,
+    .certificate-shape-two,
+    .certificate-shape-three {
+        position: absolute;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .certificate-shape-one {
+        width: 360px;
+        height: 360px;
+        top: -220px;
+        right: -145px;
+        border: 52px solid rgba(15, 79, 126, 0.05);
+        border-radius: 50%;
+    }
+
+    .certificate-shape-two {
+        width: 300px;
+        height: 300px;
+        bottom: -195px;
+        left: -125px;
+        border: 46px solid rgba(213, 163, 58, 0.07);
+        border-radius: 50%;
+    }
+
+    .certificate-shape-three {
+        width: 195px;
+        height: 195px;
+        top: 325px;
+        right: -105px;
+        border-radius: 34px;
+        background: rgba(29, 127, 187, 0.035);
+        transform: rotate(45deg);
+    }
+
+    /* =====================================================
+       FILIGRANE AUTOMATIQUE HEXA
+    ====================================================== */
+
+    .certificate-watermark {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .certificate-watermark-inner {
+        position: relative;
+        width: 360px;
+        height: 315px;
+        opacity: 0.034;
+    }
+
+    .certificate-watermark-hexagon {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--hexa-navy);
+        font-size: 132px;
+        font-weight: 1000;
+        clip-path: polygon(
+            25% 0%,
+            75% 0%,
+            100% 50%,
+            75% 100%,
+            25% 100%,
+            0% 50%
+        );
+        border: 20px solid var(--hexa-navy);
+        background: transparent;
+    }
+
+    .certificate-watermark-text {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--hexa-navy);
+        font-size: 65px;
+        font-weight: 1000;
+        letter-spacing: -0.05em;
+    }
+
+    /* =====================================================
+       CONTENU
+    ====================================================== */
+
+    .certificate-content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 49px 66px 42px;
+    }
+
+    /* =====================================================
+       EN-TÊTE DU CERTIFICAT
+    ====================================================== */
+
+    .certificate-header {
+        display: grid;
+        grid-template-columns: 210px minmax(0, 1fr) 230px;
+        align-items: center;
+        gap: 24px;
+        min-height: 96px;
+    }
+
+    .certificate-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .certificate-logo {
+        width: 145px;
+        max-height: 92px;
+        object-fit: contain;
+    }
+
+    .certificate-company {
+        text-align: center;
+    }
+
+    .certificate-company-name {
+        margin: 0;
+        color: var(--hexa-navy);
+        font-size: 31px;
+        font-weight: 950;
+        letter-spacing: -0.025em;
+    }
+
+    .certificate-company-tagline {
+        max-width: 510px;
+        margin: 7px auto 0;
+        color: var(--hexa-muted);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.045em;
+        line-height: 1.55;
+        text-transform: uppercase;
+    }
+
+    .certificate-reference-box {
+        justify-self: end;
+        width: 225px;
+        overflow: hidden;
+        border: 1px solid rgba(15, 79, 126, 0.14);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 10px 25px rgba(16, 47, 75, 0.06);
+    }
+
+    .certificate-reference-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 10px 12px;
+    }
+
+    .certificate-reference-row + .certificate-reference-row {
+        border-top: 1px solid var(--hexa-line);
+    }
+
+    .certificate-reference-row span {
+        color: var(--hexa-muted);
+        font-size: 9px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .certificate-reference-row strong {
+        color: var(--hexa-navy);
+        font-size: 12px;
+        font-weight: 900;
+        overflow-wrap: anywhere;
+    }
+
+    /* =====================================================
+       TITRE
+    ====================================================== */
+
+    .certificate-title-area {
+        margin-top: 19px;
+        text-align: center;
+    }
+
+    .certificate-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--hexa-gold);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+    }
+
+    .certificate-eyebrow::before,
+    .certificate-eyebrow::after {
+        content: "";
+        width: 48px;
+        height: 1px;
+        background: var(--hexa-gold);
+    }
+
+    .certificate-main-title {
+        margin: 7px 0 0;
+        color: var(--hexa-navy);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 48px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        line-height: 1.05;
+        text-transform: uppercase;
+    }
+
+    .certificate-title-symbol {
+        width: 49px;
+        height: 49px;
+        display: grid;
+        place-items: center;
+        margin: 12px auto 0;
+        color: var(--hexa-gold);
+        border: 1px solid rgba(213, 163, 58, 0.70);
+        transform: rotate(45deg);
+    }
+
+    .certificate-title-symbol i {
+        transform: rotate(-45deg);
+        font-size: 17px;
+    }
+
+    /* =====================================================
+       CORPS
+    ====================================================== */
+
+    .certificate-body {
+        width: 86%;
+        margin: 14px auto 0;
+        text-align: center;
+    }
+
+    .certificate-introduction {
+        margin: 0;
+        color: var(--hexa-muted);
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .certificate-student-name {
+        display: inline-block;
+        position: relative;
+        margin: 10px 0 7px;
+        padding: 0 25px 7px;
+        color: var(--hexa-navy);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 36px;
+        font-weight: 800;
+        line-height: 1.15;
+        text-transform: uppercase;
+    }
+
+    .certificate-student-name::after {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        bottom: 0;
+        height: 2px;
+        border-radius: 999px;
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                var(--hexa-gold),
+                transparent
+            );
+    }
+
+    .certificate-description {
+        max-width: 880px;
+        margin: 0 auto;
+        color: var(--hexa-ink);
+        font-size: 15px;
+        line-height: 1.68;
+    }
+
+    .certificate-description strong {
+        color: var(--hexa-blue);
+        font-weight: 900;
+    }
+
+    .certificate-period {
+        width: max-content;
+        max-width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 12px;
+        padding: 9px 17px;
+        border: 1px solid rgba(15, 79, 126, 0.15);
+        border-radius: 999px;
+        color: var(--hexa-blue);
+        background: rgba(15, 79, 126, 0.045);
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    .certificate-period i {
+        color: var(--hexa-gold);
+    }
+
+    /* =====================================================
+       BAS DU CERTIFICAT
+    ====================================================== */
+
+    .certificate-footer {
+        display: grid;
+        grid-template-columns: 1fr 260px 1fr;
+        align-items: end;
+        gap: 22px;
+        margin-top: auto;
+        padding: 12px 52px 0;
+    }
+
+    .certificate-info {
+        color: var(--hexa-muted);
+        font-size: 11px;
+        line-height: 1.72;
+    }
+
+    .certificate-info-label {
+        color: var(--hexa-muted);
+    }
+
+    .certificate-info strong {
+        color: var(--hexa-ink);
+        font-weight: 850;
+    }
+
+    .certificate-info-line {
+        display: flex;
+        gap: 5px;
+    }
+
+    /* =====================================================
+       TAMPON AUTOMATIQUE HEXAQUÉBEC
+    ====================================================== */
+
+    .certificate-stamp {
+        position: relative;
+        width: 176px;
+        height: 176px;
+        display: grid;
+        place-items: center;
+        justify-self: center;
+        border: 3px double rgba(8, 44, 76, 0.78);
+        border-radius: 50%;
+        color: rgba(8, 44, 76, 0.86);
+        background:
+            radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.78) 0 47%,
+                transparent 48%
+            );
+        transform: rotate(-8deg);
+        box-shadow:
+            inset 0 0 0 6px rgba(8, 44, 76, 0.05),
+            0 2px 0 rgba(255, 255, 255, 0.9);
+        opacity: 0.95;
+    }
+
+    .certificate-stamp::before {
+        content: "";
+        position: absolute;
+        inset: 12px;
+        border: 1.5px dashed rgba(8, 44, 76, 0.70);
+        border-radius: 50%;
+    }
+
+    .certificate-stamp::after {
+        content: "";
+        position: absolute;
+        inset: 35px;
+        clip-path: polygon(
+            25% 0%,
+            75% 0%,
+            100% 50%,
+            75% 100%,
+            25% 100%,
+            0% 50%
+        );
+        border: 2px solid rgba(8, 44, 76, 0.72);
+        background: rgba(8, 44, 76, 0.035);
+    }
+
+    .certificate-stamp-brand {
+        position: absolute;
+        top: 22px;
+        left: 50%;
+        z-index: 2;
+        width: 130px;
+        transform: translateX(-50%);
+        color: var(--hexa-navy);
+        font-size: 11px;
+        font-weight: 1000;
+        letter-spacing: 0.14em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .certificate-stamp-center {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        place-items: center;
+        text-align: center;
+    }
+
+    .certificate-stamp-h {
+        color: var(--hexa-navy);
+        font-size: 36px;
+        font-weight: 1000;
+        letter-spacing: -0.08em;
+        line-height: 1;
+    }
+
+    .certificate-stamp-auto {
+        margin-top: 4px;
+        color: var(--hexa-blue);
+        font-size: 8px;
+        font-weight: 950;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+    }
+
+    .certificate-stamp-bottom {
+        position: absolute;
+        left: 50%;
+        bottom: 19px;
+        z-index: 2;
+        width: 128px;
+        transform: translateX(-50%);
+        color: var(--hexa-navy);
+        font-size: 8px;
+        font-weight: 950;
+        letter-spacing: 0.09em;
+        line-height: 1.35;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .certificate-stamp-number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        width: 108px;
+        transform:
+            translate(-50%, -50%)
+            rotate(90deg);
+        color: rgba(8, 44, 76, 0.62);
+        font-size: 6px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    /* =====================================================
+       SIGNATURE
+    ====================================================== */
+
+    .certificate-signature {
+        justify-self: end;
+        width: 270px;
+        text-align: center;
+    }
+
+    .certificate-signature-caption {
+        margin-bottom: 2px;
+        color: var(--hexa-muted);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+    }
+
+    .certificate-signature-image {
+        width: 215px;
+        height: 77px;
+        display: block;
+        margin: 0 auto -2px;
+        object-fit: contain;
+    }
+
+    .certificate-signature-line {
+        width: 225px;
+        height: 1px;
+        margin: 0 auto 6px;
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #8b95a1 15% 85%,
+                transparent
+            );
+    }
+
+    .certificate-signature strong {
+        display: block;
+        color: var(--hexa-navy);
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+    .certificate-signature span {
+        display: block;
+        margin-top: 3px;
+        color: var(--hexa-muted);
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+    /* =====================================================
+       LIGNE DE SÉCURITÉ
+    ====================================================== */
+
+    .certificate-security {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        margin-top: 11px;
+        color: #7a8491;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.055em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .certificate-security::before,
+    .certificate-security::after {
+        content: "";
+        width: 70px;
+        height: 1px;
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(8, 44, 76, 0.25)
+            );
+    }
+
+    .certificate-security::after {
+        transform: rotate(180deg);
+    }
+
+    .certificate-security i {
+        color: var(--hexa-gold);
+    }
+
+    /* =====================================================
+       BADGE ACTIVITÉS HEXAQUÉBEC
+    ====================================================== */
+
+    .certificate-services {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .certificate-service {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 8px;
+        border: 1px solid rgba(15, 79, 126, 0.11);
+        border-radius: 999px;
+        color: var(--hexa-blue);
+        background: rgba(15, 79, 126, 0.035);
+        font-size: 8px;
+        font-weight: 850;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    .certificate-service i {
+        color: var(--hexa-gold);
+    }
+
+
+    /* =====================================================
+       MODE TEMPORAIRE POUR HTML2CANVAS
+       Évite l’erreur createPattern avec certains dégradés
+       et pseudo-éléments pendant le téléchargement.
+    ====================================================== */
+
+    #certificateToDownload.capture-mode,
+    #certificateToDownload.capture-mode * {
+        animation: none !important;
+        transition: none !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+        background-image: none !important;
+    }
+
+    #certificateToDownload.capture-mode {
+        width: 1180px !important;
+        height: 834px !important;
+        min-width: 1180px !important;
+        min-height: 834px !important;
+        background-color: #fffefb !important;
+    }
+
+    #certificateToDownload.capture-mode *::before,
+    #certificateToDownload.capture-mode *::after {
+        background-image: none !important;
+        box-shadow: none !important;
+    }
+
+    #certificateToDownload.capture-mode .certificate-ribbon {
+        background: #082c4c !important;
+    }
+
+    #certificateToDownload.capture-mode .certificate-shape-one,
+    #certificateToDownload.capture-mode .certificate-shape-two,
+    #certificateToDownload.capture-mode .certificate-shape-three,
+    #certificateToDownload.capture-mode .certificate-watermark {
+        display: none !important;
+    }
+
+    #certificateToDownload.capture-mode .certificate-stamp {
+        background: #fffefb !important;
+        box-shadow: none !important;
+    }
+
+    #certificateToDownload.capture-mode .certificate-student-name::after {
+        background: #d5a33a !important;
+    }
+
+    #certificateToDownload.capture-mode .certificate-signature-line {
+        background: #8b95a1 !important;
+    }
+
+    #certificateToDownload.capture-mode .certificate-security::before,
+    #certificateToDownload.capture-mode .certificate-security::after,
+    #certificateToDownload.capture-mode .certificate-corner::before,
+    #certificateToDownload.capture-mode .certificate-corner::after,
+    #certificateToDownload.capture-mode .certificate-stamp::before,
+    #certificateToDownload.capture-mode .certificate-stamp::after {
+        display: none !important;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
+    @media (max-width: 760px) {
+        .certificate-toolbar {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .certificate-toolbar-group {
+            width: 100%;
+        }
+
+        .certificate-button {
+            flex: 1;
+        }
+
+        .certificate-toolbar-status {
+            justify-content: center;
+        }
+    }
+
+    /* =====================================================
+       IMPRESSION A4 PAYSAGE
+    ====================================================== */
+
+    @media print {
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        html,
+        body {
+            width: 297mm;
+            height: 210mm;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+
+        body * {
+            visibility: hidden;
+        }
+
+        .certificate,
+        .certificate * {
+            visibility: visible;
+        }
+
+        .certificate-page {
+            width: 297mm;
+            height: 210mm;
+            margin: 0;
+            padding: 0;
+        }
+
+        .certificate-toolbar {
+            display: none !important;
+        }
+
+        .certificate-wrapper {
+            position: absolute;
+            inset: 0;
+            width: 297mm;
+            height: 210mm;
+            overflow: hidden;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .certificate {
+            width: 297mm;
+            height: 210mm;
+            min-height: 210mm;
+            transform: none;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .certificate-content {
+            padding:
+                12.5mm
+                16.6mm
+                10.5mm;
+        }
+
+        .certificate-outer-frame {
+            inset: 4.3mm;
+        }
+
+        .certificate-inner-frame {
+            inset: 6.8mm;
+        }
+
+        .certificate-ribbon {
+            height: 3mm;
+        }
+    }
+</style>
+
+<section class="certificate-page">
+
+    <!-- ==============================================
+         BARRE D’ACTIONS
+    =============================================== -->
+
+    <div class="certificate-toolbar">
+
+        <div class="certificate-toolbar-group">
+
+            <a
+                href="{% url 'liste_attestations_stagiaires' %}"
+                class="certificate-button"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Retour
+            </a>
+
+            <a
+                href="{% url 'creer_attestation_stagiaire' %}"
+                class="certificate-button"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Nouvelle attestation
+            </a>
+
+        </div>
+
+        <div class="certificate-toolbar-status">
+            <i class="fa-solid fa-circle-check"></i>
+            Attestation officielle générée
+        </div>
+
+        <div class="certificate-toolbar-group">
+
+            <button
+                type="button"
+                class="certificate-button"
+                id="downloadCertificate"
+            >
+                <i class="fa-solid fa-image"></i>
+                Télécharger en image
+            </button>
+
+            <button
+                type="button"
+                class="certificate-button primary"
+                onclick="window.print()"
+            >
+                <i class="fa-solid fa-print"></i>
+                Imprimer l’attestation
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ==============================================
+         ATTESTATION
+    =============================================== -->
+
+    <div class="certificate-wrapper">
+
+        <article
+            class="certificate"
+            id="certificateToDownload"
+        >
+
+            <!-- Décorations -->
+
+            <div class="certificate-ribbon"></div>
+
+            <div class="certificate-outer-frame"></div>
+            <div class="certificate-inner-frame"></div>
+
+            <div class="certificate-corner top-left"></div>
+            <div class="certificate-corner top-right"></div>
+            <div class="certificate-corner bottom-right"></div>
+            <div class="certificate-corner bottom-left"></div>
+
+            <div class="certificate-shape-one"></div>
+            <div class="certificate-shape-two"></div>
+            <div class="certificate-shape-three"></div>
+
+            <!-- Filigrane automatique -->
+
+            <div class="certificate-watermark">
+
+                <div class="certificate-watermark-inner">
+
+                    <div class="certificate-watermark-hexagon"></div>
+
+                    <div class="certificate-watermark-text">
+                        H
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Contenu -->
+
+            <div class="certificate-content">
+
+                <!-- EN-TÊTE -->
+
+                <header class="certificate-header">
+
+                    <div class="certificate-brand">
+
+                        <img
+                            src="{% static 'images/logohexa.png' %}"
+                            alt="Logo officiel HexaQuébec"
+                            class="certificate-logo"
+                        >
+
+                    </div>
+
+                    <div class="certificate-company">
+
+                        <h2 class="certificate-company-name">
+                            HexaQuébec
+                        </h2>
+
+                        <p class="certificate-company-tagline">
+                            Développement web • Applications mobiles •
+                            Intégration de l’intelligence artificielle
+                        </p>
+
+                        <div class="certificate-services">
+
+                            <span class="certificate-service">
+                                <i class="fa-solid fa-code"></i>
+                                Web
+                            </span>
+
+                            <span class="certificate-service">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                                Mobile
+                            </span>
+
+                            <span class="certificate-service">
+                                <i class="fa-solid fa-brain"></i>
+                                Intelligence artificielle
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="certificate-reference-box">
+
+                        <div class="certificate-reference-row">
+
+                            <span>
+                                Numéro d’attestation
+                            </span>
+
+                            <strong>
+                                {{ attestation.numero_attestation }}
+                            </strong>
+
+                        </div>
+
+                        <div class="certificate-reference-row">
+
+                            <span>
+                                Numéro du stagiaire
+                            </span>
+
+                            <strong>
+                                {{ attestation.numero_stagiaire }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </header>
+
+                <!-- TITRE -->
+
+                <div class="certificate-title-area">
+
+                    <div class="certificate-eyebrow">
+                        Document officiel
+                    </div>
+
+                    <h1 class="certificate-main-title">
+                        Attestation de stage
+                    </h1>
+
+                    <div class="certificate-title-symbol">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+
+                </div>
+
+                <!-- CORPS -->
+
+                <main class="certificate-body">
+
+                    <p class="certificate-introduction">
+                        La direction de l’entreprise
+                        <strong>HexaQuébec</strong>
+                        atteste officiellement par la présente que
+                    </p>
+
+                    <div class="certificate-student-name">
+                        {{ attestation.prenom }}
+                        {{ attestation.nom }}
+                    </div>
+
+                    <p class="certificate-description">
+
+                        a effectué avec succès un stage au sein de
+                        notre entreprise dans le programme
+
+                        <strong>
+                            « {{ attestation.programme }} »
+                        </strong>.
+
+                        Durant cette période, le stagiaire a démontré
+                        son engagement, son sérieux, son professionnalisme
+                        ainsi que sa volonté d’apprendre et de développer
+                        ses compétences.
+
+                    </p>
+
+                    <div class="certificate-period">
+
+                        <i class="fa-regular fa-calendar-check"></i>
+
+                        Stage effectué du
+                        <strong>
+                            {{ attestation.date_debut|date:"d/m/Y" }}
+                        </strong>
+
+                        au
+
+                        <strong>
+                            {{ attestation.date_fin|date:"d/m/Y" }}
+                        </strong>
+
+                    </div>
+
+                </main>
+
+                <!-- PIED -->
+
+                <footer class="certificate-footer">
+
+                    <div class="certificate-info">
+
+                        <div class="certificate-info-line">
+                            <span class="certificate-info-label">
+                                Délivrée à :
+                            </span>
+
+                            <strong>
+                                {{ attestation.lieu_delivrance }}
+                            </strong>
+                        </div>
+
+                        <div class="certificate-info-line">
+                            <span class="certificate-info-label">
+                                Date de délivrance :
+                            </span>
+
+                            <strong>
+                                {{ attestation.date_delivrance|date:"d/m/Y" }}
+                            </strong>
+                        </div>
+
+                        <div class="certificate-info-line">
+                            <span class="certificate-info-label">
+                                Entreprise :
+                            </span>
+
+                            <strong>
+                                HexaQuébec
+                            </strong>
+                        </div>
+
+                        <div class="certificate-info-line">
+                            <span class="certificate-info-label">
+                                Pays :
+                            </span>
+
+                            <strong>
+                                Canada
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <!-- TAMPON AUTOMATIQUE -->
+
+                    <div
+                        class="certificate-stamp"
+                        aria-label="Tampon officiel automatique HexaQuébec"
+                    >
+
+                        <div class="certificate-stamp-brand">
+                            HexaQuébec
+                        </div>
+
+                        <div class="certificate-stamp-center">
+
+                            <div class="certificate-stamp-h">
+                                H
+                            </div>
+
+                            <div class="certificate-stamp-auto">
+                                Cachet automatique
+                            </div>
+
+                        </div>
+
+                        <div class="certificate-stamp-bottom">
+                            Canada • Document officiel
+                        </div>
+
+                        <div class="certificate-stamp-number">
+                            {{ attestation.numero_attestation }}
+                        </div>
+
+                    </div>
+
+                    <!-- SIGNATURE -->
+
+                    <div class="certificate-signature">
+
+                        <div class="certificate-signature-caption">
+                            Signature électronique
+                        </div>
+
+                        <img
+                            src="{{ attestation.signature_data }}"
+                            alt="Signature électronique du responsable"
+                            class="certificate-signature-image"
+                        >
+
+                        <div class="certificate-signature-line"></div>
+
+                        <strong>
+                            {{ attestation.responsable }}
+                        </strong>
+
+                        <span>
+                            {{ attestation.fonction_responsable }}
+                            — HexaQuébec
+                        </span>
+
+                    </div>
+
+                </footer>
+
+                <!-- SÉCURITÉ -->
+
+                <div class="certificate-security">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    Document officiel généré électroniquement par
+                    HexaQuébec — Développement web, applications
+                    mobiles et intégration de l’intelligence artificielle
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const downloadButton = document.getElementById(
+            "downloadCertificate"
+        );
+
+        const certificate = document.getElementById(
+            "certificateToDownload"
+        );
+
+        if (
+            !downloadButton ||
+            !certificate
+        ) {
+            return;
+        }
+
+        downloadButton.addEventListener(
+            "click",
+            async function () {
+
+                const texteInitial = downloadButton.innerHTML;
+
+                downloadButton.disabled = true;
+
+                downloadButton.innerHTML = `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Création de l’image...
+                `;
+
+                try {
+
+                    if (
+                        typeof html2canvas === "undefined"
+                    ) {
+                        throw new Error(
+                            "La bibliothèque html2canvas n’est pas chargée."
+                        );
+                    }
+
+                    const images = certificate.querySelectorAll(
+                        "img"
+                    );
+
+                    await Promise.all(
+                        Array.from(images).map(function (image) {
+
+                            if (image.complete) {
+                                return Promise.resolve();
+                            }
+
+                            return new Promise(function (
+                                resolve
+                            ) {
+                                image.onload = resolve;
+                                image.onerror = resolve;
+                            });
+                        })
+                    );
+
+                    const canvas = await html2canvas(
+                        certificate,
+                        {
+                            scale: 2,
+                            width: 1180,
+                            height: 834,
+                            windowWidth: 1180,
+                            windowHeight: 834,
+                            scrollX: 0,
+                            scrollY: 0,
+                            useCORS: true,
+                            allowTaint: false,
+                            backgroundColor: "#fffefb",
+                            logging: false,
+                            imageTimeout: 15000,
+                            foreignObjectRendering: false,
+
+                            onclone: function (clonedDocument) {
+
+                                const clonedCertificate =
+                                    clonedDocument.getElementById(
+                                        "certificateToDownload"
+                                    );
+
+                                if (!clonedCertificate) {
+                                    return;
+                                }
+
+                                clonedCertificate.classList.add(
+                                    "capture-mode"
+                                );
+
+                                /*
+                                 * Retire uniquement les éléments invisibles
+                                 * ayant une largeur ou une hauteur nulle.
+                                 * Ce sont eux qui peuvent provoquer :
+                                 * createPattern(... canvas 0 × 0).
+                                 */
+                                clonedCertificate
+                                    .querySelectorAll("*")
+                                    .forEach(function (element) {
+
+                                        const rectangle =
+                                            element.getBoundingClientRect();
+
+                                        if (
+                                            rectangle.width <= 0 ||
+                                            rectangle.height <= 0
+                                        ) {
+                                            element.style.backgroundImage =
+                                                "none";
+
+                                            element.style.boxShadow =
+                                                "none";
+                                        }
+                                    });
+                            },
+                        }
+                    );
+
+                    const lien = document.createElement("a");
+
+                    lien.download =
+                        "attestation-{{ attestation.numero_stagiaire|escapejs }}-HexaQuebec.png";
+
+                    lien.href = canvas.toDataURL(
+                        "image/png",
+                        1.0
+                    );
+
+                    document.body.appendChild(lien);
+                    lien.click();
+                    lien.remove();
+
+                } catch (erreur) {
+
+                    console.error(
+                        "Erreur de création de l’image :",
+                        erreur
+                    );
+
+                    const detailErreur = (
+                        erreur && erreur.message
+                    )
+                        ? erreur.message
+                        : "erreur inconnue";
+
+                    alert(
+                        "Impossible de créer l’image : " +
+                        detailErreur +
+                        "\n\nRechargez la page avec Ctrl + F5, " +
+                        "puis réessayez."
+                    );
+
+                } finally {
+
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = texteInitial;
+                }
+            }
+        );
+    });
+</script>
+
+{% endblock %}
