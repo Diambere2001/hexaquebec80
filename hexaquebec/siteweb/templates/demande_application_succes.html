@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}
+Demande reçue | HexaQuébec
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .demande-success-page,
+    .demande-success-page * {
+        box-sizing: border-box;
+    }
+
+    .demande-success-page {
+        min-height: 82vh;
+        display: grid;
+        place-items: center;
+        padding: 60px 18px;
+        background:
+            radial-gradient(
+                circle at 15% 10%,
+                rgba(52, 120, 246, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 85% 15%,
+                rgba(22, 165, 141, 0.15),
+                transparent 27%
+            ),
+            #f4f7fb;
+    }
+
+    .demande-success-card {
+        width: min(720px, 100%);
+        padding: 46px;
+        border: 1px solid #e4e9f0;
+        border-radius: 30px;
+        background: white;
+        text-align: center;
+        box-shadow: 0 28px 80px rgba(15, 35, 62, 0.12);
+    }
+
+    .demande-success-icon {
+        display: grid;
+        place-items: center;
+        width: 85px;
+        height: 85px;
+        margin: 0 auto 22px;
+        border-radius: 27px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                #16a58d,
+                #0f7566
+            );
+        font-size: 37px;
+    }
+
+    .demande-success-card h1 {
+        margin: 0;
+        color: #0c1f38;
+        font-size: clamp(31px, 5vw, 49px);
+        letter-spacing: -0.035em;
+    }
+
+    .demande-success-card > p {
+        max-width: 590px;
+        margin: 14px auto 27px;
+        color: #667085;
+        line-height: 1.7;
+    }
+
+    .demande-reference {
+        padding: 21px;
+        border: 1px solid #cfe7e1;
+        border-radius: 19px;
+        background: #effaf7;
+    }
+
+    .demande-reference small {
+        display: block;
+        color: #0f7566;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+    }
+
+    .demande-reference strong {
+        display: block;
+        margin-top: 8px;
+        color: #0c1f38;
+        font-size: clamp(19px, 4vw, 28px);
+        word-break: break-word;
+    }
+
+    .demande-success-details {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px;
+        margin-top: 21px;
+        text-align: left;
+    }
+
+    .demande-success-detail {
+        padding: 17px;
+        border: 1px solid #e4e9f0;
+        border-radius: 16px;
+        background: #f9fbfd;
+    }
+
+    .demande-success-detail span {
+        display: block;
+        color: #667085;
+        font-size: 12px;
+    }
+
+    .demande-success-detail strong {
+        display: block;
+        margin-top: 5px;
+        color: #172033;
+        font-size: 14px;
+    }
+
+    .demande-success-actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 27px;
+    }
+
+    .demande-success-actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        padding: 0 21px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 900;
+    }
+
+    .demande-primary-button {
+        color: white;
+        background: #0c1f38;
+    }
+
+    .demande-secondary-button {
+        color: #0c1f38;
+        background: #edf2f7;
+    }
+
+    @media (max-width: 600px) {
+        .demande-success-card {
+            padding: 32px 20px;
+        }
+
+        .demande-success-details {
+            grid-template-columns: 1fr;
+        }
+
+        .demande-success-actions a {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="demande-success-page">
+
+    <div class="demande-success-card">
+
+        <div class="demande-success-icon">
+            ✓
+        </div>
+
+        <h1>
+            Demande reçue
+        </h1>
+
+        <p>
+            Merci {{ demande.nom_complet }}.
+
+            La demande de l’entreprise
+
+            <strong>
+                {{ demande.nom_entreprise }}
+            </strong>
+
+            a été enregistrée par HexaQuébec.
+
+            Un email avec le document PDF a été envoyé à
+
+            <strong>
+                {{ demande.email }}
+            </strong>.
+        </p>
+
+        <div class="demande-reference">
+
+            <small>
+                Votre numéro de demande
+            </small>
+
+            <strong>
+                {{ demande.numero_demande }}
+            </strong>
+
+        </div>
+
+        <div class="demande-success-details">
+
+            <div class="demande-success-detail">
+
+                <span>
+                    Application
+                </span>
+
+                <strong>
+                    {{ demande.nom_application }}
+                </strong>
+
+            </div>
+
+            <div class="demande-success-detail">
+
+                <span>
+                    Qualité
+                </span>
+
+                <strong>
+                    {{ demande.nom_forfait }}
+                </strong>
+
+            </div>
+
+            <div class="demande-success-detail">
+
+                <span>
+                    Prix indicatif
+                </span>
+
+                <strong>
+                    À partir de
+                    {{ demande.prix_estime|floatformat:0 }}
+                    $ {{ demande.devise }}
+                </strong>
+
+            </div>
+
+            <div class="demande-success-detail">
+
+                <span>
+                    Délai indicatif
+                </span>
+
+                <strong>
+                    {{ demande.delai_estime }}
+                </strong>
+
+            </div>
+
+        </div>
+
+        <div class="demande-success-actions">
+
+            <a
+                href="{% url 'telecharger_demande_application_pdf' demande.token_public %}"
+                class="demande-primary-button"
+            >
+                Télécharger mon PDF
+            </a>
+
+            <a
+                href="{% url 'solutions_applications' %}"
+                class="demande-secondary-button"
+            >
+                Voir les autres applications
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

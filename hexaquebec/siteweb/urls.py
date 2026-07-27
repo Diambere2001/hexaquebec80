@@ -180,4 +180,24 @@ urlpatterns = [
     ),
 
     path("chatbot_ai/", views.chatbot_ai, name="chatbot_ai"),
+
+
+    path(
+        "solutions-applications/",
+        views.solutions_applications,
+        name="solutions_applications",
+    ),
+
+    path(
+        "solutions-applications/succes/<uuid:token>/",
+        views.demande_application_succes,
+        name="demande_application_succes",
+    ),
+
+    path(
+        "solutions-applications/pdf/<uuid:token>/",
+        views.telecharger_demande_application_pdf,
+        name="telecharger_demande_application_pdf",
+    ),
 ]
+

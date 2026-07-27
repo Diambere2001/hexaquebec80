@@ -1135,3 +1135,178 @@ class MessageLu(models.Model):
     )
 
     date_lecture = models.DateTimeField(auto_now_add=True)
+
+
+
+import secrets
+import uuid
+
+from django.db import models
+from django.utils import timezone
+
+
+class DemandeApplication(models.Model):
+
+    TYPE_APPLICATION_CHOICES = [
+        ("restaurant", "Application pour restaurant"),
+        ("ecommerce", "Site e-commerce"),
+        ("marketplace", "Marketplace multivendeur"),
+        ("reservation", "Application de réservation"),
+        ("immobilier", "Application immobilière"),
+        ("sur_mesure", "Application sur mesure"),
+    ]
+
+    QUALITE_CHOICES = [
+        ("essentiel", "Essentiel"),
+        ("professionnel", "Professionnel"),
+        ("premium", "Premium"),
+    ]
+
+    STATUT_CHOICES = [
+        ("nouvelle", "Nouvelle demande"),
+        ("analyse", "En analyse"),
+        ("contacte", "Client contacté"),
+        ("devis", "Devis envoyé"),
+        ("acceptee", "Demande acceptée"),
+        ("refusee", "Demande refusée"),
+    ]
+
+    numero_demande = models.CharField(
+        max_length=40,
+        unique=True,
+        editable=False,
+        db_index=True,
+    )
+
+    token_public = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+    )
+
+    nom_complet = models.CharField(
+        max_length=150,
+        verbose_name="Nom complet",
+    )
+
+    nom_entreprise = models.CharField(
+        max_length=180,
+        verbose_name="Nom de l’entreprise",
+    )
+
+    email = models.EmailField()
+
+    telephone = models.CharField(
+        max_length=40,
+        verbose_name="Numéro de téléphone",
+    )
+
+    type_application = models.CharField(
+        max_length=30,
+        choices=TYPE_APPLICATION_CHOICES,
+    )
+
+    qualite = models.CharField(
+        max_length=30,
+        choices=QUALITE_CHOICES,
+    )
+
+    nom_application = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    nom_forfait = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+
+    prix_estime = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
+
+    devise = models.CharField(
+        max_length=10,
+        default="CAD",
+    )
+
+    delai_estime = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+
+    fonctionnalites = models.JSONField(
+        default=list,
+        blank=True,
+    )
+
+    budget_client = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Budget prévu",
+    )
+
+    delai_souhaite = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name="Délai souhaité",
+    )
+
+    description = models.TextField(
+        blank=True,
+        verbose_name="Description du projet",
+    )
+
+    statut = models.CharField(
+        max_length=20,
+        choices=STATUT_CHOICES,
+        default="nouvelle",
+    )
+
+    email_client_envoye = models.BooleanField(
+        default=False,
+    )
+
+    email_hexaquebec_envoye = models.BooleanField(
+        default=False,
+    )
+
+    date_creation = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    date_modification = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ["-date_creation"]
+        verbose_name = "Demande d’application"
+        verbose_name_plural = "Demandes d’applications"
+
+    def __str__(self):
+        return f"{self.numero_demande} - {self.nom_entreprise}"
+
+    @staticmethod
+    def generer_numero_demande():
+        date_actuelle = timezone.localdate().strftime("%Y%m%d")
+
+        for _ in range(10):
+            code = secrets.token_hex(4).upper()
+            numero = f"HQ-APP-{date_actuelle}-{code}"
+
+            if not DemandeApplication.objects.filter(
+                numero_demande=numero
+            ).exists():
+                return numero
+
+        return f"HQ-APP-{date_actuelle}-{uuid.uuid4().hex[:12].upper()}"
+
+    def save(self, *args, **kwargs):
+        if not self.numero_demande:
+            self.numero_demande = self.generer_numero_demande()
+
+        super().save(*args, **kwargs)

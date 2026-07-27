@@ -1143,3 +1143,64 @@ class ReactionMessageAdmin(admin.ModelAdmin):
 @admin.register(MessageLu)
 class MessageLuAdmin(admin.ModelAdmin):
     list_display = ("message", "utilisateur", "date_lecture")
+
+
+
+
+
+
+
+from django.contrib import admin
+
+from .models import DemandeApplication
+
+
+@admin.register(DemandeApplication)
+class DemandeApplicationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "numero_demande",
+        "nom_entreprise",
+        "nom_complet",
+        "nom_application",
+        "nom_forfait",
+        "prix_estime",
+        "statut",
+        "date_creation",
+    )
+
+    list_filter = (
+        "statut",
+        "type_application",
+        "qualite",
+        "email_client_envoye",
+        "email_hexaquebec_envoye",
+        "date_creation",
+    )
+
+    search_fields = (
+        "numero_demande",
+        "nom_entreprise",
+        "nom_complet",
+        "email",
+        "telephone",
+    )
+
+    readonly_fields = (
+        "numero_demande",
+        "token_public",
+        "nom_application",
+        "nom_forfait",
+        "prix_estime",
+        "devise",
+        "delai_estime",
+        "fonctionnalites",
+        "email_client_envoye",
+        "email_hexaquebec_envoye",
+        "date_creation",
+        "date_modification",
+    )
+
+    ordering = (
+        "-date_creation",
+    )

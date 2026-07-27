@@ -420,3 +420,122 @@ class AttestationStageForm(forms.ModelForm):
             )
 
         return signature
+
+
+
+
+from django import forms
+
+from .models import DemandeApplication
+
+
+class DemandeApplicationForm(forms.ModelForm):
+
+    accepter_confidentialite = forms.BooleanField(
+        required=True,
+        label=(
+            "J’accepte que mes renseignements soient utilisés "
+            "pour traiter ma demande."
+        ),
+    )
+
+    # Champ invisible contre les robots.
+    website = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )
+
+    class Meta:
+        model = DemandeApplication
+
+        fields = [
+            "nom_complet",
+            "nom_entreprise",
+            "email",
+            "telephone",
+            "type_application",
+            "qualite",
+            "budget_client",
+            "delai_souhaite",
+            "description",
+        ]
+
+        widgets = {
+            "nom_complet": forms.TextInput(
+                attrs={
+                    "placeholder": "Votre nom et prénom",
+                    "autocomplete": "name",
+                }
+            ),
+
+            "nom_entreprise": forms.TextInput(
+                attrs={
+                    "placeholder": "Nom de votre entreprise",
+                    "autocomplete": "organization",
+                }
+            ),
+
+            "email": forms.EmailInput(
+                attrs={
+                    "placeholder": "exemple@entreprise.ca",
+                    "autocomplete": "email",
+                }
+            ),
+
+            "telephone": forms.TextInput(
+                attrs={
+                    "placeholder": "+1 418 000-0000",
+                    "autocomplete": "tel",
+                }
+            ),
+
+            "type_application": forms.HiddenInput(),
+
+            "qualite": forms.HiddenInput(),
+
+            "budget_client": forms.TextInput(
+                attrs={
+                    "placeholder": "Exemple : 4 000 $ à 6 000 $",
+                }
+            ),
+
+            "delai_souhaite": forms.TextInput(
+                attrs={
+                    "placeholder": "Exemple : lancement dans 3 mois",
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "rows": 6,
+                    "placeholder": (
+                        "Expliquez votre entreprise, vos clients, "
+                        "vos objectifs et les fonctionnalités importantes."
+                    ),
+                }
+            ),
+        }
+
+    def clean_website(self):
+        website = self.cleaned_data.get("website")
+
+        if website:
+            raise forms.ValidationError("Soumission invalide.")
+
+        return website
+
+    def clean_telephone(self):
+        telephone = self.cleaned_data.get("telephone", "").strip()
+
+        chiffres = "".join(
+            caractere
+            for caractere in telephone
+            if caractere.isdigit()
+        )
+
+        if len(chiffres) < 7:
+            raise forms.ValidationError(
+                "Entrez un numéro de téléphone valide."
+            )
+
+        return telephone

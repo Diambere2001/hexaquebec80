@@ -39,6 +39,7 @@ from .models import (
     ContactMessage,
     CartItem,
     Commentaire,
+    DemandeApplication,
 )
 from .forms import ContactForm, OrderForm, UrgenceForm
 from django.contrib.auth import authenticate, login, logout
@@ -57,8 +58,11 @@ from .models import Client, Message
 from .forms import MessageForm
 from django.template.loader import get_template, render_to_string  
 from django.core.mail import EmailMessage
-
-
+from .catalogue_applications import (
+    CATALOGUE_APPLICATIONS,
+    obtenir_offre_complete,
+)
+from .forms import DemandeApplicationForm
 
 
 
@@ -4291,4 +4295,1900 @@ def detail_attestation_stagiaire(
         request,
         "detail_attestation.html",
         context,
+    )
+
+
+
+
+
+
+
+
+def solutions_applications(request):
+    type_selectionne = request.GET.get(
+        "type",
+        "restaurant",
+    )
+
+    qualite_selectionnee = request.GET.get(
+        "qualite",
+        "professionnel",
+    )
+
+    if type_selectionne not in CATALOGUE_APPLICATIONS:
+        type_selectionne = "restaurant"
+
+    if qualite_selectionnee not in [
+        "essentiel",
+        "professionnel",
+        "premium",
+    ]:
+        qualite_selectionnee = "professionnel"
+
+    if request.method == "POST":
+        form = DemandeApplicationForm(request.POST)
+
+        type_selectionne = request.POST.get(
+            "type_application",
+            "restaurant",
+        )
+
+        qualite_selectionnee = request.POST.get(
+            "qualite",
+            "professionnel",
+        )
+
+        if form.is_valid():
+            application = CATALOGUE_APPLICATIONS.get(
+                type_selectionne
+            )
+
+            if not application:
+                form.add_error(
+                    "type_application",
+                    "Le type d’application est invalide.",
+                )
+
+            else:
+                forfait = application["forfaits"].get(
+                    qualite_selectionnee
+                )
+
+                if not forfait:
+                    form.add_error(
+                        "qualite",
+                        "Le forfait sélectionné est invalide.",
+                    )
+
+                else:
+                    demande = form.save(commit=False)
+
+                    demande.nom_application = application["nom"]
+                    demande.nom_forfait = forfait["nom"]
+                    demande.prix_estime = forfait["prix"]
+                    demande.devise = forfait.get(
+                        "devise",
+                        "CAD",
+                    )
+                    demande.delai_estime = forfait["delai"]
+                    demande.fonctionnalites = forfait[
+                        "fonctionnalites"
+                    ]
+
+                    demande.save()
+
+                    try:
+                        envoyer_emails_demande_application(
+                            demande
+                        )
+                    except Exception:
+                        logger.exception(
+                            "Erreur pendant l’envoi de la demande %s",
+                            demande.numero_demande,
+                        )
+
+                    return redirect(
+                        "demande_application_succes",
+                        token=demande.token_public,
+                    )
+
+    else:
+        form = DemandeApplicationForm(
+            initial={
+                "type_application": type_selectionne,
+                "qualite": qualite_selectionnee,
+            }
+        )
+
+    # Mets le return render ici, à la fin de la fonction.
+    return render(
+        request,
+        "solutions_applications.html",
+        {
+            "form": form,
+            "catalogue": CATALOGUE_APPLICATIONS,
+            "type_selectionne": type_selectionne,
+            "qualite_selectionnee": qualite_selectionnee,
+        },
+    )
+
+
+# La prochaine fonction commence après le return render.
+def demande_application_succes(request, token):
+    demande = get_object_or_404(
+        DemandeApplication,
+        token_public=token,
+    )
+
+    return render(
+        request,
+        "demande_application_succes.html",
+        {
+            "demande": demande,
+        },
+    )
+
+
+def telecharger_demande_application_pdf(request, token):
+    demande = get_object_or_404(
+        DemandeApplication,
+        token_public=token,
+    )
+
+    pdf = generer_pdf_demande(demande)
+
+    response = HttpResponse(
+        pdf,
+        content_type="application/pdf",
+    )
+
+    response[
+        "Content-Disposition"
+    ] = (
+        f'attachment; filename="'
+        f'demande-{demande.numero_demande}.pdf"'
+    )
+
+    return response
+
+
+
+
+import json
+from io import BytesIO
+from xml.sax.saxutils import escape
+
+from django.utils import timezone
+
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import (
+    getSampleStyleSheet,
+    ParagraphStyle,
+)
+from reportlab.lib.units import mm
+from reportlab.platypus import (
+    HRFlowable,
+    KeepTogether,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
+import logging
+
+from xml.sax.saxutils import escape
+
+
+def formater_prix(prix):
+    """
+    Formate un prix selon la présentation utilisée par HexaQuébec.
+
+    Exemple :
+        4500 -> 4 500 $ CAD
+    """
+
+    if prix is None:
+        return "Sur devis"
+
+    try:
+        prix_formate = f"{float(prix):,.0f}".replace(",", " ")
+    except (TypeError, ValueError):
+        return "Sur devis"
+
+    return f"{prix_formate} $ CAD"
+
+
+def generer_pdf_demande(demande):
+    """
+    Génère un PDF professionnel contenant le résumé complet
+    de la demande d’application du client.
+    """
+
+    buffer = BytesIO()
+
+    # ============================================================
+    # COULEURS HEXAQUÉBEC
+    # ============================================================
+
+    couleur_navy = colors.HexColor("#0B1F36")
+    couleur_navy_clair = colors.HexColor("#153E5C")
+    couleur_verte = colors.HexColor("#16A58D")
+    couleur_verte_foncee = colors.HexColor("#0D7565")
+    couleur_verte_claire = colors.HexColor("#EAF8F5")
+    couleur_bleue_claire = colors.HexColor("#EEF5FF")
+    couleur_fond = colors.HexColor("#F5F7FA")
+    couleur_bordure = colors.HexColor("#DDE3EA")
+    couleur_texte = colors.HexColor("#263449")
+    couleur_gris = colors.HexColor("#667085")
+    couleur_blanche = colors.white
+
+    largeur_page, hauteur_page = A4
+
+    # ============================================================
+    # DOCUMENT
+    # ============================================================
+
+    document = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=17 * mm,
+        leftMargin=17 * mm,
+        topMargin=16 * mm,
+        bottomMargin=25 * mm,
+        title=f"Demande {demande.numero_demande}",
+        author="HexaQuébec",
+        subject="Résumé d’une demande de développement numérique",
+        creator="HexaQuébec",
+    )
+
+    styles = getSampleStyleSheet()
+
+    # ============================================================
+    # STYLES
+    # ============================================================
+
+    styles.add(
+        ParagraphStyle(
+            name="HexaMarque",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=19,
+            leading=22,
+            textColor=couleur_blanche,
+            spaceAfter=3,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="HexaSlogan",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.5,
+            leading=11,
+            textColor=colors.HexColor("#D8E4EE"),
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="DocumentType",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=11,
+            leading=14,
+            alignment=TA_RIGHT,
+            textColor=couleur_blanche,
+            spaceAfter=5,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="DocumentReference",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.5,
+            leading=11,
+            alignment=TA_RIGHT,
+            textColor=colors.HexColor("#D8E4EE"),
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="TitrePrincipalHexa",
+            parent=styles["Title"],
+            fontName="Helvetica-Bold",
+            fontSize=21,
+            leading=25,
+            alignment=TA_LEFT,
+            textColor=couleur_navy,
+            spaceAfter=7,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="IntroductionHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=9.5,
+            leading=14,
+            textColor=couleur_gris,
+            spaceAfter=12,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="SectionHexa",
+            parent=styles["Heading2"],
+            fontName="Helvetica-Bold",
+            fontSize=12.5,
+            leading=16,
+            textColor=couleur_navy,
+            spaceBefore=4,
+            spaceAfter=0,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="LabelHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=7.5,
+            leading=10,
+            textColor=couleur_gris,
+            spaceAfter=3,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="ValeurHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=9.5,
+            leading=13,
+            textColor=couleur_texte,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="ValeurSimpleHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=9.2,
+            leading=13,
+            textColor=couleur_texte,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="PrixHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=20,
+            leading=23,
+            alignment=TA_RIGHT,
+            textColor=couleur_verte_foncee,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="PrixLabelHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=7,
+            leading=9,
+            alignment=TA_RIGHT,
+            textColor=couleur_gris,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="FonctionnaliteHexa",
+            parent=styles["BodyText"],
+            fontName="Helvetica",
+            fontSize=8.8,
+            leading=13,
+            textColor=couleur_texte,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="NoteHexa",
+            parent=styles["BodyText"],
+            fontName="Helvetica",
+            fontSize=8.5,
+            leading=13,
+            textColor=couleur_texte,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="ContactHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=7.3,
+            leading=9,
+            alignment=TA_CENTER,
+            textColor=couleur_gris,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="PiedPageHexa",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=7,
+            leading=9,
+            textColor=couleur_gris,
+        )
+    )
+
+    styles.add(
+        ParagraphStyle(
+            name="PiedPageNumero",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=7,
+            leading=9,
+            alignment=TA_RIGHT,
+            textColor=couleur_gris,
+        )
+    )
+
+    # ============================================================
+    # FONCTIONS INTERNES
+    # ============================================================
+
+    def texte_securise(valeur, valeur_defaut="Non indiqué"):
+        if valeur is None:
+            return escape(valeur_defaut)
+
+        valeur = str(valeur).strip()
+
+        if not valeur:
+            return escape(valeur_defaut)
+
+        return escape(valeur)
+
+    def paragraphe_valeur(valeur, style=None):
+        return Paragraph(
+            texte_securise(valeur),
+            style or styles["ValeurSimpleHexa"],
+        )
+
+    def titre_section(titre):
+        """
+        Crée un titre de section avec une barre verte à gauche.
+        """
+
+        barre = Table(
+            [
+                [
+                    "",
+                    Paragraph(
+                        escape(titre),
+                        styles["SectionHexa"],
+                    ),
+                ]
+            ],
+            colWidths=[3 * mm, 153 * mm],
+        )
+
+        barre.setStyle(
+            TableStyle(
+                [
+                    (
+                        "BACKGROUND",
+                        (0, 0),
+                        (0, 0),
+                        couleur_verte,
+                    ),
+                    (
+                        "VALIGN",
+                        (0, 0),
+                        (-1, -1),
+                        "MIDDLE",
+                    ),
+                    (
+                        "LEFTPADDING",
+                        (0, 0),
+                        (0, 0),
+                        0,
+                    ),
+                    (
+                        "RIGHTPADDING",
+                        (0, 0),
+                        (0, 0),
+                        0,
+                    ),
+                    (
+                        "TOPPADDING",
+                        (0, 0),
+                        (0, 0),
+                        0,
+                    ),
+                    (
+                        "BOTTOMPADDING",
+                        (0, 0),
+                        (0, 0),
+                        0,
+                    ),
+                    (
+                        "LEFTPADDING",
+                        (1, 0),
+                        (1, 0),
+                        9,
+                    ),
+                    (
+                        "RIGHTPADDING",
+                        (1, 0),
+                        (1, 0),
+                        0,
+                    ),
+                    (
+                        "TOPPADDING",
+                        (1, 0),
+                        (1, 0),
+                        4,
+                    ),
+                    (
+                        "BOTTOMPADDING",
+                        (1, 0),
+                        (1, 0),
+                        4,
+                    ),
+                ]
+            )
+        )
+
+        return barre
+
+    def dessiner_pied_de_page(canvas, doc):
+        """
+        Ajoute les coordonnées et le numéro de page
+        sur chaque page du PDF.
+        """
+
+        canvas.saveState()
+
+        canvas.setStrokeColor(couleur_bordure)
+        canvas.setLineWidth(0.6)
+
+        canvas.line(
+            17 * mm,
+            18 * mm,
+            largeur_page - 17 * mm,
+            18 * mm,
+        )
+
+        canvas.setFillColor(couleur_navy)
+        canvas.setFont("Helvetica-Bold", 7.5)
+
+        canvas.drawString(
+            17 * mm,
+            12.5 * mm,
+            "HexaQuébec",
+        )
+
+        canvas.setFillColor(couleur_gris)
+        canvas.setFont("Helvetica", 6.8)
+
+        canvas.drawString(
+            39 * mm,
+            12.5 * mm,
+            "514 467 7377  |  hexaquebec80@gmail.com",
+        )
+
+        canvas.drawString(
+            17 * mm,
+            8.5 * mm,
+            "2186, rue Roussel, Chicoutimi, QC, Canada",
+        )
+
+        canvas.setFillColor(couleur_gris)
+        canvas.setFont("Helvetica-Bold", 7)
+
+        canvas.drawRightString(
+            largeur_page - 17 * mm,
+            10.5 * mm,
+            f"Page {doc.page}",
+        )
+
+        canvas.restoreState()
+
+    # ============================================================
+    # DATE ET STATUT
+    # ============================================================
+
+    date_creation = demande.date_creation
+
+    try:
+        if timezone.is_aware(date_creation):
+            date_creation = timezone.localtime(date_creation)
+    except (TypeError, ValueError):
+        pass
+
+    date_formatee = date_creation.strftime(
+        "%d/%m/%Y à %H:%M"
+    )
+
+    try:
+        statut = demande.get_statut_display()
+    except AttributeError:
+        statut = getattr(
+            demande,
+            "statut",
+            "Demande reçue",
+        )
+
+    # ============================================================
+    # EN-TÊTE
+    # ============================================================
+
+    bloc_marque = Paragraph(
+        (
+            "HEXAQUÉBEC"
+            "<br/>"
+            "<font size='8'>"
+            "Développement web, mobile et intelligence artificielle"
+            "</font>"
+        ),
+        styles["HexaMarque"],
+    )
+
+    bloc_document = Paragraph(
+        (
+            "<b>DEMANDE DE DÉVELOPPEMENT</b>"
+            "<br/>"
+            f"<font size='8'>Référence : "
+            f"{texte_securise(demande.numero_demande)}</font>"
+        ),
+        styles["DocumentType"],
+    )
+
+    entete = Table(
+        [
+            [
+                bloc_marque,
+                bloc_document,
+            ]
+        ],
+        colWidths=[102 * mm, 54 * mm],
+    )
+
+    entete.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, -1),
+                    couleur_navy,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "MIDDLE",
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (0, 0),
+                    16,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (0, 0),
+                    10,
+                ),
+                (
+                    "LEFTPADDING",
+                    (1, 0),
+                    (1, 0),
+                    10,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (1, 0),
+                    (1, 0),
+                    16,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    15,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    15,
+                ),
+                (
+                    "LINEBELOW",
+                    (0, 0),
+                    (-1, -1),
+                    4,
+                    couleur_verte,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # COORDONNÉES SOUS L’EN-TÊTE
+    # ============================================================
+
+    coordonnees = Table(
+        [
+            [
+                Paragraph(
+                    "<b>Téléphone</b><br/>514 467 7377",
+                    styles["ContactHexa"],
+                ),
+                Paragraph(
+                    "<b>Email</b><br/>hexaquebec80@gmail.com",
+                    styles["ContactHexa"],
+                ),
+                Paragraph(
+                    (
+                        "<b>Adresse</b><br/>"
+                        "2186, rue Roussel, Chicoutimi, QC, Canada"
+                    ),
+                    styles["ContactHexa"],
+                ),
+            ]
+        ],
+        colWidths=[
+            44 * mm,
+            52 * mm,
+            60 * mm,
+        ],
+    )
+
+    coordonnees.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, -1),
+                    couleur_fond,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "MIDDLE",
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.5,
+                    couleur_bordure,
+                ),
+                (
+                    "INNERGRID",
+                    (0, 0),
+                    (-1, -1),
+                    0.5,
+                    couleur_bordure,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    6,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    6,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # CARTE DE RÉFÉRENCE
+    # ============================================================
+
+    carte_reference = Table(
+        [
+            [
+                Paragraph(
+                    "NUMÉRO DE DEMANDE",
+                    styles["LabelHexa"],
+                ),
+                Paragraph(
+                    "DATE DE RÉCEPTION",
+                    styles["LabelHexa"],
+                ),
+                Paragraph(
+                    "STATUT",
+                    styles["LabelHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    texte_securise(
+                        demande.numero_demande
+                    ),
+                    styles["ValeurHexa"],
+                ),
+                Paragraph(
+                    texte_securise(
+                        date_formatee
+                    ),
+                    styles["ValeurHexa"],
+                ),
+                Paragraph(
+                    texte_securise(
+                        statut
+                    ),
+                    styles["ValeurHexa"],
+                ),
+            ],
+        ],
+        colWidths=[
+            55 * mm,
+            55 * mm,
+            46 * mm,
+        ],
+    )
+
+    carte_reference.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, 0),
+                    couleur_fond,
+                ),
+                (
+                    "BACKGROUND",
+                    (0, 1),
+                    (-1, 1),
+                    couleur_blanche,
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.7,
+                    couleur_bordure,
+                ),
+                (
+                    "INNERGRID",
+                    (0, 0),
+                    (-1, -1),
+                    0.5,
+                    couleur_bordure,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "MIDDLE",
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, 0),
+                    7,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, 0),
+                    5,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 1),
+                    (-1, 1),
+                    9,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 1),
+                    (-1, 1),
+                    9,
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    9,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    9,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # INFORMATIONS DU CLIENT
+    # ============================================================
+
+    tableau_client = Table(
+        [
+            [
+                Paragraph(
+                    "Nom complet",
+                    styles["LabelHexa"],
+                ),
+                paragraphe_valeur(
+                    demande.nom_complet,
+                    styles["ValeurHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    "Entreprise",
+                    styles["LabelHexa"],
+                ),
+                paragraphe_valeur(
+                    demande.nom_entreprise,
+                    styles["ValeurHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    "Adresse email",
+                    styles["LabelHexa"],
+                ),
+                paragraphe_valeur(
+                    demande.email
+                ),
+            ],
+            [
+                Paragraph(
+                    "Téléphone",
+                    styles["LabelHexa"],
+                ),
+                paragraphe_valeur(
+                    demande.telephone
+                ),
+            ],
+        ],
+        colWidths=[
+            42 * mm,
+            114 * mm,
+        ],
+    )
+
+    tableau_client.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (0, -1),
+                    couleur_fond,
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.6,
+                    couleur_bordure,
+                ),
+                (
+                    "INNERGRID",
+                    (0, 0),
+                    (-1, -1),
+                    0.4,
+                    couleur_bordure,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "TOP",
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    9,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    9,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # SOLUTION SÉLECTIONNÉE
+    # ============================================================
+
+    informations_solution = Table(
+        [
+            [
+                Paragraph(
+                    "APPLICATION",
+                    styles["LabelHexa"],
+                ),
+                Paragraph(
+                    "NIVEAU DE QUALITÉ",
+                    styles["LabelHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    texte_securise(
+                        demande.nom_application
+                    ),
+                    styles["ValeurHexa"],
+                ),
+                Paragraph(
+                    texte_securise(
+                        demande.nom_forfait
+                    ),
+                    styles["ValeurHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    "DÉLAI INDICATIF",
+                    styles["LabelHexa"],
+                ),
+                Paragraph(
+                    "DÉLAI SOUHAITÉ PAR LE CLIENT",
+                    styles["LabelHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    texte_securise(
+                        demande.delai_estime
+                    ),
+                    styles["ValeurSimpleHexa"],
+                ),
+                Paragraph(
+                    texte_securise(
+                        demande.delai_souhaite
+                    ),
+                    styles["ValeurSimpleHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    "BUDGET PRÉVU",
+                    styles["LabelHexa"],
+                ),
+                Paragraph(
+                    "RÉFÉRENCE",
+                    styles["LabelHexa"],
+                ),
+            ],
+            [
+                Paragraph(
+                    texte_securise(
+                        demande.budget_client
+                    ),
+                    styles["ValeurSimpleHexa"],
+                ),
+                Paragraph(
+                    texte_securise(
+                        demande.numero_demande
+                    ),
+                    styles["ValeurSimpleHexa"],
+                ),
+            ],
+        ],
+        colWidths=[
+            55 * mm,
+            55 * mm,
+        ],
+    )
+
+    informations_solution.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, 0),
+                    couleur_verte_claire,
+                ),
+                (
+                    "BACKGROUND",
+                    (0, 2),
+                    (-1, 2),
+                    couleur_verte_claire,
+                ),
+                (
+                    "BACKGROUND",
+                    (0, 4),
+                    (-1, 4),
+                    couleur_verte_claire,
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.6,
+                    colors.HexColor("#C8E6DF"),
+                ),
+                (
+                    "INNERGRID",
+                    (0, 0),
+                    (-1, -1),
+                    0.4,
+                    colors.HexColor("#D7ECE7"),
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "TOP",
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    7,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    7,
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+            ]
+        )
+    )
+
+    carte_prix = Table(
+        [
+            [
+                Paragraph(
+                    "PRIX INDICATIF",
+                    styles["PrixLabelHexa"],
+                )
+            ],
+            [
+                Paragraph(
+                    (
+                        "À partir de<br/>"
+                        f"{escape(formater_prix(demande.prix_estime))}"
+                    ),
+                    styles["PrixHexa"],
+                )
+            ],
+            [
+                Paragraph(
+                    (
+                        "Le montant définitif sera confirmé "
+                        "après l’analyse du projet."
+                    ),
+                    styles["ContactHexa"],
+                )
+            ],
+        ],
+        colWidths=[42 * mm],
+    )
+
+    carte_prix.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, -1),
+                    couleur_verte_claire,
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    1,
+                    couleur_verte,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "MIDDLE",
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    8,
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    9,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    9,
+                ),
+            ]
+        )
+    )
+
+    bloc_solution = Table(
+        [
+            [
+                informations_solution,
+                carte_prix,
+            ]
+        ],
+        colWidths=[
+            112 * mm,
+            44 * mm,
+        ],
+    )
+
+    bloc_solution.setStyle(
+        TableStyle(
+            [
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "TOP",
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    0,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (0, 0),
+                    3,
+                ),
+                (
+                    "LEFTPADDING",
+                    (1, 0),
+                    (1, 0),
+                    3,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (1, 0),
+                    (1, 0),
+                    0,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    0,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    0,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # FONCTIONNALITÉS
+    # ============================================================
+
+    fonctionnalites = demande.fonctionnalites or []
+
+    if isinstance(fonctionnalites, str):
+        try:
+            fonctionnalites = json.loads(
+                fonctionnalites
+            )
+        except (json.JSONDecodeError, TypeError):
+            fonctionnalites = [
+                fonctionnalites
+            ]
+
+    if not isinstance(fonctionnalites, list):
+        fonctionnalites = list(
+            fonctionnalites
+        )
+
+    lignes_fonctionnalites = []
+
+    for fonctionnalite in fonctionnalites:
+        lignes_fonctionnalites.append(
+            [
+                Paragraph(
+                    "&#8226;",
+                    ParagraphStyle(
+                        name=f"PuceVerte{len(lignes_fonctionnalites)}",
+                        parent=styles["Normal"],
+                        fontName="Helvetica-Bold",
+                        fontSize=13,
+                        leading=13,
+                        alignment=TA_CENTER,
+                        textColor=couleur_verte,
+                    ),
+                ),
+                Paragraph(
+                    texte_securise(
+                        fonctionnalite
+                    ),
+                    styles["FonctionnaliteHexa"],
+                ),
+            ]
+        )
+
+    if not lignes_fonctionnalites:
+        lignes_fonctionnalites.append(
+            [
+                Paragraph(
+                    "&#8226;",
+                    styles["FonctionnaliteHexa"],
+                ),
+                Paragraph(
+                    "Les fonctionnalités seront confirmées après analyse.",
+                    styles["FonctionnaliteHexa"],
+                ),
+            ]
+        )
+
+    tableau_fonctionnalites = Table(
+        lignes_fonctionnalites,
+        colWidths=[
+            8 * mm,
+            148 * mm,
+        ],
+        splitByRow=1,
+    )
+
+    tableau_fonctionnalites.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, -1),
+                    couleur_blanche,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "TOP",
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (0, -1),
+                    6,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (0, -1),
+                    2,
+                ),
+                (
+                    "LEFTPADDING",
+                    (1, 0),
+                    (1, -1),
+                    2,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (1, 0),
+                    (1, -1),
+                    8,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    5,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    5,
+                ),
+                (
+                    "LINEBELOW",
+                    (0, 0),
+                    (-1, -2),
+                    0.35,
+                    colors.HexColor("#EEF1F4"),
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.6,
+                    couleur_bordure,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # DESCRIPTION
+    # ============================================================
+
+    description = (
+        demande.description.strip()
+        if demande.description
+        else "Aucune description supplémentaire n’a été fournie."
+    )
+
+    description_securisee = escape(
+        description
+    ).replace(
+        "\n",
+        "<br/>",
+    )
+
+    carte_description = Table(
+        [
+            [
+                Paragraph(
+                    description_securisee,
+                    styles["ValeurSimpleHexa"],
+                )
+            ]
+        ],
+        colWidths=[156 * mm],
+    )
+
+    carte_description.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, -1),
+                    couleur_fond,
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.6,
+                    couleur_bordure,
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    12,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    12,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    11,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    11,
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "TOP",
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # NOTE IMPORTANTE
+    # ============================================================
+
+    note_importante = Table(
+        [
+            [
+                Paragraph(
+                    "<b>IMPORTANT</b>",
+                    ParagraphStyle(
+                        name="TitreImportantHexa",
+                        parent=styles["Normal"],
+                        fontName="Helvetica-Bold",
+                        fontSize=8,
+                        leading=10,
+                        textColor=couleur_navy,
+                    ),
+                ),
+                Paragraph(
+                    (
+                        "Ce document confirme la réception de votre demande. "
+                        "Il ne constitue pas un devis, une facture ou un contrat. "
+                        "Le prix, le délai et les modalités définitives seront "
+                        "confirmés après l’analyse complète du projet par HexaQuébec."
+                    ),
+                    styles["NoteHexa"],
+                ),
+            ]
+        ],
+        colWidths=[
+            25 * mm,
+            131 * mm,
+        ],
+    )
+
+    note_importante.setStyle(
+        TableStyle(
+            [
+                (
+                    "BACKGROUND",
+                    (0, 0),
+                    (-1, -1),
+                    couleur_bleue_claire,
+                ),
+                (
+                    "BOX",
+                    (0, 0),
+                    (-1, -1),
+                    0.7,
+                    colors.HexColor("#D5E5FB"),
+                ),
+                (
+                    "LINEBEFORE",
+                    (0, 0),
+                    (0, 0),
+                    4,
+                    colors.HexColor("#3478F6"),
+                ),
+                (
+                    "VALIGN",
+                    (0, 0),
+                    (-1, -1),
+                    "TOP",
+                ),
+                (
+                    "LEFTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    10,
+                ),
+                (
+                    "RIGHTPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    10,
+                ),
+                (
+                    "TOPPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    10,
+                ),
+                (
+                    "BOTTOMPADDING",
+                    (0, 0),
+                    (-1, -1),
+                    10,
+                ),
+            ]
+        )
+    )
+
+    # ============================================================
+    # CONTENU FINAL
+    # ============================================================
+
+    contenu = [
+        entete,
+        coordonnees,
+        Spacer(1, 15),
+
+        Paragraph(
+            "Résumé de votre demande",
+            styles["TitrePrincipalHexa"],
+        ),
+
+        Paragraph(
+            (
+                "Merci d’avoir choisi HexaQuébec. Nous avons bien reçu "
+                "votre demande de développement. Vous trouverez ci-dessous "
+                "le résumé des informations transmises."
+            ),
+            styles["IntroductionHexa"],
+        ),
+
+        carte_reference,
+        Spacer(1, 15),
+
+        titre_section(
+            "Informations du client"
+        ),
+        Spacer(1, 8),
+        tableau_client,
+        Spacer(1, 15),
+
+        titre_section(
+            "Solution numérique sélectionnée"
+        ),
+        Spacer(1, 8),
+        bloc_solution,
+        Spacer(1, 15),
+
+        titre_section(
+            "Fonctionnalités incluses"
+        ),
+        Spacer(1, 8),
+        tableau_fonctionnalites,
+        Spacer(1, 15),
+
+        titre_section(
+            "Description du projet"
+        ),
+        Spacer(1, 8),
+        carte_description,
+        Spacer(1, 16),
+
+        note_importante,
+        Spacer(1, 15),
+
+        HRFlowable(
+            width="100%",
+            thickness=0.7,
+            color=couleur_bordure,
+            spaceBefore=2,
+            spaceAfter=10,
+        ),
+
+        Paragraph(
+            (
+                "<b>Nous, HexaQuébec, avons reçu votre demande.</b><br/>"
+                "Notre équipe communiquera avec vous après l’analyse "
+                "des informations fournies."
+            ),
+            styles["NoteHexa"],
+        ),
+
+        Spacer(1, 8),
+
+        Paragraph(
+            (
+                "<b>HexaQuébec</b><br/>"
+                "Développement web, applications mobiles et intelligence artificielle<br/>"
+                "Téléphone : 514 467 7377<br/>"
+                "Email : hexaquebec80@gmail.com<br/>"
+                "Adresse : 2186, rue Roussel, Chicoutimi, QC, Canada"
+            ),
+            styles["NoteHexa"],
+        ),
+    ]
+
+    document.build(
+        contenu,
+        onFirstPage=dessiner_pied_de_page,
+        onLaterPages=dessiner_pied_de_page,
+    )
+
+    resultat = buffer.getvalue()
+    buffer.close()
+
+    return resultat
+
+def envoyer_emails_demande_application(demande):
+    pdf = generer_pdf_demande(demande)
+
+    nom_pdf = f"demande-{demande.numero_demande}.pdf"
+
+    email_expediteur = settings.DEFAULT_FROM_EMAIL
+
+    email_hexaquebec = getattr(
+        settings,
+        "HEXQUEBEC_DEMANDES_EMAIL",
+        settings.DEFAULT_FROM_EMAIL,
+    )
+
+    prix = formater_prix(demande.prix_estime)
+
+    sujet_client = (
+        f"HexaQuébec — Demande reçue "
+        f"{demande.numero_demande}"
+    )
+
+    message_client = f"""
+Bonjour {demande.nom_complet},
+
+Nous avons bien reçu la demande de l’entreprise {demande.nom_entreprise}.
+
+Numéro de demande : {demande.numero_demande}
+Application : {demande.nom_application}
+Qualité : {demande.nom_forfait}
+Prix indicatif : à partir de {prix}
+Délai indicatif : {demande.delai_estime}
+
+Votre document PDF est joint à cet email.
+
+Notre équipe analysera votre demande avant de confirmer le prix final,
+le délai de réalisation et les conditions du projet.
+
+Merci d’avoir choisi HexaQuébec.
+
+HexaQuébec
+Développement web, applications mobiles et intelligence artificielle
+""".strip()
+
+    email_client = EmailMultiAlternatives(
+        subject=sujet_client,
+        body=message_client,
+        from_email=email_expediteur,
+        to=[demande.email],
+        reply_to=[email_hexaquebec],
+    )
+
+    email_client.attach(
+        nom_pdf,
+        pdf,
+        "application/pdf",
+    )
+
+    sujet_hexaquebec = (
+        f"Nouvelle demande {demande.numero_demande} "
+        f"— {demande.nom_entreprise}"
+    )
+
+    message_hexaquebec = f"""
+Nouvelle demande reçue sur le site HexaQuébec.
+
+Numéro : {demande.numero_demande}
+Client : {demande.nom_complet}
+Entreprise : {demande.nom_entreprise}
+Email : {demande.email}
+Téléphone : {demande.telephone}
+
+Application : {demande.nom_application}
+Qualité : {demande.nom_forfait}
+Prix indicatif : à partir de {prix}
+Délai indicatif : {demande.delai_estime}
+
+Budget indiqué :
+{demande.budget_client or "Non indiqué"}
+
+Délai souhaité :
+{demande.delai_souhaite or "Non indiqué"}
+
+Description :
+{demande.description or "Aucune description"}
+""".strip()
+
+    email_admin = EmailMultiAlternatives(
+        subject=sujet_hexaquebec,
+        body=message_hexaquebec,
+        from_email=email_expediteur,
+        to=[email_hexaquebec],
+        reply_to=[demande.email],
+    )
+
+    email_admin.attach(
+        nom_pdf,
+        pdf,
+        "application/pdf",
+    )
+
+    client_envoye = False
+    hexaquebec_envoye = False
+
+    try:
+        client_envoye = bool(
+            email_client.send(fail_silently=False)
+        )
+
+    except Exception:
+        logger.exception(
+            "Erreur email client pour %s",
+            demande.numero_demande,
+        )
+
+    try:
+        hexaquebec_envoye = bool(
+            email_admin.send(fail_silently=False)
+        )
+
+    except Exception:
+        logger.exception(
+            "Erreur email HexaQuébec pour %s",
+            demande.numero_demande,
+        )
+
+    demande.email_client_envoye = client_envoye
+    demande.email_hexaquebec_envoye = hexaquebec_envoye
+
+    demande.save(
+        update_fields=[
+            "email_client_envoye",
+            "email_hexaquebec_envoye",
+            "date_modification",
+        ]
     )
