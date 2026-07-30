@@ -1069,6 +1069,15 @@
 
             <button
                 type="button"
+                class="certificate-button"
+                id="downloadCertificatePdf"
+            >
+                <i class="fa-solid fa-file-pdf"></i>
+                Télécharger en PDF
+            </button>
+
+            <button
+                type="button"
                 class="certificate-button primary"
                 onclick="window.print()"
             >
@@ -1405,168 +1414,259 @@
     src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
 ></script>
 
+<script
+    src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"
+></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-        const downloadButton = document.getElementById(
+        const imageButton = document.getElementById(
             "downloadCertificate"
+        );
+
+        const pdfButton = document.getElementById(
+            "downloadCertificatePdf"
         );
 
         const certificate = document.getElementById(
             "certificateToDownload"
         );
 
-        if (
-            !downloadButton ||
-            !certificate
-        ) {
+        if (!certificate) {
             return;
         }
 
-        downloadButton.addEventListener(
-            "click",
-            async function () {
+        async function attendreImages(element) {
+            const images = element.querySelectorAll("img");
 
-                const texteInitial = downloadButton.innerHTML;
-
-                downloadButton.disabled = true;
-
-                downloadButton.innerHTML = `
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                    Création de l’image...
-                `;
-
-                try {
-
-                    if (
-                        typeof html2canvas === "undefined"
-                    ) {
-                        throw new Error(
-                            "La bibliothèque html2canvas n’est pas chargée."
-                        );
+            await Promise.all(
+                Array.from(images).map(function (image) {
+                    if (image.complete) {
+                        return Promise.resolve();
                     }
 
-                    const images = certificate.querySelectorAll(
-                        "img"
-                    );
+                    return new Promise(function (resolve) {
+                        image.onload = resolve;
+                        image.onerror = resolve;
+                    });
+                })
+            );
+        }
 
-                    await Promise.all(
-                        Array.from(images).map(function (image) {
-
-                            if (image.complete) {
-                                return Promise.resolve();
-                            }
-
-                            return new Promise(function (
-                                resolve
-                            ) {
-                                image.onload = resolve;
-                                image.onerror = resolve;
-                            });
-                        })
-                    );
-
-                    const canvas = await html2canvas(
-                        certificate,
-                        {
-                            scale: 2,
-                            width: 1180,
-                            height: 834,
-                            windowWidth: 1180,
-                            windowHeight: 834,
-                            scrollX: 0,
-                            scrollY: 0,
-                            useCORS: true,
-                            allowTaint: false,
-                            backgroundColor: "#fffefb",
-                            logging: false,
-                            imageTimeout: 15000,
-                            foreignObjectRendering: false,
-
-                            onclone: function (clonedDocument) {
-
-                                const clonedCertificate =
-                                    clonedDocument.getElementById(
-                                        "certificateToDownload"
-                                    );
-
-                                if (!clonedCertificate) {
-                                    return;
-                                }
-
-                                clonedCertificate.classList.add(
-                                    "capture-mode"
-                                );
-
-                                /*
-                                 * Retire uniquement les éléments invisibles
-                                 * ayant une largeur ou une hauteur nulle.
-                                 * Ce sont eux qui peuvent provoquer :
-                                 * createPattern(... canvas 0 × 0).
-                                 */
-                                clonedCertificate
-                                    .querySelectorAll("*")
-                                    .forEach(function (element) {
-
-                                        const rectangle =
-                                            element.getBoundingClientRect();
-
-                                        if (
-                                            rectangle.width <= 0 ||
-                                            rectangle.height <= 0
-                                        ) {
-                                            element.style.backgroundImage =
-                                                "none";
-
-                                            element.style.boxShadow =
-                                                "none";
-                                        }
-                                    });
-                            },
-                        }
-                    );
-
-                    const lien = document.createElement("a");
-
-                    lien.download =
-                        "attestation-{{ attestation.numero_stagiaire|escapejs }}-HexaQuebec.png";
-
-                    lien.href = canvas.toDataURL(
-                        "image/png",
-                        1.0
-                    );
-
-                    document.body.appendChild(lien);
-                    lien.click();
-                    lien.remove();
-
-                } catch (erreur) {
-
-                    console.error(
-                        "Erreur de création de l’image :",
-                        erreur
-                    );
-
-                    const detailErreur = (
-                        erreur && erreur.message
-                    )
-                        ? erreur.message
-                        : "erreur inconnue";
-
-                    alert(
-                        "Impossible de créer l’image : " +
-                        detailErreur +
-                        "\n\nRechargez la page avec Ctrl + F5, " +
-                        "puis réessayez."
-                    );
-
-                } finally {
-
-                    downloadButton.disabled = false;
-                    downloadButton.innerHTML = texteInitial;
-                }
+        async function creerCanvasAttestation() {
+            if (typeof html2canvas === "undefined") {
+                throw new Error(
+                    "La bibliothèque html2canvas n’est pas chargée."
+                );
             }
-        );
+
+            await attendreImages(certificate);
+
+            return await html2canvas(
+                certificate,
+                {
+                    scale: 2,
+                    width: 1180,
+                    height: 834,
+                    windowWidth: 1180,
+                    windowHeight: 834,
+                    scrollX: 0,
+                    scrollY: 0,
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: "#fffefb",
+                    logging: false,
+                    imageTimeout: 15000,
+                    foreignObjectRendering: false,
+
+                    onclone: function (clonedDocument) {
+                        const clonedCertificate =
+                            clonedDocument.getElementById(
+                                "certificateToDownload"
+                            );
+
+                        if (!clonedCertificate) {
+                            return;
+                        }
+
+                        clonedCertificate.classList.add(
+                            "capture-mode"
+                        );
+
+                        clonedCertificate
+                            .querySelectorAll("*")
+                            .forEach(function (element) {
+                                const rectangle =
+                                    element.getBoundingClientRect();
+
+                                if (
+                                    rectangle.width <= 0 ||
+                                    rectangle.height <= 0
+                                ) {
+                                    element.style.backgroundImage = "none";
+                                    element.style.boxShadow = "none";
+                                }
+                            });
+                    },
+                }
+            );
+        }
+
+        function telechargerCanvasEnImage(canvas) {
+            const lien = document.createElement("a");
+
+            lien.download =
+                "attestation-{{ attestation.numero_stagiaire|escapejs }}-HexaQuebec.png";
+
+            lien.href = canvas.toDataURL(
+                "image/png",
+                1.0
+            );
+
+            document.body.appendChild(lien);
+            lien.click();
+            lien.remove();
+        }
+
+        function telechargerCanvasEnPdf(canvas) {
+            if (
+                !window.jspdf ||
+                !window.jspdf.jsPDF
+            ) {
+                throw new Error(
+                    "La bibliothèque jsPDF n’est pas chargée."
+                );
+            }
+
+            const { jsPDF } = window.jspdf;
+
+            const pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "mm",
+                format: "a4",
+                compress: true,
+            });
+
+            const imageData = canvas.toDataURL(
+                "image/jpeg",
+                0.96
+            );
+
+            const pageWidth = 297;
+            const pageHeight = 210;
+            const imageRatio = canvas.width / canvas.height;
+            const pageRatio = pageWidth / pageHeight;
+
+            let imageWidth;
+            let imageHeight;
+            let positionX;
+            let positionY;
+
+            if (imageRatio > pageRatio) {
+                imageWidth = pageWidth;
+                imageHeight = pageWidth / imageRatio;
+                positionX = 0;
+                positionY = (pageHeight - imageHeight) / 2;
+            } else {
+                imageHeight = pageHeight;
+                imageWidth = pageHeight * imageRatio;
+                positionX = (pageWidth - imageWidth) / 2;
+                positionY = 0;
+            }
+
+            pdf.addImage(
+                imageData,
+                "JPEG",
+                positionX,
+                positionY,
+                imageWidth,
+                imageHeight,
+                undefined,
+                "FAST"
+            );
+
+            pdf.setProperties({
+                title:
+                    "Attestation de stage — {{ attestation.prenom|escapejs }} {{ attestation.nom|escapejs }}",
+                subject:
+                    "Attestation officielle de stage HexaQuébec",
+                author: "HexaQuébec",
+                creator: "HexaQuébec",
+            });
+
+            pdf.save(
+                "attestation-{{ attestation.numero_stagiaire|escapejs }}-HexaQuebec.pdf"
+            );
+        }
+
+        async function executerTelechargement(button, type) {
+            if (!button) {
+                return;
+            }
+
+            const contenuInitial = button.innerHTML;
+
+            button.disabled = true;
+            button.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Création en cours...
+            `;
+
+            try {
+                const canvas = await creerCanvasAttestation();
+
+                if (type === "pdf") {
+                    telechargerCanvasEnPdf(canvas);
+                } else {
+                    telechargerCanvasEnImage(canvas);
+                }
+            } catch (erreur) {
+                console.error(
+                    "Erreur de génération du document :",
+                    erreur
+                );
+
+                const detailErreur =
+                    erreur && erreur.message
+                        ? erreur.message
+                        : "Erreur inconnue";
+
+                alert(
+                    "Impossible de créer le document : " +
+                    detailErreur +
+                    "\n\nRechargez la page avec Ctrl + F5, " +
+                    "puis réessayez."
+                );
+            } finally {
+                button.disabled = false;
+                button.innerHTML = contenuInitial;
+            }
+        }
+
+        if (imageButton) {
+            imageButton.addEventListener(
+                "click",
+                function () {
+                    executerTelechargement(
+                        imageButton,
+                        "image"
+                    );
+                }
+            );
+        }
+
+        if (pdfButton) {
+            pdfButton.addEventListener(
+                "click",
+                function () {
+                    executerTelechargement(
+                        pdfButton,
+                        "pdf"
+                    );
+                }
+            );
+        }
     });
 </script>
 
