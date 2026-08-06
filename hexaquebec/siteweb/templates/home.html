@@ -1634,6 +1634,61 @@ body{
                     HexaQuébec accompagne les entreprises dans la création de solutions numériques professionnelles, performantes et modernes.
                 </p>
 
+
+
+
+                <div class="hero-buttons">
+
+                    <a href="{% url 'services' %}" class="hero-btn primary-btn">
+                        <i class="fa-solid fa-code"></i>
+                        Services
+                    </a>
+
+                    <a href="{% url 'demande_stage' %}" class="hero-btn secondary-btn">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        Demande de Stage
+                    </a>
+
+                    <a href="{% url 'space' %}" class="hero-btn outline-btn">
+                        <i class="fa-solid fa-users"></i>
+                        Espace
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+                <div class="hero-image-wrapper">
+
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop"
+                         class="hero-image"
+                         alt="Développement Web">
+
+                    <div class="floating-card floating-1">
+                        <i class="fa-solid fa-code"></i>
+                        Développement Web
+                    </div>
+
+                    <div class="floating-card floating-2">
+                        <i class="fa-solid fa-robot"></i>
+                        Intelligence Artificielle
+                    </div>
+
+                    <div class="floating-card floating-3">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                        Applications Mobiles
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<!-- Section Stage en pleine largeur : sortie de la colonne col-lg-6 du héros -->
 <section class="stage-dev" id="stage">
     <div class="stage-bg-orb stage-orb-1"></div>
     <div class="stage-bg-orb stage-orb-2"></div>
@@ -1696,8 +1751,42 @@ body{
 
                 </div>
 
+                <!-- Filtre instantané des domaines -->
+                <div class="stage-filter js-stage-reveal">
+                    <label class="stage-filter-field" for="stageSearch">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                        <input
+                            type="search"
+                            id="stageSearch"
+                            placeholder="Filtrer un domaine en temps réel..."
+                            autocomplete="off"
+                            aria-label="Filtrer les domaines de stage"
+                        >
+                        <button
+                            type="button"
+                            class="stage-filter-clear"
+                            id="stageSearchClear"
+                            aria-label="Effacer le filtre"
+                            hidden
+                        >
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </label>
+
+                    <div class="stage-filter-result" aria-live="polite">
+                        <strong id="stageFilterCount">0</strong>
+                        <span id="stageFilterLabel">domaines affichés</span>
+                    </div>
+                </div>
+
                 <!-- Domaines générés en JS -->
                 <div class="stage-tags" id="stageTags"></div>
+
+                <div class="stage-empty" id="stageEmpty" hidden>
+                    <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
+                    <strong>Aucun domaine trouvé</strong>
+                    <span>Essayez un autre mot-clé.</span>
+                </div>
 
                 <!-- Zone basse -->
                 <div class="stage-bottom-row js-stage-reveal">
@@ -1717,7 +1806,7 @@ body{
                        class="stage-btn"
                        id="stageBtn">
 
-                       
+                        <span class="stage-btn-text">Déposer ma demande</span>
 
                         <span class="stage-btn-icon">
                             <i class="fa-solid fa-arrow-right"></i>
@@ -4008,6 +4097,260 @@ and
         transition:none !important;
     }
 }
+
+
+/* =========================================================
+   CORRECTIONS DE PLACEMENT + FILTRE TEMPS RÉEL
+========================================================= */
+.stage-dev{
+    width:100%;
+    max-width:none;
+    margin:0;
+    isolation:isolate;
+}
+
+.stage-shell,
+.stage-card,
+.stage-left,
+.stage-right{
+    min-width:0;
+}
+
+.stage-left{
+    /* Les ombres et animations ne sont plus coupées. */
+    overflow:visible;
+}
+
+.stage-filter{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:0 0 14px;
+}
+
+.stage-filter-field{
+    position:relative;
+    min-width:0;
+    flex:1;
+    height:48px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 12px 0 15px;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+    background:rgba(255,255,255,.96);
+    box-shadow:0 10px 25px rgba(7,26,61,.055);
+    transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+
+.stage-filter-field:focus-within{
+    border-color:rgba(0,87,255,.42);
+    box-shadow:0 14px 32px rgba(0,87,255,.12);
+    transform:translateY(-1px);
+}
+
+.stage-filter-field > i{
+    flex:0 0 auto;
+    color:var(--blue);
+    font-size:14px;
+}
+
+.stage-filter-field input{
+    width:100%;
+    min-width:0;
+    height:100%;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:var(--navy);
+    font-size:13px;
+    font-weight:700;
+}
+
+.stage-filter-field input::placeholder{
+    color:#94a3b8;
+    font-weight:600;
+}
+
+.stage-filter-clear{
+    width:31px;
+    height:31px;
+    flex:0 0 31px;
+    display:grid;
+    place-items:center;
+    border:0;
+    border-radius:10px;
+    background:#eef4ff;
+    color:var(--navy);
+    cursor:pointer;
+    transition:transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.stage-filter-clear:hover{
+    transform:scale(1.06);
+    background:#fee2e2;
+    color:var(--red);
+}
+
+.stage-filter-result{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    min-height:42px;
+    padding:0 13px;
+    border-radius:13px;
+    background:#f1f5f9;
+    color:#64748b;
+    font-size:10px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.stage-filter-result strong{
+    color:var(--navy);
+    font-size:13px;
+}
+
+.stage-tag.stage-tag-hidden{
+    display:none !important;
+}
+
+.stage-tag.stage-tag-filter-enter{
+    animation:stageFilterEnter .38s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes stageFilterEnter{
+    from{opacity:0; transform:translateY(10px) scale(.97);}
+    to{opacity:1; transform:translateY(0) scale(1);}
+}
+
+.stage-empty{
+    width:100%;
+    min-height:145px;
+    margin:0 0 22px;
+    padding:28px 18px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    text-align:center;
+    border:1px dashed #cbd5e1;
+    border-radius:18px;
+    background:rgba(248,250,252,.88);
+    color:#94a3b8;
+}
+
+.stage-empty[hidden]{
+    display:none !important;
+}
+
+.stage-empty i{
+    margin-bottom:4px;
+    color:var(--blue);
+    font-size:25px;
+}
+
+.stage-empty strong{
+    color:var(--navy);
+    font-size:14px;
+}
+
+.stage-empty span{
+    font-size:11px;
+    font-weight:700;
+}
+
+/* Tablettes et mobiles : une seule colonne, sans contenu comprimé. */
+@media(max-width:991.98px){
+    .stage-dev{
+        padding:55px 18px;
+    }
+
+    .stage-card{
+        grid-template-columns:1fr !important;
+        min-height:auto !important;
+        border-radius:28px;
+        overflow:hidden;
+    }
+
+    .stage-left{
+        padding:42px 28px 32px !important;
+        text-align:left;
+    }
+
+    .stage-title,
+    .stage-description{
+        max-width:760px;
+    }
+
+    .stage-tags{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .stage-right{
+        min-height:500px !important;
+    }
+
+    .stage-image-zone{
+        height:500px !important;
+        min-height:500px !important;
+    }
+
+    .stage-girl{
+        max-height:475px;
+    }
+}
+
+@media(max-width:650px){
+    .stage-dev{
+        padding:35px 12px;
+    }
+
+    .stage-left{
+        padding:34px 18px 25px !important;
+        text-align:center;
+    }
+
+    .stage-filter{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .stage-filter-result{
+        width:max-content;
+        max-width:100%;
+        align-self:flex-start;
+    }
+
+    .stage-tags{
+        grid-template-columns:1fr;
+    }
+
+    .stage-right{
+        min-height:420px !important;
+    }
+
+    .stage-image-zone{
+        height:420px !important;
+        min-height:420px !important;
+    }
+}
+
+@media(max-width:390px){
+    .stage-filter-field{
+        height:46px;
+    }
+
+    .stage-filter-field input{
+        font-size:12px;
+    }
+}
+
 </style>
 
 
@@ -4064,6 +4407,11 @@ document.addEventListener("DOMContentLoaded", function(){
     const spotlight = document.getElementById("stageSpotlight");
     const particlesContainer = document.getElementById("stageParticles");
     const domainCount = document.getElementById("stageDomainCount");
+    const stageSearch = document.getElementById("stageSearch");
+    const stageSearchClear = document.getElementById("stageSearchClear");
+    const stageFilterCount = document.getElementById("stageFilterCount");
+    const stageFilterLabel = document.getElementById("stageFilterLabel");
+    const stageEmpty = document.getElementById("stageEmpty");
 
     if(!section || !stageCard){
         return;
@@ -4085,6 +4433,7 @@ document.addEventListener("DOMContentLoaded", function(){
             item.className = "stage-tag";
 
             item.dataset.index = index;
+            item.dataset.search = `${stage.text} ${stage.subtext}`.toLocaleLowerCase("fr");
 
             item.innerHTML = `
                 <span class="stage-tag-icon">
@@ -4101,6 +4450,71 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     }
 
+
+
+    /* =====================================================
+       FILTRE INSTANTANÉ EN JAVASCRIPT
+    ====================================================== */
+
+    function normalizeStageValue(value){
+        return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLocaleLowerCase("fr")
+            .trim();
+    }
+
+    function updateStageFilter(){
+        const query = normalizeStageValue(stageSearch ? stageSearch.value : "");
+        const tags = Array.from(section.querySelectorAll(".stage-tag"));
+        let visibleCount = 0;
+
+        tags.forEach(function(tag){
+            const searchable = normalizeStageValue(tag.dataset.search);
+            const isVisible = !query || searchable.includes(query);
+
+            tag.classList.toggle("stage-tag-hidden", !isVisible);
+
+            if(isVisible){
+                visibleCount += 1;
+                tag.classList.remove("stage-tag-filter-enter");
+                void tag.offsetWidth;
+                tag.classList.add("stage-tag-filter-enter");
+            }
+        });
+
+        if(stageFilterCount){
+            stageFilterCount.textContent = visibleCount;
+        }
+
+        if(stageFilterLabel){
+            stageFilterLabel.textContent = visibleCount > 1
+                ? "domaines affichés"
+                : "domaine affiché";
+        }
+
+        if(stageEmpty){
+            stageEmpty.hidden = visibleCount !== 0;
+        }
+
+        if(stageSearchClear){
+            stageSearchClear.hidden = query.length === 0;
+        }
+    }
+
+    if(stageSearch){
+        stageSearch.addEventListener("input", updateStageFilter);
+    }
+
+    if(stageSearchClear){
+        stageSearchClear.addEventListener("click", function(){
+            stageSearch.value = "";
+            updateStageFilter();
+            stageSearch.focus();
+        });
+    }
+
+    updateStageFilter();
 
     /* =====================================================
        PARTICULES GÉNÉRÉES EN JS
@@ -4269,203 +4683,90 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function startStageAnimations(){
 
-        /* Textes */
-
-        const reveals =
-            section.querySelectorAll(
-                ".js-stage-reveal"
-            );
-
-        reveals.forEach(
-            function(element, index){
-
-                setTimeout(function(){
-
-                    element.classList.add(
-                        "stage-reveal-visible"
-                    );
-
-                }, 120 + index * 140);
-
-            }
+        const reveals = Array.from(
+            section.querySelectorAll(".js-stage-reveal")
         );
 
-
-        /* Cartes domaines */
-
-        const tags =
-            section.querySelectorAll(
-                ".stage-tag"
-            );
-
-        tags.forEach(
-            function(tag, index){
-
-                setTimeout(function(){
-
-                    tag.classList.add(
-                        "stage-tag-visible"
-                    );
-
-                }, 450 + index * 110);
-
-            }
+        const tags = Array.from(
+            section.querySelectorAll(".stage-tag")
         );
 
-
-        /* Image fille */
-
-        if(stageGirl){
-
-            setTimeout(function(){
-
-                stageGirl.classList.add(
-                    "stage-girl-visible"
-                );
-
-            }, 380);
-        }
-
-
-        /* Cartes flottantes */
-
-        const floatingCards =
-            section.querySelectorAll(
-                ".stage-floating-card"
-            );
-
-        floatingCards.forEach(
-            function(card, index){
-
-                setTimeout(function(){
-
-                    card.classList.add(
-                        "stage-floating-visible"
-                    );
-
-                }, 800 + index * 220);
-
-            }
+        const floatingCards = Array.from(
+            section.querySelectorAll(".stage-floating-card")
         );
 
+        /*
+           Toutes les animations démarrent dans la même frame.
+           Les petits délais CSS gardent une lecture fluide sans désynchronisation.
+        */
+        requestAnimationFrame(function(){
 
-        /* Compteur */
+            reveals.forEach(function(element, index){
+                element.style.transitionDelay = `${Math.min(index * 70, 280)}ms`;
+                element.classList.add("stage-reveal-visible");
+            });
 
-        setTimeout(function(){
+            tags.forEach(function(tag, index){
+                tag.style.transitionDelay = `${120 + index * 55}ms`;
+                tag.classList.add("stage-tag-visible");
+            });
 
-            animateCounter(
-                domainCount,
-                stages.length,
-                1200
-            );
+            if(stageGirl){
+                stageGirl.style.transitionDelay = "140ms";
+                stageGirl.classList.add("stage-girl-visible");
+            }
 
-        }, 500);
+            floatingCards.forEach(function(card, index){
+                card.style.transitionDelay = `${260 + index * 90}ms`;
+                card.classList.add("stage-floating-visible");
+            });
+        });
+
+        animateCounter(domainCount, stages.length, 1100);
     }
 
 
     /* =====================================================
-       EFFET 3D SOURIS SUR DESKTOP
+       SPOTLIGHT + PARALLAX STABLE SUR DESKTOP
     ====================================================== */
 
-    const canUse3D =
-        window.matchMedia(
-            "(min-width: 981px)"
-        ).matches;
+    const canUse3D = window.matchMedia("(min-width: 992px)").matches;
 
     if(canUse3D){
+        stageCard.addEventListener("mousemove", function(event){
+            const rect = stageCard.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
 
-        stageCard.addEventListener(
-            "mousemove",
-            function(event){
+            /* La carte reste parfaitement en place. */
+            stageCard.style.transform = "none";
 
-                const rect =
-                    stageCard.getBoundingClientRect();
-
-                const x =
-                    event.clientX - rect.left;
-
-                const y =
-                    event.clientY - rect.top;
-
-                const centerX =
-                    rect.width / 2;
-
-                const centerY =
-                    rect.height / 2;
-
-                const rotateY =
-                    ((x - centerX) / centerX) * 1.5;
-
-                const rotateX =
-                    -((y - centerY) / centerY) * 1.2;
-
-                stageCard.style.transform = `
-                    perspective(1400px)
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                `;
-
-
-                /* Spotlight */
-
-                if(spotlight){
-
-                    spotlight.style.left =
-                        x + "px";
-
-                    spotlight.style.top =
-                        y + "px";
-
-                    spotlight.style.opacity =
-                        "1";
-                }
-
-
-                /* Parallaxe fille */
-
-                if(stageGirl){
-
-                    const moveX =
-                        ((x - centerX) / centerX) * 8;
-
-                    const moveY =
-                        ((y - centerY) / centerY) * 4;
-
-                    stageGirl.style.transform = `
-                        translate(
-                            ${moveX}px,
-                            ${moveY}px
-                        )
-                        scale(1.01)
-                    `;
-                }
+            if(spotlight){
+                spotlight.style.left = x + "px";
+                spotlight.style.top = y + "px";
+                spotlight.style.opacity = "1";
             }
-        );
 
-
-        stageCard.addEventListener(
-            "mouseleave",
-            function(){
-
-                stageCard.style.transform = `
-                    perspective(1400px)
-                    rotateX(0deg)
-                    rotateY(0deg)
-                `;
-
-                if(spotlight){
-                    spotlight.style.opacity =
-                        "0";
-                }
-
-                if(stageGirl){
-                    stageGirl.style.transform = `
-                        translate(0,0)
-                        scale(1)
-                    `;
-                }
+            if(stageGirl){
+                const moveX = ((x - centerX) / centerX) * 7;
+                const moveY = ((y - centerY) / centerY) * 4;
+                stageGirl.style.translate = `${moveX}px ${moveY}px`;
             }
-        );
+        });
+
+        stageCard.addEventListener("mouseleave", function(){
+            stageCard.style.transform = "none";
+
+            if(spotlight){
+                spotlight.style.opacity = "0";
+            }
+
+            if(stageGirl){
+                stageGirl.style.translate = "0 0";
+            }
+        });
     }
 
 
@@ -4586,57 +4887,6 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 
-
-                <div class="hero-buttons">
-
-                    <a href="{% url 'services' %}" class="hero-btn primary-btn">
-                        <i class="fa-solid fa-code"></i>
-                        Services
-                    </a>
-
-                    <a href="{% url 'demande_stage' %}" class="hero-btn secondary-btn">
-                        <i class="fa-solid fa-user-graduate"></i>
-                        Demande de Stage
-                    </a>
-
-                    <a href="{% url 'space' %}" class="hero-btn outline-btn">
-                        <i class="fa-solid fa-users"></i>
-                        Espace
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-6">
-                <div class="hero-image-wrapper">
-
-                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop"
-                         class="hero-image"
-                         alt="Développement Web">
-
-                    <div class="floating-card floating-1">
-                        <i class="fa-solid fa-code"></i>
-                        Développement Web
-                    </div>
-
-                    <div class="floating-card floating-2">
-                        <i class="fa-solid fa-robot"></i>
-                        Intelligence Artificielle
-                    </div>
-
-                    <div class="floating-card floating-3">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                        Applications Mobiles
-                    </div>
-
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</header>
 
 <section class="section-block services-section">
     <div class="services-bg"></div>
