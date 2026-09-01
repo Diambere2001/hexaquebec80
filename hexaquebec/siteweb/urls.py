@@ -199,5 +199,41 @@ urlpatterns = [
         views.telecharger_demande_application_pdf,
         name="telecharger_demande_application_pdf",
     ),
+
+    path(
+        "conference/",
+        views.conference,
+        name="conference"
+    ),
+
+    path(
+        "conference/confirmation/",
+        views.conference_confirmation,
+        name="conference_confirmation"
+    ),
+
+    path(
+        "gestion/conferences/",
+        views.conferences_gestion,
+        name="conferences_gestion"
+    ),
+
+    path(
+        "gestion/conferences/<int:pk>/",
+        views.conference_detail_gestion,
+        name="conference_detail_gestion"
+    ),
+
+    path(
+        "gestion/conferences/<int:pk>/creer/",
+        views.conference_creer_evenement,
+        name="conference_creer_evenement"
+    ),
+
+    path(
+        "conference/reunion/<uuid:token>/",
+        views.conference_room,
+        name="conference_room"
+    ),
 ]
 

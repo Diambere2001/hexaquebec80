@@ -1,0 +1,415 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Gestion conférences — HexaQuébec
+</title>
+
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    rel="stylesheet"
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    padding:
+        45px 20px;
+
+    color:#fff;
+
+    font-family:'Poppins',sans-serif;
+
+    background:#050816;
+}
+
+.container{
+
+    width:100%;
+
+    max-width:1250px;
+
+    margin:auto;
+}
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-bottom:35px;
+}
+
+h1{
+
+    margin:0;
+
+    font-size:
+        clamp(28px,4vw,45px);
+
+    font-weight:900;
+}
+
+h1 span{
+
+    color:#72e5ff;
+}
+
+.subtitle{
+
+    margin-top:8px;
+
+    color:
+        rgba(255,255,255,.52);
+
+    font-size:12px;
+}
+
+.requests{
+
+    display:grid;
+
+    gap:15px;
+}
+
+.request{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        auto;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:22px;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+}
+
+.request-main{
+
+    display:flex;
+
+    gap:16px;
+
+    align-items:center;
+}
+
+.avatar{
+
+    width:55px;
+    height:55px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:17px;
+
+    font-size:18px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7255ff,
+            #009eda
+        );
+}
+
+.request h3{
+
+    margin:
+        0 0 5px;
+
+    font-size:15px;
+}
+
+.meta{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:
+        5px 14px;
+
+    color:
+        rgba(255,255,255,.52);
+
+    font-size:9px;
+}
+
+.status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:
+        5px 9px;
+
+    margin-top:8px;
+
+    border-radius:100px;
+
+    color:#7cecff;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    background:
+        rgba(0,212,255,.07);
+
+    border:
+        1px solid rgba(0,212,255,.15);
+}
+
+.action{
+
+    min-height:43px;
+
+    padding:
+        0 15px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    border-radius:12px;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7255ff,
+            #009ed9
+        );
+}
+
+.empty{
+
+    padding:60px;
+
+    text-align:center;
+
+    color:
+        rgba(255,255,255,.45);
+
+    border-radius:25px;
+
+    background:
+        rgba(255,255,255,.04);
+}
+
+@media(max-width:700px){
+
+    .request{
+
+        grid-template-columns:1fr;
+    }
+
+    .action{
+
+        width:100%;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+
+                Conférences
+
+                <span>
+                    HexaQuébec
+                </span>
+
+            </h1>
+
+            <div class="subtitle">
+
+                Demandes de rendez-vous clients
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="requests">
+
+        {% for demande in demandes %}
+
+        <div class="request">
+
+            <div class="request-main">
+
+                <div class="avatar">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+
+                        {{ demande.nom }}
+
+                        {% if demande.entreprise %}
+
+                            — {{ demande.entreprise }}
+
+                        {% endif %}
+
+                    </h3>
+
+                    <div class="meta">
+
+                        <span>
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            {{ demande.email }}
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-solid fa-phone"></i>
+
+                            {{ demande.telephone }}
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-solid fa-calendar"></i>
+
+                            {{ demande.date_souhaitee|date:"d/m/Y H:i" }}
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-solid fa-briefcase"></i>
+
+                            {{ demande.sujet }}
+
+                        </span>
+
+                    </div>
+
+                    <span class="status">
+
+                        {{ demande.get_statut_display }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'conference_detail_gestion' demande.id %}"
+                class="action"
+            >
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+                Gérer
+
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+
+            <i class="fa-solid fa-video fa-3x"></i>
+
+            <h3>
+                Aucune demande
+            </h3>
+
+            <p>
+                Les demandes clients apparaîtront ici.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

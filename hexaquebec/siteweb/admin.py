@@ -18,6 +18,16 @@ from .models import PresenceStagiaire
 
 from .models import DocumentStagiaire
 
+import uuid
+
+from django.contrib import admin, messages
+from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.html import format_html
+
+from .models import DemandeConference
 
 
 
@@ -1204,3 +1214,745 @@ class DemandeApplicationAdmin(admin.ModelAdmin):
     ordering = (
         "-date_creation",
     )
+
+
+
+
+
+
+
+# ============================================================
+# admin.py
+# HEXAQUÉBEC — GESTION DES CONFÉRENCES
+# ============================================================
+
+
+
+# ============================================================
+# ADMIN CONFÉRENCE
+# ============================================================
+
+@admin.register(DemandeConference)
+class DemandeConferenceAdmin(admin.ModelAdmin):
+
+    # --------------------------------------------------------
+    # LISTE PRINCIPALE
+    # --------------------------------------------------------
+
+    list_display = (
+        "nom",
+        "entreprise_affichee",
+        "telephone",
+        "email",
+        "sujet",
+        "date_souhaitee",
+        "statut_badge",
+        "conference_badge",
+        "email_badge",
+        "cree_le",
+    )
+
+    # --------------------------------------------------------
+    # FILTRES
+    # --------------------------------------------------------
+
+    list_filter = (
+        "statut",
+        "email_envoye",
+        "date_souhaitee",
+        "cree_le",
+    )
+
+    # --------------------------------------------------------
+    # RECHERCHE
+    # --------------------------------------------------------
+
+    search_fields = (
+        "nom",
+        "entreprise",
+        "telephone",
+        "email",
+        "sujet",
+        "message",
+        "room_name",
+    )
+
+    # --------------------------------------------------------
+    # TRI
+    # --------------------------------------------------------
+
+    ordering = (
+        "-cree_le",
+    )
+
+    date_hierarchy = "date_souhaitee"
+
+    list_per_page = 30
+
+    # --------------------------------------------------------
+    # CHAMPS NON MODIFIABLES
+    # --------------------------------------------------------
+
+    readonly_fields = (
+        "token",
+        "room_name",
+        "cree_le",
+        "conference_creee_le",
+        "lien_conference_admin",
+        "statut_conference_detail",
+    )
+
+    # --------------------------------------------------------
+    # ORGANISATION DU FORMULAIRE
+    # --------------------------------------------------------
+
+    fieldsets = (
+
+        (
+            "👤 Informations du client",
+            {
+                "fields": (
+                    "nom",
+                    "entreprise",
+                    "telephone",
+                    "email",
+                )
+            },
+        ),
+
+        (
+            "📅 Rendez-vous",
+            {
+                "fields": (
+                    "sujet",
+                    "date_souhaitee",
+                    "message",
+                    "statut",
+                )
+            },
+        ),
+
+        (
+            "🎥 Visioconférence HexaQuébec",
+            {
+                "fields": (
+                    "statut_conference_detail",
+                    "room_name",
+                    "token",
+                    "conference_creee_le",
+                    "lien_conference_admin",
+                )
+            },
+        ),
+
+        (
+            "📧 Notification",
+            {
+                "fields": (
+                    "email_envoye",
+                )
+            },
+        ),
+
+        (
+            "🕐 Informations système",
+            {
+                "fields": (
+                    "cree_le",
+                ),
+                "classes": (
+                    "collapse",
+                ),
+            },
+        ),
+    )
+
+    # --------------------------------------------------------
+    # ACTIONS
+    # --------------------------------------------------------
+
+    actions = (
+        "creer_conference_et_envoyer_email",
+        "renvoyer_email_conference",
+        "marquer_confirmee",
+        "marquer_terminee",
+        "marquer_annulee",
+    )
+
+    # ========================================================
+    # ENTREPRISE
+    # ========================================================
+
+    @admin.display(
+        description="Entreprise"
+    )
+    def entreprise_affichee(self, obj):
+
+        if obj.entreprise:
+            return obj.entreprise
+
+        return "Client particulier"
+
+    # ========================================================
+    # BADGE STATUT
+    # ========================================================
+
+    @admin.display(
+        description="Statut"
+    )
+    def statut_badge(self, obj):
+
+        couleurs = {
+
+            "nouvelle": "#f59e0b",
+
+            "confirmee": "#2563eb",
+
+            "terminee": "#16a34a",
+
+            "annulee": "#dc2626",
+        }
+
+        couleur = couleurs.get(
+            obj.statut,
+            "#6b7280"
+        )
+
+        return format_html(
+            """
+            <span style="
+                display:inline-block;
+                padding:6px 10px;
+                border-radius:20px;
+                color:#fff;
+                background:{};
+                font-size:11px;
+                font-weight:700;
+            ">
+                {}
+            </span>
+            """,
+            couleur,
+            obj.get_statut_display(),
+        )
+
+    # ========================================================
+    # BADGE CONFÉRENCE
+    # ========================================================
+
+    @admin.display(
+        description="Visioconférence"
+    )
+    def conference_badge(self, obj):
+
+        if obj.room_name:
+
+            return format_html(
+                """
+                <span style="
+                    color:#16a34a;
+                    font-weight:700;
+                ">
+                    ● Créée
+                </span>
+                """
+            )
+
+        return format_html(
+            """
+            <span style="
+                color:#f59e0b;
+                font-weight:700;
+            ">
+                ● À créer
+            </span>
+            """
+        )
+
+    # ========================================================
+    # BADGE EMAIL
+    # ========================================================
+
+    @admin.display(
+        description="Courriel"
+    )
+    def email_badge(self, obj):
+
+        if obj.email_envoye:
+
+            return format_html(
+                """
+                <span style="
+                    color:#16a34a;
+                    font-weight:700;
+                ">
+                    ✓ Envoyé
+                </span>
+                """
+            )
+
+        return format_html(
+            """
+            <span style="
+                color:#dc2626;
+                font-weight:700;
+            ">
+                Non envoyé
+            </span>
+            """
+        )
+
+    # ========================================================
+    # STATUT DANS DETAIL
+    # ========================================================
+
+    @admin.display(
+        description="État de la conférence"
+    )
+    def statut_conference_detail(self, obj):
+
+        if not obj.pk:
+
+            return "La demande doit d'abord être enregistrée."
+
+        if obj.room_name:
+
+            return format_html(
+                """
+                <div style="
+                    padding:14px;
+                    border-radius:10px;
+                    background:#ecfdf5;
+                    color:#166534;
+                    font-weight:700;
+                ">
+                    ✓ La salle de visioconférence est créée.
+                </div>
+                """
+            )
+
+        return format_html(
+            """
+            <div style="
+                padding:14px;
+                border-radius:10px;
+                background:#fff7ed;
+                color:#9a3412;
+                font-weight:700;
+            ">
+                ⚠ La visioconférence n'est pas encore créée.
+                Utilisez l'action
+                « Créer conférence + envoyer courriel ».
+            </div>
+            """
+        )
+
+    # ========================================================
+    # LIEN CONFÉRENCE
+    # ========================================================
+
+    @admin.display(
+        description="Lien de la visioconférence"
+    )
+    def lien_conference_admin(self, obj):
+
+        if not obj.pk:
+
+            return "-"
+
+        if not obj.room_name:
+
+            return format_html(
+                """
+                <span style="color:#888;">
+                    Créez d'abord la visioconférence.
+                </span>
+                """
+            )
+
+        url = reverse(
+            "conference_room",
+            kwargs={
+                "token": obj.token
+            }
+        )
+
+        return format_html(
+            """
+            <div style="
+                padding:12px;
+                background:#f8fafc;
+                border:1px solid #e5e7eb;
+                border-radius:10px;
+            ">
+
+                <strong>
+                    Lien client :
+                </strong>
+
+                <br><br>
+
+                <a
+                    href="{}"
+                    target="_blank"
+                    style="
+                        color:#2563eb;
+                        font-weight:700;
+                    "
+                >
+                    {}
+                </a>
+
+                <br><br>
+
+                <a
+                    href="{}"
+                    target="_blank"
+                    style="
+                        display:inline-block;
+                        padding:8px 14px;
+                        border-radius:8px;
+                        background:#2563eb;
+                        color:white;
+                        font-weight:700;
+                        text-decoration:none;
+                    "
+                >
+                    🎥 Ouvrir la conférence
+                </a>
+
+            </div>
+            """,
+            url,
+            url,
+            url,
+        )
+
+    # ========================================================
+    # CREER ROOM
+    # ========================================================
+
+    def creer_room(self, demande):
+
+        if demande.room_name:
+
+            return
+
+        identifiant = uuid.uuid4().hex[:20]
+
+        demande.room_name = (
+            f"HexaQuebec-{identifiant}"
+        )
+
+        demande.statut = "confirmee"
+
+        demande.conference_creee_le = (
+            timezone.now()
+        )
+
+        demande.save(
+            update_fields=[
+                "room_name",
+                "statut",
+                "conference_creee_le",
+            ]
+        )
+
+    # ========================================================
+    # EMAIL
+    # ========================================================
+
+    def envoyer_email(
+        self,
+        request,
+        demande
+    ):
+
+        lien = request.build_absolute_uri(
+            reverse(
+                "conference_room",
+                kwargs={
+                    "token": demande.token
+                }
+            )
+        )
+
+        sujet_email = (
+            "Votre visioconférence HexaQuébec est confirmée"
+        )
+
+        message_email = (
+            f"Bonjour {demande.nom},\n\n"
+
+            f"Votre rendez-vous avec HexaQuébec "
+            f"est confirmé.\n\n"
+
+            f"Sujet : {demande.sujet}\n"
+
+            f"Entreprise : "
+            f"{demande.entreprise or 'Client particulier'}\n"
+
+            f"Date prévue : "
+            f"{demande.date_souhaitee:%d/%m/%Y à %H:%M}\n\n"
+
+            f"Votre lien privé de visioconférence :\n"
+            f"{lien}\n\n"
+
+            f"Vous pouvez ouvrir ce lien depuis "
+            f"votre téléphone ou votre ordinateur.\n\n"
+
+            f"Veuillez vous connecter quelques minutes "
+            f"avant le début de la rencontre.\n\n"
+
+            f"HexaQuébec\n"
+            f"L'innovation au cœur du numérique québécois."
+        )
+
+        send_mail(
+            subject=sujet_email,
+            message=message_email,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[
+                demande.email
+            ],
+            fail_silently=False,
+        )
+
+        demande.email_envoye = True
+
+        demande.save(
+            update_fields=[
+                "email_envoye"
+            ]
+        )
+
+        return lien
+
+    # ========================================================
+    # ACTION :
+    # CREER CONFERENCE + EMAIL
+    # ========================================================
+
+    @admin.action(
+        description=(
+            "🎥 Créer conférence + envoyer courriel au client"
+        )
+    )
+    def creer_conference_et_envoyer_email(
+        self,
+        request,
+        queryset
+    ):
+
+        succes = 0
+
+        erreurs = 0
+
+        for demande in queryset:
+
+            try:
+
+                self.creer_room(
+                    demande
+                )
+
+                self.envoyer_email(
+                    request,
+                    demande
+                )
+
+                succes += 1
+
+            except Exception as exc:
+
+                erreurs += 1
+
+                self.message_user(
+                    request,
+                    (
+                        f"Erreur pour "
+                        f"{demande.nom} : "
+                        f"{exc}"
+                    ),
+                    level=messages.ERROR,
+                )
+
+        if succes:
+
+            self.message_user(
+                request,
+                (
+                    f"{succes} conférence(s) créée(s) "
+                    f"et lien(s) envoyé(s) par courriel."
+                ),
+                level=messages.SUCCESS,
+            )
+
+        if erreurs:
+
+            self.message_user(
+                request,
+                (
+                    f"{erreurs} demande(s) "
+                    f"n'ont pas pu être traitées."
+                ),
+                level=messages.WARNING,
+            )
+
+    # ========================================================
+    # ACTION :
+    # RENVOYER EMAIL
+    # ========================================================
+
+    @admin.action(
+        description="📧 Renvoyer le lien par courriel"
+    )
+    def renvoyer_email_conference(
+        self,
+        request,
+        queryset
+    ):
+
+        succes = 0
+
+        erreurs = 0
+
+        for demande in queryset:
+
+            if not demande.room_name:
+
+                self.message_user(
+                    request,
+                    (
+                        f"{demande.nom} : "
+                        f"aucune conférence créée."
+                    ),
+                    level=messages.WARNING,
+                )
+
+                continue
+
+            try:
+
+                self.envoyer_email(
+                    request,
+                    demande
+                )
+
+                succes += 1
+
+            except Exception as exc:
+
+                erreurs += 1
+
+                self.message_user(
+                    request,
+                    (
+                        f"Erreur email pour "
+                        f"{demande.nom} : "
+                        f"{exc}"
+                    ),
+                    level=messages.ERROR,
+                )
+
+        if succes:
+
+            self.message_user(
+                request,
+                (
+                    f"{succes} courriel(s) envoyé(s)."
+                ),
+                level=messages.SUCCESS,
+            )
+
+        if erreurs:
+
+            self.message_user(
+                request,
+                (
+                    f"{erreurs} courriel(s) "
+                    f"n'ont pas pu être envoyés."
+                ),
+                level=messages.WARNING,
+            )
+
+    # ========================================================
+    # ACTION :
+    # CONFIRMEE
+    # ========================================================
+
+    @admin.action(
+        description="✅ Marquer comme confirmée"
+    )
+    def marquer_confirmee(
+        self,
+        request,
+        queryset
+    ):
+
+        total = queryset.update(
+            statut="confirmee"
+        )
+
+        self.message_user(
+            request,
+            (
+                f"{total} conférence(s) "
+                f"marquée(s) comme confirmée(s)."
+            ),
+            level=messages.SUCCESS,
+        )
+
+    # ========================================================
+    # ACTION :
+    # TERMINEE
+    # ========================================================
+
+    @admin.action(
+        description="✔ Marquer comme terminée"
+    )
+    def marquer_terminee(
+        self,
+        request,
+        queryset
+    ):
+
+        total = queryset.update(
+            statut="terminee"
+        )
+
+        self.message_user(
+            request,
+            (
+                f"{total} conférence(s) "
+                f"marquée(s) comme terminée(s)."
+            ),
+            level=messages.SUCCESS,
+        )
+
+    # ========================================================
+    # ACTION :
+    # ANNULEE
+    # ========================================================
+
+    @admin.action(
+        description="❌ Annuler la conférence"
+    )
+    def marquer_annulee(
+        self,
+        request,
+        queryset
+    ):
+
+        total = queryset.update(
+            statut="annulee"
+        )
+
+        self.message_user(
+            request,
+            (
+                f"{total} conférence(s) "
+                f"annulée(s)."
+            ),
+            level=messages.WARNING,
+        )

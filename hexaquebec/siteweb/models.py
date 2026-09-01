@@ -1310,3 +1310,101 @@ class DemandeApplication(models.Model):
             self.numero_demande = self.generer_numero_demande()
 
         super().save(*args, **kwargs)
+
+
+
+
+
+
+import uuid
+
+from django.db import models
+from django.utils import timezone
+
+
+class DemandeConference(models.Model):
+
+    STATUT_CHOICES = [
+        ("nouvelle", "Nouvelle demande"),
+        ("confirmee", "Conférence créée"),
+        ("terminee", "Terminée"),
+        ("annulee", "Annulée"),
+    ]
+
+    nom = models.CharField(
+        max_length=150,
+        verbose_name="Nom complet"
+    )
+
+    entreprise = models.CharField(
+        max_length=180,
+        blank=True,
+        verbose_name="Entreprise"
+    )
+
+    telephone = models.CharField(
+        max_length=40,
+        verbose_name="Numéro de téléphone"
+    )
+
+    email = models.EmailField(
+        verbose_name="Adresse courriel"
+    )
+
+    sujet = models.CharField(
+        max_length=200,
+        verbose_name="Sujet de la rencontre"
+    )
+
+    message = models.TextField(
+        blank=True,
+        verbose_name="Description du besoin"
+    )
+
+    date_souhaitee = models.DateTimeField(
+        verbose_name="Date et heure souhaitées"
+    )
+
+    statut = models.CharField(
+        max_length=20,
+        choices=STATUT_CHOICES,
+        default="nouvelle"
+    )
+
+    # Jeton privé utilisé dans le lien client HexaQuébec.
+    token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False
+    )
+
+    # Nom technique de la salle vidéo.
+    room_name = models.CharField(
+        max_length=180,
+        blank=True
+    )
+
+    cree_le = models.DateTimeField(
+        default=timezone.now
+    )
+
+    conference_creee_le = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    email_envoye = models.BooleanField(
+        default=False
+    )
+
+    class Meta:
+        ordering = ["-cree_le"]
+        verbose_name = "Demande de conférence"
+        verbose_name_plural = "Demandes de conférence"
+
+    def __str__(self):
+        return f"{self.nom} — {self.sujet}"
+
+    @property
+    def conference_creee(self):
+        return bool(self.room_name)

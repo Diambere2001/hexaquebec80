@@ -5,7 +5,10 @@ from .models import Client
 from .models import Message
 from .models import MessageClient, RendezVous, Partenaire
 from .models import Product, CommentPro
-
+from .catalogue_applications import (
+    obtenir_choix_applications,
+    obtenir_choix_forfaits,
+)
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -539,3 +542,96 @@ class DemandeApplicationForm(forms.ModelForm):
             )
 
         return telephone
+
+
+
+
+
+from django import forms
+
+from .models import DemandeConference
+
+
+class DemandeConferenceForm(forms.ModelForm):
+
+    class Meta:
+
+        model = DemandeConference
+
+        fields = [
+            "nom",
+            "entreprise",
+            "telephone",
+            "email",
+            "sujet",
+            "date_souhaitee",
+            "message",
+        ]
+
+        widgets = {
+
+            "nom": forms.TextInput(
+                attrs={
+                    "class": "conference-input",
+                    "placeholder": "Votre nom complet",
+                    "autocomplete": "name",
+                }
+            ),
+
+            "entreprise": forms.TextInput(
+                attrs={
+                    "class": "conference-input",
+                    "placeholder": "Nom de votre entreprise",
+                }
+            ),
+
+            "telephone": forms.TextInput(
+                attrs={
+                    "class": "conference-input",
+                    "placeholder": "+1 514 000 0000",
+                    "autocomplete": "tel",
+                }
+            ),
+
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "conference-input",
+                    "placeholder": "exemple@entreprise.com",
+                    "autocomplete": "email",
+                }
+            ),
+
+            "sujet": forms.TextInput(
+                attrs={
+                    "class": "conference-input",
+                    "placeholder": "Ex. Création d'une application mobile",
+                }
+            ),
+
+            "date_souhaitee": forms.DateTimeInput(
+                attrs={
+                    "class": "conference-input",
+                    "type": "datetime-local",
+                },
+                format="%Y-%m-%dT%H:%M"
+            ),
+
+            "message": forms.Textarea(
+                attrs={
+                    "class": "conference-input conference-textarea",
+                    "placeholder": (
+                        "Présentez brièvement votre projet "
+                        "ou le sujet de la rencontre..."
+                    ),
+                    "rows": 5,
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["date_souhaitee"].input_formats = [
+            "%Y-%m-%dT%H:%M"
+        ]

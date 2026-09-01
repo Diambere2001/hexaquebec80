@@ -1,0 +1,1703 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Conférence — {{ demande.nom }} | HexaQuébec
+</title>
+
+
+<link
+    rel="icon"
+    href="{% static 'images/logoHexa.png' %}"
+>
+
+
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    rel="stylesheet"
+>
+
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+:root{
+
+    --bg:#050816;
+
+    --bg2:#081020;
+
+    --purple:#7558ff;
+
+    --cyan:#00d4ff;
+
+    --green:#00e68a;
+
+    --text:#ffffff;
+
+    --muted:rgba(255,255,255,.58);
+
+    --border:rgba(255,255,255,.08);
+}
+
+
+body{
+
+    min-height:100vh;
+
+    color:#fff;
+
+    font-family:'Poppins',sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 12% 8%,
+            rgba(117,88,255,.17),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 90% 85%,
+            rgba(0,212,255,.10),
+            transparent 35%
+        ),
+
+        #050816;
+}
+
+
+/* ==========================================================
+   GRILLE BACKGROUND
+========================================================== */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-1;
+
+    pointer-events:none;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.015) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.015) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        65px 65px;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.topbar{
+
+    min-height:82px;
+
+    display:flex;
+
+    align-items:center;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.06);
+
+    background:
+        rgba(5,8,22,.80);
+
+    backdrop-filter:
+        blur(22px);
+}
+
+
+.topbar-container{
+
+    width:92%;
+
+    max-width:1300px;
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+}
+
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#fff;
+
+    text-decoration:none;
+}
+
+
+.logo-box{
+
+    width:56px;
+    height:56px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:17px;
+
+    background:#fff;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.25);
+}
+
+
+.logo-box img{
+
+    width:45px;
+    height:45px;
+
+    object-fit:contain;
+}
+
+
+.brand strong{
+
+    display:block;
+
+    font-size:16px;
+
+    font-weight:900;
+}
+
+
+.brand small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:#8be9ff;
+
+    font-size:8px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+}
+
+
+.return-button{
+
+    min-height:44px;
+
+    padding:
+        0 15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    border-radius:13px;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:10px;
+
+    font-weight:700;
+
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    transition:.25s ease;
+}
+
+
+.return-button:hover{
+
+    transform:
+        translateX(-4px);
+
+    color:#fff;
+
+    border-color:
+        rgba(0,212,255,.20);
+}
+
+
+/* ==========================================================
+   PAGE
+========================================================== */
+
+.page{
+
+    width:92%;
+
+    max-width:1300px;
+
+    margin:auto;
+
+    padding:
+        45px 0
+        80px;
+}
+
+
+/* ==========================================================
+   MESSAGE
+========================================================== */
+
+.messages{
+
+    margin-bottom:25px;
+}
+
+
+.message{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:
+        15px 18px;
+
+    margin-bottom:10px;
+
+    border-radius:15px;
+
+    color:#a8ffd5;
+
+    font-size:11px;
+
+    line-height:1.6;
+
+    background:
+        rgba(0,230,138,.07);
+
+    border:
+        1px solid rgba(0,230,138,.14);
+}
+
+
+.message i{
+
+    font-size:19px;
+
+    color:#00e68a;
+}
+
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.hero{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:30px;
+
+    margin-bottom:30px;
+}
+
+
+.eyebrow{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+        8px 13px;
+
+    margin-bottom:13px;
+
+    border-radius:50px;
+
+    color:#82e9ff;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    background:
+        rgba(255,255,255,.05);
+
+    border:
+        1px solid rgba(255,255,255,.07);
+}
+
+
+.online-dot{
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#00e68a;
+
+    box-shadow:
+        0 0 12px #00e68a;
+}
+
+
+.hero h1{
+
+    max-width:800px;
+
+    margin-bottom:10px;
+
+    font-size:
+        clamp(
+            31px,
+            5vw,
+            52px
+        );
+
+    line-height:1.05;
+
+    font-weight:900;
+
+    letter-spacing:-1.8px;
+}
+
+
+.hero h1 span{
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #9b85ff,
+            #00d4ff
+        );
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+}
+
+
+.hero-subtitle{
+
+    color:var(--muted);
+
+    font-size:11px;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status-card{
+
+    flex-shrink:0;
+
+    min-width:180px;
+
+    padding:
+        15px 18px;
+
+    border-radius:17px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid rgba(255,255,255,.07);
+}
+
+
+.status-label{
+
+    display:block;
+
+    color:
+        rgba(255,255,255,.38);
+
+    font-size:8px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.7px;
+}
+
+
+.status-value{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-top:5px;
+
+    color:#53ffa9;
+
+    font-size:11px;
+
+    font-weight:800;
+}
+
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:
+        1.3fr
+        .7fr;
+
+    gap:22px;
+}
+
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:30px;
+
+    border-radius:26px;
+
+    background:
+
+        linear-gradient(
+            150deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.022)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 25px 65px rgba(0,0,0,.27);
+}
+
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:200px;
+    height:200px;
+
+    top:-130px;
+    right:-100px;
+
+    border-radius:50%;
+
+    background:
+        rgba(0,212,255,.08);
+
+    filter:blur(30px);
+}
+
+
+.card-title{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:23px;
+
+    font-size:15px;
+
+    font-weight:800;
+}
+
+
+.card-title-icon{
+
+    width:42px;
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7558ff,
+            #009ed9
+        );
+}
+
+
+/* ==========================================================
+   INFOS
+========================================================== */
+
+.info-grid{
+
+    position:relative;
+
+    z-index:2;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:12px;
+}
+
+
+.info-box{
+
+    padding:15px;
+
+    min-height:80px;
+
+    border-radius:15px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.055);
+
+    transition:.25s ease;
+}
+
+
+.info-box:hover{
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        rgba(0,212,255,.15);
+}
+
+
+.info-label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    margin-bottom:7px;
+
+    color:#7ee8ff;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+}
+
+
+.info-value{
+
+    color:
+        rgba(255,255,255,.81);
+
+    font-size:11px;
+
+    line-height:1.5;
+
+    word-break:break-word;
+}
+
+
+/* ==========================================================
+   MESSAGE CLIENT
+========================================================== */
+
+.client-message{
+
+    position:relative;
+
+    z-index:2;
+
+    margin-top:16px;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,.03);
+
+    border:
+        1px solid rgba(255,255,255,.05);
+}
+
+
+.client-message span{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#8be9ff;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+}
+
+
+.client-message p{
+
+    margin:0;
+
+    color:
+        rgba(255,255,255,.61);
+
+    font-size:11px;
+
+    line-height:1.8;
+}
+
+
+/* ==========================================================
+   CREATE VIDEO
+========================================================== */
+
+.video-panel{
+
+    position:relative;
+
+    z-index:2;
+
+    text-align:center;
+}
+
+
+.video-icon{
+
+    width:90px;
+    height:90px;
+
+    margin:
+        8px auto
+        20px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:28px;
+
+    color:#fff;
+
+    font-size:31px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7558ff,
+            #00aee9
+        );
+
+    box-shadow:
+        0 20px 50px rgba(0,174,233,.22);
+
+    animation:
+        videoFloat
+        3s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes videoFloat{
+
+    0%,100%{
+
+        transform:
+            translateY(0);
+    }
+
+    50%{
+
+        transform:
+            translateY(-8px);
+    }
+}
+
+
+.video-panel h3{
+
+    font-size:18px;
+
+    font-weight:850;
+}
+
+
+.video-panel p{
+
+    max-width:350px;
+
+    margin:
+        10px auto
+        20px;
+
+    color:
+        rgba(255,255,255,.50);
+
+    font-size:10px;
+
+    line-height:1.7;
+}
+
+
+/* ==========================================================
+   CREATE BUTTON
+========================================================== */
+
+.create-button{
+
+    width:100%;
+
+    min-height:54px;
+
+    border:none;
+
+    border-radius:15px;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:10px;
+
+    font-weight:850;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7255ff,
+            #009ed9
+        );
+
+    box-shadow:
+        0 18px 40px rgba(0,158,217,.17);
+
+    transition:.3s ease;
+}
+
+
+.create-button:hover{
+
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 25px 50px rgba(0,158,217,.25);
+}
+
+
+/* ==========================================================
+   MEETING CREATED
+========================================================== */
+
+.meeting-created{
+
+    position:relative;
+
+    z-index:2;
+}
+
+
+.success-icon{
+
+    width:76px;
+    height:76px;
+
+    margin:
+        5px auto
+        18px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:24px;
+
+    color:#3bffa5;
+
+    font-size:27px;
+
+    background:
+        rgba(0,230,138,.08);
+
+    border:
+        1px solid rgba(0,230,138,.16);
+}
+
+
+.meeting-created h3{
+
+    text-align:center;
+
+    color:#fff;
+
+    font-size:17px;
+
+    font-weight:850;
+}
+
+
+.meeting-created > p{
+
+    margin:
+        7px 0
+        18px;
+
+    text-align:center;
+
+    color:
+        rgba(255,255,255,.47);
+
+    font-size:9px;
+}
+
+
+/* ==========================================================
+   LINK
+========================================================== */
+
+.link-box{
+
+    padding:14px;
+
+    margin-bottom:12px;
+
+    word-break:break-all;
+
+    border-radius:13px;
+
+    color:#82e9ff;
+
+    font-size:9px;
+
+    line-height:1.7;
+
+    background:
+        rgba(0,0,0,.22);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+}
+
+
+/* ==========================================================
+   ACTION BUTTONS
+========================================================== */
+
+.action-grid{
+
+    display:grid;
+
+    gap:9px;
+}
+
+
+.action-button{
+
+    min-height:46px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:
+        0 13px;
+
+    border:none;
+
+    border-radius:13px;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid rgba(255,255,255,.07);
+
+    transition:.25s ease;
+}
+
+
+.action-button:hover{
+
+    color:#fff;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.action-button.primary{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7255ff,
+            #009ed9
+        );
+}
+
+
+.action-button.whatsapp{
+
+    background:
+        linear-gradient(
+            135deg,
+            #128c56,
+            #20b86d
+        );
+}
+
+
+/* ==========================================================
+   EMAIL STATUS
+========================================================== */
+
+.email-status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:15px;
+
+    padding:12px;
+
+    border-radius:13px;
+
+    color:#5bffac;
+
+    font-size:9px;
+
+    background:
+        rgba(0,230,138,.06);
+
+    border:
+        1px solid rgba(0,230,138,.12);
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media(max-width:900px){
+
+    .dashboard{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:650px){
+
+    .page{
+
+        width:90%;
+
+        padding-top:30px;
+    }
+
+
+    .hero{
+
+        flex-direction:column;
+    }
+
+
+    .status-card{
+
+        width:100%;
+    }
+
+
+    .info-grid{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .card{
+
+        padding:
+            24px 18px;
+    }
+
+
+    .brand small{
+
+        display:none;
+    }
+
+
+    .return-button span{
+
+        display:none;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================================
+     HEADER
+========================================================== -->
+
+<header class="topbar">
+
+    <div class="topbar-container">
+
+
+        <a
+            href="{% url 'home' %}"
+            class="brand"
+        >
+
+            <span class="logo-box">
+
+                <img
+                    src="{% static 'images/logoHexa.png' %}"
+                    alt="HexaQuébec"
+                >
+
+            </span>
+
+
+            <span>
+
+                <strong>
+                    HexaQuébec
+                </strong>
+
+                <small>
+                    Gestion des conférences
+                </small>
+
+            </span>
+
+        </a>
+
+
+        <a
+            href="{% url 'conferences_gestion' %}"
+            class="return-button"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            <span>
+                Toutes les conférences
+            </span>
+
+        </a>
+
+
+    </div>
+
+</header>
+
+
+<main class="page">
+
+
+    <!-- ======================================================
+         MESSAGES
+    ======================================================= -->
+
+    {% if messages %}
+
+    <div class="messages">
+
+        {% for message in messages %}
+
+        <div class="message">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <span>
+                {{ message }}
+            </span>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ======================================================
+         HERO
+    ======================================================= -->
+
+    <section class="hero">
+
+
+        <div>
+
+
+            <div class="eyebrow">
+
+                <span class="online-dot"></span>
+
+                Rendez-vous client
+
+            </div>
+
+
+            <h1>
+
+                Conférence avec
+
+                <span>
+                    {{ demande.nom }}
+                </span>
+
+            </h1>
+
+
+            <p class="hero-subtitle">
+
+                {{ demande.entreprise|default:"Client HexaQuébec" }}
+
+                ·
+
+                Demande reçue le
+                {{ demande.cree_le|date:"d/m/Y à H:i" }}
+
+            </p>
+
+
+        </div>
+
+
+        <div class="status-card">
+
+            <span class="status-label">
+                Statut
+            </span>
+
+            <div class="status-value">
+
+                <span class="online-dot"></span>
+
+                {{ demande.get_statut_display }}
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ======================================================
+         DASHBOARD
+    ======================================================= -->
+
+    <section class="dashboard">
+
+
+        <!-- ==================================================
+             INFORMATION CLIENT
+        =================================================== -->
+
+        <article class="card">
+
+
+            <div class="card-title">
+
+                <span class="card-title-icon">
+
+                    <i class="fa-solid fa-user-tie"></i>
+
+                </span>
+
+                Informations du client
+
+            </div>
+
+
+            <div class="info-grid">
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        Nom
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ demande.nom }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="fa-solid fa-building"></i>
+
+                        Entreprise
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ demande.entreprise|default:"Non renseignée" }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        Téléphone
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ demande.telephone }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        Courriel
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ demande.email }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="fa-solid fa-briefcase"></i>
+
+                        Sujet
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ demande.sujet }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="fa-solid fa-calendar-days"></i>
+
+                        Date souhaitée
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ demande.date_souhaitee|date:"d/m/Y à H:i" }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            {% if demande.message %}
+
+            <div class="client-message">
+
+                <span>
+
+                    <i class="fa-solid fa-message"></i>
+
+                    Message du client
+
+                </span>
+
+                <p>
+
+                    {{ demande.message|linebreaksbr }}
+
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+        </article>
+
+
+        <!-- ==================================================
+             CONFERENCE
+        =================================================== -->
+
+        <aside class="card">
+
+
+            {% if not demande.conference_creee %}
+
+
+            <div class="video-panel">
+
+
+                <div class="video-icon">
+
+                    <i class="fa-solid fa-video"></i>
+
+                </div>
+
+
+                <h3>
+                    Créer la visioconférence
+                </h3>
+
+
+                <p>
+
+                    Générez la salle privée HexaQuébec.
+                    Le client recevra automatiquement
+                    son invitation professionnelle
+                    par courriel.
+
+                </p>
+
+
+                <form
+                    method="POST"
+                    action="{% url 'conference_creer_evenement' demande.id %}"
+                >
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="create-button"
+                    >
+
+                        <i class="fa-solid fa-video"></i>
+
+                        Créer et envoyer l'invitation
+
+                    </button>
+
+
+                </form>
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="meeting-created">
+
+
+                <div class="success-icon">
+
+                    <i class="fa-solid fa-video"></i>
+
+                </div>
+
+
+                <h3>
+                    Conférence prête
+                </h3>
+
+
+                <p>
+
+                    La salle vidéo privée est active.
+
+                </p>
+
+
+                <div
+                    class="link-box"
+                    id="conferenceLink"
+                >
+
+                    {{ lien_conference }}
+
+                </div>
+
+
+                <div class="action-grid">
+
+
+                    <a
+                        href="{{ lien_conference }}"
+                        target="_blank"
+                        class="action-button primary"
+                    >
+
+                        <i class="fa-solid fa-video"></i>
+
+                        Ouvrir la conférence
+
+                    </a>
+
+
+                    {% if whatsapp_url %}
+
+                    <a
+                        href="{{ whatsapp_url }}"
+                        target="_blank"
+                        class="action-button whatsapp"
+                    >
+
+                        <i class="fa-brands fa-whatsapp"></i>
+
+                        Envoyer au client
+
+                    </a>
+
+                    {% endif %}
+
+
+                    <button
+                        type="button"
+                        class="action-button"
+                        onclick="copyConferenceLink()"
+                    >
+
+                        <i class="fa-solid fa-copy"></i>
+
+                        Copier le lien
+
+                    </button>
+
+
+                </div>
+
+
+                {% if demande.email_envoye %}
+
+                <div class="email-status">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    Invitation envoyée par courriel
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+            {% endif %}
+
+
+        </aside>
+
+
+    </section>
+
+
+</main>
+
+
+<script>
+
+function copyConferenceLink(){
+
+    const link =
+        document
+            .getElementById(
+                "conferenceLink"
+            )
+            .innerText
+            .trim();
+
+
+    navigator.clipboard
+        .writeText(link)
+        .then(
+            function(){
+
+                alert(
+                    "Lien de conférence copié."
+                );
+
+            }
+        );
+
+}
+
+</script>
+
+
+</body>
+</html>

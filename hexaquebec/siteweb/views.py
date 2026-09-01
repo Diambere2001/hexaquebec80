@@ -6192,3 +6192,869 @@ Description :
             "date_modification",
         ]
     )
+
+
+
+
+
+
+import uuid
+
+from urllib.parse import quote
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.core.mail import send_mail
+from django.http import Http404
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
+from django.urls import reverse
+from django.utils import timezone
+
+from .forms import DemandeConferenceForm
+from .models import DemandeConference
+
+
+def _staff(user):
+    return user.is_authenticated and user.is_staff
+
+
+# ==========================================================
+# PAGE CLIENT
+# ==========================================================
+
+def conference(request):
+
+    if request.method == "POST":
+
+        form = DemandeConferenceForm(request.POST)
+
+        if form.is_valid():
+
+            demande = form.save()
+
+            messages.success(
+                request,
+                (
+                    "Votre demande de rendez-vous a bien été envoyée. "
+                    "HexaQuébec vous transmettra le lien de conférence "
+                    "après confirmation."
+                )
+            )
+
+            # Notification HexaQuébec
+            try:
+
+                send_mail(
+                    subject=(
+                        f"Nouvelle demande de conférence — "
+                        f"{demande.nom}"
+                    ),
+                    message=(
+                        f"Nouvelle demande de conférence HexaQuébec.\n\n"
+                        f"Client : {demande.nom}\n"
+                        f"Entreprise : {demande.entreprise or '-'}\n"
+                        f"Téléphone : {demande.telephone}\n"
+                        f"Courriel : {demande.email}\n"
+                        f"Sujet : {demande.sujet}\n"
+                        f"Date souhaitée : "
+                        f"{demande.date_souhaitee:%d/%m/%Y %H:%M}\n\n"
+                        f"Message :\n{demande.message}"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[
+                        settings.DEFAULT_FROM_EMAIL
+                    ],
+                    fail_silently=True,
+                )
+
+            except Exception:
+                pass
+
+            return redirect("conference_confirmation")
+
+    else:
+
+        form = DemandeConferenceForm()
+
+    return render(
+        request,
+        "hexa/conference.html",
+        {
+            "form": form,
+        }
+    )
+
+
+# ==========================================================
+# CONFIRMATION CLIENT
+# ==========================================================
+
+def conference_confirmation(request):
+
+    return render(
+        request,
+        "hexa/conference_confirmation.html"
+    )
+
+
+# ==========================================================
+# GESTION HEXAQUÉBEC
+# ==========================================================
+
+@user_passes_test(_staff)
+def conferences_gestion(request):
+
+    demandes = DemandeConference.objects.all()
+
+    return render(
+        request,
+        "hexa/conferences_gestion.html",
+        {
+            "demandes": demandes,
+        }
+    )
+
+
+# ==========================================================
+# CRÉER LA CONFÉRENCE
+# ==========================================================
+import uuid
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.utils import timezone
+
+from .models import DemandeConference
+
+
+@user_passes_test(_staff)
+def conference_creer_evenement(request, pk):
+
+    if request.method != "POST":
+        return redirect("conferences_gestion")
+
+    demande = get_object_or_404(
+        DemandeConference,
+        pk=pk
+    )
+
+    # ======================================================
+    # CRÉATION DE LA SALLE
+    # ======================================================
+
+    if not demande.room_name:
+
+        identifiant = uuid.uuid4().hex[:20]
+
+        demande.room_name = (
+            f"HexaQuebec-{identifiant}"
+        )
+
+        demande.statut = "confirmee"
+
+        demande.conference_creee_le = (
+            timezone.now()
+        )
+
+        demande.save(
+            update_fields=[
+                "room_name",
+                "statut",
+                "conference_creee_le",
+            ]
+        )
+
+    # ======================================================
+    # LIEN PROFESSIONNEL HEXAQUÉBEC
+    # ======================================================
+
+    lien_conference = request.build_absolute_uri(
+        reverse(
+            "conference_room",
+            kwargs={
+                "token": demande.token
+            }
+        )
+    )
+
+    # ======================================================
+    # DATE
+    # ======================================================
+
+    date_conference = (
+        demande.date_souhaitee.strftime(
+            "%d/%m/%Y à %H:%M"
+        )
+    )
+
+    entreprise = (
+        demande.entreprise
+        if demande.entreprise
+        else "Client HexaQuébec"
+    )
+
+    # ======================================================
+    # EMAIL TEXTE DE SECOURS
+    # ======================================================
+
+    texte_email = (
+        f"Bonjour {demande.nom},\n\n"
+        f"Votre visioconférence HexaQuébec est confirmée.\n\n"
+        f"Sujet : {demande.sujet}\n"
+        f"Entreprise : {entreprise}\n"
+        f"Date : {date_conference}\n\n"
+        f"Lien de visioconférence :\n"
+        f"{lien_conference}\n\n"
+        f"Veuillez vous connecter quelques minutes "
+        f"avant la rencontre.\n\n"
+        f"HexaQuébec\n"
+        f"L'innovation au cœur du numérique québécois."
+    )
+
+    # ======================================================
+    # EMAIL HTML PROFESSIONNEL
+    # ======================================================
+
+    html_email = f"""
+    <!DOCTYPE html>
+
+    <html lang="fr">
+
+    <head>
+
+        <meta charset="UTF-8">
+
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        >
+
+        <title>
+            Conférence HexaQuébec
+        </title>
+
+    </head>
+
+    <body
+        style="
+            margin:0;
+            padding:0;
+            background:#050816;
+            font-family:Arial,Helvetica,sans-serif;
+        "
+    >
+
+        <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+            style="
+                background:#050816;
+                padding:35px 15px;
+            "
+        >
+
+            <tr>
+
+                <td align="center">
+
+
+                    <table
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                            max-width:650px;
+                            background:#0a1022;
+                            border-radius:26px;
+                            overflow:hidden;
+                            border:1px solid #202943;
+                        "
+                    >
+
+
+                        <!-- HEADER -->
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:34px 35px;
+                                    text-align:center;
+                                    background:
+                                        linear-gradient(
+                                            135deg,
+                                            #17113b,
+                                            #071b31
+                                        );
+                                "
+                            >
+
+                                <div
+                                    style="
+                                        display:inline-block;
+                                        padding:8px 14px;
+                                        margin-bottom:15px;
+                                        border-radius:50px;
+                                        background:#10253c;
+                                        color:#62ddff;
+                                        font-size:12px;
+                                        font-weight:bold;
+                                    "
+                                >
+                                    ● CONFÉRENCE CONFIRMÉE
+                                </div>
+
+
+                                <h1
+                                    style="
+                                        margin:0;
+                                        color:#ffffff;
+                                        font-size:30px;
+                                        line-height:1.25;
+                                    "
+                                >
+                                    HexaQuébec
+                                </h1>
+
+
+                                <p
+                                    style="
+                                        margin:8px 0 0;
+                                        color:#83e7ff;
+                                        font-size:13px;
+                                    "
+                                >
+                                    Conférence professionnelle
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- CONTENU -->
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:36px 35px;
+                                "
+                            >
+
+
+                                <h2
+                                    style="
+                                        margin:
+                                            0 0 12px;
+                                        color:#ffffff;
+                                        font-size:23px;
+                                    "
+                                >
+                                    Bonjour {demande.nom} 👋
+                                </h2>
+
+
+                                <p
+                                    style="
+                                        margin:
+                                            0 0 27px;
+                                        color:#abb5cc;
+                                        font-size:14px;
+                                        line-height:1.8;
+                                    "
+                                >
+                                    Votre rendez-vous vidéo
+                                    avec HexaQuébec est maintenant
+                                    confirmé.
+
+                                    Vous pouvez rejoindre votre
+                                    conférence à partir du bouton
+                                    ci-dessous.
+                                </p>
+
+
+                                <!-- INFORMATIONS -->
+
+                                <table
+                                    width="100%"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    role="presentation"
+                                    style="
+                                        margin-bottom:28px;
+                                    "
+                                >
+
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:15px;
+                                                background:#0e172d;
+                                                border-radius:14px;
+                                                border:1px solid #202a43;
+                                            "
+                                        >
+
+                                            <div
+                                                style="
+                                                    color:#62ddff;
+                                                    font-size:11px;
+                                                    font-weight:bold;
+                                                    margin-bottom:5px;
+                                                "
+                                            >
+                                                SUJET
+                                            </div>
+
+                                            <div
+                                                style="
+                                                    color:#ffffff;
+                                                    font-size:14px;
+                                                "
+                                            >
+                                                {demande.sujet}
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+                                        <td height="10"></td>
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:15px;
+                                                background:#0e172d;
+                                                border-radius:14px;
+                                                border:1px solid #202a43;
+                                            "
+                                        >
+
+                                            <div
+                                                style="
+                                                    color:#62ddff;
+                                                    font-size:11px;
+                                                    font-weight:bold;
+                                                    margin-bottom:5px;
+                                                "
+                                            >
+                                                ENTREPRISE
+                                            </div>
+
+                                            <div
+                                                style="
+                                                    color:#ffffff;
+                                                    font-size:14px;
+                                                "
+                                            >
+                                                {entreprise}
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+                                        <td height="10"></td>
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:15px;
+                                                background:#0e172d;
+                                                border-radius:14px;
+                                                border:1px solid #202a43;
+                                            "
+                                        >
+
+                                            <div
+                                                style="
+                                                    color:#62ddff;
+                                                    font-size:11px;
+                                                    font-weight:bold;
+                                                    margin-bottom:5px;
+                                                "
+                                            >
+                                                DATE ET HEURE
+                                            </div>
+
+                                            <div
+                                                style="
+                                                    color:#ffffff;
+                                                    font-size:14px;
+                                                "
+                                            >
+                                                {date_conference}
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                </table>
+
+
+                                <!-- BOUTON -->
+
+                                <div
+                                    style="
+                                        text-align:center;
+                                        margin:
+                                            15px 0 28px;
+                                    "
+                                >
+
+                                    <a
+                                        href="{lien_conference}"
+                                        style="
+                                            display:inline-block;
+                                            padding:17px 30px;
+                                            border-radius:14px;
+                                            color:#ffffff;
+                                            text-decoration:none;
+                                            font-size:14px;
+                                            font-weight:bold;
+                                            background:#6855f7;
+                                        "
+                                    >
+                                        🎥 Rejoindre la visioconférence
+                                    </a>
+
+                                </div>
+
+
+                                <!-- LIEN -->
+
+                                <div
+                                    style="
+                                        padding:18px;
+                                        border-radius:15px;
+                                        background:#07101f;
+                                        border:1px solid #1e2940;
+                                    "
+                                >
+
+                                    <div
+                                        style="
+                                            color:#8d98af;
+                                            font-size:11px;
+                                            margin-bottom:8px;
+                                        "
+                                    >
+                                        Si le bouton ne fonctionne pas,
+                                        copiez ce lien :
+                                    </div>
+
+
+                                    <div
+                                        style="
+                                            color:#62ddff;
+                                            word-break:break-all;
+                                            font-size:11px;
+                                            line-height:1.6;
+                                        "
+                                    >
+                                        {lien_conference}
+                                    </div>
+
+                                </div>
+
+
+                                <!-- CONSEIL -->
+
+                                <div
+                                    style="
+                                        margin-top:25px;
+                                        padding:18px;
+                                        border-radius:15px;
+                                        background:#0c1b20;
+                                        border:1px solid #164535;
+                                    "
+                                >
+
+                                    <strong
+                                        style="
+                                            display:block;
+                                            margin-bottom:6px;
+                                            color:#55efa6;
+                                            font-size:12px;
+                                        "
+                                    >
+                                        ✓ Avant votre rendez-vous
+                                    </strong>
+
+
+                                    <span
+                                        style="
+                                            color:#9faeb6;
+                                            font-size:12px;
+                                            line-height:1.7;
+                                        "
+                                    >
+                                        Nous vous recommandons
+                                        d'ouvrir le lien quelques
+                                        minutes avant la rencontre
+                                        et d'autoriser votre caméra
+                                        et votre microphone.
+                                    </span>
+
+                                </div>
+
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- FOOTER -->
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:25px 35px;
+                                    text-align:center;
+                                    background:#070c19;
+                                    border-top:1px solid #1b2438;
+                                "
+                            >
+
+                                <strong
+                                    style="
+                                        display:block;
+                                        color:#ffffff;
+                                        font-size:14px;
+                                    "
+                                >
+                                    HexaQuébec
+                                </strong>
+
+
+                                <div
+                                    style="
+                                        margin-top:5px;
+                                        color:#6c7890;
+                                        font-size:11px;
+                                    "
+                                >
+                                    L'innovation au cœur
+                                    du numérique québécois
+                                </div>
+
+
+                                <div
+                                    style="
+                                        margin-top:15px;
+                                        color:#414b61;
+                                        font-size:10px;
+                                    "
+                                >
+                                    © 2026 HexaQuébec
+                                    — Tous droits réservés
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </body>
+
+    </html>
+    """
+
+    # ======================================================
+    # ENVOI EMAIL
+    # ======================================================
+
+    email_ok = False
+
+    try:
+
+        email = EmailMultiAlternatives(
+            subject=(
+                "🎥 Votre visioconférence "
+                "HexaQuébec est confirmée"
+            ),
+            body=texte_email,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[
+                demande.email
+            ]
+        )
+
+        email.attach_alternative(
+            html_email,
+            "text/html"
+        )
+
+        email.send()
+
+        email_ok = True
+
+        demande.email_envoye = True
+
+        demande.save(
+            update_fields=[
+                "email_envoye"
+            ]
+        )
+
+    except Exception as exc:
+
+        print(
+            "Erreur email conférence :",
+            exc
+        )
+
+    # ======================================================
+    # MESSAGE HEXAQUÉBEC
+    # ======================================================
+
+    if email_ok:
+
+        messages.success(
+            request,
+            (
+                "La visioconférence a été créée "
+                "avec succès. Le client a reçu "
+                "un courriel professionnel contenant "
+                "son lien privé."
+            )
+        )
+
+    else:
+
+        messages.warning(
+            request,
+            (
+                "La visioconférence est créée, "
+                "mais le courriel n'a pas pu être envoyé. "
+                "Vérifiez votre configuration email."
+            )
+        )
+
+    return redirect(
+        "conference_detail_gestion",
+        pk=demande.pk
+    )
+
+# ==========================================================
+# DETAIL POUR HEXAQUÉBEC
+# ==========================================================
+
+@user_passes_test(_staff)
+def conference_detail_gestion(request, pk):
+
+    demande = get_object_or_404(
+        DemandeConference,
+        pk=pk
+    )
+
+    lien_conference = None
+
+    whatsapp_url = None
+
+    if demande.room_name:
+
+        lien_conference = request.build_absolute_uri(
+            reverse(
+                "conference_room",
+                kwargs={
+                    "token": demande.token
+                }
+            )
+        )
+
+        # Envoi au numéro de téléphone par WhatsApp.
+        numero = "".join(
+            caractere
+            for caractere in demande.telephone
+            if caractere.isdigit()
+        )
+
+        texte = (
+            f"Bonjour {demande.nom},\n\n"
+            f"Votre visioconférence HexaQuébec est confirmée.\n"
+            f"Sujet : {demande.sujet}\n"
+            f"Date : {demande.date_souhaitee:%d/%m/%Y à %H:%M}\n\n"
+            f"Lien : {lien_conference}\n\n"
+            f"HexaQuébec"
+        )
+
+        if numero:
+
+            whatsapp_url = (
+                f"https://wa.me/{numero}"
+                f"?text={quote(texte)}"
+            )
+
+    return render(
+        request,
+        "hexa/conference_detail_gestion.html",
+        {
+            "demande": demande,
+            "lien_conference": lien_conference,
+            "whatsapp_url": whatsapp_url,
+        }
+    )
+
+
+# ==========================================================
+# SALLE CLIENT
+# ==========================================================
+
+def conference_room(request, token):
+
+    demande = get_object_or_404(
+        DemandeConference,
+        token=token
+    )
+
+    if not demande.room_name:
+
+        raise Http404(
+            "Cette conférence n'est pas encore disponible."
+        )
+
+    return render(
+        request,
+        "hexa/conference_room.html",
+        {
+            "conference": demande,
+        }
+    )
