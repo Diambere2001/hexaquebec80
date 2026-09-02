@@ -18,12 +18,7 @@
     <link
         rel="icon"
         type="image/png"
-        href="{% static 'images/logoHexa.png' %}?v=400"
-    >
-
-    <link
-        rel="apple-touch-icon"
-        href="{% static 'images/logoHexa.png' %}?v=400"
+        href="{% static 'images/logoHexa.png' %}?v=600"
     >
 
     <meta
@@ -31,22 +26,16 @@
         content="#050816"
     >
 
-
-    <!-- BOOTSTRAP -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
-
-    <!-- FONT AWESOME -->
     <link
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         rel="stylesheet"
     >
 
-
-    <!-- GOOGLE FONT -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet"
@@ -55,36 +44,18 @@
 
 <style>
 
-/* =========================================================
-   VARIABLES
-========================================================= */
-
 :root{
-
     --bg:#050816;
     --bg2:#071020;
     --bg3:#0a1226;
-
     --purple:#7c5cff;
     --blue:#2563eb;
     --cyan:#00d4ff;
-
-    --white:#ffffff;
-
-    --text:rgba(255,255,255,.72);
-
-    --border:rgba(255,255,255,.09);
-
-    --card:rgba(255,255,255,.055);
-
     --green:#00e68a;
-
+    --white:#ffffff;
+    --text:rgba(255,255,255,.70);
+    --border:rgba(255,255,255,.08);
 }
-
-
-/* =========================================================
-   RESET
-========================================================= */
 
 *{
     margin:0;
@@ -97,29 +68,22 @@ html{
 }
 
 body{
-
     min-height:100vh;
-
     font-family:'Poppins',sans-serif;
-
     color:#fff;
-
     overflow-x:hidden;
 
     background:
-
         radial-gradient(
             circle at 10% 10%,
             rgba(124,92,255,.18),
             transparent 35%
         ),
-
         radial-gradient(
             circle at 90% 80%,
             rgba(0,212,255,.12),
             transparent 35%
         ),
-
         linear-gradient(
             145deg,
             #050816,
@@ -130,28 +94,18 @@ body{
     background-attachment:fixed;
 }
 
-
-/* GRILLE DISCRÈTE */
-
 body::before{
-
     content:"";
-
     position:fixed;
-
     inset:0;
-
+    z-index:-3;
     pointer-events:none;
 
-    z-index:-3;
-
     background-image:
-
         linear-gradient(
             rgba(255,255,255,.018) 1px,
             transparent 1px
         ),
-
         linear-gradient(
             90deg,
             rgba(255,255,255,.018) 1px,
@@ -161,46 +115,8 @@ body::before{
     background-size:65px 65px;
 }
 
-
-/* LUMIÈRE DROITE */
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:500px;
-    height:500px;
-
-    top:20%;
-    right:-250px;
-
-    z-index:-2;
-
-    pointer-events:none;
-
-    border-radius:50%;
-
-    background:
-
-        radial-gradient(
-            circle,
-            rgba(0,212,255,.12),
-            transparent 70%
-        );
-
-    filter:blur(30px);
-}
-
-
 a{
     text-decoration:none;
-}
-
-button,
-input{
-    font-family:inherit;
 }
 
 
@@ -209,37 +125,32 @@ input{
 ========================================================= */
 
 .hq-navbar{
-
     position:fixed;
-
     top:0;
     left:0;
-
     width:100%;
-
     z-index:10000;
 
     padding:12px 0;
 
-    background:rgba(5,8,22,.80);
+    background:
+        rgba(5,8,22,.82);
 
     border-bottom:
         1px solid rgba(255,255,255,.06);
 
     backdrop-filter:blur(22px);
-
     -webkit-backdrop-filter:blur(22px);
 
     transition:.35s ease;
 }
 
-
 .hq-navbar.scrolled{
-
-    background:rgba(5,8,22,.97);
+    background:
+        rgba(5,8,22,.97);
 
     box-shadow:
-        0 12px 40px rgba(0,0,0,.35);
+        0 14px 45px rgba(0,0,0,.35);
 }
 
 
@@ -248,39 +159,23 @@ input{
 ========================================================= */
 
 .hq-logo{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     color:#fff !important;
 }
 
-
 .hq-logo-circle{
-
-    position:relative;
-
     width:62px;
     height:62px;
 
     flex-shrink:0;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
-    overflow:hidden;
-
     border-radius:20px;
-
-    /*
-       IMPORTANT :
-       FOND BLANC DU LOGO
-    */
 
     background:#ffffff;
 
@@ -288,132 +183,78 @@ input{
         1px solid rgba(255,255,255,.30);
 
     box-shadow:
-
         0 12px 30px rgba(0,0,0,.25),
-
         0 0 25px rgba(0,212,255,.08);
 }
 
-
-.hq-logo-circle::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    border-radius:20px;
-
-    border:
-        1px solid rgba(0,0,0,.05);
-
-    pointer-events:none;
-}
-
-
 .hq-logo-img{
-
     width:50px;
     height:50px;
-
     object-fit:contain;
-
-    background:transparent;
 }
 
-
 .hq-logo-text{
-
     display:flex;
-
     flex-direction:column;
-
     line-height:1.1;
 }
 
-
 .hq-logo-text strong{
-
-    color:#ffffff;
-
     font-size:18px;
-
     font-weight:900;
-
-    letter-spacing:-.5px;
 }
 
-
 .hq-logo-text small{
-
     margin-top:5px;
-
     color:#8be9ff;
-
-    font-size:10px;
-
+    font-size:9px;
     text-transform:uppercase;
-
-    letter-spacing:1.3px;
+    letter-spacing:1.2px;
 }
 
 
 /* =========================================================
-   NAV DESKTOP
+   MENU DESKTOP
 ========================================================= */
 
 .hq-desktop-nav{
-
     display:flex;
-
     align-items:center;
-
     gap:2px;
 }
 
-
 .hq-desktop-nav .nav-link{
-
-    padding:
-        11px 12px !important;
+    padding:11px 10px !important;
 
     color:
-        rgba(255,255,255,.77) !important;
+        rgba(255,255,255,.76) !important;
 
     border-radius:12px;
 
-    font-size:12px;
-
+    font-size:11px;
     font-weight:650;
 
     transition:.25s ease;
 }
 
-
 .hq-desktop-nav .nav-link:hover{
-
     color:#fff !important;
 
     background:
         rgba(255,255,255,.065);
 }
 
-
 .hq-desktop-nav .nav-link i{
-
     margin-right:5px;
-
     color:#8be9ff;
 }
 
 
 /* =========================================================
-   BOUTON MENU MOBILE
+   BOUTON MOBILE
 ========================================================= */
 
 .hq-mobile-menu-btn{
-
     width:48px;
     height:48px;
 
@@ -423,15 +264,12 @@ input{
     justify-content:center;
 
     border:none;
-
     border-radius:15px;
 
-    color:#ffffff;
-
+    color:#fff;
     font-size:20px;
 
     background:
-
         linear-gradient(
             135deg,
             rgba(124,92,255,.28),
@@ -444,61 +282,46 @@ input{
     box-shadow:
         0 12px 30px rgba(0,0,0,.25);
 
-    transition:.3s ease;
+    transition:.30s ease;
 }
 
-
 .hq-mobile-menu-btn:hover{
-
     transform:scale(1.05);
-
-    box-shadow:
-        0 15px 35px rgba(0,212,255,.15);
 }
 
 
 /* =========================================================
-   OVERLAY MENU MOBILE
+   OVERLAY
 ========================================================= */
 
 .hq-mobile-overlay{
-
     position:fixed;
-
     inset:0;
 
     z-index:19998;
 
     opacity:0;
-
     visibility:hidden;
 
     background:
-        rgba(2,5,15,.74);
+        rgba(2,5,15,.76);
 
-    backdrop-filter:blur(9px);
+    backdrop-filter:blur(8px);
 
-    transition:
-        opacity .40s ease,
-        visibility .40s ease;
+    transition:.4s ease;
 }
 
-
 .hq-mobile-overlay.active{
-
     opacity:1;
-
     visibility:visible;
 }
 
 
 /* =========================================================
    MENU MOBILE
-   SORTIE DEPUIS LA GAUCHE
 ========================================================= */
 
 .hq-mobile-menu{
-
     position:fixed;
 
     top:0;
@@ -507,11 +330,9 @@ input{
     z-index:19999;
 
     width:min(88%,365px);
-
     height:100vh;
 
     display:flex;
-
     flex-direction:column;
 
     padding:20px;
@@ -519,19 +340,16 @@ input{
     overflow-y:auto;
 
     background:
-
         radial-gradient(
             circle at top left,
-            rgba(124,92,255,.21),
-            transparent 35%
+            rgba(124,92,255,.20),
+            transparent 36%
         ),
-
         radial-gradient(
             circle at bottom right,
-            rgba(0,212,255,.11),
+            rgba(0,212,255,.10),
             transparent 40%
         ),
-
         linear-gradient(
             160deg,
             #060a18,
@@ -544,10 +362,6 @@ input{
     box-shadow:
         30px 0 80px rgba(0,0,0,.60);
 
-    /*
-       MENU CACHÉ À GAUCHE
-    */
-
     transform:
         translateX(-105%);
 
@@ -557,20 +371,12 @@ input{
         cubic-bezier(.2,.8,.2,1);
 }
 
-
-/* MENU OUVERT */
-
 .hq-mobile-menu.active{
-
     transform:
         translateX(0);
 }
 
-
-/* LIGNE CYAN */
-
 .hq-mobile-menu::after{
-
     content:"";
 
     position:absolute;
@@ -582,7 +388,6 @@ input{
     height:100%;
 
     background:
-
         linear-gradient(
             180deg,
             transparent,
@@ -597,49 +402,36 @@ input{
 
 
 /* =========================================================
-   HEADER MENU MOBILE
+   HEADER MOBILE
 ========================================================= */
 
 .hq-mobile-menu-header{
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
 
     gap:14px;
 
     padding-bottom:20px;
-
     margin-bottom:15px;
 
     border-bottom:
         1px solid rgba(255,255,255,.07);
 }
 
-
 .hq-mobile-brand{
-
     display:flex;
-
     align-items:center;
-
     gap:11px;
 }
 
-
-/* LOGO BLANC DANS MENU */
-
 .hq-mobile-logo{
-
     width:55px;
     height:55px;
 
     flex-shrink:0;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
@@ -651,28 +443,20 @@ input{
         0 12px 30px rgba(0,0,0,.25);
 }
 
-
 .hq-mobile-logo img{
-
     width:44px;
     height:44px;
-
     object-fit:contain;
 }
 
-
 .hq-mobile-brand strong{
-
     display:block;
 
     font-size:16px;
-
     font-weight:900;
 }
 
-
 .hq-mobile-brand small{
-
     display:block;
 
     margin-top:3px;
@@ -680,29 +464,20 @@ input{
     color:#8be9ff;
 
     font-size:8px;
-
     text-transform:uppercase;
-
-    letter-spacing:.8px;
 }
 
-
-/* FERMETURE */
-
 .hq-mobile-close{
-
     width:42px;
     height:42px;
 
     flex-shrink:0;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
     border:none;
-
     border-radius:13px;
 
     color:#fff;
@@ -716,36 +491,23 @@ input{
     transition:.3s ease;
 }
 
-
 .hq-mobile-close:hover{
-
     transform:rotate(90deg);
-
     color:#ff8585;
-
-    background:
-        rgba(255,80,80,.13);
 }
 
 
 /* =========================================================
-   LIENS MENU MOBILE
+   LIENS MOBILE
 ========================================================= */
 
 .hq-mobile-links{
-
     display:flex;
-
     flex-direction:column;
-
     gap:8px;
 }
 
-
 .hq-mobile-links a{
-
-    position:relative;
-
     min-height:65px;
 
     display:grid;
@@ -759,10 +521,7 @@ input{
 
     gap:11px;
 
-    padding:
-        10px 12px;
-
-    overflow:hidden;
+    padding:10px 12px;
 
     border-radius:17px;
 
@@ -778,81 +537,65 @@ input{
 
     transform:
         translateX(-35px);
-
-    transition:
-        transform .3s ease,
-        background .3s ease,
-        border-color .3s ease;
 }
-
-
-/* ARRIVÉE UNE PAR UNE */
 
 .hq-mobile-menu.active
 .hq-mobile-links a{
-
     animation:
-
         menuItemEnter
         .55s
         cubic-bezier(.2,.8,.2,1)
         forwards;
 }
 
-
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(1){
-
     animation-delay:.10s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(2){
-
     animation-delay:.15s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(3){
-
     animation-delay:.20s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(4){
-
     animation-delay:.25s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(5){
-
     animation-delay:.30s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(6){
-
     animation-delay:.35s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(7){
-
     animation-delay:.40s;
 }
 
 .hq-mobile-menu.active
 .hq-mobile-links a:nth-child(8){
-
     animation-delay:.45s;
 }
 
+.hq-mobile-menu.active
+.hq-mobile-links a:nth-child(9){
+    animation-delay:.50s;
+}
 
 @keyframes menuItemEnter{
 
     from{
-
         opacity:0;
 
         transform:
@@ -860,7 +603,6 @@ input{
     }
 
     to{
-
         opacity:1;
 
         transform:
@@ -868,16 +610,10 @@ input{
     }
 }
 
-
 .hq-mobile-links a:hover{
-
     color:#fff;
 
-    transform:
-        translateX(5px);
-
     background:
-
         linear-gradient(
             135deg,
             rgba(124,92,255,.14),
@@ -888,14 +624,11 @@ input{
         rgba(0,212,255,.18);
 }
 
-
 .mobile-menu-icon{
-
     width:43px;
     height:43px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
@@ -904,30 +637,20 @@ input{
     color:#fff;
 
     background:
-
         linear-gradient(
             135deg,
             #7558ff,
             #009ed8
         );
-
-    box-shadow:
-        0 10px 24px rgba(0,150,215,.13);
 }
 
-
 .hq-mobile-links strong{
-
     display:block;
-
     font-size:12px;
-
     font-weight:800;
 }
 
-
 .hq-mobile-links small{
-
     display:block;
 
     margin-top:2px;
@@ -938,32 +661,35 @@ input{
     font-size:9px;
 }
 
-
 .mobile-menu-arrow{
-
     color:
         rgba(255,255,255,.30);
 
     font-size:10px;
+}
 
-    transition:.3s ease;
+.conference-mobile-link{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,.16),
+            rgba(0,212,255,.10)
+        ) !important;
+
+    border:
+        1px solid rgba(0,212,255,.18) !important;
+}
+
+.conference-live{
+    color:#51ffad !important;
 }
 
 
-.hq-mobile-links a:hover
-.mobile-menu-arrow{
-
-    color:#8be9ff;
-
-    transform:
-        translateX(3px);
-}
-
-
-/* FOOTER MENU */
+/* =========================================================
+   FOOTER MENU MOBILE
+========================================================= */
 
 .hq-mobile-menu-footer{
-
     margin-top:auto;
 
     padding-top:22px;
@@ -972,11 +698,8 @@ input{
         1px solid rgba(255,255,255,.07);
 }
 
-
 .menu-ai-status{
-
     display:flex;
-
     align-items:center;
 
     gap:8px;
@@ -984,13 +707,10 @@ input{
     color:#50ffa9;
 
     font-size:10px;
-
     font-weight:700;
 }
 
-
 .menu-ai-status span{
-
     width:8px;
     height:8px;
 
@@ -1000,34 +720,9 @@ input{
 
     box-shadow:
         0 0 12px #00e68a;
-
-    animation:
-        menuOnlinePulse
-        1.5s
-        infinite;
 }
-
-
-@keyframes menuOnlinePulse{
-
-    0%,100%{
-
-        opacity:1;
-
-        transform:scale(1);
-    }
-
-    50%{
-
-        opacity:.5;
-
-        transform:scale(1.35);
-    }
-}
-
 
 .hq-mobile-menu-footer p{
-
     margin:
         10px 0 0;
 
@@ -1037,19 +732,16 @@ input{
     font-size:9px;
 }
 
-
 body.menu-open{
-
     overflow:hidden;
 }
 
 
 /* =========================================================
-   PROGRESSION EN HAUT
+   PROGRESSION
 ========================================================= */
 
 .hq-progress{
-
     position:fixed;
 
     top:86px;
@@ -1064,22 +756,17 @@ body.menu-open{
         rgba(255,255,255,.035);
 }
 
-
 .hq-progress-bar{
-
-    width:11.11%;
     height:100%;
 
-    background:
+    width:11.11%;
 
+    background:
         linear-gradient(
             90deg,
             #7c5cff,
             #00d4ff
         );
-
-    box-shadow:
-        0 0 18px rgba(0,212,255,.60);
 
     transition:
         width
@@ -1093,17 +780,11 @@ body.menu-open{
 ========================================================= */
 
 #hqPages{
-
     position:relative;
-
-    width:100%;
-
     padding-top:86px;
 }
 
-
 .hq-page{
-
     display:none;
 
     position:relative;
@@ -1113,30 +794,19 @@ body.menu-open{
     min-height:
         calc(100vh - 86px);
 
-    overflow:hidden;
-
     padding:
         65px 0
         125px;
 
-    background:transparent;
+    overflow:hidden;
 }
 
-
 .hq-page.is-active{
-
     display:flex;
-
     align-items:center;
 }
 
-
-/* =========================================================
-   TRANSITIONS PAGES
-========================================================= */
-
 .hq-page.page-enter-next{
-
     display:flex;
 
     animation:
@@ -1146,9 +816,7 @@ body.menu-open{
         both;
 }
 
-
 .hq-page.page-enter-prev{
-
     display:flex;
 
     animation:
@@ -1158,9 +826,7 @@ body.menu-open{
         both;
 }
 
-
 .hq-page.page-leave-next{
-
     display:flex;
 
     animation:
@@ -1170,9 +836,7 @@ body.menu-open{
         both;
 }
 
-
 .hq-page.page-leave-prev{
-
     display:flex;
 
     animation:
@@ -1182,11 +846,9 @@ body.menu-open{
         both;
 }
 
-
 @keyframes enterNext{
 
     from{
-
         opacity:0;
 
         transform:
@@ -1197,7 +859,6 @@ body.menu-open{
     }
 
     to{
-
         opacity:1;
 
         transform:
@@ -1208,11 +869,9 @@ body.menu-open{
     }
 }
 
-
 @keyframes enterPrev{
 
     from{
-
         opacity:0;
 
         transform:
@@ -1223,7 +882,6 @@ body.menu-open{
     }
 
     to{
-
         opacity:1;
 
         transform:
@@ -1234,18 +892,9 @@ body.menu-open{
     }
 }
 
-
 @keyframes leaveNext{
 
-    from{
-
-        opacity:1;
-
-        transform:translateX(0);
-    }
-
     to{
-
         opacity:0;
 
         transform:
@@ -1255,18 +904,9 @@ body.menu-open{
     }
 }
 
-
 @keyframes leavePrev{
 
-    from{
-
-        opacity:1;
-
-        transform:translateX(0);
-    }
-
     to{
-
         opacity:0;
 
         transform:
@@ -1278,11 +918,10 @@ body.menu-open{
 
 
 /* =========================================================
-   REVEAL CONTENU
+   REVEAL
 ========================================================= */
 
 .hq-reveal{
-
     opacity:0;
 
     transform:
@@ -1291,13 +930,10 @@ body.menu-open{
     filter:blur(7px);
 }
 
-
 .hq-page.is-active .hq-reveal,
 .hq-page.page-enter-next .hq-reveal,
 .hq-page.page-enter-prev .hq-reveal{
-
     animation:
-
         contentReveal
         .75s
         cubic-bezier(.2,.8,.2,1)
@@ -1307,11 +943,9 @@ body.menu-open{
         var(--delay,.14s);
 }
 
-
 @keyframes contentReveal{
 
     to{
-
         opacity:1;
 
         transform:
@@ -1327,25 +961,18 @@ body.menu-open{
 ========================================================= */
 
 .hq-container{
-
     width:92%;
-
     max-width:1380px;
-
     margin:auto;
 }
 
-
 .hq-eyebrow{
-
     display:inline-flex;
-
     align-items:center;
 
     gap:9px;
 
-    padding:
-        9px 16px;
+    padding:9px 16px;
 
     margin-bottom:22px;
 
@@ -1353,8 +980,7 @@ body.menu-open{
 
     color:#8be9ff;
 
-    font-size:12px;
-
+    font-size:11px;
     font-weight:800;
 
     background:
@@ -1362,14 +988,9 @@ body.menu-open{
 
     border:
         1px solid rgba(255,255,255,.09);
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.16);
 }
 
-
 .hq-eyebrow-dot{
-
     width:8px;
     height:8px;
 
@@ -1381,26 +1002,20 @@ body.menu-open{
         0 0 15px #00e68a;
 }
 
-
 .hq-title{
-
     margin-bottom:22px;
 
     font-size:
         clamp(38px,5vw,67px);
 
     line-height:1.04;
-
     font-weight:900;
 
     letter-spacing:-2.2px;
 }
 
-
 .hq-title span{
-
     background:
-
         linear-gradient(
             90deg,
             #9b85ff,
@@ -1408,28 +1023,22 @@ body.menu-open{
         );
 
     -webkit-background-clip:text;
-
     background-clip:text;
 
     color:transparent;
 }
 
-
 .hq-description{
-
     max-width:840px;
 
     color:
         rgba(255,255,255,.68);
 
-    font-size:15px;
-
+    font-size:14px;
     line-height:1.9;
 }
 
-
 .hq-section-header{
-
     max-width:920px;
 
     margin:
@@ -1439,10 +1048,8 @@ body.menu-open{
     text-align:center;
 }
 
-
 .hq-section-header
 .hq-description{
-
     margin:auto;
 }
 
@@ -1452,7 +1059,6 @@ body.menu-open{
 ========================================================= */
 
 .presentation-grid{
-
     display:grid;
 
     grid-template-columns:
@@ -1464,30 +1070,24 @@ body.menu-open{
     gap:70px;
 }
 
-
 .hero-title{
-
     margin-bottom:24px;
 
     font-size:
         clamp(44px,5.4vw,76px);
 
     line-height:1;
-
     font-weight:900;
 
     letter-spacing:-3px;
 }
 
-
 .hero-title span{
-
     display:block;
 
     margin-top:10px;
 
     background:
-
         linear-gradient(
             90deg,
             #a18dff,
@@ -1495,15 +1095,12 @@ body.menu-open{
         );
 
     -webkit-background-clip:text;
-
     background-clip:text;
 
     color:transparent;
 }
 
-
 .hero-text{
-
     max-width:720px;
 
     margin-bottom:30px;
@@ -1511,66 +1108,49 @@ body.menu-open{
     color:
         rgba(255,255,255,.72);
 
-    font-size:16px;
-
+    font-size:15px;
     line-height:1.9;
 }
 
-
 .hero-buttons{
-
     display:flex;
-
     flex-wrap:wrap;
 
     gap:13px;
 }
 
-
 .hq-btn{
-
     min-height:53px;
 
     padding:
         0 22px;
 
     display:inline-flex;
-
     align-items:center;
     justify-content:center;
 
-    gap:10px;
+    gap:9px;
 
     border:none;
-
     border-radius:15px;
 
     color:#fff;
 
-    font-size:13px;
-
+    font-size:12px;
     font-weight:800;
 
-    transition:.30s ease;
+    transition:.3s ease;
 }
 
-
 .hq-btn:hover{
-
     color:#fff;
 
     transform:
         translateY(-4px);
-
-    box-shadow:
-        0 18px 38px rgba(0,0,0,.35);
 }
 
-
 .hq-btn-primary{
-
     background:
-
         linear-gradient(
             135deg,
             #7658ff,
@@ -1578,13 +1158,10 @@ body.menu-open{
         );
 }
 
-
 .hq-btn-warning{
-
     color:#111;
 
     background:
-
         linear-gradient(
             135deg,
             #ffcf33,
@@ -1592,15 +1169,7 @@ body.menu-open{
         );
 }
 
-
-.hq-btn-warning:hover{
-
-    color:#111;
-}
-
-
 .hq-btn-outline{
-
     background:
         rgba(255,255,255,.055);
 
@@ -1608,9 +1177,7 @@ body.menu-open{
         1px solid rgba(255,255,255,.11);
 }
 
-
 .hero-visual{
-
     position:relative;
 
     max-width:650px;
@@ -1618,11 +1185,7 @@ body.menu-open{
     margin-left:auto;
 }
 
-
 .hero-image-box{
-
-    position:relative;
-
     padding:10px;
 
     overflow:hidden;
@@ -1630,12 +1193,7 @@ body.menu-open{
     border-radius:34px;
 
     background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.09),
-            rgba(255,255,255,.025)
-        );
+        rgba(255,255,255,.06);
 
     border:
         1px solid rgba(255,255,255,.10);
@@ -1644,49 +1202,21 @@ body.menu-open{
         0 35px 100px rgba(0,0,0,.43);
 }
 
-
-.hero-image-box::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:280px;
-    height:280px;
-
-    top:-100px;
-    right:-90px;
-
-    border-radius:50%;
-
-    background:
-        rgba(0,212,255,.20);
-
-    filter:blur(70px);
-}
-
-
 .hero-image{
-
     width:100%;
     height:510px;
-
-    display:block;
 
     object-fit:cover;
 
     border-radius:26px;
 }
 
-
 .tech-card{
-
     position:absolute;
 
     z-index:5;
 
     display:flex;
-
     align-items:center;
 
     gap:9px;
@@ -1698,70 +1228,49 @@ body.menu-open{
 
     color:#fff;
 
-    font-size:11px;
-
+    font-size:10px;
     font-weight:800;
 
     background:
-        rgba(8,15,34,.89);
+        rgba(8,15,34,.90);
 
     border:
         1px solid rgba(255,255,255,.10);
-
-    backdrop-filter:blur(18px);
 
     box-shadow:
         0 14px 35px rgba(0,0,0,.35);
 
     animation:
-        floatCard
+        floating
         4.5s
         ease-in-out
         infinite;
 }
 
-
 .tech-card i{
-
     color:#65e6ff;
 }
 
-
 .tech-1{
-
     top:35px;
     left:-25px;
 }
 
-
 .tech-2{
-
     right:-18px;
     top:44%;
-
-    animation-delay:.7s;
 }
-
 
 .tech-3{
-
     bottom:35px;
     left:35px;
-
-    animation-delay:1.3s;
 }
 
-
-@keyframes floatCard{
-
-    0%,100%{
-
-        transform:translateY(0);
-    }
+@keyframes floating{
 
     50%{
-
-        transform:translateY(-10px);
+        transform:
+            translateY(-10px);
     }
 }
 
@@ -1771,9 +1280,6 @@ body.menu-open{
 ========================================================= */
 
 .stage-card{
-
-    position:relative;
-
     display:grid;
 
     grid-template-columns:
@@ -1787,10 +1293,9 @@ body.menu-open{
     border-radius:34px;
 
     background:
-
         linear-gradient(
             145deg,
-            rgba(255,255,255,.072),
+            rgba(255,255,255,.07),
             rgba(255,255,255,.025)
         );
 
@@ -1801,40 +1306,11 @@ body.menu-open{
         0 30px 80px rgba(0,0,0,.34);
 }
 
-
-.stage-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:380px;
-    height:380px;
-
-    top:-170px;
-    left:-120px;
-
-    border-radius:50%;
-
-    background:
-        rgba(124,92,255,.13);
-
-    filter:blur(40px);
-}
-
-
 .stage-left{
-
-    position:relative;
-
-    z-index:3;
-
     padding:55px;
 }
 
-
 .stage-right{
-
     position:relative;
 
     min-height:620px;
@@ -1842,147 +1318,69 @@ body.menu-open{
     overflow:hidden;
 }
 
-
 .stage-title{
-
-    max-width:720px;
-
     margin-bottom:18px;
 
     font-size:
         clamp(37px,4vw,58px);
 
-    line-height:1.05;
-
     font-weight:900;
-
-    letter-spacing:-2px;
+    line-height:1.05;
 }
 
-
 .stage-title span{
-
     color:#76e5ff;
 }
 
-
 .stage-description{
-
-    max-width:680px;
-
     color:
-        rgba(255,255,255,.70);
+        rgba(255,255,255,.68);
 
-    line-height:1.85;
-
-    font-size:14px;
+    font-size:13px;
+    line-height:1.8;
 }
-
 
 .stage-stats{
-
     display:flex;
-
     flex-wrap:wrap;
 
-    gap:15px;
+    gap:12px;
 
     margin:
-        28px 0;
+        27px 0;
 }
 
-
 .stage-stat{
-
     min-width:125px;
 
     padding:
-        15px 17px;
+        14px 16px;
 
-    border-radius:17px;
+    border-radius:16px;
 
     background:
-        rgba(255,255,255,.052);
+        rgba(255,255,255,.05);
 
     border:
-        1px solid rgba(255,255,255,.08);
+        1px solid rgba(255,255,255,.07);
 }
 
-
 .stage-stat strong{
-
     display:block;
 
     color:#8be9ff;
 
-    font-size:21px;
+    font-size:20px;
 }
-
 
 .stage-stat span{
-
     color:
-        rgba(255,255,255,.55);
+        rgba(255,255,255,.48);
 
-    font-size:10px;
+    font-size:9px;
 }
-
-
-.stage-search{
-
-    position:relative;
-
-    max-width:650px;
-
-    margin-bottom:18px;
-}
-
-
-.stage-search i{
-
-    position:absolute;
-
-    top:50%;
-    left:18px;
-
-    transform:
-        translateY(-50%);
-
-    color:#8be9ff;
-}
-
-
-.stage-search input{
-
-    width:100%;
-    height:52px;
-
-    padding:
-        0 48px;
-
-    outline:none;
-
-    border-radius:15px;
-
-    color:#fff;
-
-    background:
-        rgba(255,255,255,.045);
-
-    border:
-        1px solid rgba(255,255,255,.09);
-}
-
-
-.stage-search input::placeholder{
-
-    color:
-        rgba(255,255,255,.39);
-}
-
 
 .stage-tags{
-
     display:grid;
 
     grid-template-columns:
@@ -1990,17 +1388,14 @@ body.menu-open{
 
     gap:10px;
 
-    margin-bottom:24px;
+    margin-bottom:23px;
 }
 
-
 .stage-tag{
-
     display:flex;
-
     align-items:center;
 
-    gap:11px;
+    gap:10px;
 
     min-height:62px;
 
@@ -2014,48 +1409,21 @@ body.menu-open{
 
     border:
         1px solid rgba(255,255,255,.07);
-
-    transition:.30s ease;
 }
-
-
-.stage-tag:hover{
-
-    transform:
-        translateY(-3px);
-
-    background:
-        rgba(0,212,255,.08);
-
-    border-color:
-        rgba(0,212,255,.25);
-}
-
-
-.stage-tag.is-hidden{
-
-    display:none;
-}
-
 
 .stage-tag-icon{
-
     width:40px;
     height:40px;
 
     flex-shrink:0;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
     border-radius:12px;
 
-    color:#fff;
-
     background:
-
         linear-gradient(
             135deg,
             #7458ff,
@@ -2063,147 +1431,45 @@ body.menu-open{
         );
 }
 
-
 .stage-tag strong{
-
     display:block;
 
-    font-size:11px;
+    font-size:10px;
 }
-
 
 .stage-tag small{
-
-    display:block;
-
-    margin-top:2px;
-
     color:
-        rgba(255,255,255,.47);
+        rgba(255,255,255,.45);
 
-    font-size:9px;
+    font-size:8px;
 }
 
-
 .stage-warning{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
     margin-bottom:20px;
 
     color:#ff9292;
 
-    font-size:11px;
+    font-size:10px;
 }
 
 
-.stage-image{
+/* DESKTOP : ON GARDE TON POSITIONNEMENT */
 
+.stage-image{
     position:absolute;
 
-    right:-15%;
+    right:-10%;
     bottom:0;
 
-    height:96%;
-
-    max-width:120%;
+    height:95%;
 
     object-fit:contain;
-
-    object-position:bottom;
 
     filter:
         drop-shadow(
             0 30px 50px
             rgba(0,0,0,.35)
         );
-
-    animation:
-        stagePerson
-        5s
-        ease-in-out
-        infinite;
-}
-
-
-@keyframes stagePerson{
-
-    0%,100%{
-
-        transform:translateY(0);
-    }
-
-    50%{
-
-        transform:translateY(-9px);
-    }
-}
-
-
-.stage-float{
-
-    position:absolute;
-
-    z-index:4;
-
-    padding:
-        13px 16px;
-
-    border-radius:16px;
-
-    background:
-        rgba(8,15,34,.88);
-
-    border:
-        1px solid rgba(255,255,255,.09);
-
-    box-shadow:
-        0 15px 35px rgba(0,0,0,.30);
-
-    backdrop-filter:blur(16px);
-
-    animation:
-        floatCard
-        4s
-        ease-in-out
-        infinite;
-}
-
-
-.stage-float strong{
-
-    display:block;
-
-    font-size:11px;
-}
-
-
-.stage-float small{
-
-    color:
-        rgba(255,255,255,.50);
-
-    font-size:9px;
-}
-
-
-.stage-float-1{
-
-    top:70px;
-    left:20px;
-}
-
-
-.stage-float-2{
-
-    right:25px;
-    bottom:90px;
-
-    animation-delay:.9s;
 }
 
 
@@ -2212,7 +1478,6 @@ body.menu-open{
 ========================================================= */
 
 .services-grid{
-
     display:grid;
 
     grid-template-columns:
@@ -2221,109 +1486,62 @@ body.menu-open{
     gap:18px;
 }
 
-
 .service-card{
-
     position:relative;
 
-    min-height:255px;
+    min-height:245px;
 
     padding:27px;
-
-    overflow:hidden;
 
     border-radius:26px;
 
     background:
-
         linear-gradient(
             155deg,
-            rgba(255,255,255,.070),
+            rgba(255,255,255,.07),
             rgba(255,255,255,.025)
         );
 
     border:
-        1px solid rgba(255,255,255,.085);
+        1px solid rgba(255,255,255,.08);
 
-    box-shadow:
-        0 18px 45px rgba(0,0,0,.20);
-
-    transition:.38s ease;
+    transition:.35s ease;
 }
-
-
-.service-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:180px;
-    height:180px;
-
-    top:-100px;
-    right:-80px;
-
-    border-radius:50%;
-
-    background:
-        rgba(0,212,255,.09);
-
-    filter:blur(25px);
-}
-
 
 .service-card:hover{
-
     transform:
-        translateY(-8px);
+        translateY(-7px);
 
     border-color:
         rgba(0,212,255,.20);
-
-    box-shadow:
-        0 28px 60px rgba(0,0,0,.32);
 }
 
-
 .service-number{
-
     position:absolute;
 
-    top:16px;
-    right:22px;
+    top:15px;
+    right:20px;
 
     color:
         rgba(255,255,255,.07);
 
-    font-size:40px;
-
+    font-size:38px;
     font-weight:900;
 }
 
-
 .service-icon{
+    width:60px;
+    height:60px;
 
-    position:relative;
-
-    z-index:2;
-
-    width:62px;
-    height:62px;
-
-    margin-bottom:21px;
+    margin-bottom:20px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
     border-radius:18px;
 
-    font-size:22px;
-
     background:
-
         linear-gradient(
             135deg,
             #7155ff,
@@ -2331,44 +1549,25 @@ body.menu-open{
         );
 }
 
-
 .service-card h3{
-
-    position:relative;
-
-    z-index:2;
-
-    margin-bottom:10px;
-
-    font-size:17px;
-
+    font-size:16px;
     font-weight:800;
 }
 
-
 .service-card p{
-
-    position:relative;
-
-    z-index:2;
-
-    margin:0;
-
     color:
-        rgba(255,255,255,.61);
+        rgba(255,255,255,.58);
 
-    line-height:1.75;
-
-    font-size:12px;
+    font-size:11px;
+    line-height:1.7;
 }
 
 
 /* =========================================================
-   CARTES ANNONCES
+   CARTES
 ========================================================= */
 
 .content-grid{
-
     display:grid;
 
     grid-template-columns:
@@ -2377,119 +1576,61 @@ body.menu-open{
     gap:20px;
 }
 
-
 .hq-content-card{
-
     overflow:hidden;
 
     border-radius:25px;
 
     background:
-
-        linear-gradient(
-            150deg,
-            rgba(255,255,255,.07),
-            rgba(255,255,255,.025)
-        );
+        rgba(255,255,255,.05);
 
     border:
         1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-        0 18px 45px rgba(0,0,0,.22);
-
-    transition:.35s ease;
 }
-
-
-.hq-content-card:hover{
-
-    transform:
-        translateY(-7px);
-
-    border-color:
-        rgba(0,212,255,.20);
-
-    box-shadow:
-        0 28px 65px rgba(0,0,0,.33);
-}
-
 
 .hq-content-image{
-
     width:100%;
-    height:225px;
+    height:220px;
 
     object-fit:cover;
 }
 
-
 .hq-content-body{
-
-    padding:23px;
+    padding:22px;
 }
 
-
 .hq-content-title{
-
-    margin-bottom:11px;
-
-    font-size:17px;
-
+    font-size:16px;
     font-weight:800;
 }
 
-
 .hq-content-text{
-
     color:
-        rgba(255,255,255,.60);
+        rgba(255,255,255,.58);
 
+    font-size:11px;
     line-height:1.7;
-
-    font-size:12px;
 }
 
-
-.hq-content-date{
-
-    display:flex;
-
+.hq-small-btn{
+    display:inline-flex;
     align-items:center;
 
-    gap:8px;
+    gap:7px;
 
     margin-top:15px;
 
-    color:#8be9ff;
-
-    font-size:10px;
-}
-
-
-.hq-small-btn{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    margin-top:17px;
-
     padding:
-        11px 16px;
+        10px 14px;
 
-    border-radius:12px;
+    border-radius:11px;
 
     color:#fff;
 
-    font-size:11px;
-
+    font-size:10px;
     font-weight:800;
 
     background:
-
         linear-gradient(
             135deg,
             #7155ff,
@@ -2497,46 +1638,22 @@ body.menu-open{
         );
 }
 
-
 .hq-small-btn:hover{
-
     color:#fff;
 }
 
-
 .hq-empty{
-
-    max-width:700px;
-
-    margin:auto;
-
-    padding:
-        55px 25px;
+    padding:50px;
 
     text-align:center;
+
+    color:
+        rgba(255,255,255,.50);
 
     border-radius:25px;
 
     background:
         rgba(255,255,255,.04);
-
-    border:
-        1px solid rgba(255,255,255,.07);
-}
-
-
-.hq-empty i{
-
-    margin-bottom:15px;
-
-    color:#8be9ff;
-}
-
-
-.hq-empty p{
-
-    color:
-        rgba(255,255,255,.55);
 }
 
 
@@ -2545,68 +1662,30 @@ body.menu-open{
 ========================================================= */
 
 .video-list{
-
-    max-width:1000px;
-
+    max-width:950px;
     margin:auto;
-
-    display:grid;
-
-    gap:20px;
 }
 
-
 .video-card{
-
     overflow:hidden;
 
-    border-radius:28px;
+    border-radius:27px;
 
     background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.05);
 
     border:
         1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-        0 25px 65px rgba(0,0,0,.30);
 }
 
-
 .video-player{
-
     width:100%;
-
-    max-height:490px;
-
-    display:block;
-
-    object-fit:cover;
-
+    max-height:500px;
     background:#000;
 }
 
-
 .video-info{
-
-    padding:
-        20px 24px;
-}
-
-
-.video-info h3{
-
-    font-size:18px;
-
-    font-weight:800;
-}
-
-
-.video-info span{
-
-    color:#8be9ff;
-
-    font-size:10px;
+    padding:20px;
 }
 
 
@@ -2615,41 +1694,12 @@ body.menu-open{
 ========================================================= */
 
 .affiche-slider{
-
-    position:relative;
-
-    width:100%;
-
     overflow:hidden;
 
-    padding:
-        20px 0
-        30px;
-
-    mask-image:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            #000 8%,
-            #000 92%,
-            transparent
-        );
-
-    -webkit-mask-image:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            #000 8%,
-            #000 92%,
-            transparent
-        );
+    padding:20px 0;
 }
 
-
 .affiche-track{
-
     display:flex;
 
     width:max-content;
@@ -2658,82 +1708,45 @@ body.menu-open{
 
     animation:
         afficheMove
-        34s
+        35s
         linear
         infinite;
 }
 
-
-.affiche-track:hover{
-
-    animation-play-state:paused;
-}
-
-
 .affiche-card{
-
-    width:315px;
-
-    flex:none;
+    width:300px;
 
     overflow:hidden;
 
-    border-radius:25px;
+    flex:none;
+
+    border-radius:24px;
 
     background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.05);
 
     border:
         1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.28);
-
-    transition:.35s ease;
 }
-
-
-.affiche-card:hover{
-
-    transform:
-        translateY(-7px)
-        scale(1.015);
-}
-
 
 .affiche-card img{
-
     width:100%;
-    height:390px;
+    height:380px;
 
     object-fit:cover;
 }
 
-
 .affiche-card h5{
-
-    margin:0;
-
-    padding:18px;
+    padding:16px;
 
     text-align:center;
 
-    font-size:13px;
-
-    font-weight:750;
+    font-size:12px;
 }
-
 
 @keyframes afficheMove{
 
-    from{
-
-        transform:
-            translateX(0);
-    }
-
     to{
-
         transform:
             translateX(-50%);
     }
@@ -2741,308 +1754,164 @@ body.menu-open{
 
 
 /* =========================================================
-   DIAM IA
+   DIAM
 ========================================================= */
 
 .diam-grid{
-
     display:grid;
 
     grid-template-columns:
-        .82fr
-        1.18fr;
+        .8fr
+        1.2fr;
 
     align-items:center;
 
     gap:60px;
 }
 
-
 .diam-visual{
-
-    position:relative;
-
     text-align:center;
 }
 
-
-.diam-glow{
-
-    position:absolute;
-
-    width:380px;
-    height:380px;
-
-    top:45%;
-    left:50%;
-
-    transform:
-        translate(-50%,-50%);
-
-    border-radius:50%;
-
-    background:
-
-        radial-gradient(
-            circle,
-            rgba(0,212,255,.24),
-            transparent 70%
-        );
-
-    filter:blur(45px);
-}
-
-
 .diam-image{
-
-    position:relative;
-
-    z-index:2;
-
     width:100%;
-
-    max-width:410px;
+    max-width:400px;
 
     border-radius:32px;
 
     border:
-        1px solid rgba(255,255,255,.12);
+        1px solid rgba(255,255,255,.10);
 
     box-shadow:
-        0 30px 80px rgba(0,0,0,.45);
-
-    animation:
-        diamFloat
-        5s
-        ease-in-out
-        infinite;
+        0 30px 80px rgba(0,0,0,.40);
 }
-
-
-@keyframes diamFloat{
-
-    0%,100%{
-
-        transform:translateY(0);
-    }
-
-    50%{
-
-        transform:translateY(-12px);
-    }
-}
-
 
 .ai-status{
-
-    position:relative;
-
-    z-index:3;
-
     display:inline-flex;
-
     align-items:center;
 
-    gap:9px;
+    gap:8px;
 
-    margin-top:20px;
+    margin-top:15px;
 
     padding:
-        10px 17px;
+        9px 15px;
 
     border-radius:100px;
 
-    color:#3bffa7;
+    color:#50ffa9;
 
-    font-size:10px;
-
-    font-weight:900;
+    font-size:9px;
 
     background:
         rgba(0,230,138,.08);
-
-    border:
-        1px solid rgba(0,230,138,.23);
 }
 
-
 .ai-pulse{
-
-    width:9px;
-    height:9px;
+    width:8px;
+    height:8px;
 
     border-radius:50%;
 
     background:#00e68a;
 
     box-shadow:
-        0 0 16px #00e68a;
-
-    animation:
-        aiPulse
-        1.4s
-        infinite;
+        0 0 12px #00e68a;
 }
-
-
-@keyframes aiPulse{
-
-    0%{
-
-        box-shadow:
-            0 0 0 0
-            rgba(0,230,138,.55);
-    }
-
-    100%{
-
-        box-shadow:
-            0 0 0 12px
-            rgba(0,230,138,0);
-    }
-}
-
 
 .ai-features{
-
     display:flex;
-
     flex-wrap:wrap;
 
-    gap:9px;
+    gap:8px;
 
     margin:
-        22px 0;
+        20px 0;
 }
 
-
 .ai-feature{
-
     padding:
-        10px 13px;
+        9px 12px;
 
-    border-radius:12px;
+    border-radius:11px;
 
     color:
-        rgba(255,255,255,.76);
+        rgba(255,255,255,.68);
 
-    font-size:10px;
-
-    font-weight:700;
+    font-size:9px;
 
     background:
         rgba(255,255,255,.045);
-
-    border:
-        1px solid rgba(255,255,255,.07);
 }
-
 
 .ai-chat{
-
     overflow:hidden;
 
-    border-radius:25px;
+    border-radius:24px;
 
     background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.05);
 
     border:
-        1px solid rgba(255,255,255,.085);
-
-    box-shadow:
-        0 24px 65px rgba(0,0,0,.28);
+        1px solid rgba(255,255,255,.08);
 }
 
-
 .chat-header{
-
     display:flex;
-
     align-items:center;
 
-    gap:12px;
+    gap:10px;
 
-    padding:
-        17px 20px;
+    padding:15px;
 
     border-bottom:
         1px solid rgba(255,255,255,.07);
 }
 
-
 .chat-avatar{
-
-    width:48px;
-    height:48px;
+    width:45px;
+    height:45px;
 
     object-fit:cover;
 
-    border-radius:15px;
+    border-radius:14px;
 }
-
-
-.chat-header strong{
-
-    display:block;
-
-    font-size:13px;
-}
-
-
-.chat-header small{
-
-    color:#3bffa7;
-
-    font-size:9px;
-}
-
 
 .chat-messages{
-
-    min-height:190px;
-
-    max-height:265px;
+    min-height:180px;
+    max-height:260px;
 
     overflow-y:auto;
 
-    padding:20px;
+    padding:18px;
 }
-
 
 .bot-message,
 .user-message{
+    max-width:82%;
 
     width:fit-content;
 
-    max-width:82%;
-
-    margin-bottom:10px;
-
     padding:
-        11px 14px;
+        10px 13px;
 
-    border-radius:15px;
+    margin-bottom:9px;
 
-    font-size:11px;
+    border-radius:14px;
 
-    line-height:1.65;
+    font-size:10px;
+    line-height:1.6;
 }
 
-
 .bot-message{
-
     background:
         rgba(255,255,255,.07);
 }
 
-
 .user-message{
-
     margin-left:auto;
 
     background:
-
         linear-gradient(
             135deg,
             #7053ff,
@@ -3050,36 +1919,32 @@ body.menu-open{
         );
 }
 
-
 .chat-input{
-
     display:flex;
 
-    gap:9px;
+    gap:8px;
 
-    padding:14px;
+    padding:13px;
 
     border-top:
         1px solid rgba(255,255,255,.07);
 }
 
-
 .chat-input input{
-
     flex:1;
 
     min-width:0;
 
-    height:48px;
+    height:46px;
+
+    padding:
+        0 14px;
 
     outline:none;
 
     color:#fff;
 
-    padding:
-        0 15px;
-
-    border-radius:13px;
+    border-radius:12px;
 
     background:
         rgba(255,255,255,.045);
@@ -3088,22 +1953,17 @@ body.menu-open{
         1px solid rgba(255,255,255,.07);
 }
 
-
 .chat-input button{
-
-    width:48px;
-    height:48px;
-
-    flex-shrink:0;
+    width:46px;
+    height:46px;
 
     border:none;
 
-    border-radius:13px;
+    border-radius:12px;
 
     color:#fff;
 
     background:
-
         linear-gradient(
             135deg,
             #7053ff,
@@ -3117,37 +1977,12 @@ body.menu-open{
 ========================================================= */
 
 .partners-slider{
-
     overflow:hidden;
 
-    padding:
-        20px 0
-        30px;
-
-    mask-image:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            #000 8%,
-            #000 92%,
-            transparent
-        );
-
-    -webkit-mask-image:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            #000 8%,
-            #000 92%,
-            transparent
-        );
+    padding:20px 0;
 }
 
-
 .partners-track{
-
     display:flex;
 
     width:max-content;
@@ -3155,104 +1990,62 @@ body.menu-open{
     gap:18px;
 
     animation:
-        partnerMove
+        partnersMove
         30s
         linear
         infinite;
 }
 
-
-.partners-track:hover{
-
-    animation-play-state:paused;
-}
-
-
 .partner-card{
-
-    width:220px;
-    height:205px;
+    width:210px;
+    height:190px;
 
     flex:none;
 
     display:flex;
-
     flex-direction:column;
 
     align-items:center;
     justify-content:center;
 
-    padding:20px;
+    padding:18px;
 
-    border-radius:24px;
+    border-radius:23px;
 
     background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.05);
 
     border:
         1px solid rgba(255,255,255,.08);
-
-    transition:.3s ease;
 }
-
-
-.partner-card:hover{
-
-    transform:
-        translateY(-7px);
-}
-
 
 .partner-logo{
-
-    width:105px;
-    height:105px;
+    width:100px;
+    height:100px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
-    padding:15px;
+    padding:13px;
 
-    margin-bottom:14px;
+    margin-bottom:12px;
 
-    border-radius:20px;
+    border-radius:18px;
 
     background:#fff;
 }
 
-
 .partner-logo img{
-
     max-width:100%;
-
     max-height:75px;
 
     object-fit:contain;
 }
 
-
-.partner-card h5{
-
-    font-size:12px;
-
-    text-align:center;
-
-    font-weight:750;
-}
-
-
-@keyframes partnerMove{
-
-    from{
-
-        transform:
-            translateX(0);
-    }
+@keyframes partnersMove{
 
     to{
-
         transform:
             translateX(-50%);
     }
@@ -3264,25 +2057,25 @@ body.menu-open{
 ========================================================= */
 
 .contact-grid{
-
     display:grid;
 
     grid-template-columns:
         1fr
         1fr;
 
-    gap:25px;
+    gap:22px;
 }
 
-
 .contact-panel{
+    position:relative;
 
-    padding:32px;
+    overflow:hidden;
 
-    border-radius:28px;
+    padding:30px;
+
+    border-radius:27px;
 
     background:
-
         linear-gradient(
             150deg,
             rgba(255,255,255,.065),
@@ -3296,70 +2089,38 @@ body.menu-open{
         0 20px 55px rgba(0,0,0,.24);
 }
 
-
-.contact-panel h3{
-
-    margin-bottom:22px;
-
-    font-size:20px;
-
-    font-weight:850;
-}
-
-
 .contact-item{
-
     display:grid;
 
     grid-template-columns:
-        52px
-        1fr
-        18px;
+        48px
+        1fr;
 
     align-items:center;
 
     gap:12px;
 
-    padding:13px;
+    padding:12px;
 
-    margin-bottom:11px;
+    margin-bottom:10px;
 
-    border-radius:16px;
+    border-radius:15px;
 
     background:
-        rgba(255,255,255,.04);
-
-    border:
-        1px solid rgba(255,255,255,.055);
-
-    transition:.3s ease;
+        rgba(255,255,255,.035);
 }
-
-
-.contact-item:hover{
-
-    transform:
-        translateX(5px);
-
-    border-color:
-        rgba(0,212,255,.18);
-}
-
 
 .contact-icon{
-
-    width:48px;
-    height:48px;
+    width:45px;
+    height:45px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
-    border-radius:14px;
+    border-radius:13px;
 
     background:
-
         linear-gradient(
             135deg,
             #7155ff,
@@ -3367,114 +2128,226 @@ body.menu-open{
         );
 }
 
-
 .contact-item span{
-
-    display:block;
-
-    margin-bottom:2px;
-
     color:#8be9ff;
 
-    font-size:9px;
-
+    font-size:8px;
     font-weight:800;
 }
 
-
 .contact-item p{
-
     margin:0;
 
     color:
-        rgba(255,255,255,.68);
-
-    font-size:11px;
-}
-
-
-.contact-item > i{
-
-    color:#8be9ff;
+        rgba(255,255,255,.65);
 
     font-size:10px;
 }
 
-
 .social-links{
-
     display:flex;
-
     flex-wrap:wrap;
-
-    gap:10px;
-
-    margin-top:22px;
-}
-
-
-.social-link{
-
-    display:inline-flex;
-
-    align-items:center;
 
     gap:9px;
 
-    padding:
-        11px 15px;
+    margin-top:20px;
+}
 
-    border-radius:13px;
+.social-link{
+    padding:
+        10px 14px;
+
+    border-radius:12px;
 
     color:#fff;
 
-    font-size:10px;
-
-    font-weight:750;
+    font-size:9px;
 
     background:
         rgba(255,255,255,.05);
 
     border:
         1px solid rgba(255,255,255,.07);
-
-    transition:.3s ease;
 }
-
 
 .social-link:hover{
-
     color:#fff;
-
-    transform:
-        translateY(-4px);
-}
-
-
-.footer-bottom{
-
-    margin-top:35px;
-
-    padding-top:22px;
-
-    text-align:center;
-
-    color:
-        rgba(255,255,255,.42);
-
-    border-top:
-        1px solid rgba(255,255,255,.06);
-
-    font-size:10px;
 }
 
 
 /* =========================================================
-   NAVIGATION PAGES
+   FONDATEUR
+========================================================= */
+
+.founder-card{
+    position:relative;
+
+    margin-top:22px;
+
+    padding:30px;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,.11),
+            rgba(0,212,255,.055)
+        ),
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(0,212,255,.13);
+
+    box-shadow:
+        0 24px 60px rgba(0,0,0,.28);
+}
+
+.founder-card::before{
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+    height:260px;
+
+    top:-160px;
+    right:-100px;
+
+    border-radius:50%;
+
+    background:
+        rgba(0,212,255,.12);
+
+    filter:blur(45px);
+}
+
+.founder-content{
+    position:relative;
+
+    z-index:2;
+
+    display:grid;
+
+    grid-template-columns:
+        82px
+        1fr
+        auto;
+
+    align-items:center;
+
+    gap:20px;
+}
+
+.founder-avatar{
+    width:82px;
+    height:82px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:24px;
+
+    color:#fff;
+
+    font-size:30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7558ff,
+            #00a9e3
+        );
+
+    box-shadow:
+        0 18px 40px rgba(0,169,227,.20);
+}
+
+.founder-label{
+    display:block;
+
+    margin-bottom:5px;
+
+    color:#8be9ff;
+
+    font-size:9px;
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+.founder-name{
+    margin:0;
+
+    font-size:
+        clamp(20px,3vw,28px);
+
+    font-weight:900;
+}
+
+.founder-role{
+    margin-top:4px;
+
+    color:#75e8ff;
+
+    font-size:11px;
+    font-weight:700;
+}
+
+.founder-description{
+    max-width:800px;
+
+    margin:
+        11px 0 0;
+
+    color:
+        rgba(255,255,255,.58);
+
+    font-size:10px;
+    line-height:1.8;
+}
+
+.founder-badge{
+    min-width:140px;
+
+    padding:
+        13px 15px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    color:#56ffad;
+
+    font-size:9px;
+    font-weight:800;
+
+    background:
+        rgba(0,230,138,.055);
+
+    border:
+        1px solid rgba(0,230,138,.13);
+}
+
+.founder-badge i{
+    display:block;
+
+    margin-bottom:6px;
+
+    font-size:18px;
+}
+
+
+/* =========================================================
+   NAVIGATION BAS
 ========================================================= */
 
 .hq-page-navigation{
-
     position:fixed;
 
     z-index:9000;
@@ -3486,181 +2359,58 @@ body.menu-open{
         translateX(-50%);
 
     display:flex;
-
     align-items:center;
 
-    gap:9px;
+    gap:8px;
 
     padding:8px;
 
     border-radius:22px;
 
     background:
-        rgba(7,12,28,.88);
+        rgba(7,12,28,.90);
 
     border:
         1px solid rgba(255,255,255,.10);
 
     box-shadow:
         0 20px 55px rgba(0,0,0,.42);
-
-    backdrop-filter:blur(22px);
 }
 
-
 .hq-navigation-button{
-
-    width:49px;
-    height:49px;
+    width:48px;
+    height:48px;
 
     border:none;
 
-    border-radius:16px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
+    border-radius:15px;
 
     color:#fff;
 
     background:
         rgba(255,255,255,.065);
-
-    border:
-        1px solid rgba(255,255,255,.07);
-
-    transition:.28s ease;
 }
-
-
-.hq-navigation-button:hover:not(:disabled){
-
-    transform:
-        translateY(-3px);
-
-    background:
-
-        linear-gradient(
-            135deg,
-            #7053ff,
-            #009ed8
-        );
-}
-
 
 .hq-navigation-button:disabled{
-
     opacity:.25;
-
-    cursor:not-allowed;
 }
 
-
 .hq-page-info{
-
-    min-width:180px;
-
-    padding:
-        0 13px;
+    min-width:175px;
 
     text-align:center;
 }
 
-
 .hq-page-info strong{
-
     display:block;
 
-    margin-bottom:2px;
-
-    font-size:11px;
-
-    white-space:nowrap;
+    font-size:10px;
 }
-
 
 .hq-page-info span{
-
     color:#8be9ff;
 
-    font-size:9px;
-
-    font-weight:800;
-}
-
-
-/* =========================================================
-   POINTS
-========================================================= */
-
-.hq-dots{
-
-    position:fixed;
-
-    z-index:8900;
-
-    right:24px;
-    top:50%;
-
-    transform:
-        translateY(-50%);
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-    padding:
-        11px 8px;
-
-    border-radius:18px;
-
-    background:
-        rgba(7,12,28,.68);
-
-    border:
-        1px solid rgba(255,255,255,.07);
-
-    backdrop-filter:blur(16px);
-}
-
-
-.hq-dot{
-
-    width:9px;
-    height:9px;
-
-    padding:0;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:
-        rgba(255,255,255,.24);
-
-    transition:.3s ease;
-}
-
-
-.hq-dot.active{
-
-    height:27px;
-
-    border-radius:8px;
-
-    background:
-
-        linear-gradient(
-            180deg,
-            #805fff,
-            #00d4ff
-        );
-
-    box-shadow:
-        0 0 16px rgba(0,212,255,.35);
+    font-size:8px;
 }
 
 
@@ -3669,23 +2419,21 @@ body.menu-open{
 ========================================================= */
 
 .diam-fixed{
-
     position:fixed;
 
     z-index:9500;
 
-    right:24px;
-    bottom:23px;
+    right:22px;
+    bottom:22px;
 
     display:flex;
-
     align-items:center;
 
-    gap:10px;
+    gap:9px;
 
     padding:
-        8px 14px
-        8px 8px;
+        7px 13px
+        7px 7px;
 
     border:none;
 
@@ -3693,41 +2441,16 @@ body.menu-open{
 
     color:#fff;
 
-    cursor:pointer;
-
     background:
         rgba(8,14,31,.95);
 
     border:
-        1px solid rgba(0,212,255,.22);
-
-    box-shadow:
-        0 18px 45px rgba(0,0,0,.42);
-
-    transition:.3s ease;
+        1px solid rgba(0,212,255,.20);
 }
 
-
-.diam-fixed:hover{
-
-    transform:
-        translateY(-5px);
-}
-
-
-.diam-fixed-avatar{
-
-    position:relative;
-
-    width:46px;
-    height:46px;
-}
-
-
-.diam-fixed-avatar img{
-
-    width:46px;
-    height:46px;
+.diam-fixed img{
+    width:44px;
+    height:44px;
 
     object-fit:cover;
 
@@ -3737,239 +2460,16 @@ body.menu-open{
         2px solid #00d4ff;
 }
 
-
-.diam-fixed-online{
-
-    position:absolute;
-
-    right:1px;
-    bottom:2px;
-
-    width:11px;
-    height:11px;
-
-    border-radius:50%;
-
-    background:#00e68a;
-
-    border:
-        2px solid #071020;
-
-    box-shadow:
-        0 0 12px #00e68a;
-}
-
-
-.diam-fixed-copy{
-
-    text-align:left;
-}
-
-
-.diam-fixed-copy strong{
-
+.diam-fixed strong{
     display:block;
 
-    font-size:10px;
+    font-size:9px;
 }
 
+.diam-fixed small{
+    color:#51ffad;
 
-.diam-fixed-copy small{
-
-    display:block;
-
-    margin-top:2px;
-
-    color:#52ffa9;
-
-    font-size:8px;
-}
-
-
-/* =========================================================
-   POPUP DIAM
-========================================================= */
-
-.diam-popup{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:25000;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-
-    opacity:0;
-
-    visibility:hidden;
-
-    background:
-        rgba(2,5,15,.77);
-
-    backdrop-filter:blur(10px);
-
-    transition:.35s ease;
-}
-
-
-.diam-popup.show{
-
-    opacity:1;
-
-    visibility:visible;
-}
-
-
-.diam-popup-card{
-
-    position:relative;
-
-    width:100%;
-
-    max-width:420px;
-
-    padding:27px;
-
-    border-radius:29px;
-
-    text-align:center;
-
-    background:
-
-        linear-gradient(
-            150deg,
-            #0b1329,
-            #080e20
-        );
-
-    border:
-        1px solid rgba(255,255,255,.10);
-
-    box-shadow:
-        0 35px 90px rgba(0,0,0,.55);
-
-    transform:
-        translateY(20px)
-        scale(.96);
-
-    transition:.35s ease;
-}
-
-
-.diam-popup.show
-.diam-popup-card{
-
-    transform:
-        translateY(0)
-        scale(1);
-}
-
-
-.diam-popup-close{
-
-    position:absolute;
-
-    top:14px;
-    right:14px;
-
-    width:39px;
-    height:39px;
-
-    border:none;
-
-    border-radius:50%;
-
-    color:#fff;
-
-    background:
-        rgba(255,255,255,.065);
-}
-
-
-.diam-popup-image{
-
-    width:135px;
-    height:135px;
-
-    margin-bottom:17px;
-
-    object-fit:cover;
-
-    border-radius:50%;
-
-    border:
-        3px solid #00d4ff;
-}
-
-
-.diam-popup-card h3{
-
-    font-size:20px;
-
-    font-weight:850;
-}
-
-
-.diam-popup-card p{
-
-    color:
-        rgba(255,255,255,.65);
-
-    line-height:1.7;
-
-    font-size:11px;
-}
-
-
-.diam-popup-actions{
-
-    display:flex;
-
-    gap:9px;
-
-    margin-top:18px;
-}
-
-
-.diam-popup-actions button{
-
-    flex:1;
-
-    min-height:45px;
-
-    border:none;
-
-    border-radius:13px;
-
-    color:#fff;
-
-    font-size:10px;
-
-    font-weight:800;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            #7155ff,
-            #00a0da
-        );
-}
-
-
-.diam-popup-actions button:last-child{
-
-    background:
-        rgba(255,255,255,.07);
-
-    border:
-        1px solid rgba(255,255,255,.08);
+    font-size:7px;
 }
 
 
@@ -3981,74 +2481,52 @@ body.menu-open{
 
     .services-grid,
     .content-grid{
-
         grid-template-columns:
             repeat(2,1fr);
     }
 }
 
 
-/* =========================================================
-   MOBILE / TABLETTE
-========================================================= */
-
 @media(max-width:991px){
 
     .hq-desktop-nav{
-
-        display:none !important;
+        display:none;
     }
 
-
     .hq-mobile-menu-btn{
-
         display:flex;
     }
 
-
     .hq-navbar{
-
         padding:9px 0;
     }
 
-
     .hq-progress{
-
         top:78px;
     }
 
-
     #hqPages{
-
         padding-top:78px;
     }
 
-
     .hq-logo-circle{
-
         width:54px;
         height:54px;
 
         border-radius:16px;
     }
 
-
     .hq-logo-img{
-
-        width:42px;
-        height:42px;
+        width:43px;
+        height:43px;
     }
 
-
     .hq-logo-text small{
-
         display:none;
     }
 
-
     .presentation-grid,
     .diam-grid{
-
         grid-template-columns:1fr;
 
         gap:40px;
@@ -4056,281 +2534,291 @@ body.menu-open{
         text-align:center;
     }
 
-
-    .hero-text,
-    .hq-description{
-
-        margin-left:auto;
-        margin-right:auto;
-    }
-
-
-    .hero-buttons{
-
+    .hero-buttons,
+    .ai-features{
         justify-content:center;
     }
 
-
     .hero-visual{
-
-        width:100%;
-
-        margin:
-            15px auto 0;
+        margin:auto;
     }
 
-
     .hero-image{
-
         height:390px;
     }
 
 
-    .stage-card{
+    /* =====================================================
+       STAGE TABLETTE — FILLE CORRIGÉE
+    ===================================================== */
 
+    .stage-card{
         grid-template-columns:1fr;
     }
 
-
     .stage-left{
-
         padding:40px;
     }
 
-
     .stage-right{
+        position:relative;
 
-        min-height:470px;
+        width:100%;
+
+        min-height:460px;
+
+        display:flex;
+
+        align-items:flex-end;
+        justify-content:center;
+
+        overflow:hidden;
+
+        padding:
+            20px 20px 0;
     }
-
 
     .stage-image{
+        position:relative;
 
-        right:5%;
+        right:auto;
+        left:auto;
+        top:auto;
+        bottom:auto;
 
-        height:95%;
-    }
+        display:block;
 
+        width:auto;
+        height:auto;
 
-    .ai-features{
+        max-width:100%;
+        max-height:430px;
 
-        justify-content:center;
-    }
+        margin:
+            auto auto 0;
 
+        object-fit:contain;
 
-    .hq-dots{
+        object-position:
+            center bottom;
 
-        display:none;
+        transform:none;
+
+        filter:
+            drop-shadow(
+                0 25px 45px
+                rgba(0,0,0,.38)
+            );
     }
 
 
     .diam-fixed{
-
-        bottom:91px;
+        bottom:90px;
     }
+
 }
 
 
 /* =========================================================
-   PETIT MOBILE
+   MOBILE
 ========================================================= */
 
 @media(max-width:700px){
 
     .hq-page{
-
         align-items:flex-start !important;
 
         padding:
-            46px 0
+            45px 0
             145px;
     }
 
-
     .hq-container{
-
         width:90%;
     }
-
-
-    .hq-title{
-
-        letter-spacing:-1.3px;
-    }
-
-
-    .hero-title{
-
-        letter-spacing:-2px;
-    }
-
 
     .services-grid,
     .content-grid,
     .contact-grid{
-
         grid-template-columns:1fr;
     }
 
+
+    /* =====================================================
+       STAGE MOBILE — FILLE BIEN CENTRÉE
+    ===================================================== */
+
+    .stage-card{
+        grid-template-columns:1fr;
+
+        min-height:auto;
+
+        border-radius:25px;
+    }
 
     .stage-left{
-
         padding:
-            28px 22px;
+            27px 20px 20px;
     }
 
-
     .stage-tags{
-
         grid-template-columns:1fr;
     }
 
-
     .stage-right{
+        position:relative;
 
-        min-height:380px;
+        width:100%;
+        height:auto;
+
+        min-height:390px;
+
+        display:flex;
+
+        align-items:flex-end;
+        justify-content:center;
+
+        overflow:hidden;
+
+        padding:
+            10px 12px 0;
+
+        margin-top:5px;
     }
-
 
     .stage-image{
+        position:relative;
 
-        right:-3%;
+        right:auto;
+        left:auto;
+        top:auto;
+        bottom:auto;
 
-        height:94%;
-    }
+        display:block;
 
+        width:auto;
+        height:auto;
 
-    .stage-float-1{
+        max-width:100%;
+        max-height:380px;
 
-        top:35px;
-        left:15px;
-    }
+        margin:
+            auto auto 0;
 
+        object-fit:contain;
 
-    .stage-float-2{
+        object-position:
+            center bottom;
 
-        right:15px;
-        bottom:40px;
+        transform:none;
+
+        filter:
+            drop-shadow(
+                0 22px 35px
+                rgba(0,0,0,.35)
+            );
     }
 
 
     .hero-image{
-
-        height:300px;
+        height:290px;
     }
 
+    .founder-content{
+        grid-template-columns:
+            65px
+            1fr;
 
-    .tech-card{
-
-        padding:
-            9px 12px;
-
-        font-size:8px;
+        align-items:start;
     }
 
+    .founder-avatar{
+        width:65px;
+        height:65px;
 
-    .tech-1{
+        border-radius:19px;
 
-        left:-7px;
+        font-size:23px;
     }
 
+    .founder-badge{
+        grid-column:
+            1 / -1;
 
-    .tech-2{
-
-        right:-7px;
+        width:100%;
     }
-
-
-    .tech-3{
-
-        left:18px;
-    }
-
 
     .hq-page-navigation{
-
-        bottom:14px;
-
         width:
             calc(100% - 28px);
 
-        justify-content:space-between;
+        bottom:14px;
     }
-
 
     .hq-page-info{
+        flex:1;
 
         min-width:0;
-
-        flex:1;
     }
-
-
-    .hq-navigation-button{
-
-        width:47px;
-        height:47px;
-    }
-
 
     .diam-fixed{
-
         right:14px;
-        bottom:84px;
+        bottom:82px;
 
         width:50px;
         height:50px;
 
-        padding:0;
-
-        justify-content:center;
+        padding:3px;
     }
 
-
-    .diam-fixed-copy{
-
+    .diam-fixed span{
         display:none;
     }
 
-
-    .diam-fixed-avatar,
-    .diam-fixed-avatar img{
-
+    .diam-fixed img{
         width:43px;
         height:43px;
     }
 
-
-    .affiche-card{
-
-        width:270px;
-    }
-
-
-    .affiche-card img{
-
-        height:340px;
-    }
-
-
-    .diam-popup-actions{
-
-        flex-direction:column;
-    }
 }
 
 
 /* =========================================================
-   DESKTOP : CACHE MENU MOBILE
+   PETITS TÉLÉPHONES
+========================================================= */
+
+@media(max-width:480px){
+
+    .stage-right{
+        min-height:350px;
+
+        padding:
+            5px 8px 0;
+    }
+
+    .stage-image{
+        max-width:95%;
+
+        max-height:345px;
+
+        margin:
+            auto auto 0;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
 ========================================================= */
 
 @media(min-width:992px){
 
     .hq-mobile-menu,
     .hq-mobile-overlay{
-
         display:none !important;
     }
+
 }
 
 </style>
@@ -4352,9 +2840,6 @@ body.menu-open{
         <div
             class="d-flex align-items-center justify-content-between"
         >
-
-
-            <!-- LOGO -->
 
             <a
                 href="{% url 'login_hexa' %}"
@@ -4387,7 +2872,7 @@ body.menu-open{
             </a>
 
 
-            <!-- MENU DESKTOP -->
+            <!-- MENU ORDINATEUR -->
 
             <div class="hq-desktop-nav">
 
@@ -4395,100 +2880,76 @@ body.menu-open{
                     href="{% url 'home' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-house"></i>
                     Accueil
-
                 </a>
-
 
                 <a
                     href="{% url 'services' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-layer-group"></i>
                     Services
-
                 </a>
-
 
                 <a
                     href="{% url 'produits_list' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-newspaper"></i>
                     Articles
-
                 </a>
-
 
                 <a
                     href="{% url 'portfolio' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-briefcase"></i>
                     Projets
-
                 </a>
-
 
                 <a
                     href="{% url 'client_login' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-users"></i>
                     Clients
-
                 </a>
-
 
                 <a
                     href="{% url 'contact' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-envelope"></i>
                     Contact
-
                 </a>
-
 
                 <a
                     href="{% url 'a_propos' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-circle-info"></i>
                     À propos
-
                 </a>
-
 
                 <a
                     href="{% url 'solutions_applications' %}"
                     class="nav-link"
                 >
-
                     <i class="fa-solid fa-laptop-code"></i>
                     Solutions & tarifs
-
                 </a>
+
                 <a
-    href="{% url 'conference' %}"
-    class="nav-link"
->
-    <i class="fa-solid fa-video"></i>
-    Conférence
-</a>
+                    href="{% url 'conference' %}"
+                    class="nav-link"
+                >
+                    <i class="fa-solid fa-video"></i>
+                    Conférence
+                </a>
 
             </div>
 
-
-            <!-- BOUTON MENU MOBILE -->
 
             <button
                 class="hq-mobile-menu-btn"
@@ -4501,7 +2962,6 @@ body.menu-open{
 
             </button>
 
-
         </div>
 
     </div>
@@ -4510,7 +2970,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     MENU MOBILE
+     OVERLAY MOBILE
 ===================================================== -->
 
 <div
@@ -4520,16 +2980,16 @@ body.menu-open{
 ></div>
 
 
+<!-- =====================================================
+     MENU MOBILE
+===================================================== -->
+
 <aside
     class="hq-mobile-menu"
     id="hqMobileMenu"
 >
 
-
-    <!-- HEADER -->
-
     <div class="hq-mobile-menu-header">
-
 
         <div class="hq-mobile-brand">
 
@@ -4541,7 +3001,6 @@ body.menu-open{
                 >
 
             </span>
-
 
             <div>
 
@@ -4562,45 +3021,29 @@ body.menu-open{
             type="button"
             class="hq-mobile-close"
             onclick="closeHexaMenu()"
-            aria-label="Fermer le menu"
         >
 
             <i class="fa-solid fa-xmark"></i>
 
         </button>
 
-
     </div>
 
 
-    <!-- LIENS -->
-
     <nav class="hq-mobile-links">
-
 
         <a href="{% url 'home' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-house"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    Accueil
-                </strong>
-
-                <small>
-                    Présentation HexaQuébec
-                </small>
-
+                <strong>Accueil</strong>
+                <small>Présentation HexaQuébec</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4608,26 +3051,15 @@ body.menu-open{
         <a href="{% url 'services' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-layer-group"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    Services
-                </strong>
-
-                <small>
-                    Nos solutions numériques
-                </small>
-
+                <strong>Services</strong>
+                <small>Nos solutions numériques</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4635,26 +3067,15 @@ body.menu-open{
         <a href="{% url 'produits_list' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-newspaper"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    Articles
-                </strong>
-
-                <small>
-                    Actualités & publications
-                </small>
-
+                <strong>Articles</strong>
+                <small>Actualités & publications</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4662,26 +3083,15 @@ body.menu-open{
         <a href="{% url 'portfolio' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-briefcase"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    Projets
-                </strong>
-
-                <small>
-                    Nos réalisations
-                </small>
-
+                <strong>Projets</strong>
+                <small>Nos réalisations</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4689,26 +3099,15 @@ body.menu-open{
         <a href="{% url 'client_login' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-users"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    Clients
-                </strong>
-
-                <small>
-                    Espace sécurisé
-                </small>
-
+                <strong>Clients</strong>
+                <small>Espace sécurisé</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4716,26 +3115,15 @@ body.menu-open{
         <a href="{% url 'contact' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-envelope"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    Contact
-                </strong>
-
-                <small>
-                    Parlez-nous de votre projet
-                </small>
-
+                <strong>Contact</strong>
+                <small>Parlez-nous de votre projet</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4743,26 +3131,15 @@ body.menu-open{
         <a href="{% url 'a_propos' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-circle-info"></i>
-
             </span>
 
             <span>
-
-                <strong>
-                    À propos
-                </strong>
-
-                <small>
-                    Découvrez HexaQuébec
-                </small>
-
+                <strong>À propos</strong>
+                <small>Découvrez HexaQuébec</small>
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
 
@@ -4770,43 +3147,54 @@ body.menu-open{
         <a href="{% url 'solutions_applications' %}">
 
             <span class="mobile-menu-icon">
-
                 <i class="fa-solid fa-laptop-code"></i>
+            </span>
 
+            <span>
+                <strong>Solutions & tarifs</strong>
+                <small>Applications professionnelles</small>
+            </span>
+
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
+
+        </a>
+
+
+        <!-- CONFÉRENCE MOBILE -->
+
+        <a
+            href="{% url 'conference' %}"
+            class="conference-mobile-link"
+        >
+
+            <span class="mobile-menu-icon">
+                <i class="fa-solid fa-video"></i>
             </span>
 
             <span>
 
                 <strong>
-                    Solutions & tarifs
+                    Conférence
                 </strong>
 
-                <small>
-                    Applications professionnelles
+                <small class="conference-live">
+                    Demander un rendez-vous vidéo
                 </small>
 
             </span>
 
-            <i
-                class="fa-solid fa-chevron-right mobile-menu-arrow"
-            ></i>
+            <i class="fa-solid fa-chevron-right mobile-menu-arrow"></i>
 
         </a>
-
 
     </nav>
 
 
-    <!-- FOOTER MENU -->
-
     <div class="hq-mobile-menu-footer">
 
         <div class="menu-ai-status">
-
             <span></span>
-
             Diam IA est en ligne
-
         </div>
 
         <p>
@@ -4814,7 +3202,6 @@ body.menu-open{
         </p>
 
     </div>
-
 
 </aside>
 
@@ -4834,14 +3221,14 @@ body.menu-open{
 
 
 <!-- =====================================================
-     TOUTES LES PAGES
+     PAGES
 ===================================================== -->
 
 <main id="hqPages">
 
 
 <!-- =====================================================
-     1 - PRÉSENTATION
+     1 PRESENTATION
 ===================================================== -->
 
 <section
@@ -4852,12 +3239,9 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="presentation-grid">
 
-
             <div>
-
 
                 <div
                     class="hq-eyebrow hq-reveal"
@@ -4907,7 +3291,6 @@ body.menu-open{
                     style="--delay:.32s;"
                 >
 
-
                     <a
                         href="{% url 'services' %}"
                         class="hq-btn hq-btn-primary"
@@ -4944,8 +3327,18 @@ body.menu-open{
                     </a>
 
 
-                </div>
+                    <a
+                        href="{% url 'conference' %}"
+                        class="hq-btn hq-btn-outline"
+                    >
 
+                        <i class="fa-solid fa-video"></i>
+
+                        Conférence
+
+                    </a>
+
+                </div>
 
             </div>
 
@@ -4954,7 +3347,6 @@ body.menu-open{
                 class="hero-visual hq-reveal"
                 style="--delay:.25s;"
             >
-
 
                 <div class="hero-image-box">
 
@@ -4993,12 +3385,9 @@ body.menu-open{
 
                 </div>
 
-
             </div>
 
-
         </div>
-
 
     </div>
 
@@ -5006,23 +3395,20 @@ body.menu-open{
 
 
 <!-- =====================================================
-     2 - STAGE
+     2 STAGES
 ===================================================== -->
 
 <section
     class="hq-page"
     id="stage"
-    data-title="Opportunités de Stage"
+    data-title="Stages"
 >
 
     <div class="hq-container">
 
-
         <div class="stage-card hq-reveal">
 
-
             <div class="stage-left">
-
 
                 <div class="hq-eyebrow">
 
@@ -5047,19 +3433,17 @@ body.menu-open{
                 <p class="stage-description">
 
                     Développez vos compétences sur des projets
-                    réels, collaborez avec une équipe
-                    professionnelle et transformez votre potentiel
-                    en expérience concrète.
+                    réels et transformez votre potentiel
+                    en expérience professionnelle.
 
                 </p>
 
 
                 <div class="stage-stats">
 
-
                     <div class="stage-stat">
 
-                        <strong id="stageDomainCount">
+                        <strong>
                             6
                         </strong>
 
@@ -5095,39 +3479,15 @@ body.menu-open{
 
                     </div>
 
-
                 </div>
 
 
-                <div class="stage-search">
+                <div class="stage-tags">
 
-                    <i class="fa-solid fa-magnifying-glass"></i>
-
-                    <input
-                        type="search"
-                        id="stageSearch"
-                        placeholder="Rechercher un domaine..."
-                        autocomplete="off"
-                    >
-
-                </div>
-
-
-                <div
-                    class="stage-tags"
-                    id="stageTags"
-                >
-
-
-                    <div
-                        class="stage-tag"
-                        data-search="développement web django python site plateforme"
-                    >
+                    <div class="stage-tag">
 
                         <span class="stage-tag-icon">
-
                             <i class="fa-solid fa-code"></i>
-
                         </span>
 
                         <span>
@@ -5145,15 +3505,10 @@ body.menu-open{
                     </div>
 
 
-                    <div
-                        class="stage-tag"
-                        data-search="applications mobiles android ios flutter"
-                    >
+                    <div class="stage-tag">
 
                         <span class="stage-tag-icon">
-
-                            <i class="fa-solid fa-mobile-screen-button"></i>
-
+                            <i class="fa-solid fa-mobile-screen"></i>
                         </span>
 
                         <span>
@@ -5171,15 +3526,10 @@ body.menu-open{
                     </div>
 
 
-                    <div
-                        class="stage-tag"
-                        data-search="ui ux design interface"
-                    >
+                    <div class="stage-tag">
 
                         <span class="stage-tag-icon">
-
                             <i class="fa-solid fa-pen-ruler"></i>
-
                         </span>
 
                         <span>
@@ -5197,15 +3547,10 @@ body.menu-open{
                     </div>
 
 
-                    <div
-                        class="stage-tag"
-                        data-search="infographie graphisme création visuelle"
-                    >
+                    <div class="stage-tag">
 
                         <span class="stage-tag-icon">
-
                             <i class="fa-solid fa-palette"></i>
-
                         </span>
 
                         <span>
@@ -5223,15 +3568,10 @@ body.menu-open{
                     </div>
 
 
-                    <div
-                        class="stage-tag"
-                        data-search="administration gestion organisation"
-                    >
+                    <div class="stage-tag">
 
                         <span class="stage-tag-icon">
-
                             <i class="fa-solid fa-building-user"></i>
-
                         </span>
 
                         <span>
@@ -5249,15 +3589,10 @@ body.menu-open{
                     </div>
 
 
-                    <div
-                        class="stage-tag"
-                        data-search="service clientèle client communication"
-                    >
+                    <div class="stage-tag">
 
                         <span class="stage-tag-icon">
-
                             <i class="fa-solid fa-headset"></i>
-
                         </span>
 
                         <span>
@@ -5273,7 +3608,6 @@ body.menu-open{
                         </span>
 
                     </div>
-
 
                 </div>
 
@@ -5297,42 +3631,14 @@ body.menu-open{
 
                     Déposer ma demande
 
-                    <i class="fa-solid fa-arrow-right"></i>
-
                 </a>
-
 
             </div>
 
 
+            <!-- FILLE -->
+
             <div class="stage-right">
-
-
-                <div class="stage-float stage-float-1">
-
-                    <strong>
-                        🚀 Expérience
-                    </strong>
-
-                    <small>
-                        Projets concrets
-                    </small>
-
-                </div>
-
-
-                <div class="stage-float stage-float-2">
-
-                    <strong>
-                        ⭐ Compétences
-                    </strong>
-
-                    <small>
-                        Progression réelle
-                    </small>
-
-                </div>
-
 
                 <img
                     src="{% static 'images/fille-stage.png' %}"
@@ -5340,12 +3646,9 @@ body.menu-open{
                     alt="Stage HexaQuébec"
                 >
 
-
             </div>
 
-
         </div>
-
 
     </div>
 
@@ -5353,7 +3656,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     3 - SERVICES
+     3 SERVICES
 ===================================================== -->
 
 <section
@@ -5364,26 +3667,18 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="hq-section-header">
 
-
-            <div
-                class="hq-eyebrow hq-reveal"
-                style="--delay:.08s;"
-            >
+            <div class="hq-eyebrow hq-reveal">
 
                 <i class="fa-solid fa-layer-group"></i>
 
-                Développement • IA • Mobile • UI/UX
+                Nos expertises
 
             </div>
 
 
-            <h2
-                class="hq-title hq-reveal"
-                style="--delay:.16s;"
-            >
+            <h2 class="hq-title hq-reveal">
 
                 Services
 
@@ -5394,40 +3689,26 @@ body.menu-open{
             </h2>
 
 
-            <p
-                class="hq-description hq-reveal"
-                style="--delay:.23s;"
-            >
+            <p class="hq-description hq-reveal">
 
-                Nous créons des plateformes modernes,
-                rapides et professionnelles :
-                sites web, e-commerce,
-                intelligence artificielle,
-                applications mobiles,
-                UI/UX et maintenance.
+                Des solutions numériques professionnelles
+                pensées pour accompagner votre entreprise.
 
             </p>
-
 
         </div>
 
 
         <div class="services-grid">
 
-
-            <div
-                class="service-card hq-reveal"
-                style="--delay:.28s;"
-            >
+            <div class="service-card hq-reveal">
 
                 <div class="service-number">
                     01
                 </div>
 
                 <div class="service-icon">
-
                     <i class="fa-solid fa-code"></i>
-
                 </div>
 
                 <h3>
@@ -5435,27 +3716,21 @@ body.menu-open{
                 </h3>
 
                 <p>
-                    Sites vitrines, dashboards,
-                    plateformes web et systèmes
-                    professionnels modernes.
+                    Sites vitrines, plateformes,
+                    dashboards et systèmes professionnels.
                 </p>
 
             </div>
 
 
-            <div
-                class="service-card hq-reveal"
-                style="--delay:.34s;"
-            >
+            <div class="service-card hq-reveal">
 
                 <div class="service-number">
                     02
                 </div>
 
                 <div class="service-icon">
-
                     <i class="fa-solid fa-cart-shopping"></i>
-
                 </div>
 
                 <h3>
@@ -5463,27 +3738,21 @@ body.menu-open{
                 </h3>
 
                 <p>
-                    Boutiques professionnelles,
-                    paiements en ligne,
-                    commandes et expérience client.
+                    Boutiques modernes avec paiements,
+                    commandes et gestion des produits.
                 </p>
 
             </div>
 
 
-            <div
-                class="service-card hq-reveal"
-                style="--delay:.40s;"
-            >
+            <div class="service-card hq-reveal">
 
                 <div class="service-number">
                     03
                 </div>
 
                 <div class="service-icon">
-
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-
+                    <i class="fa-solid fa-mobile-screen"></i>
                 </div>
 
                 <h3>
@@ -5492,26 +3761,20 @@ body.menu-open{
 
                 <p>
                     Applications Android et iOS
-                    rapides, fluides
-                    et professionnelles.
+                    professionnelles.
                 </p>
 
             </div>
 
 
-            <div
-                class="service-card hq-reveal"
-                style="--delay:.46s;"
-            >
+            <div class="service-card hq-reveal">
 
                 <div class="service-number">
                     04
                 </div>
 
                 <div class="service-icon">
-
                     <i class="fa-solid fa-robot"></i>
-
                 </div>
 
                 <h3>
@@ -5519,27 +3782,21 @@ body.menu-open{
                 </h3>
 
                 <p>
-                    Chatbots intelligents,
-                    automatisation,
-                    analyse et solutions IA.
+                    Assistants intelligents,
+                    automatisation et solutions IA.
                 </p>
 
             </div>
 
 
-            <div
-                class="service-card hq-reveal"
-                style="--delay:.52s;"
-            >
+            <div class="service-card hq-reveal">
 
                 <div class="service-number">
                     05
                 </div>
 
                 <div class="service-icon">
-
                     <i class="fa-solid fa-pen-nib"></i>
-
                 </div>
 
                 <h3>
@@ -5547,27 +3804,21 @@ body.menu-open{
                 </h3>
 
                 <p>
-                    Interfaces élégantes,
-                    animations fluides
-                    et expérience utilisateur moderne.
+                    Interfaces modernes,
+                    professionnelles et intuitives.
                 </p>
 
             </div>
 
 
-            <div
-                class="service-card hq-reveal"
-                style="--delay:.58s;"
-            >
+            <div class="service-card hq-reveal">
 
                 <div class="service-number">
                     06
                 </div>
 
                 <div class="service-icon">
-
                     <i class="fa-solid fa-shield-halved"></i>
-
                 </div>
 
                 <h3>
@@ -5575,16 +3826,13 @@ body.menu-open{
                 </h3>
 
                 <p>
-                    Sécurisation,
-                    optimisation,
-                    mises à jour et support professionnel.
+                    Sécurité, optimisation,
+                    maintenance et support.
                 </p>
 
             </div>
 
-
         </div>
-
 
     </div>
 
@@ -5592,7 +3840,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     4 - ANNONCES
+     4 ANNONCES
 ===================================================== -->
 
 <section
@@ -5603,26 +3851,18 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="hq-section-header">
 
-
-            <div
-                class="hq-eyebrow hq-reveal"
-                style="--delay:.08s;"
-            >
+            <div class="hq-eyebrow hq-reveal">
 
                 <i class="fa-solid fa-bullhorn"></i>
 
-                Actualités & Informations
+                Actualités
 
             </div>
 
 
-            <h2
-                class="hq-title hq-reveal"
-                style="--delay:.16s;"
-            >
+            <h2 class="hq-title hq-reveal">
 
                 Nos annonces
 
@@ -5632,36 +3872,16 @@ body.menu-open{
 
             </h2>
 
-
-            <p
-                class="hq-description hq-reveal"
-                style="--delay:.24s;"
-            >
-
-                Découvrez nos dernières annonces,
-                nouveautés, stages
-                et informations importantes.
-
-            </p>
-
-
         </div>
 
 
         {% if annonces %}
 
-
         <div class="content-grid">
-
 
             {% for annonce in annonces %}
 
-
-            <article
-                class="hq-content-card hq-reveal"
-                style="--delay:.30s;"
-            >
-
+            <article class="hq-content-card hq-reveal">
 
                 {% if annonce.image %}
 
@@ -5671,45 +3891,19 @@ body.menu-open{
                     alt="{{ annonce.title }}"
                 >
 
-                {% else %}
-
-                <img
-                    src="{% static 'images/default-annonce.jpg' %}"
-                    class="hq-content-image"
-                    alt="Annonce HexaQuébec"
-                >
-
                 {% endif %}
 
 
                 <div class="hq-content-body">
 
-
                     <h3 class="hq-content-title">
-
                         {{ annonce.title }}
-
                     </h3>
 
 
                     <p class="hq-content-text">
-
                         {{ annonce.content|truncatewords:25 }}
-
                     </p>
-
-
-                    {% if annonce.published_at %}
-
-                    <div class="hq-content-date">
-
-                        <i class="fa-solid fa-calendar-days"></i>
-
-                        {{ annonce.published_at|date:"d M Y" }}
-
-                    </div>
-
-                    {% endif %}
 
 
                     <a
@@ -5723,39 +3917,28 @@ body.menu-open{
 
                     </a>
 
-
                 </div>
-
 
             </article>
 
-
             {% endfor %}
-
 
         </div>
 
 
         {% else %}
 
-
-        <div class="hq-empty hq-reveal">
+        <div class="hq-empty">
 
             <i class="fa-solid fa-bullhorn fa-3x"></i>
 
             <h4>
-                Aucune annonce disponible
+                Aucune annonce
             </h4>
-
-            <p>
-                Les nouvelles annonces apparaîtront bientôt.
-            </p>
 
         </div>
 
-
         {% endif %}
-
 
     </div>
 
@@ -5763,7 +3946,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     5 - VIDEOS
+     5 VIDEOS
 ===================================================== -->
 
 <section
@@ -5774,26 +3957,18 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="hq-section-header">
 
+            <div class="hq-eyebrow">
 
-            <div
-                class="hq-eyebrow hq-reveal"
-                style="--delay:.08s;"
-            >
-
-                <i class="fa-solid fa-circle-play"></i>
+                <i class="fa-solid fa-video"></i>
 
                 Communication digitale
 
             </div>
 
 
-            <h2
-                class="hq-title hq-reveal"
-                style="--delay:.16s;"
-            >
+            <h2 class="hq-title">
 
                 Vidéos
 
@@ -5803,38 +3978,18 @@ body.menu-open{
 
             </h2>
 
-
-            <p
-                class="hq-description hq-reveal"
-                style="--delay:.24s;"
-            >
-
-                Regardez nos vidéos de présentation,
-                annonces et démonstrations
-                professionnelles.
-
-            </p>
-
-
         </div>
 
 
         <div class="video-list">
 
-
             {% for v in videos %}
 
-
-            <div
-                class="video-card hq-reveal"
-                style="--delay:.30s;"
-            >
-
+            <div class="video-card">
 
                 <video
                     class="video-player"
                     controls
-                    preload="metadata"
                 >
 
                     <source
@@ -5847,28 +4002,18 @@ body.menu-open{
 
                 <div class="video-info">
 
-                    <h3>
+                    <h4>
                         {{ v.titre }}
-                    </h3>
-
-                    <span>
-
-                        <i class="fa-solid fa-calendar"></i>
-
-                        {{ v.date_pub|date:"d M Y" }}
-
-                    </span>
+                    </h4>
 
                 </div>
-
 
             </div>
 
 
             {% empty %}
 
-
-            <div class="hq-empty hq-reveal">
+            <div class="hq-empty">
 
                 <i class="fa-solid fa-video fa-3x"></i>
 
@@ -5878,12 +4023,9 @@ body.menu-open{
 
             </div>
 
-
             {% endfor %}
 
-
         </div>
-
 
     </div>
 
@@ -5891,7 +4033,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     6 - AFFICHES
+     6 AFFICHES
 ===================================================== -->
 
 <section
@@ -5902,14 +4044,9 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="hq-section-header">
 
-
-            <div
-                class="hq-eyebrow hq-reveal"
-                style="--delay:.08s;"
-            >
+            <div class="hq-eyebrow">
 
                 <i class="fa-solid fa-images"></i>
 
@@ -5918,10 +4055,7 @@ body.menu-open{
             </div>
 
 
-            <h2
-                class="hq-title hq-reveal"
-                style="--delay:.16s;"
-            >
+            <h2 class="hq-title">
 
                 Affiches
 
@@ -5931,35 +4065,16 @@ body.menu-open{
 
             </h2>
 
-
-            <p
-                class="hq-description hq-reveal"
-                style="--delay:.24s;"
-            >
-
-                Découvrez nos affiches modernes
-                et nos campagnes visuelles professionnelles.
-
-            </p>
-
-
         </div>
 
 
         {% if affiches %}
 
-
-        <div
-            class="affiche-slider hq-reveal"
-            style="--delay:.30s;"
-        >
-
+        <div class="affiche-slider">
 
             <div class="affiche-track">
 
-
                 {% for a in affiches %}
-
 
                 <article class="affiche-card">
 
@@ -5974,14 +4089,10 @@ body.menu-open{
 
                 </article>
 
-
                 {% endfor %}
 
 
-                <!-- DUPLICATION POUR ANIMATION -->
-
                 {% for a in affiches %}
-
 
                 <article class="affiche-card">
 
@@ -5996,32 +4107,22 @@ body.menu-open{
 
                 </article>
 
-
                 {% endfor %}
-
 
             </div>
-
 
         </div>
 
 
         {% else %}
 
+        <div class="hq-empty">
 
-        <div class="hq-empty hq-reveal">
-
-            <i class="fa-solid fa-images fa-3x"></i>
-
-            <h4>
-                Aucune affiche disponible
-            </h4>
+            Aucune affiche disponible.
 
         </div>
 
-
         {% endif %}
-
 
     </div>
 
@@ -6029,7 +4130,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     7 - DIAM IA
+     7 DIAM IA
 ===================================================== -->
 
 <section
@@ -6040,18 +4141,9 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="diam-grid">
 
-
-            <div
-                class="diam-visual hq-reveal"
-                style="--delay:.12s;"
-            >
-
-
-                <div class="diam-glow"></div>
-
+            <div class="diam-visual">
 
                 <img
                     src="{% static 'images/diam.jpeg' %}"
@@ -6070,29 +4162,21 @@ body.menu-open{
 
                 </div>
 
-
             </div>
 
 
             <div>
 
-
-                <div
-                    class="hq-eyebrow hq-reveal"
-                    style="--delay:.16s;"
-                >
+                <div class="hq-eyebrow">
 
                     <i class="fa-solid fa-robot"></i>
 
-                    Assistant intelligent HexaQuébec
+                    Assistant HexaQuébec
 
                 </div>
 
 
-                <h2
-                    class="hq-title hq-reveal"
-                    style="--delay:.22s;"
-                >
+                <h2 class="hq-title">
 
                     Discutez avec
 
@@ -6103,28 +4187,16 @@ body.menu-open{
                 </h2>
 
 
-                <p
-                    class="hq-description hq-reveal"
-                    style="--delay:.28s;"
-                >
+                <p class="hq-description">
 
-                    Diam IA est l'assistant intelligent
-                    de HexaQuébec.
-
-                    Il vous accompagne concernant
-                    nos services,
-                    le développement web,
-                    les applications mobiles,
-                    l'intelligence artificielle,
-                    les stages et les solutions numériques.
+                    Diam IA vous accompagne concernant
+                    nos services, nos solutions numériques,
+                    les stages et vos projets.
 
                 </p>
 
 
-                <div
-                    class="ai-features hq-reveal"
-                    style="--delay:.34s;"
-                >
+                <div class="ai-features">
 
                     <span class="ai-feature">
                         Développement Web
@@ -6135,7 +4207,7 @@ body.menu-open{
                     </span>
 
                     <span class="ai-feature">
-                        Applications Mobiles
+                        Mobile
                     </span>
 
                     <span class="ai-feature">
@@ -6146,21 +4218,12 @@ body.menu-open{
                         E-commerce
                     </span>
 
-                    <span class="ai-feature">
-                        UI/UX Design
-                    </span>
-
                 </div>
 
 
-                <div
-                    class="ai-chat hq-reveal"
-                    style="--delay:.40s;"
-                >
-
+                <div class="ai-chat">
 
                     <div class="chat-header">
-
 
                         <img
                             src="{% static 'images/diam.jpeg' %}"
@@ -6168,19 +4231,17 @@ body.menu-open{
                             alt="Diam IA"
                         >
 
-
                         <div>
 
                             <strong>
                                 Diam IA
                             </strong>
 
-                            <small>
-                                ● Assistant en ligne
+                            <small style="color:#51ffad;">
+                                ● En ligne
                             </small>
 
                         </div>
-
 
                     </div>
 
@@ -6190,28 +4251,23 @@ body.menu-open{
                         id="chatMessages"
                     >
 
-
                         <div class="bot-message">
 
-                            👋 Bonjour, je suis Diam IA.
-                            Comment puis-je vous aider aujourd'hui ?
+                            Bonjour 👋
+                            Comment puis-je vous aider ?
 
                         </div>
-
 
                     </div>
 
 
                     <div class="chat-input">
 
-
                         <input
                             type="text"
                             id="userInput"
                             placeholder="Posez votre question..."
-                            autocomplete="off"
                         >
-
 
                         <button
                             type="button"
@@ -6222,18 +4278,13 @@ body.menu-open{
 
                         </button>
 
-
                     </div>
-
 
                 </div>
 
-
             </div>
 
-
         </div>
-
 
     </div>
 
@@ -6241,7 +4292,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     8 - PARTENAIRES
+     8 PARTENAIRES
 ===================================================== -->
 
 <section
@@ -6252,28 +4303,20 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="hq-section-header">
 
-
-            <div
-                class="hq-eyebrow hq-reveal"
-                style="--delay:.08s;"
-            >
+            <div class="hq-eyebrow">
 
                 <i class="fa-solid fa-handshake"></i>
 
-                Entreprises partenaires
+                Nos partenaires
 
             </div>
 
 
-            <h2
-                class="hq-title hq-reveal"
-                style="--delay:.16s;"
-            >
+            <h2 class="hq-title">
 
-                Nos partenaires
+                Partenaires
 
                 <span>
                     HexaQuébec
@@ -6281,42 +4324,20 @@ body.menu-open{
 
             </h2>
 
-
-            <p
-                class="hq-description hq-reveal"
-                style="--delay:.24s;"
-            >
-
-                Nous collaborons avec des entreprises
-                solides afin d'offrir
-                des services numériques modernes.
-
-            </p>
-
-
         </div>
 
 
         {% if partenaires %}
 
-
-        <div
-            class="partners-slider hq-reveal"
-            style="--delay:.30s;"
-        >
-
+        <div class="partners-slider">
 
             <div class="partners-track">
 
-
                 {% for partenaire in partenaires %}
-
 
                 <article class="partner-card">
 
-
                     <div class="partner-logo">
-
 
                         {% if partenaire.logo %}
 
@@ -6334,31 +4355,23 @@ body.menu-open{
 
                         {% endif %}
 
-
                     </div>
 
 
-                    <h5>
+                    <strong>
                         {{ partenaire.nom }}
-                    </h5>
-
+                    </strong>
 
                 </article>
-
 
                 {% endfor %}
 
 
-                <!-- DUPLICATION -->
-
                 {% for partenaire in partenaires %}
-
 
                 <article class="partner-card">
 
-
                     <div class="partner-logo">
-
 
                         {% if partenaire.logo %}
 
@@ -6376,47 +4389,22 @@ body.menu-open{
 
                         {% endif %}
 
-
                     </div>
 
 
-                    <h5>
+                    <strong>
                         {{ partenaire.nom }}
-                    </h5>
-
+                    </strong>
 
                 </article>
 
-
                 {% endfor %}
-
 
             </div>
 
-
         </div>
-
-
-        {% else %}
-
-
-        <div class="hq-empty hq-reveal">
-
-            <i class="fa-solid fa-handshake fa-3x"></i>
-
-            <h4>
-                Nos partenaires
-            </h4>
-
-            <p>
-                Les partenaires apparaîtront ici.
-            </p>
-
-        </div>
-
 
         {% endif %}
-
 
     </div>
 
@@ -6424,7 +4412,7 @@ body.menu-open{
 
 
 <!-- =====================================================
-     9 - CONTACT
+     9 CONTACT
 ===================================================== -->
 
 <section
@@ -6435,26 +4423,18 @@ body.menu-open{
 
     <div class="hq-container">
 
-
         <div class="hq-section-header">
 
+            <div class="hq-eyebrow">
 
-            <div
-                class="hq-eyebrow hq-reveal"
-                style="--delay:.08s;"
-            >
-
-                <i class="fa-solid fa-envelope-open-text"></i>
+                <i class="fa-solid fa-envelope"></i>
 
                 Parlons de votre projet
 
             </div>
 
 
-            <h2
-                class="hq-title hq-reveal"
-                style="--delay:.16s;"
-            >
+            <h2 class="hq-title">
 
                 Contactez
 
@@ -6465,57 +4445,38 @@ body.menu-open{
             </h2>
 
 
-            <p
-                class="hq-description hq-reveal"
-                style="--delay:.24s;"
-            >
+            <p class="hq-description">
 
-                Vous avez un projet web,
-                une application mobile,
-                une solution IA
-                ou un besoin informatique ?
-
-                Contactez HexaQuébec.
+                Notre équipe est disponible pour
+                discuter de votre projet web,
+                mobile ou intelligence artificielle.
 
             </p>
-
 
         </div>
 
 
         <div class="contact-grid">
 
-
-            <!-- ENTREPRISE -->
-
-            <div
-                class="contact-panel hq-reveal"
-                style="--delay:.30s;"
-            >
-
+            <div class="contact-panel">
 
                 <h3>
-
-                    <i class="fa-solid fa-building me-2"></i>
-
                     HexaQuébec
-
                 </h3>
 
 
                 <p class="hq-description">
 
-                    Entreprise spécialisée en
-                    développement web,
+                    Développement web,
                     applications mobiles,
-                    intelligence artificielle
-                    et solutions numériques modernes.
+                    intelligence artificielle,
+                    e-commerce et solutions
+                    numériques professionnelles.
 
                 </p>
 
 
                 <div class="social-links">
-
 
                     <a
                         href="https://www.facebook.com/profile.php?id=61578598457506"
@@ -6554,39 +4515,20 @@ body.menu-open{
 
                     </a>
 
-
                 </div>
-
 
             </div>
 
 
-            <!-- INFORMATIONS -->
-
-            <div
-                class="contact-panel hq-reveal"
-                style="--delay:.38s;"
-            >
-
-
-                <h3>
-
-                    <i class="fa-solid fa-address-card me-2"></i>
-
-                    Informations
-
-                </h3>
-
+            <div class="contact-panel">
 
                 <div class="contact-item">
-
 
                     <div class="contact-icon">
 
                         <i class="fa-solid fa-location-dot"></i>
 
                     </div>
-
 
                     <div>
 
@@ -6601,22 +4543,16 @@ body.menu-open{
 
                     </div>
 
-
-                    <i class="fa-solid fa-arrow-right"></i>
-
-
                 </div>
 
 
                 <div class="contact-item">
 
-
                     <div class="contact-icon">
 
-                        <i class="fa-solid fa-phone-volume"></i>
+                        <i class="fa-solid fa-phone"></i>
 
                     </div>
-
 
                     <div>
 
@@ -6630,22 +4566,16 @@ body.menu-open{
 
                     </div>
 
-
-                    <i class="fa-solid fa-arrow-right"></i>
-
-
                 </div>
 
 
                 <div class="contact-item">
 
-
                     <div class="contact-icon">
 
-                        <i class="fa-solid fa-envelope-open-text"></i>
+                        <i class="fa-solid fa-envelope"></i>
 
                     </div>
-
 
                     <div>
 
@@ -6659,81 +4589,111 @@ body.menu-open{
 
                     </div>
 
+                </div>
 
-                    <i class="fa-solid fa-arrow-right"></i>
 
+                <a
+                    href="{% url 'conference' %}"
+                    class="hq-btn hq-btn-primary mt-3"
+                >
+
+                    <i class="fa-solid fa-video"></i>
+
+                    Demander une conférence
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             DIAMBERE KAMARA
+        ================================================== -->
+
+        <div class="founder-card hq-reveal">
+
+            <div class="founder-content">
+
+                <div class="founder-avatar">
+
+                    <i class="fa-solid fa-user-tie"></i>
 
                 </div>
 
 
-            </div>
+                <div>
 
+                    <span class="founder-label">
+
+                        Direction HexaQuébec
+
+                    </span>
+
+
+                    <h3 class="founder-name">
+
+                        Diambere Kamara
+
+                    </h3>
+
+
+                    <div class="founder-role">
+
+                        Fondateur & Directeur technique
+
+                    </div>
+
+
+                    <p class="founder-description">
+
+                        Fondateur de HexaQuébec et responsable
+                        de la direction technique.
+
+                        Spécialisé en développement web,
+                        applications mobiles, Python,
+                        Django, intelligence artificielle
+                        et création de solutions numériques
+                        professionnelles pour les entreprises.
+
+                    </p>
+
+                </div>
+
+
+                <div class="founder-badge">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    Direction
+                    <br>
+                    HexaQuébec
+
+                </div>
+
+            </div>
 
         </div>
 
 
         <div
-            class="contact-panel mt-4 hq-reveal"
-            style="--delay:.46s;"
+            class="text-center mt-5"
+            style="
+                color:rgba(255,255,255,.35);
+                font-size:10px;
+            "
         >
-
-
-            <h3>
-                Fondateur & Développeur
-            </h3>
-
-
-            <p class="hq-description">
-
-
-                <strong
-                    style="
-                        color:#fff;
-                        font-size:18px;
-                    "
-                >
-                    Diambere Kamara
-                </strong>
-
-
-                <br><br>
-
-
-                Développeur Backend spécialisé en
-
-
-                <span style="color:#8be9ff;">
-
-                    Django,
-                    Python &
-                    Intelligence Artificielle
-
-                </span>.
-
-
-                <br><br>
-
-
-                Création de plateformes web modernes,
-                dashboards professionnels,
-                systèmes automatisés,
-                applications intelligentes
-                et solutions numériques.
-
-
-            </p>
-
-
-        </div>
-
-
-        <div class="footer-bottom">
 
             © 2026 HexaQuébec —
             Tous droits réservés
 
-        </div>
+            <br><br>
 
+            Diambere Kamara —
+            Fondateur & Directeur technique
+
+        </div>
 
     </div>
 
@@ -6744,27 +4704,16 @@ body.menu-open{
 
 
 <!-- =====================================================
-     POINTS DE NAVIGATION
-===================================================== -->
-
-<div
-    class="hq-dots"
-    id="hqDots"
-></div>
-
-
-<!-- =====================================================
-     PRECEDENT / SUIVANT
+     NAVIGATION BAS
 ===================================================== -->
 
 <div class="hq-page-navigation">
 
-
     <button
+        type="button"
         class="hq-navigation-button"
         id="hqPrevious"
-        type="button"
-        aria-label="Précédent"
+        aria-label="Page précédente"
     >
 
         <i class="fa-solid fa-arrow-left"></i>
@@ -6774,189 +4723,60 @@ body.menu-open{
 
     <div class="hq-page-info">
 
-
         <strong id="hqPageTitle">
-
             Présentation HexaQuébec
-
         </strong>
 
-
         <span id="hqPageNumber">
-
             01 / 09
-
         </span>
-
 
     </div>
 
 
     <button
+        type="button"
         class="hq-navigation-button"
         id="hqNext"
-        type="button"
-        aria-label="Suivant"
+        aria-label="Page suivante"
     >
 
         <i class="fa-solid fa-arrow-right"></i>
 
     </button>
 
-
 </div>
 
 
 <!-- =====================================================
-     DIAM IA FIXE
+     DIAM FIXE
 ===================================================== -->
 
 <button
-    type="button"
     class="diam-fixed"
-    onclick="openDiamPopup()"
+    type="button"
+    onclick="goToDiamAI()"
 >
 
+    <img
+        src="{% static 'images/diam.jpeg' %}"
+        alt="Diam IA"
+    >
 
-    <span class="diam-fixed-avatar">
-
-
-        <img
-            src="{% static 'images/diam.jpeg' %}"
-            alt="Diam IA"
-        >
-
-
-        <span class="diam-fixed-online"></span>
-
-
-    </span>
-
-
-    <span class="diam-fixed-copy">
-
+    <span>
 
         <strong>
             Diam IA
         </strong>
 
-
         <small>
-            ● Assistant en ligne
+            ● Assistant actif
         </small>
-
 
     </span>
 
-
 </button>
 
-
-<!-- =====================================================
-     POPUP DIAM
-===================================================== -->
-
-<div
-    class="diam-popup"
-    id="diamPopup"
-    onclick="closeDiamPopupOutside(event)"
->
-
-
-    <div class="diam-popup-card">
-
-
-        <button
-            type="button"
-            class="diam-popup-close"
-            onclick="closeDiamPopup()"
-        >
-
-            <i class="fa-solid fa-xmark"></i>
-
-        </button>
-
-
-        <img
-            src="{% static 'images/diam.jpeg' %}"
-            class="diam-popup-image"
-            alt="Diam IA"
-        >
-
-
-        <div class="ai-status mb-3">
-
-            <span class="ai-pulse"></span>
-
-            IA ACTIVE
-
-        </div>
-
-
-        <h3>
-            Bonjour 👋
-        </h3>
-
-
-        <p id="diamText">
-
-            Je suis
-
-            <strong>
-                Diam IA
-            </strong>.
-
-            <br>
-
-            Assistant intelligent de HexaQuébec.
-
-            <br>
-
-            Posez votre question,
-            je suis là pour vous aider.
-
-        </p>
-
-
-        <div class="diam-popup-actions">
-
-
-            <button
-                type="button"
-                onclick="goToDiamAI()"
-            >
-
-                <i class="fa-solid fa-comments me-1"></i>
-
-                Discuter
-
-            </button>
-
-
-            <button
-                type="button"
-                onclick="startDiamVoice()"
-            >
-
-                <i class="fa-solid fa-microphone me-1"></i>
-
-                Vocal
-
-            </button>
-
-
-        </div>
-
-
-    </div>
-
-
-</div>
-
-
-<!-- =====================================================
-     BOOTSTRAP JS
-===================================================== -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -7045,8 +4865,6 @@ function closeHexaMenu(){
 }
 
 
-/* FERMER AVEC ESC */
-
 document.addEventListener(
     "keydown",
     function(event){
@@ -7060,8 +4878,6 @@ document.addEventListener(
     }
 );
 
-
-/* FERMER APRÈS CLIC SUR LIEN */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -7098,13 +4914,11 @@ document.addEventListener(
     "DOMContentLoaded",
     function(){
 
-
-        const pages =
-            Array.from(
-                document.querySelectorAll(
-                    ".hq-page"
-                )
-            );
+        const pages = Array.from(
+            document.querySelectorAll(
+                ".hq-page"
+            )
+        );
 
 
         const previousButton =
@@ -7137,142 +4951,149 @@ document.addEventListener(
             );
 
 
-        const dotsContainer =
-            document.getElementById(
-                "hqDots"
+        if(
+            pages.length === 0
+            ||
+            !previousButton
+            ||
+            !nextButton
+        ){
+
+            console.error(
+                "Navigation HexaQuébec : éléments introuvables."
+            );
+
+            return;
+
+        }
+
+
+        let currentIndex =
+            pages.findIndex(
+                function(page){
+
+                    return page.classList.contains(
+                        "is-active"
+                    );
+
+                }
             );
 
 
-        let currentIndex = 0;
+        if(currentIndex < 0){
 
-        let changingPage = false;
+            currentIndex = 0;
 
-        let touchStartX = 0;
-
-        let touchStartY = 0;
+        }
 
 
-        /* =================================================
-           POINTS
-        ================================================= */
+        let isAnimating =
+            false;
+
+
+        let touchStartX =
+            0;
+
+
+        let touchStartY =
+            0;
+
 
         pages.forEach(
             function(page,index){
 
+                page.classList.remove(
+                    "page-enter-next",
+                    "page-enter-prev",
+                    "page-leave-next",
+                    "page-leave-prev"
+                );
 
-                const dot =
-                    document.createElement(
-                        "button"
+
+                page.style.visibility =
+                    "";
+
+
+                if(index === currentIndex){
+
+                    page.classList.add(
+                        "is-active"
                     );
 
+                    page.style.display =
+                        "flex";
 
-                dot.type =
-                    "button";
+                }else{
 
+                    page.classList.remove(
+                        "is-active"
+                    );
 
-                dot.className =
-                    "hq-dot";
+                    page.style.display =
+                        "none";
 
-
-                dot.title =
-                    page.dataset.title
-                    ||
-                    "Section";
-
-
-                dot.addEventListener(
-                    "click",
-                    function(){
-
-                        changePage(
-                            index
-                        );
-
-                    }
-                );
-
-
-                dotsContainer.appendChild(
-                    dot
-                );
-
+                }
 
             }
         );
 
 
-        function getDots(){
-
-            return Array.from(
-                dotsContainer.querySelectorAll(
-                    ".hq-dot"
-                )
-            );
-
-        }
-
-
-        /* =================================================
-           UPDATE
-        ================================================= */
-
         function updateNavigation(){
-
 
             const currentPage =
                 pages[currentIndex];
 
 
-            const title =
-                currentPage.dataset.title
-                ||
-                "HexaQuébec";
+            if(pageTitle){
+
+                pageTitle.textContent =
+                    currentPage.dataset.title
+                    ||
+                    "HexaQuébec";
+
+            }
 
 
-            pageTitle.textContent =
-                title;
+            if(pageNumber){
 
-
-            pageNumber.textContent =
-
-                String(
-                    currentIndex + 1
-                ).padStart(
-                    2,
-                    "0"
-                )
-
-                +
-
-                " / "
-
-                +
-
-                String(
-                    pages.length
-                ).padStart(
-                    2,
-                    "0"
-                );
-
-
-            progress.style.width =
-
-                (
-                    (
+                pageNumber.textContent =
+                    String(
                         currentIndex + 1
+                    ).padStart(
+                        2,
+                        "0"
                     )
-                    /
-                    pages.length
-                )
+                    +
+                    " / "
+                    +
+                    String(
+                        pages.length
+                    ).padStart(
+                        2,
+                        "0"
+                    );
 
-                *
+            }
 
-                100
 
-                +
+            if(progress){
 
-                "%";
+                const pourcentage =
+                    (
+                        (
+                            currentIndex + 1
+                        )
+                        /
+                        pages.length
+                    )
+                    *
+                    100;
+
+
+                progress.style.width =
+                    pourcentage + "%";
+
+            }
 
 
             previousButton.disabled =
@@ -7283,78 +5104,82 @@ document.addEventListener(
                 currentIndex ===
                 pages.length - 1;
 
-
-            getDots().forEach(
-                function(dot,index){
-
-                    dot.classList.toggle(
-                        "active",
-                        index === currentIndex
-                    );
-
-                }
-            );
-
-
         }
 
 
-        /* =================================================
-           RESTART ANIMATION
-        ================================================= */
+        function restartContentAnimation(page){
 
-        function restartAnimations(page){
-
-
-            const items =
+            const elements =
                 page.querySelectorAll(
                     ".hq-reveal"
                 );
 
 
-            items.forEach(
-                function(item){
+            elements.forEach(
+                function(element){
 
-                    item.style.animation =
+                    element.style.animation =
                         "none";
 
                 }
             );
 
 
-            void page.offsetWidth;
+            void page.offsetHeight;
 
 
-            items.forEach(
-                function(item){
+            elements.forEach(
+                function(element){
 
-                    item.style.animation =
+                    element.style.animation =
                         "";
 
                 }
             );
 
+        }
+
+
+        function stopVideos(page){
+
+            page
+                .querySelectorAll(
+                    "video"
+                )
+                .forEach(
+                    function(video){
+
+                        try{
+
+                            video.pause();
+
+                        }catch(error){
+
+                            console.log(error);
+
+                        }
+
+                    }
+                );
 
         }
 
 
-        /* =================================================
-           CHANGER PAGE
-        ================================================= */
+        function changePage(targetIndex){
 
-        function changePage(
-            targetIndex
-        ){
+            if(isAnimating){
+
+                return;
+
+            }
 
 
             if(
-                changingPage
-                ||
-                targetIndex === currentIndex
-                ||
                 targetIndex < 0
                 ||
                 targetIndex >= pages.length
+                ||
+                targetIndex === currentIndex
             ){
 
                 return;
@@ -7362,7 +5187,7 @@ document.addEventListener(
             }
 
 
-            changingPage =
+            isAnimating =
                 true;
 
 
@@ -7375,28 +5200,38 @@ document.addEventListener(
 
 
             const goingNext =
-                targetIndex > currentIndex;
+                targetIndex >
+                currentIndex;
 
 
-            /*
-               ARRÊTER VIDEO
-            */
+            stopVideos(
+                oldPage
+            );
 
-            oldPage
-                .querySelectorAll(
-                    "video"
-                )
-                .forEach(
-                    function(video){
 
-                        try{
+            oldPage.classList.remove(
+                "page-enter-next",
+                "page-enter-prev",
+                "page-leave-next",
+                "page-leave-prev"
+            );
 
-                            video.pause();
 
-                        }catch(error){}
+            newPage.classList.remove(
+                "is-active",
+                "page-enter-next",
+                "page-enter-prev",
+                "page-leave-next",
+                "page-leave-prev"
+            );
 
-                    }
-                );
+
+            oldPage.style.display =
+                "flex";
+
+
+            oldPage.style.visibility =
+                "visible";
 
 
             oldPage.classList.remove(
@@ -7404,24 +5239,25 @@ document.addEventListener(
             );
 
 
+            void oldPage.offsetHeight;
+
+
             oldPage.classList.add(
-
                 goingNext
-                ?
-                "page-leave-next"
-                :
-                "page-leave-prev"
-
+                    ?
+                    "page-leave-next"
+                    :
+                    "page-leave-prev"
             );
 
 
             setTimeout(
                 function(){
 
-
                     oldPage.classList.remove(
                         "page-leave-next",
-                        "page-leave-prev"
+                        "page-leave-prev",
+                        "is-active"
                     );
 
 
@@ -7429,39 +5265,53 @@ document.addEventListener(
                         "none";
 
 
+                    oldPage.style.visibility =
+                        "";
+
+
                     currentIndex =
                         targetIndex;
-
-
-                    window.scrollTo(
-                        0,
-                        0
-                    );
 
 
                     newPage.style.display =
                         "flex";
 
 
+                    newPage.style.visibility =
+                        "visible";
+
+
+                    void newPage.offsetHeight;
+
+
                     newPage.classList.add(
-
                         goingNext
-                        ?
-                        "page-enter-next"
-                        :
-                        "page-enter-prev"
-
+                            ?
+                            "page-enter-next"
+                            :
+                            "page-enter-prev"
                     );
 
 
-                    restartAnimations(
+                    restartContentAnimation(
                         newPage
+                    );
+
+
+                    updateNavigation();
+
+
+                    window.scrollTo(
+                        {
+                            top:0,
+                            left:0,
+                            behavior:"auto"
+                        }
                     );
 
 
                     setTimeout(
                         function(){
-
 
                             newPage.classList.remove(
                                 "page-enter-next",
@@ -7478,31 +5328,30 @@ document.addEventListener(
                                 "";
 
 
-                            changingPage =
+                            newPage.style.visibility =
+                                "";
+
+
+                            isAnimating =
                                 false;
 
-
                         },
-                        720
+                        760
                     );
 
-
-                    updateNavigation();
-
-
                 },
-                420
+                430
             );
-
 
         }
 
 
-        /* BOUTONS */
-
         previousButton.addEventListener(
             "click",
-            function(){
+            function(event){
+
+                event.preventDefault();
+
 
                 changePage(
                     currentIndex - 1
@@ -7514,7 +5363,10 @@ document.addEventListener(
 
         nextButton.addEventListener(
             "click",
-            function(){
+            function(event){
+
+                event.preventDefault();
+
 
                 changePage(
                     currentIndex + 1
@@ -7524,40 +5376,38 @@ document.addEventListener(
         );
 
 
-        /* =================================================
-           CLAVIER
-        ================================================= */
-
         document.addEventListener(
             "keydown",
             function(event){
 
-
-                const active =
+                const activeElement =
                     document.activeElement;
 
 
-                const writing =
-                    active
+                if(
+                    activeElement
                     &&
                     (
-                        active.tagName === "INPUT"
+                        activeElement.tagName ===
+                        "INPUT"
                         ||
-                        active.tagName === "TEXTAREA"
-                    );
-
-
-                if(writing){
+                        activeElement.tagName ===
+                        "TEXTAREA"
+                        ||
+                        activeElement.tagName ===
+                        "SELECT"
+                    )
+                ){
 
                     return;
 
                 }
 
 
-                if(
-                    event.key ===
-                    "ArrowRight"
-                ){
+                if(event.key === "ArrowRight"){
+
+                    event.preventDefault();
+
 
                     changePage(
                         currentIndex + 1
@@ -7566,10 +5416,10 @@ document.addEventListener(
                 }
 
 
-                if(
-                    event.key ===
-                    "ArrowLeft"
-                ){
+                if(event.key === "ArrowLeft"){
+
+                    event.preventDefault();
+
 
                     changePage(
                         currentIndex - 1
@@ -7577,21 +5427,17 @@ document.addEventListener(
 
                 }
 
-
             }
         );
 
-
-        /* =================================================
-           SWIPE MOBILE
-        ================================================= */
 
         document.addEventListener(
             "touchstart",
             function(event){
 
-
                 if(
+                    !event.touches
+                    ||
                     !event.touches[0]
                 ){
 
@@ -7601,12 +5447,13 @@ document.addEventListener(
 
 
                 touchStartX =
-                    event.touches[0].clientX;
+                    event.touches[0]
+                    .clientX;
 
 
                 touchStartY =
-                    event.touches[0].clientY;
-
+                    event.touches[0]
+                    .clientY;
 
             },
             {
@@ -7619,31 +5466,16 @@ document.addEventListener(
             "touchend",
             function(event){
 
-
-                if(
-                    !event.changedTouches[0]
-                ){
-
-                    return;
-
-                }
-
-
-                /*
-                  NE PAS CHANGER PAGE
-                  SI MENU EST OUVERT
-                */
-
-                const menu =
+                const mobileMenu =
                     document.getElementById(
                         "hqMobileMenu"
                     );
 
 
                 if(
-                    menu
+                    mobileMenu
                     &&
-                    menu.classList.contains(
+                    mobileMenu.classList.contains(
                         "active"
                     )
                 ){
@@ -7653,37 +5485,51 @@ document.addEventListener(
                 }
 
 
-                const endX =
+                if(
+                    !event.changedTouches
+                    ||
+                    !event.changedTouches[0]
+                ){
+
+                    return;
+
+                }
+
+
+                const touchEndX =
                     event.changedTouches[0]
                     .clientX;
 
 
-                const endY =
+                const touchEndY =
                     event.changedTouches[0]
                     .clientY;
 
 
-                const deltaX =
-                    endX - touchStartX;
+                const differenceX =
+                    touchEndX -
+                    touchStartX;
 
 
-                const deltaY =
-                    endY - touchStartY;
-
-
-                if(
-                    Math.abs(deltaX) < 65
-                ){
-
-                    return;
-
-                }
+                const differenceY =
+                    touchEndY -
+                    touchStartY;
 
 
                 if(
-                    Math.abs(deltaX)
+                    Math.abs(
+                        differenceX
+                    )
                     <
-                    Math.abs(deltaY)
+                    65
+                    ||
+                    Math.abs(
+                        differenceX
+                    )
+                    <=
+                    Math.abs(
+                        differenceY
+                    )
                 ){
 
                     return;
@@ -7691,7 +5537,7 @@ document.addEventListener(
                 }
 
 
-                if(deltaX < 0){
+                if(differenceX < 0){
 
                     changePage(
                         currentIndex + 1
@@ -7705,7 +5551,6 @@ document.addEventListener(
 
                 }
 
-
             },
             {
                 passive:true
@@ -7713,41 +5558,35 @@ document.addEventListener(
         );
 
 
-        /* =================================================
-           ACCÈS EXTERNE
-        ================================================= */
-
         window.goToPageById =
-            function(id){
+            function(pageId){
 
-
-                const index =
+                const targetIndex =
                     pages.findIndex(
                         function(page){
 
                             return (
-                                page.id === id
+                                page.id ===
+                                pageId
                             );
 
                         }
                     );
 
 
-                if(index !== -1){
+                if(targetIndex !== -1){
 
                     changePage(
-                        index
+                        targetIndex
                     );
 
                 }
-
 
             };
 
 
         updateNavigation();
 
-
     }
 );
 
@@ -7755,289 +5594,30 @@ document.addEventListener(
 
 
 <!-- =====================================================
-     NAVBAR EFFET
+     DIAM IA
 ===================================================== -->
 
 <script>
-
-window.addEventListener(
-    "scroll",
-    function(){
-
-
-        const navbar =
-            document.querySelector(
-                ".hq-navbar"
-            );
-
-
-        if(!navbar){
-
-            return;
-
-        }
-
-
-        navbar.classList.toggle(
-            "scrolled",
-            window.scrollY > 25
-        );
-
-
-    }
-);
-
-</script>
-
-
-<!-- =====================================================
-     FILTRE STAGE
-===================================================== -->
-
-<script>
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-
-        const input =
-            document.getElementById(
-                "stageSearch"
-            );
-
-
-        const tags =
-            Array.from(
-                document.querySelectorAll(
-                    "#stageTags .stage-tag"
-                )
-            );
-
-
-        if(
-            !input
-            ||
-            tags.length === 0
-        ){
-
-            return;
-
-        }
-
-
-        function normalizeText(value){
-
-
-            return String(
-                value || ""
-            )
-            .normalize("NFD")
-            .replace(
-                /[\u0300-\u036f]/g,
-                ""
-            )
-            .toLowerCase();
-
-
-        }
-
-
-        input.addEventListener(
-            "input",
-            function(){
-
-
-                const value =
-                    normalizeText(
-                        input.value
-                    );
-
-
-                let visibleCount =
-                    0;
-
-
-                tags.forEach(
-                    function(tag){
-
-
-                        const searchable =
-                            normalizeText(
-
-                                tag.dataset.search
-
-                                +
-
-                                " "
-
-                                +
-
-                                tag.textContent
-
-                            );
-
-
-                        const visible =
-
-                            !value
-
-                            ||
-
-                            searchable.includes(
-                                value
-                            );
-
-
-                        tag.classList.toggle(
-                            "is-hidden",
-                            !visible
-                        );
-
-
-                        if(visible){
-
-                            visibleCount++;
-
-                        }
-
-
-                    }
-                );
-
-
-                const counter =
-                    document.getElementById(
-                        "stageDomainCount"
-                    );
-
-
-                if(counter){
-
-                    counter.textContent =
-                        visibleCount;
-
-                }
-
-
-            }
-        );
-
-
-    }
-);
-
-</script>
-
-
-<!-- =====================================================
-     POPUP DIAM
-===================================================== -->
-
-<script>
-
-function openDiamPopup(){
-
-
-    const popup =
-        document.getElementById(
-            "diamPopup"
-        );
-
-
-    if(popup){
-
-        popup.classList.add(
-            "show"
-        );
-
-    }
-
-
-}
-
-
-function closeDiamPopup(){
-
-
-    const popup =
-        document.getElementById(
-            "diamPopup"
-        );
-
-
-    if(popup){
-
-        popup.classList.remove(
-            "show"
-        );
-
-    }
-
-
-}
-
-
-function closeDiamPopupOutside(
-    event
-){
-
-
-    if(
-        event.target.id ===
-        "diamPopup"
-    ){
-
-        closeDiamPopup();
-
-    }
-
-
-}
-
 
 function goToDiamAI(){
 
+    if(
+        typeof
+        window.goToPageById
+        ===
+        "function"
+    ){
 
-    closeDiamPopup();
+        window.goToPageById(
+            "diam-ai-section"
+        );
 
-
-    setTimeout(
-        function(){
-
-
-            if(
-                typeof
-                window.goToPageById
-                ===
-                "function"
-            ){
-
-                window.goToPageById(
-                    "diam-ai-section"
-                );
-
-            }
-
-
-        },
-        180
-    );
-
+    }
 
 }
 
-</script>
-
-
-<!-- =====================================================
-     COOKIE
-===================================================== -->
-
-<script>
 
 function getCookie(name){
-
 
     let cookieValue =
         null;
@@ -8048,7 +5628,6 @@ function getCookie(name){
         &&
         document.cookie !== ""
     ){
-
 
         const cookies =
             document.cookie.split(
@@ -8061,7 +5640,6 @@ function getCookie(name){
             i < cookies.length;
             i++
         ){
-
 
             const cookie =
                 cookies[i].trim();
@@ -8076,7 +5654,6 @@ function getCookie(name){
                 name + "="
             ){
 
-
                 cookieValue =
                     decodeURIComponent(
                         cookie.substring(
@@ -8084,54 +5661,21 @@ function getCookie(name){
                         )
                     );
 
-
                 break;
-
 
             }
 
-
         }
-
 
     }
 
 
     return cookieValue;
 
-
 }
 
-
-function escapeHTML(value){
-
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        String(value || "");
-
-
-    return div.innerHTML;
-
-
-}
-
-</script>
-
-
-<!-- =====================================================
-     CHAT DIAM
-===================================================== -->
-
-<script>
 
 async function sendMessage(){
-
 
     const input =
         document.getElementById(
@@ -8139,7 +5683,7 @@ async function sendMessage(){
         );
 
 
-    const chat =
+    const messages =
         document.getElementById(
             "chatMessages"
         );
@@ -8148,7 +5692,7 @@ async function sendMessage(){
     if(
         !input
         ||
-        !chat
+        !messages
     ){
 
         return;
@@ -8181,7 +5725,7 @@ async function sendMessage(){
         text;
 
 
-    chat.appendChild(
+    messages.appendChild(
         userMessage
     );
 
@@ -8190,195 +5734,90 @@ async function sendMessage(){
         "";
 
 
-    const typing =
+    const loading =
         document.createElement(
             "div"
         );
 
 
-    typing.className =
+    loading.className =
         "bot-message";
 
 
-    typing.id =
-        "diamTyping";
+    loading.textContent =
+        "Diam IA réfléchit...";
 
 
-    typing.innerHTML =
-
-        '<i class="fa-solid fa-circle-notch fa-spin"></i> Diam IA réfléchit...';
-
-
-    chat.appendChild(
-        typing
+    messages.appendChild(
+        loading
     );
 
 
-    chat.scrollTop =
-        chat.scrollHeight;
+    messages.scrollTop =
+        messages.scrollHeight;
 
 
     try{
-
 
         const response =
             await fetch(
                 "{% url 'diam_ai_chat' %}",
                 {
 
-
                     method:"POST",
-
 
                     headers:{
 
-
                         "Content-Type":
                             "application/json",
-
 
                         "X-CSRFToken":
                             getCookie(
                                 "csrftoken"
                             )
 
-
                     },
-
 
                     body:
                         JSON.stringify(
                             {
-
                                 message:text
-
                             }
                         )
 
-
                 }
             );
-
-
-        if(!response.ok){
-
-
-            throw new Error(
-                "Erreur HTTP "
-                +
-                response.status
-            );
-
-
-        }
 
 
         const data =
             await response.json();
 
 
-        const typingElement =
-            document.getElementById(
-                "diamTyping"
-            );
-
-
-        if(typingElement){
-
-            typingElement.remove();
-
-        }
-
-
-        const answer =
-
+        loading.textContent =
             data.answer
-
             ||
-
             data.response
-
             ||
-
-            "Désolé, je n'ai pas trouvé de réponse.";
-
-
-        const bot =
-            document.createElement(
-                "div"
-            );
-
-
-        bot.className =
-            "bot-message";
-
-
-        bot.textContent =
-            answer;
-
-
-        chat.appendChild(
-            bot
-        );
-
-
-        chat.scrollTop =
-            chat.scrollHeight;
+            "Je n'ai pas trouvé de réponse.";
 
 
     }catch(error){
 
-
-        console.error(
-            "Erreur Diam IA :",
-            error
-        );
-
-
-        const typingElement =
-            document.getElementById(
-                "diamTyping"
-            );
-
-
-        if(typingElement){
-
-            typingElement.remove();
-
-        }
-
-
-        const bot =
-            document.createElement(
-                "div"
-            );
-
-
-        bot.className =
-            "bot-message";
-
-
-        bot.textContent =
-            "Diam IA est momentanément indisponible. Veuillez réessayer.";
-
-
-        chat.appendChild(
-            bot
-        );
-
+        loading.textContent =
+            "Diam IA est momentanément indisponible.";
 
     }
 
 
+    messages.scrollTop =
+        messages.scrollHeight;
+
 }
 
-
-/* ENTRÉE */
 
 document.addEventListener(
     "DOMContentLoaded",
     function(){
-
 
         const input =
             document.getElementById(
@@ -8388,33 +5827,26 @@ document.addEventListener(
 
         if(input){
 
-
             input.addEventListener(
                 "keydown",
                 function(event){
-
 
                     if(
                         event.key ===
                         "Enter"
                     ){
 
-
                         event.preventDefault();
 
 
                         sendMessage();
 
-
                     }
-
 
                 }
             );
 
-
         }
-
 
     }
 );
@@ -8423,538 +5855,29 @@ document.addEventListener(
 
 
 <!-- =====================================================
-     DIAM VOCAL
+     NAVBAR SCROLL
 ===================================================== -->
 
 <script>
 
-let diamRecognition =
-    null;
-
-
-let diamVisitorName =
-    "";
-
-
-function speakDiam(
-    text,
-    callback = null
-){
-
-
-    if(
-        !(
-            "speechSynthesis"
-            in window
-        )
-    ){
-
-
-        alert(
-            "La voix n'est pas supportée par ce navigateur."
-        );
-
-
-        return;
-
-
-    }
-
-
-    window.speechSynthesis.cancel();
-
-
-    const speech =
-        new SpeechSynthesisUtterance(
-            text
-        );
-
-
-    speech.lang =
-        "fr-FR";
-
-
-    speech.rate =
-        .95;
-
-
-    speech.pitch =
-        1.05;
-
-
-    speech.volume =
-        1;
-
-
-    speech.onend =
-        function(){
-
-
-            if(callback){
-
-
-                setTimeout(
-                    callback,
-                    500
-                );
-
-
-            }
-
-
-        };
-
-
-    window.speechSynthesis.speak(
-        speech
-    );
-
-
-}
-
-
-function createRecognition(){
-
-
-    const SpeechRecognition =
-
-        window.SpeechRecognition
-
-        ||
-
-        window.webkitSpeechRecognition;
-
-
-    if(!SpeechRecognition){
-
-
-        alert(
-            "La reconnaissance vocale n'est pas disponible. Utilisez Google Chrome."
-        );
-
-
-        return null;
-
-
-    }
-
-
-    const recognition =
-        new SpeechRecognition();
-
-
-    recognition.lang =
-        "fr-FR";
-
-
-    recognition.interimResults =
-        false;
-
-
-    recognition.continuous =
-        false;
-
-
-    return recognition;
-
-
-}
-
-
-function startDiamVoice(){
-
-
-    const diamText =
-        document.getElementById(
-            "diamText"
-        );
-
-
-    if(diamText){
-
-
-        diamText.innerHTML =
-
-            "🎙️ Diam IA vocal activé.<br>Dites votre nom.";
-
-
-    }
-
-
-    speakDiam(
-
-        "Bienvenue sur la plateforme HexaQuébec. Je suis Diam IA. Dites-moi votre nom s'il vous plaît.",
-
-        listenDiamName
-
-    );
-
-
-}
-
-
-function listenDiamName(){
-
-
-    diamRecognition =
-        createRecognition();
-
-
-    if(!diamRecognition){
-
-        return;
-
-    }
-
-
-    diamRecognition.start();
-
-
-    diamRecognition.onresult =
-        function(event){
-
-
-            diamVisitorName =
-                event.results[0][0]
-                .transcript;
-
-
-            const diamText =
-                document.getElementById(
-                    "diamText"
-                );
-
-
-            if(diamText){
-
-
-                diamText.innerHTML =
-
-                    "Merci <strong>"
-
-                    +
-
-                    escapeHTML(
-                        diamVisitorName
-                    )
-
-                    +
-
-                    "</strong> 😊<br>Posez maintenant votre question.";
-
-
-            }
-
-
-            speakDiam(
-
-                "Merci "
-                +
-                diamVisitorName
-                +
-                ". Posez maintenant votre question.",
-
-                listenDiamQuestion
-
-            );
-
-
-        };
-
-
-}
-
-
-function listenDiamQuestion(){
-
-
-    diamRecognition =
-        createRecognition();
-
-
-    if(!diamRecognition){
-
-        return;
-
-    }
-
-
-    const diamText =
-        document.getElementById(
-            "diamText"
-        );
-
-
-    if(diamText){
-
-
-        diamText.innerHTML =
-            "🎧 J'écoute votre question...";
-
-
-    }
-
-
-    diamRecognition.start();
-
-
-    diamRecognition.onresult =
-        function(event){
-
-
-            const question =
-                event.results[0][0]
-                .transcript;
-
-
-            if(diamText){
-
-
-                diamText.innerHTML =
-
-                    "<strong>"
-
-                    +
-
-                    escapeHTML(
-                        diamVisitorName
-                    )
-
-                    +
-
-                    " :</strong><br>"
-
-                    +
-
-                    escapeHTML(
-                        question
-                    )
-
-                    +
-
-                    "<br><br>🤖 Diam IA réfléchit...";
-
-
-            }
-
-
-            sendVoiceQuestionToDjango(
-                question
-            );
-
-
-        };
-
-
-}
-
-
-async function sendVoiceQuestionToDjango(
-    question
-){
-
-
-    const diamText =
-        document.getElementById(
-            "diamText"
-        );
-
-
-    try{
-
-
-        const response =
-            await fetch(
-                "{% url 'diam_ai_chat' %}",
-                {
-
-
-                    method:"POST",
-
-
-                    headers:{
-
-
-                        "Content-Type":
-                            "application/json",
-
-
-                        "X-CSRFToken":
-                            getCookie(
-                                "csrftoken"
-                            )
-
-
-                    },
-
-
-                    body:
-                        JSON.stringify(
-                            {
-
-
-                                message:
-                                    question,
-
-
-                                name:
-                                    diamVisitorName
-
-
-                            }
-                        )
-
-
-                }
-            );
-
-
-        if(!response.ok){
-
-
-            throw new Error(
-                "Erreur HTTP "
-                +
-                response.status
-            );
-
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        const answer =
-
-            data.answer
-
-            ||
-
-            data.response
-
-            ||
-
-            "Désolé, je n'ai pas trouvé de réponse.";
-
-
-        if(diamText){
-
-
-            diamText.innerHTML =
-
-                "<strong>Diam IA :</strong><br>"
-
-                +
-
-                escapeHTML(
-                    answer
-                );
-
-
-        }
-
-
-        speakDiam(
-            answer
-        );
-
-
-    }catch(error){
-
-
-        console.error(
-            "Erreur Diam IA vocal :",
-            error
-        );
-
-
-        if(diamText){
-
-
-            diamText.innerHTML =
-
-                "Diam IA ne peut pas contacter le serveur pour le moment.";
-
-
-        }
-
-
-    }
-
-
-}
-
-</script>
-
-
-<!-- =====================================================
-     STATUS DIAM
-===================================================== -->
-
-<script>
-
-document.addEventListener(
-    "DOMContentLoaded",
+window.addEventListener(
+    "scroll",
     function(){
 
-
-        const statusText =
-            document.getElementById(
-                "statusText"
+        const navbar =
+            document.querySelector(
+                ".hq-navbar"
             );
 
 
-        if(!statusText){
+        if(navbar){
 
-            return;
+            navbar.classList.toggle(
+                "scrolled",
+                window.scrollY > 25
+            );
 
         }
-
-
-        const states = [
-
-            "IA ACTIVE",
-
-            "EN LIGNE",
-
-            "PRÊT À VOUS AIDER",
-
-            "DIAM IA CONNECTÉ"
-
-        ];
-
-
-        let statusIndex =
-            0;
-
-
-        setInterval(
-            function(){
-
-
-                statusIndex =
-
-                    (
-                        statusIndex + 1
-                    )
-
-                    %
-
-                    states.length;
-
-
-                statusText.textContent =
-                    states[
-                        statusIndex
-                    ];
-
-
-            },
-            3200
-        );
-
 
     }
 );
