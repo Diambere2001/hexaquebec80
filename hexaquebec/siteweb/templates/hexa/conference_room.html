@@ -1,213 +1,819 @@
 {% load static %}
+
 <!DOCTYPE html>
+
 <html lang="fr">
+
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
 
-<title>
-    Conférence HexaQuébec — {{ conference.sujet }}
-</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
->
 
-<link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap"
-    rel="stylesheet"
->
+    <title>
 
-<style>
+        Conférence HexaQuébec —
+        {{ conference.sujet }}
 
-*{
-    box-sizing:border-box;
-}
+    </title>
 
-body{
 
-    margin:0;
+    <meta
+        name="theme-color"
+        content="#050816"
+    >
 
-    min-height:100vh;
 
-    color:#fff;
+    <link
+        rel="icon"
+        href="{% static 'images/logoHexa.png' %}"
+    >
 
-    font-family:'Poppins',sans-serif;
 
-    background:#050816;
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        rel="stylesheet"
+    >
 
-    overflow:hidden;
-}
 
-.topbar{
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
 
-    height:75px;
 
-    padding:
-        0 22px;
+    <style>
 
-    display:flex;
 
-    align-items:center;
+        *{
 
-    justify-content:space-between;
+            margin:0;
 
-    gap:20px;
+            padding:0;
 
-    border-bottom:
-        1px solid rgba(255,255,255,.07);
+            box-sizing:border-box;
 
-    background:
-        #070c1c;
-}
+        }
 
-.brand{
 
-    display:flex;
+        html,
+        body{
 
-    align-items:center;
+            width:100%;
 
-    gap:10px;
-}
+            height:100%;
 
-.logo{
+        }
 
-    width:48px;
-    height:48px;
 
-    display:flex;
+        body{
 
-    align-items:center;
-    justify-content:center;
+            min-height:100vh;
 
-    border-radius:14px;
+            overflow:hidden;
 
-    background:#fff;
-}
+            color:#ffffff;
 
-.logo img{
+            font-family:
+                'Poppins',
+                sans-serif;
 
-    width:40px;
-    height:40px;
+            background:#050816;
 
-    object-fit:contain;
-}
+        }
 
-.brand strong{
 
-    display:block;
+        /* ==================================================
+           TOP BAR
+        ================================================== */
 
-    font-size:14px;
 
-    font-weight:900;
-}
+        .conference-topbar{
 
-.brand small{
+            position:relative;
 
-    display:block;
+            z-index:100;
 
-    color:#8be9ff;
+            width:100%;
 
-    font-size:8px;
-}
+            height:78px;
 
-.status{
+            padding:
+                0 22px;
 
-    display:flex;
+            display:flex;
 
-    align-items:center;
+            align-items:center;
 
-    gap:7px;
+            justify-content:
+                space-between;
 
-    color:#52ffa9;
+            gap:20px;
 
-    font-size:9px;
+            background:
 
-    font-weight:700;
-}
+                linear-gradient(
+                    135deg,
+                    rgba(5,8,22,.98),
+                    rgba(7,16,32,.98)
+                );
 
-.status span{
+            border-bottom:
 
-    width:8px;
-    height:8px;
+                1px solid
+                rgba(255,255,255,.07);
 
-    border-radius:50%;
+            box-shadow:
 
-    background:#00e68a;
+                0 10px 35px
+                rgba(0,0,0,.28);
 
-    box-shadow:
-        0 0 12px #00e68a;
-}
+        }
 
-.room{
 
-    width:100%;
+        /* ==================================================
+           BRAND
+        ================================================== */
 
-    height:
-        calc(100vh - 75px);
 
-    background:#000;
-}
+        .conference-brand{
 
-.room iframe{
+            min-width:0;
 
-    width:100%;
+            display:flex;
 
-    height:100%;
+            align-items:center;
 
-    border:0;
-}
+            gap:12px;
 
-</style>
+        }
+
+
+        .conference-logo{
+
+            width:54px;
+
+            height:54px;
+
+            flex-shrink:0;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            border-radius:17px;
+
+            background:#ffffff;
+
+            box-shadow:
+
+                0 10px 28px
+                rgba(0,0,0,.25);
+
+        }
+
+
+        .conference-logo img{
+
+            width:44px;
+
+            height:44px;
+
+            object-fit:contain;
+
+        }
+
+
+        .conference-brand-text{
+
+            min-width:0;
+
+        }
+
+
+        .conference-brand-text strong{
+
+            display:block;
+
+            overflow:hidden;
+
+            white-space:nowrap;
+
+            text-overflow:ellipsis;
+
+            font-size:14px;
+
+            font-weight:900;
+
+        }
+
+
+        .conference-brand-text small{
+
+            display:block;
+
+            max-width:500px;
+
+            margin-top:3px;
+
+            overflow:hidden;
+
+            white-space:nowrap;
+
+            text-overflow:ellipsis;
+
+            color:#8be9ff;
+
+            font-size:8px;
+
+            font-weight:600;
+
+        }
+
+
+        /* ==================================================
+           STATUS
+        ================================================== */
+
+
+        .conference-status{
+
+            flex-shrink:0;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:9px;
+
+            padding:
+                9px 13px;
+
+            border-radius:100px;
+
+            color:#58ffad;
+
+            font-size:9px;
+
+            font-weight:800;
+
+            background:
+
+                rgba(
+                    0,
+                    230,
+                    138,
+                    .07
+                );
+
+            border:
+
+                1px solid
+                rgba(
+                    0,
+                    230,
+                    138,
+                    .13
+                );
+
+        }
+
+
+        .conference-status-dot{
+
+            width:8px;
+
+            height:8px;
+
+            border-radius:50%;
+
+            background:#00e68a;
+
+            box-shadow:
+
+                0 0 13px
+                #00e68a;
+
+        }
+
+
+        /* ==================================================
+           SALLE
+        ================================================== */
+
+
+        .conference-main{
+
+            position:relative;
+
+            width:100%;
+
+            height:
+                calc(
+                    100vh - 78px
+                );
+
+            background:#000000;
+
+        }
+
+
+        #jaas-container{
+
+            position:absolute;
+
+            inset:0;
+
+            width:100%;
+
+            height:100%;
+
+            background:#000;
+
+        }
+
+
+        #jaas-container iframe{
+
+            display:block;
+
+            width:100% !important;
+
+            height:100% !important;
+
+            border:0 !important;
+
+        }
+
+
+        /* ==================================================
+           CHARGEMENT
+        ================================================== */
+
+
+        .conference-loading{
+
+            position:absolute;
+
+            inset:0;
+
+            z-index:5;
+
+            display:flex;
+
+            flex-direction:column;
+
+            align-items:center;
+
+            justify-content:center;
+
+            gap:18px;
+
+            text-align:center;
+
+            background:
+
+                radial-gradient(
+                    circle at center,
+                    #101a38,
+                    #050816 60%
+                );
+
+            transition:
+                opacity .4s ease,
+                visibility .4s ease;
+
+        }
+
+
+        .conference-loading.hide{
+
+            opacity:0;
+
+            visibility:hidden;
+
+            pointer-events:none;
+
+        }
+
+
+        .loading-logo{
+
+            width:90px;
+
+            height:90px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            border-radius:26px;
+
+            background:#ffffff;
+
+            box-shadow:
+
+                0 20px 55px
+                rgba(0,0,0,.35);
+
+        }
+
+
+        .loading-logo img{
+
+            width:72px;
+
+            height:72px;
+
+            object-fit:contain;
+
+        }
+
+
+        .conference-loading h2{
+
+            margin:0;
+
+            font-size:18px;
+
+            font-weight:900;
+
+        }
+
+
+        .conference-loading p{
+
+            max-width:400px;
+
+            margin:0;
+
+            color:
+
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .52
+                );
+
+            font-size:10px;
+
+            line-height:1.7;
+
+        }
+
+
+        .loading-spinner{
+
+            width:34px;
+
+            height:34px;
+
+            border-radius:50%;
+
+            border:
+
+                3px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .10
+                );
+
+            border-top-color:
+                #00d4ff;
+
+            animation:
+
+                loadingSpin
+                .8s
+                linear
+                infinite;
+
+        }
+
+
+        @keyframes loadingSpin{
+
+            to{
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        /* ==================================================
+           ERREUR
+        ================================================== */
+
+
+        .meeting-error{
+
+            position:absolute;
+
+            inset:0;
+
+            z-index:20;
+
+            display:none;
+
+            align-items:center;
+
+            justify-content:center;
+
+            padding:20px;
+
+            background:#050816;
+
+        }
+
+
+        .meeting-error.active{
+
+            display:flex;
+
+        }
+
+
+        .meeting-error-card{
+
+            width:min(
+                100%,
+                500px
+            );
+
+            padding:35px;
+
+            text-align:center;
+
+            border-radius:27px;
+
+            background:
+
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .055
+                );
+
+            border:
+
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .08
+                );
+
+        }
+
+
+        .meeting-error-icon{
+
+            width:65px;
+
+            height:65px;
+
+            margin:
+                0 auto 20px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            border-radius:20px;
+
+            color:#ff8383;
+
+            font-size:24px;
+
+            background:
+
+                rgba(
+                    255,
+                    80,
+                    80,
+                    .08
+                );
+
+        }
+
+
+        .meeting-error-card h2{
+
+            margin-bottom:10px;
+
+            font-size:18px;
+
+            font-weight:900;
+
+        }
+
+
+        .meeting-error-card p{
+
+            color:
+
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .55
+                );
+
+            font-size:10px;
+
+            line-height:1.8;
+
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+
+        @media(
+            max-width:700px
+        ){
+
+
+            .conference-topbar{
+
+                height:68px;
+
+                padding:
+                    0 12px;
+
+            }
+
+
+            .conference-logo{
+
+                width:46px;
+
+                height:46px;
+
+                border-radius:14px;
+
+            }
+
+
+            .conference-logo img{
+
+                width:38px;
+
+                height:38px;
+
+            }
+
+
+            .conference-brand-text strong{
+
+                font-size:11px;
+
+            }
+
+
+            .conference-brand-text small{
+
+                max-width:190px;
+
+                font-size:7px;
+
+            }
+
+
+            .conference-status{
+
+                padding:
+                    8px;
+
+            }
+
+
+            .conference-status-text{
+
+                display:none;
+
+            }
+
+
+            .conference-main{
+
+                height:
+                    calc(
+                        100vh - 68px
+                    );
+
+            }
+
+
+        }
+
+
+    </style>
+
 
 </head>
+
 
 <body>
 
 
-<header class="topbar">
+<!-- ======================================================
+     TOPBAR
+====================================================== -->
 
 
-    <div class="brand">
+<header class="conference-topbar">
 
-        <span class="logo">
+
+    <div class="conference-brand">
+
+
+        <span class="conference-logo">
+
 
             <img
+
                 src="{% static 'images/logoHexa.png' %}"
+
                 alt="HexaQuébec"
+
             >
+
 
         </span>
 
-        <span>
+
+        <span class="conference-brand-text">
+
 
             <strong>
+
                 Conférence HexaQuébec
+
             </strong>
+
 
             <small>
 
                 {{ conference.sujet }}
 
+                {% if moderator %}
+
+                    — Modérateur HexaQuébec
+
+                {% else %}
+
+                    — {{ nom_participant }}
+
+                {% endif %}
+
             </small>
 
+
         </span>
+
 
     </div>
 
 
-    <div class="status">
+    <div class="conference-status">
 
-        <span></span>
 
-        Salle vidéo sécurisée
+        <span
+            class="conference-status-dot"
+        ></span>
+
+
+        <span
+            class="conference-status-text"
+        >
+
+            Salle vidéo sécurisée
+
+        </span>
+
 
     </div>
 
@@ -215,22 +821,415 @@ body{
 </header>
 
 
-<main class="room">
+<!-- ======================================================
+     SALLE
+====================================================== -->
 
-    <iframe
-        src="https://meet.jit.si/{{ conference.room_name }}"
-        allow="
-            camera;
-            microphone;
-            fullscreen;
-            display-capture;
-            autoplay
-        "
-        allowfullscreen
-    ></iframe>
+
+<main class="conference-main">
+
+
+    <!-- CHARGEMENT -->
+
+
+    <div
+        class="conference-loading"
+        id="conferenceLoading"
+    >
+
+
+        <div class="loading-logo">
+
+
+            <img
+
+                src="{% static 'images/logoHexa.png' %}"
+
+                alt="HexaQuébec"
+
+            >
+
+
+        </div>
+
+
+        <div>
+
+
+            <h2>
+
+                Préparation de la conférence
+
+            </h2>
+
+
+            <p>
+
+                Connexion à votre salle vidéo
+                HexaQuébec en cours...
+
+            </p>
+
+
+        </div>
+
+
+        <div
+            class="loading-spinner"
+        ></div>
+
+
+    </div>
+
+
+    <!-- JAAS -->
+
+
+    <div
+        id="jaas-container"
+    ></div>
+
+
+    <!-- ERREUR -->
+
+
+    <div
+        class="meeting-error"
+        id="meetingError"
+    >
+
+
+        <div
+            class="meeting-error-card"
+        >
+
+
+            <div
+                class="meeting-error-icon"
+            >
+
+                <i
+                    class="fa-solid fa-triangle-exclamation"
+                ></i>
+
+            </div>
+
+
+            <h2>
+
+                Impossible de charger
+                la conférence
+
+            </h2>
+
+
+            <p>
+
+                Vérifiez votre connexion
+                Internet puis actualisez
+                cette page.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
 
 </main>
 
 
+<!-- ======================================================
+     JAAS API
+====================================================== -->
+
+
+<script
+
+    src="https://8x8.vc/{{ jaas_app_id }}/external_api.js"
+
+></script>
+
+
+<script>
+
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    function(){
+
+
+        const loading =
+
+            document.getElementById(
+                "conferenceLoading"
+            );
+
+
+        const errorBox =
+
+            document.getElementById(
+                "meetingError"
+            );
+
+
+        const container =
+
+            document.getElementById(
+                "jaas-container"
+            );
+
+
+        /* ================================================
+           CONFIGURATION
+        ================================================ */
+
+
+        const domain =
+            "8x8.vc";
+
+
+        const options = {
+
+
+            roomName:
+
+                "{{ jaas_app_id|escapejs }}/{{ conference.room_name|escapejs }}",
+
+
+            jwt:
+
+                "{{ jaas_jwt|escapejs }}",
+
+
+            parentNode:
+
+                container,
+
+
+            width:
+
+                "100%",
+
+
+            height:
+
+                "100%",
+
+
+            userInfo: {
+
+
+                displayName:
+
+                    "{{ nom_participant|escapejs }}",
+
+
+                email:
+
+                    "{{ email_participant|escapejs }}"
+
+
+            },
+
+
+            configOverwrite: {
+
+
+                prejoinPageEnabled:
+                    true,
+
+
+                startWithAudioMuted:
+                    false,
+
+
+                startWithVideoMuted:
+                    false,
+
+
+                enableWelcomePage:
+                    false,
+
+
+                brandingRoomAlias:
+
+                    "{{ conference.room_name|escapejs }}"
+
+
+            },
+
+
+            interfaceConfigOverwrite: {
+
+
+                MOBILE_APP_PROMO:
+                    false,
+
+
+                SHOW_JITSI_WATERMARK:
+                    false,
+
+
+                SHOW_WATERMARK_FOR_GUESTS:
+                    false,
+
+
+                DEFAULT_BACKGROUND:
+
+                    "#050816"
+
+
+            },
+
+
+            onload:
+
+                function(){
+
+
+                    setTimeout(
+
+                        function(){
+
+
+                            loading.classList.add(
+                                "hide"
+                            );
+
+
+                        },
+
+                        700
+
+                    );
+
+
+                }
+
+
+        };
+
+
+        try{
+
+
+            const api =
+
+                new JitsiMeetExternalAPI(
+
+                    domain,
+
+                    options
+
+                );
+
+
+            /* ============================================
+               CONFÉRENCE REJOINTE
+            ============================================ */
+
+
+            api.addEventListener(
+
+                "videoConferenceJoined",
+
+                function(){
+
+
+                    loading.classList.add(
+                        "hide"
+                    );
+
+
+                }
+
+            );
+
+
+            /* ============================================
+               CONFÉRENCE QUITTÉE
+            ============================================ */
+
+
+            api.addEventListener(
+
+                "videoConferenceLeft",
+
+                function(){
+
+
+                    console.log(
+                        "Participant sorti de la conférence."
+                    );
+
+
+                }
+
+            );
+
+
+            /* ============================================
+               ERREURS
+            ============================================ */
+
+
+            api.addEventListener(
+
+                "errorOccurred",
+
+                function(error){
+
+
+                    console.error(
+                        "Erreur JaaS :",
+                        error
+                    );
+
+
+                }
+
+            );
+
+
+            window.hexaConferenceAPI =
+                api;
+
+
+        }catch(error){
+
+
+            console.error(
+                "Impossible de charger JaaS :",
+                error
+            );
+
+
+            loading.classList.add(
+                "hide"
+            );
+
+
+            errorBox.classList.add(
+                "active"
+            );
+
+
+        }
+
+
+    }
+
+);
+
+
+</script>
+
+
 </body>
+
 </html>

@@ -7037,24 +7037,299 @@ def conference_detail_gestion(request, pk):
 # ==========================================================
 # SALLE CLIENT
 # ==========================================================
-
 def conference_room(request, token):
 
-    demande = get_object_or_404(
+    conference = get_object_or_404(
         DemandeConference,
         token=token
     )
 
-    if not demande.room_name:
+
+    if not conference.room_name:
 
         raise Http404(
             "Cette conférence n'est pas encore disponible."
         )
 
+
+    # ======================================================
+    # IDENTIFICATION DU PARTICIPANT
+    # ======================================================
+
+    moderator = False
+
+
+    # Si un membre du personnel HexaQuébec est connecté
+    if (
+        request.user.is_authenticated
+        and
+        request.user.is_staff
+    ):
+
+        moderator = True
+
+
+        nom_participant = (
+
+            request.user.get_full_name()
+
+            or
+
+            request.user.get_username()
+
+            or
+
+            "HexaQuébec"
+        )
+
+
+        email_participant = (
+            request.user.email
+            or
+            ""
+        )
+
+
+        id_participant = (
+            f"staff-{request.user.pk}"
+        )
+
+
+    else:
+
+        # Client invité
+
+        nom_participant = (
+            conference.nom
+            or
+            "Client HexaQuébec"
+        )
+
+
+        email_participant = (
+            conference.email
+            or
+            ""
+        )
+
+
+        id_participant = (
+            f"client-{conference.token}"
+        )
+
+
+    # ======================================================
+    # CRÉER JWT JAAS
+    # ======================================================
+
+    try:
+
+        jaas_jwt = generer_jaas_jwt(
+
+            room_name=conference.room_name,
+
+            user_name=nom_participant,
+
+            user_email=email_participant,
+
+            user_id=id_participant,
+
+            moderator=moderator,
+
+        )
+
+
+    except Exception as erreur:
+
+        print(
+            "Erreur JaaS :",
+            erreur
+        )
+
+
+        return render(
+
+            request,
+
+            "hexa/conference_erreur.html",
+
+            {
+
+                "conference": conference,
+
+                "erreur": (
+                    "La salle vidéo n'est pas encore "
+                    "configurée correctement."
+                ),
+
+            },
+
+            status=500,
+
+        )
+
+
+    # ======================================================
+    # PAGE
+    # ======================================================
+
     return render(
+
         request,
+
         "hexa/conference_room.html",
+
         {
-            "conference": demande,
+
+            "conference": conference,
+
+            "jaas_app_id":
+                settings.JITSI_JAAS_APP_ID,
+
+            "jaas_jwt":
+                jaas_jwt,
+
+            "nom_participant":
+                nom_participant,
+
+            "email_participant":
+                email_participant,
+
+            "moderator":
+                moderator,
+
         }
+
     )
+
+
+
+
+def generer_jaas_jwt(
+    *,
+    room_name,
+    user_name,
+    user_email="",
+    user_id=None,
+    moderator=False,
+):
+
+    if not settings.JITSI_JAAS_APP_ID:
+        raise ValueError(
+            "JITSI_JAAS_APP_ID n'est pas configuré."
+        )
+
+    if not settings.JITSI_JAAS_KID:
+        raise ValueError(
+            "JITSI_JAAS_KID n'est pas configuré."
+        )
+
+    if not settings.JITSI_JAAS_PRIVATE_KEY:
+        raise ValueError(
+            "JITSI_JAAS_PRIVATE_KEY n'est pas configuré."
+        )
+
+
+    maintenant = int(
+        time.time()
+    )
+
+
+    if not user_id:
+
+        user_id = str(
+            uuid.uuid4()
+        )
+
+
+    payload = {
+
+        "aud": "jitsi",
+
+        "iss": "chat",
+
+        "sub": settings.JITSI_JAAS_APP_ID,
+
+        "room": room_name,
+
+        "nbf": maintenant - 10,
+
+        "exp": maintenant + 7200,
+
+        "context": {
+
+            "user": {
+
+                "id": str(
+                    user_id
+                ),
+
+                "name": (
+                    user_name
+                    or
+                    "Participant HexaQuébec"
+                ),
+
+                "email": (
+                    user_email
+                    or
+                    ""
+                ),
+
+                "moderator": (
+                    "true"
+                    if moderator
+                    else
+                    "false"
+                ),
+
+            },
+
+            "features": {
+
+                "livestreaming": False,
+
+                "recording": False,
+
+                "transcription": False,
+
+                "outbound-call": False,
+
+            },
+
+            "room": {
+
+                "regex": False,
+
+            },
+
+        },
+
+    }
+
+
+    headers = {
+
+        "kid": settings.JITSI_JAAS_KID,
+
+        "typ": "JWT",
+
+        "alg": "RS256",
+
+    }
+
+
+    token = jwt.encode(
+
+        payload,
+
+        settings.JITSI_JAAS_PRIVATE_KEY,
+
+        algorithm="RS256",
+
+        headers=headers,
+
+    )
+
+
+    return token

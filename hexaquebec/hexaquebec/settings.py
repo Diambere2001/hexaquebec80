@@ -203,3 +203,33 @@ cloudinary.config(
 )
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+
+
+
+# ==========================================================
+# JITSI AS A SERVICE — JAAS
+# ==========================================================
+
+JITSI_JAAS_APP_ID = os.environ.get(
+    "JITSI_JAAS_APP_ID",
+    ""
+)
+
+JITSI_JAAS_KID = os.environ.get(
+    "JITSI_JAAS_KID",
+    ""
+)
+
+JITSI_JAAS_PRIVATE_KEY = os.environ.get(
+    "JITSI_JAAS_PRIVATE_KEY",
+    ""
+)
+
+# Permet d'utiliser une clé privée enregistrée
+# dans Render avec \n
+if JITSI_JAAS_PRIVATE_KEY:
+
+    JITSI_JAAS_PRIVATE_KEY = (
+        JITSI_JAAS_PRIVATE_KEY
+        .replace("\\n", "\n")
+    )
