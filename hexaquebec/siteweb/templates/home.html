@@ -2820,7 +2820,96 @@ body.menu-open{
     }
 
 }
+/* =========================================================
+   CORRECTION DIAM IA SUR TÉLÉPHONE
+   Bouton Envoyer toujours visible
+========================================================= */
 
+@media (max-width:700px){
+
+    #diam-ai-section{
+        overflow:visible !important;
+        padding-bottom:180px !important;
+    }
+
+    #diam-ai-section .diam-grid{
+        gap:24px;
+    }
+
+    #diam-ai-section .diam-image{
+        width:150px;
+        max-width:45vw;
+        border-radius:22px;
+    }
+
+    #diam-ai-section .ai-status{
+        display:flex;
+        width:max-content;
+        margin:10px auto 0;
+    }
+
+    #diam-ai-section .ai-chat{
+        width:100%;
+        overflow:hidden;
+        text-align:left;
+    }
+
+    #diam-ai-section .chat-messages{
+        min-height:140px;
+        max-height:220px;
+        padding:14px;
+    }
+
+    #diam-ai-section .chat-input{
+        position:relative;
+        z-index:20;
+
+        width:100%;
+
+        display:grid;
+        grid-template-columns:minmax(0, 1fr) 50px;
+
+        gap:8px;
+        padding:12px;
+
+        background:rgba(5,8,22,.96);
+    }
+
+    #diam-ai-section .chat-input input{
+        width:100%;
+        min-width:0;
+        height:50px;
+
+        padding:0 12px;
+
+        font-size:16px;
+    }
+
+    #diam-ai-section .chat-input button{
+        position:relative;
+        z-index:21;
+
+        display:flex !important;
+        align-items:center;
+        justify-content:center;
+
+        width:50px !important;
+        min-width:50px !important;
+        height:50px !important;
+
+        padding:0 !important;
+        flex-shrink:0;
+
+        visibility:visible !important;
+        opacity:1 !important;
+
+        cursor:pointer;
+
+        box-shadow:
+            0 10px 24px
+            rgba(0,169,227,.28);
+    }
+}
 </style>
 
 </head>
