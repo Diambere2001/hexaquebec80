@@ -206,30 +206,45 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 
 
-# ==========================================================
-# JITSI AS A SERVICE — JAAS
-# ==========================================================
 
-JITSI_JAAS_APP_ID = os.environ.get(
+load_dotenv(BASE_DIR / ".env")
+
+
+JITSI_JAAS_APP_ID = os.getenv(
     "JITSI_JAAS_APP_ID",
     ""
 )
 
-JITSI_JAAS_KID = os.environ.get(
+JITSI_JAAS_KID = os.getenv(
     "JITSI_JAAS_KID",
     ""
 )
 
-JITSI_JAAS_PRIVATE_KEY = os.environ.get(
-    "JITSI_JAAS_PRIVATE_KEY",
+JITSI_JAAS_PRIVATE_KEY_FILE = os.getenv(
+    "JITSI_JAAS_PRIVATE_KEY_FILE",
     ""
 )
 
-# Permet d'utiliser une clé privée enregistrée
-# dans Render avec \n
-if JITSI_JAAS_PRIVATE_KEY:
 
-    JITSI_JAAS_PRIVATE_KEY = (
-        JITSI_JAAS_PRIVATE_KEY
-        .replace("\\n", "\n")
+JITSI_JAAS_PRIVATE_KEY = ""
+
+
+if JITSI_JAAS_PRIVATE_KEY_FILE:
+
+    private_key_path = Path(
+        JITSI_JAAS_PRIVATE_KEY_FILE
     )
+
+    if not private_key_path.is_absolute():
+        private_key_path = (
+            BASE_DIR /
+            JITSI_JAAS_PRIVATE_KEY_FILE
+        )
+
+    if private_key_path.exists():
+
+        JITSI_JAAS_PRIVATE_KEY = (
+            private_key_path.read_text(
+                encoding="utf-8"
+            )
+        )
