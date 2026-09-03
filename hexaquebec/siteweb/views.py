@@ -29,7 +29,9 @@ import mimetypes  # <-- Ajoute cette ligne
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, CartItem
 from .models import PaiementClient
-
+import time
+import uuid
+import jwt
 
 
 from .models import (
