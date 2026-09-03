@@ -207,6 +207,16 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 
 
+
+
+# ==========================================================
+# JITSI JAAS
+# ==========================================================
+
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
 load_dotenv(BASE_DIR / ".env")
 
 
@@ -222,29 +232,34 @@ JITSI_JAAS_KID = os.getenv(
 
 JITSI_JAAS_PRIVATE_KEY_FILE = os.getenv(
     "JITSI_JAAS_PRIVATE_KEY_FILE",
-    ""
+    "/etc/secrets/jaas_private_key.pk"
 )
 
 
+# Valeur finale de la clé privée
 JITSI_JAAS_PRIVATE_KEY = ""
 
 
-if JITSI_JAAS_PRIVATE_KEY_FILE:
+private_key_path = Path(
+    JITSI_JAAS_PRIVATE_KEY_FILE
+)
 
-    private_key_path = Path(
-        JITSI_JAAS_PRIVATE_KEY_FILE
+# Pour ton ordinateur local
+if not private_key_path.is_absolute():
+    private_key_path = BASE_DIR / private_key_path
+
+
+# Lecture de la clé privée
+if private_key_path.exists():
+
+    JITSI_JAAS_PRIVATE_KEY = (
+        private_key_path
+        .read_text(encoding="utf-8")
+        .strip()
     )
 
-    if not private_key_path.is_absolute():
-        private_key_path = (
-            BASE_DIR /
-            JITSI_JAAS_PRIVATE_KEY_FILE
-        )
-
-    if private_key_path.exists():
-
-        JITSI_JAAS_PRIVATE_KEY = (
-            private_key_path.read_text(
-                encoding="utf-8"
-            )
-        )
+else:
+    print(
+        "ERREUR JITSI : fichier de clé privée introuvable :",
+        private_key_path
+    )
