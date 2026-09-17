@@ -4,94 +4,99 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <meta
-        name="description"
-        content="HexaQuébec — Développement Web, Mobile, Intelligence artificielle, UI/UX et solutions numériques professionnelles."
-    >
+<meta
+    name="description"
+    content="HexaQuébec — Développement Web, Mobile, Intelligence artificielle, UI/UX et solutions numériques professionnelles."
+>
 
-    <meta
-        name="theme-color"
-        content="#050816"
-    >
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
 
-    <title>
-        Nos Services | HexaQuébec
-    </title>
-
-
-    <!-- FAVICON -->
-    <link
-        rel="icon"
-        type="image/png"
-        href="{% static 'images/logoHexa.png' %}"
-    >
+<title>
+    Nos Services | HexaQuébec
+</title>
 
 
-    <!-- BOOTSTRAP -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+<link
+    rel="icon"
+    type="image/png"
+    href="{% static 'images/logoHexa.png' %}"
+>
 
 
-    <!-- FONT AWESOME -->
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        rel="stylesheet"
-    >
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
 
 
-    <!-- GOOGLE FONT -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
-    >
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+>
+
 
 
 <style>
 
 /* =========================================================
-   HEXAQUÉBEC — PALETTE OFFICIELLE
+   COULEURS HEXAQUÉBEC
 ========================================================= */
 
 :root{
 
-    --hq-bg:#050816;
-    --hq-bg-2:#071020;
-    --hq-bg-3:#0a1630;
+    --blue:#0768c9;
+    --blue-dark:#034a91;
+    --blue-light:#0b84f3;
 
-    --hq-blue:#2563ff;
-    --hq-blue-2:#0b5cff;
+    --cyan:#00b8d9;
 
-    --hq-cyan:#16d6ff;
-    --hq-cyan-soft:#8cecff;
+    --navy:#071a2f;
+    --navy-soft:#0b2948;
 
-    --hq-violet:#7c5cff;
-    --hq-violet-2:#5c4df2;
+    --white:#ffffff;
 
-    --hq-green:#2ee6a6;
+    --bg:#f6f9fc;
+    --bg-soft:#fbfdff;
 
-    --hq-white:#ffffff;
-    --hq-text:#eef4ff;
-    --hq-muted:#aab7cf;
+    --text:#17263a;
+    --muted:#687b8f;
 
-    --hq-card:rgba(255,255,255,.055);
+    --border:#e4edf5;
 
-    --hq-line:rgba(255,255,255,.10);
+    --green:#16a36a;
 
-    --hq-shadow:
-        0 30px 80px
-        rgba(0,0,0,.42);
+    --shadow:
+        0 26px 75px
+        rgba(12,57,92,.12);
 
-    --hq-radius:28px;
+    --shadow-soft:
+        0 14px 40px
+        rgba(12,57,92,.08);
+
 }
+
 
 
 /* =========================================================
@@ -106,7 +111,10 @@
 
 
 html{
+
     scroll-behavior:smooth;
+    scroll-padding-top:90px;
+
 }
 
 
@@ -114,42 +122,16 @@ body{
 
     min-height:100vh;
 
-    overflow-x:hidden;
-
     font-family:
-        'Poppins',
+        "Inter",
         sans-serif;
 
-    color:
-        var(--hq-text);
+    color:var(--text);
 
-    background:
+    background:#fff;
 
-        radial-gradient(
-            circle at 8% 4%,
-            rgba(124,92,255,.20),
-            transparent 28%
-        ),
+    overflow-x:hidden;
 
-        radial-gradient(
-            circle at 95% 18%,
-            rgba(22,214,255,.16),
-            transparent 30%
-        ),
-
-        radial-gradient(
-            circle at 45% 75%,
-            rgba(37,99,255,.10),
-            transparent 35%
-        ),
-
-        linear-gradient(
-            180deg,
-            #030611,
-            var(--hq-bg) 25%,
-            var(--hq-bg-2) 58%,
-            #08142b
-        );
 }
 
 
@@ -159,148 +141,59 @@ body.menu-open{
 
 
 a{
+
     color:inherit;
     text-decoration:none;
-}
 
-
-button{
-    font:inherit;
 }
 
 
 img{
+
+    display:block;
     max-width:100%;
+
+}
+
+
+button,
+input,
+textarea{
+
+    font:inherit;
+
+}
+
+
+button{
+    cursor:pointer;
 }
 
 
 ::selection{
 
-    color:#050816;
+    background:#dff4f8;
 
-    background:
-        var(--hq-cyan);
+    color:var(--navy);
+
 }
+
+
+.shell{
+
+    width:min(
+        1180px,
+        92%
+    );
+
+    margin:auto;
+
+}
+
 
 
 /* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar{
-    width:10px;
-}
-
-
-::-webkit-scrollbar-track{
-    background:#030611;
-}
-
-
-::-webkit-scrollbar-thumb{
-
-    border:
-        2px solid
-        #030611;
-
-    border-radius:50px;
-
-    background:
-
-        linear-gradient(
-            180deg,
-            var(--hq-cyan),
-            var(--hq-violet)
-        );
-}
-
-
-/* =========================================================
-   CANVAS
-========================================================= */
-
-#networkCanvas{
-
-    position:fixed;
-
-    inset:0;
-
-    width:100%;
-    height:100%;
-
-    z-index:-5;
-
-    opacity:.55;
-
-    pointer-events:none;
-}
-
-
-/* =========================================================
-   GLOW
-========================================================= */
-
-.page-glow{
-
-    position:fixed;
-
-    border-radius:50%;
-
-    filter:
-        blur(55px);
-
-    pointer-events:none;
-
-    z-index:-4;
-
-    animation:
-        glowMove
-        10s
-        ease-in-out
-        infinite;
-}
-
-
-.glow-one{
-
-    width:550px;
-    height:550px;
-
-    top:-280px;
-    right:-190px;
-
-    background:
-
-        radial-gradient(
-            circle,
-            rgba(124,92,255,.26),
-            transparent 68%
-        );
-}
-
-
-.glow-two{
-
-    width:500px;
-    height:500px;
-
-    left:-220px;
-    bottom:-200px;
-
-    background:
-
-        radial-gradient(
-            circle,
-            rgba(22,214,255,.18),
-            transparent 70%
-        );
-
-    animation-delay:-4s;
-}
-
-
-/* =========================================================
-   PROGRESSION
+   BARRE DE PROGRESSION
 ========================================================= */
 
 .scroll-progress{
@@ -313,38 +206,512 @@ img{
     width:0;
     height:3px;
 
-    z-index:999999;
+    z-index:15000;
 
     background:
 
         linear-gradient(
             90deg,
-            var(--hq-violet),
-            var(--hq-blue),
-            var(--hq-cyan),
-            var(--hq-green)
+            var(--blue),
+            var(--cyan)
         );
 
     box-shadow:
 
         0 0 18px
-        rgba(22,214,255,.75);
+        rgba(0,184,217,.35);
+
 }
+
 
 
 /* =========================================================
-   CONTAINER
+   NAVBAR
 ========================================================= */
 
-.shell{
+.navbar-modern{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:82px;
+
+    z-index:9999;
+
+    background:
+        rgba(255,255,255,.90);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    border-bottom:
+
+        1px solid
+        rgba(221,231,240,.85);
+
+    transition:.35s ease;
+
+}
+
+
+.navbar-modern.scrolled{
+
+    background:
+        rgba(255,255,255,.98);
+
+    box-shadow:
+
+        0 12px 38px
+        rgba(10,48,80,.09);
+
+}
+
+
+.nav-inner{
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:
+        space-between;
+
+    gap:16px;
+
+}
+
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    flex-shrink:0;
+
+}
+
+
+.logo-box{
+
+    width:50px;
+    height:50px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:15px;
+
+    background:#fff;
+
+    border:
+        1px solid
+        var(--border);
+
+    box-shadow:
+
+        0 8px 24px
+        rgba(5,55,90,.08);
+
+}
+
+
+.logo-box img{
+
+    width:42px;
+    height:42px;
+
+    object-fit:contain;
+
+}
+
+
+.brand-copy strong{
+
+    display:block;
+
+    color:var(--navy);
+
+    font-family:"Manrope";
+
+    font-size:18px;
+
+    font-weight:800;
+
+}
+
+
+.brand-copy small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:8px;
+
+}
+
+
+
+/* =========================================================
+   MENU ORDINATEUR
+========================================================= */
+
+.hq-desktop-nav{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:flex-end;
+
+    gap:2px;
+
+    min-width:0;
+
+}
+
+
+.hq-desktop-nav
+.nav-link{
+
+    position:relative;
+
+    min-height:42px;
+
+    padding:
+        0 8px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:5px;
+
+    border-radius:10px;
+
+    white-space:nowrap;
+
+    color:#46596d;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    transition:.25s ease;
+
+}
+
+
+.hq-desktop-nav
+.nav-link i{
+
+    color:var(--blue);
+
+    font-size:10px;
+
+    transition:.25s;
+
+}
+
+
+.hq-desktop-nav
+.nav-link:nth-child(2n) i{
+
+    color:var(--cyan);
+
+}
+
+
+.hq-desktop-nav
+.nav-link::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+    bottom:3px;
+
+    width:0;
+    height:2px;
+
+    border-radius:20px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            var(--blue),
+            var(--cyan)
+        );
+
+    transform:
+        translateX(-50%);
+
+    transition:.25s;
+
+}
+
+
+.hq-desktop-nav
+.nav-link:hover,
+
+.hq-desktop-nav
+.nav-link.active{
+
+    color:var(--navy);
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #eef7ff,
+            #edfaff
+        );
+
+}
+
+
+.hq-desktop-nav
+.nav-link:hover i,
+
+.hq-desktop-nav
+.nav-link.active i{
+
+    color:var(--cyan);
+
+    transform:
+        scale(1.08);
+
+}
+
+
+.hq-desktop-nav
+.nav-link:hover::after,
+
+.hq-desktop-nav
+.nav-link.active::after{
+
+    width:55%;
+
+}
+
+
+
+/* =========================================================
+   BOUTON MENU MOBILE
+========================================================= */
+
+.menu-toggle{
+
+    display:none;
+
+    width:44px;
+    height:44px;
+
+    border:none;
+
+    border-radius:12px;
+
+    color:var(--navy);
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #eef7ff,
+            #edfaff
+        );
+
+    font-size:18px;
+
+}
+
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+.mobile-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:10001;
+
+    background:
+        rgba(7,26,47,.42);
+
+    backdrop-filter:
+        blur(4px);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.3s;
+
+}
+
+
+.mobile-overlay.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+.mobile-panel{
+
+    position:fixed;
+
+    top:0;
+    right:-100%;
 
     width:min(
-        1180px,
-        calc(100% - 32px)
+        360px,
+        92vw
     );
 
-    margin:auto;
+    height:100vh;
+
+    z-index:10002;
+
+    padding:
+        86px 20px
+        30px;
+
+    background:#fff;
+
+    border-left:
+        1px solid
+        var(--border);
+
+    box-shadow:
+
+        -25px 0 80px
+        rgba(7,26,47,.18);
+
+    transition:
+
+        right .4s
+        cubic-bezier(
+            .2,.8,.2,1
+        );
+
+    overflow:auto;
+
 }
+
+
+.mobile-panel.open{
+
+    right:0;
+
+}
+
+
+.mobile-panel a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    padding:
+        14px 15px;
+
+    margin-bottom:8px;
+
+    color:#40556b;
+
+    background:#f8fbfe;
+
+    border:
+        1px solid
+        #eaf0f5;
+
+    border-radius:14px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    transition:.25s;
+
+}
+
+
+.mobile-panel a:hover,
+.mobile-panel a.active{
+
+    color:var(--blue);
+
+    background:#edf7ff;
+
+    border-color:#d5eaf8;
+
+    transform:
+        translateX(3px);
+
+}
+
+
+.mobile-panel a i{
+
+    width:26px;
+
+    color:var(--blue);
+
+}
+
+
+.mobile-close{
+
+    position:absolute;
+
+    top:20px;
+    right:20px;
+
+    width:44px;
+    height:44px;
+
+    border:0;
+
+    border-radius:12px;
+
+    color:var(--navy);
+
+    background:#eef7ff;
+
+}
+
 
 
 /* =========================================================
@@ -363,7 +730,26 @@ img{
         opacity .75s ease,
 
         transform .75s
-        cubic-bezier(.2,.8,.2,1);
+        cubic-bezier(
+            .2,.8,.2,1
+        );
+
+}
+
+
+.reveal.from-left{
+
+    transform:
+        translateX(-40px);
+
+}
+
+
+.reveal.from-right{
+
+    transform:
+        translateX(40px);
+
 }
 
 
@@ -372,520 +758,9 @@ img{
     opacity:1;
 
     transform:none;
+
 }
 
-
-/* =========================================================
-   NAVBAR
-========================================================= */
-
-.navbar-modern{
-
-    position:fixed;
-
-    top:0;
-    left:0;
-
-    width:100%;
-
-    z-index:10000;
-
-    padding:
-        14px 0;
-
-    background:
-        rgba(5,8,22,.55);
-
-    border-bottom:
-        1px solid
-        transparent;
-
-    backdrop-filter:
-        blur(20px);
-
-    -webkit-backdrop-filter:
-        blur(20px);
-
-    transition:.35s;
-}
-
-
-.navbar-modern.scrolled{
-
-    padding:
-        8px 0;
-
-    background:
-        rgba(5,8,22,.94);
-
-    border-bottom-color:
-        rgba(255,255,255,.08);
-
-    box-shadow:
-
-        0 14px 40px
-        rgba(0,0,0,.35);
-}
-
-
-.nav-inner{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:
-        space-between;
-
-    gap:20px;
-}
-
-
-/* =========================================================
-   LOGO
-========================================================= */
-
-.brand{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    min-width:max-content;
-}
-
-
-.logo-box{
-
-    position:relative;
-
-    width:62px;
-    height:62px;
-
-    display:grid;
-
-    place-items:center;
-
-    padding:4px;
-
-    overflow:hidden;
-
-    background:#ffffff;
-
-    border-radius:19px;
-
-    box-shadow:
-
-        0 15px 40px
-        rgba(0,0,0,.30);
-
-    isolation:isolate;
-}
-
-
-.logo-box::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:-40%;
-
-    z-index:-2;
-
-    background:
-
-        conic-gradient(
-
-            var(--hq-violet),
-
-            var(--hq-blue),
-
-            var(--hq-cyan),
-
-            var(--hq-green),
-
-            var(--hq-violet)
-
-        );
-
-    animation:
-        rotateLogo
-        7s
-        linear
-        infinite;
-}
-
-
-.logo-box::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:3px;
-
-    z-index:-1;
-
-    background:#ffffff;
-
-    border-radius:16px;
-}
-
-
-.logo-box img{
-
-    width:52px;
-    height:52px;
-
-    object-fit:contain;
-
-    border-radius:14px;
-}
-
-
-.brand-copy{
-
-    display:flex;
-
-    flex-direction:column;
-
-    line-height:1.1;
-}
-
-
-.brand-copy strong{
-
-    color:#ffffff;
-
-    font-size:
-        1.05rem;
-
-    font-weight:900;
-}
-
-
-.brand-copy small{
-
-    margin-top:5px;
-
-    color:
-        var(--hq-cyan);
-
-    font-size:.64rem;
-
-    font-weight:700;
-}
-
-
-/* =========================================================
-   MENU ORDINATEUR
-========================================================= */
-
-.nav-links{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:4px;
-
-    padding:6px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    border-radius:17px;
-}
-
-
-.nav-links a{
-
-    padding:
-        10px 13px;
-
-    color:#e7efff;
-
-    border-radius:11px;
-
-    font-size:.82rem;
-
-    font-weight:700;
-
-    transition:.25s;
-}
-
-
-.nav-links a:hover,
-.nav-links a.active{
-
-    color:#ffffff;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            rgba(37,99,255,.20),
-            rgba(124,92,255,.20)
-        );
-
-    box-shadow:
-
-        inset 0 0 0 1px
-        rgba(22,214,255,.10);
-}
-
-
-/* =========================================================
-   BOUTON NAVBAR
-========================================================= */
-
-.nav-cta{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:9px;
-
-    padding:
-        12px 17px;
-
-    color:#ffffff;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            var(--hq-blue),
-            var(--hq-violet)
-        );
-
-    border:
-
-        1px solid
-        rgba(255,255,255,.12);
-
-    border-radius:14px;
-
-    font-size:.80rem;
-
-    font-weight:800;
-
-    box-shadow:
-
-        0 15px 35px
-        rgba(37,99,255,.28);
-
-    transition:.3s;
-}
-
-
-.nav-cta:hover{
-
-    color:#ffffff;
-
-    transform:
-        translateY(-3px);
-
-    box-shadow:
-
-        0 20px 45px
-        rgba(124,92,255,.35);
-}
-
-
-/* =========================================================
-   MENU MOBILE
-========================================================= */
-
-.menu-toggle{
-
-    display:none;
-
-    width:48px;
-    height:48px;
-
-    place-items:center;
-
-    color:#ffffff;
-
-    background:
-        rgba(255,255,255,.065);
-
-    border:
-        1px solid
-        var(--hq-line);
-
-    border-radius:14px;
-}
-
-
-.mobile-overlay{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:10001;
-
-    background:
-        rgba(0,0,0,.68);
-
-    backdrop-filter:
-        blur(5px);
-
-    opacity:0;
-
-    visibility:hidden;
-
-    transition:.3s;
-}
-
-
-.mobile-overlay.show{
-
-    opacity:1;
-
-    visibility:visible;
-}
-
-
-.mobile-panel{
-
-    position:fixed;
-
-    top:0;
-
-    right:-100%;
-
-    width:min(
-        350px,
-        91vw
-    );
-
-    height:100vh;
-
-    z-index:10002;
-
-    padding:
-        90px
-        22px
-        30px;
-
-    background:
-
-        linear-gradient(
-            160deg,
-            #050816,
-            #07142d
-        );
-
-    border-left:
-        1px solid
-        var(--hq-line);
-
-    box-shadow:
-
-        -25px 0 80px
-        rgba(0,0,0,.55);
-
-    transition:
-
-        right .4s
-        cubic-bezier(.2,.8,.2,1);
-}
-
-
-.mobile-panel.open{
-    right:0;
-}
-
-
-.mobile-panel a{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:13px;
-
-    padding:
-        14px 15px;
-
-    margin-bottom:9px;
-
-    color:#edf4ff;
-
-    background:
-        rgba(255,255,255,.05);
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    border-radius:14px;
-
-    font-weight:700;
-
-    transition:.25s;
-}
-
-
-.mobile-panel a:hover{
-
-    background:
-
-        linear-gradient(
-            135deg,
-            rgba(37,99,255,.20),
-            rgba(124,92,255,.18)
-        );
-
-    border-color:
-        rgba(22,214,255,.20);
-}
-
-
-.mobile-panel a i{
-
-    width:30px;
-
-    color:
-        var(--hq-cyan);
-}
-
-
-.mobile-close{
-
-    position:absolute;
-
-    top:20px;
-
-    right:20px;
-
-    width:46px;
-    height:46px;
-
-    color:#ffffff;
-
-    background:
-        rgba(255,255,255,.07);
-
-    border:
-        1px solid
-        var(--hq-line);
-
-    border-radius:14px;
-}
 
 
 /* =========================================================
@@ -903,81 +778,158 @@ img{
     align-items:center;
 
     padding:
-        150px 0
-        110px;
+        142px 0
+        90px;
 
     overflow:hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 88% 18%,
+            rgba(0,184,217,.16),
+            transparent 27%
+        ),
+
+        radial-gradient(
+            circle at 6% 82%,
+            rgba(7,104,201,.09),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            180deg,
+            #fff,
+            #fbfdff
+        );
+
 }
 
 
-.hero::before{
-
-    content:"";
+.hero-grid-bg{
 
     position:absolute;
 
     inset:0;
 
-    z-index:-3;
+    opacity:.27;
 
-    background:
+    pointer-events:none;
+
+    background-image:
+
+        linear-gradient(
+            #dfeaf5 1px,
+            transparent 1px
+        ),
 
         linear-gradient(
             90deg,
-            rgba(5,8,22,.98),
-            rgba(5,8,22,.88) 47%,
-            rgba(5,8,22,.66)
-        ),
+            #dfeaf5 1px,
+            transparent 1px
+        );
 
-        url("{% static 'images/forest-bg.png' %}")
-        center / cover
-        no-repeat;
+    background-size:
+        52px 52px;
+
+    mask-image:
+
+        linear-gradient(
+            to bottom,
+            #000,
+            transparent 88%
+        );
+
 }
 
 
-.hero::after{
-
-    content:"";
+.hero-blob{
 
     position:absolute;
 
-    left:0;
-    right:0;
-    bottom:0;
+    border-radius:50%;
 
-    height:190px;
+    filter:blur(8px);
 
-    z-index:-2;
+    opacity:.6;
+
+    animation:
+
+        blobMove
+        9s
+        ease-in-out
+        infinite alternate;
+
+}
+
+
+.hero-blob.one{
+
+    width:220px;
+    height:220px;
+
+    right:8%;
+    top:16%;
 
     background:
+        rgba(0,184,217,.10);
 
-        linear-gradient(
-            to top,
-            var(--hq-bg-2),
-            transparent
-        );
+}
+
+
+.hero-blob.two{
+
+    width:160px;
+    height:160px;
+
+    left:4%;
+    bottom:9%;
+
+    background:
+        rgba(7,104,201,.08);
+
+    animation-delay:-3s;
+
+}
+
+
+@keyframes blobMove{
+
+    to{
+
+        transform:
+
+            translate(
+                24px,
+                -16px
+            )
+
+            scale(1.08);
+
+    }
+
 }
 
 
 .hero-grid{
 
+    position:relative;
+
+    z-index:2;
+
     display:grid;
 
     grid-template-columns:
 
-        minmax(0,1.07fr)
-
-        minmax(370px,.93fr);
+        1.06fr
+        .94fr;
 
     align-items:center;
 
-    gap:65px;
+    gap:66px;
+
 }
 
-
-/* =========================================================
-   BADGE HERO
-========================================================= */
 
 .hero-badge{
 
@@ -985,89 +937,92 @@ img{
 
     align-items:center;
 
-    gap:10px;
-
-    padding:
-        10px 16px;
+    gap:9px;
 
     margin-bottom:22px;
 
-    color:
-        var(--hq-cyan-soft);
-
-    background:
-
-        linear-gradient(
-            135deg,
-            rgba(37,99,255,.13),
-            rgba(124,92,255,.10)
-        );
-
-    border:
-        1px solid
-        rgba(22,214,255,.17);
+    padding:
+        9px 14px;
 
     border-radius:999px;
 
-    backdrop-filter:
-        blur(15px);
+    color:var(--blue);
 
-    font-size:.76rem;
+    background:#edf7ff;
+
+    border:
+        1px solid
+        #d8ebfa;
+
+    font-size:11px;
 
     font-weight:800;
+
 }
 
 
 .badge-dot{
 
-    width:9px;
-    height:9px;
+    width:7px;
+    height:7px;
 
     border-radius:50%;
 
     background:
-        var(--hq-green);
+        var(--green);
 
     box-shadow:
 
-        0 0 0 6px
-        rgba(46,230,166,.10),
-
-        0 0 18px
-        rgba(46,230,166,.75);
+        0 0 0 5px
+        rgba(22,163,106,.09);
 
     animation:
+
         pulseDot
         1.8s
         infinite;
+
 }
 
 
-/* =========================================================
-   TITRE HERO
-========================================================= */
+@keyframes pulseDot{
+
+    50%{
+
+        box-shadow:
+
+            0 0 0 10px
+            rgba(22,163,106,0);
+
+    }
+
+}
+
 
 .hero h1{
 
-    max-width:830px;
+    max-width:760px;
 
-    margin-bottom:24px;
+    margin-bottom:22px;
 
-    color:#ffffff;
+    color:var(--navy);
+
+    font-family:"Manrope";
 
     font-size:
 
         clamp(
-            2.8rem,
-            5.5vw,
-            5.25rem
+            45px,
+            5.2vw,
+            74px
         );
 
-    line-height:1.02;
+    font-weight:800;
 
-    letter-spacing:-.055em;
+    line-height:1.03;
 
-    font-weight:900;
+    letter-spacing:-3px;
+
 }
 
 
@@ -1079,49 +1034,33 @@ img{
 
         linear-gradient(
             90deg,
-            var(--hq-cyan),
-            var(--hq-blue),
-            var(--hq-violet),
-            var(--hq-cyan)
+            var(--blue),
+            var(--cyan)
         );
-
-    background-size:
-        250% auto;
-
-    background-clip:text;
 
     -webkit-background-clip:text;
 
+    background-clip:text;
+
     color:transparent;
 
-    -webkit-text-fill-color:
-        transparent;
-
-    animation:
-        textGradient
-        6s
-        linear
-        infinite;
 }
 
 
 .hero-text{
 
-    max-width:700px;
+    max-width:690px;
 
-    margin-bottom:31px;
+    margin-bottom:30px;
 
-    color:#becae0;
+    color:var(--muted);
 
-    font-size:1rem;
+    font-size:15px;
 
     line-height:1.85;
+
 }
 
-
-/* =========================================================
-   BOUTONS
-========================================================= */
 
 .hero-actions{
 
@@ -1129,9 +1068,10 @@ img{
 
     flex-wrap:wrap;
 
-    gap:13px;
+    gap:12px;
 
-    margin-bottom:34px;
+    margin-bottom:32px;
+
 }
 
 
@@ -1139,7 +1079,7 @@ img{
 
     position:relative;
 
-    min-height:56px;
+    min-height:52px;
 
     display:inline-flex;
 
@@ -1147,129 +1087,108 @@ img{
 
     justify-content:center;
 
-    gap:10px;
+    gap:9px;
 
     padding:
-        14px 22px;
+        0 22px;
 
     overflow:hidden;
 
-    border-radius:16px;
+    border-radius:13px;
 
-    font-size:.86rem;
+    font-size:12px;
 
     font-weight:900;
 
-    transition:.3s;
+    transition:.28s;
+
 }
 
 
-.btn-hexa::before{
+.btn-hexa::after{
 
     content:"";
 
     position:absolute;
 
-    top:0;
+    top:-100%;
+    left:-30%;
 
-    left:-130%;
-
-    width:70%;
-    height:100%;
+    width:25%;
+    height:300%;
 
     background:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.38),
-            transparent
-        );
+        rgba(255,255,255,.28);
 
     transform:
-        skewX(-20deg);
+        rotate(22deg);
 
-    transition:
-        left .65s;
+    transition:.55s;
+
 }
 
 
-.btn-hexa:hover::before{
-    left:150%;
+.btn-hexa:hover{
+
+    transform:
+        translateY(-3px);
+
+}
+
+
+.btn-hexa:hover::after{
+
+    left:120%;
+
 }
 
 
 .btn-primary-hexa{
 
-    color:#ffffff;
+    color:#fff;
 
     background:
 
         linear-gradient(
             135deg,
-            var(--hq-blue),
-            var(--hq-violet)
+            var(--blue),
+            var(--cyan)
         );
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
 
     box-shadow:
 
-        0 18px 40px
-        rgba(37,99,255,.32);
+        0 15px 35px
+        rgba(7,104,201,.22);
+
 }
 
 
 .btn-primary-hexa:hover{
-
-    color:#ffffff;
-
-    transform:
-        translateY(-4px);
-
-    box-shadow:
-
-        0 24px 52px
-        rgba(124,92,255,.38);
+    color:#fff;
 }
 
 
 .btn-glass{
 
-    color:#ffffff;
+    color:var(--navy);
 
-    background:
-        rgba(255,255,255,.065);
+    background:#fff;
 
     border:
         1px solid
-        rgba(255,255,255,.13);
+        var(--border);
 
-    backdrop-filter:
-        blur(14px);
 }
 
 
 .btn-glass:hover{
 
-    color:#ffffff;
+    color:var(--blue);
 
-    background:
-        rgba(255,255,255,.10);
+    border-color:#b8d9ef;
 
-    border-color:
-        rgba(22,214,255,.30);
-
-    transform:
-        translateY(-4px);
 }
 
-
-/* =========================================================
-   CONFIANCE
-========================================================= */
 
 .hero-trust{
 
@@ -1277,7 +1196,8 @@ img{
 
     flex-wrap:wrap;
 
-    gap:15px;
+    gap:18px;
+
 }
 
 
@@ -1289,19 +1209,21 @@ img{
 
     gap:8px;
 
-    color:#adb9cf;
+    color:#536579;
 
-    font-size:.75rem;
+    font-size:10px;
 
-    font-weight:600;
+    font-weight:800;
+
 }
 
 
 .trust-item i{
 
-    color:
-        var(--hq-green);
+    color:var(--blue);
+
 }
+
 
 
 /* =========================================================
@@ -1312,11 +1234,12 @@ img{
 
     position:relative;
 
-    min-height:535px;
+    min-height:520px;
 
     display:grid;
 
     place-items:center;
+
 }
 
 
@@ -1325,23 +1248,26 @@ img{
     position:absolute;
 
     width:min(
-        475px,
-        92%
+        430px,
+        94%
     );
 
     aspect-ratio:1;
 
     border:
-        1px solid
-        rgba(22,214,255,.12);
+
+        1px dashed
+        rgba(7,104,201,.24);
 
     border-radius:50%;
 
     animation:
-        rotateLogo
-        24s
+
+        rotateOrbit
+        22s
         linear
         infinite;
+
 }
 
 
@@ -1352,27 +1278,41 @@ img{
 
     position:absolute;
 
-    border:
-        1px solid
-        rgba(124,92,255,.11);
-
     border-radius:50%;
+
+    border:
+
+        1px dashed
+        rgba(0,184,217,.20);
+
 }
 
 
 .orbit::before{
-    inset:50px;
+
+    inset:52px;
+
 }
 
 
 .orbit::after{
-    inset:98px;
+
+    inset:104px;
+
 }
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+@keyframes rotateOrbit{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+
+/* DASHBOARD */
 
 .dashboard{
 
@@ -1381,39 +1321,30 @@ img{
     z-index:3;
 
     width:min(
-        435px,
-        93%
+        430px,
+        95%
     );
 
-    padding:23px;
-
-    background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.13),
-            rgba(255,255,255,.035)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.14);
+    padding:24px;
 
     border-radius:30px;
 
-    backdrop-filter:
-        blur(25px);
+    background:
+        rgba(255,255,255,.95);
 
-    -webkit-backdrop-filter:
-        blur(25px);
+    border:
+        1px solid
+        var(--border);
 
     box-shadow:
+        var(--shadow);
 
-        0 35px 90px
-        rgba(0,0,0,.45);
+    backdrop-filter:
+        blur(18px);
 
     transition:
         transform .18s ease-out;
+
 }
 
 
@@ -1426,9 +1357,10 @@ img{
     justify-content:
         space-between;
 
-    gap:15px;
+    gap:12px;
 
-    margin-bottom:18px;
+    margin-bottom:20px;
+
 }
 
 
@@ -1439,21 +1371,27 @@ img{
     align-items:center;
 
     gap:10px;
+
 }
 
 
 .dashboard-brand img{
 
-    width:48px;
-    height:48px;
+    width:50px;
+    height:50px;
 
     object-fit:contain;
 
     padding:4px;
 
-    background:#ffffff;
-
     border-radius:13px;
+
+    background:#fff;
+
+    border:
+        1px solid
+        #edf2f6;
+
 }
 
 
@@ -1461,19 +1399,21 @@ img{
 
     display:block;
 
-    color:#ffffff;
+    color:var(--navy);
 
-    font-size:.88rem;
+    font-size:12px;
 
     font-weight:900;
+
 }
 
 
 .dashboard-brand small{
 
-    color:#98a8c1;
+    color:var(--muted);
 
-    font-size:.65rem;
+    font-size:8px;
+
 }
 
 
@@ -1483,172 +1423,139 @@ img{
 
     align-items:center;
 
-    gap:7px;
+    gap:6px;
 
     padding:
-        8px 10px;
-
-    color:#8cf2d0;
-
-    background:
-        rgba(46,230,166,.10);
-
-    border:
-        1px solid
-        rgba(46,230,166,.20);
+        7px 10px;
 
     border-radius:999px;
 
-    font-size:.62rem;
+    color:#13865a;
 
-    font-weight:800;
-}
-
-
-/* =========================================================
-   FAUSSE COURBE
-========================================================= */
-
-.chart{
-
-    position:relative;
-
-    height:168px;
-
-    margin-bottom:17px;
-
-    overflow:hidden;
-
-    background:
-
-        linear-gradient(
-            rgba(255,255,255,.04) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,.04) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        35px 35px;
+    background:#ebfaf4;
 
     border:
         1px solid
-        rgba(255,255,255,.08);
+        #d4f0e4;
 
-    border-radius:19px;
+    font-size:8px;
+
+    font-weight:800;
+
 }
 
 
-.chart svg{
+.dashboard-status i{
 
-    position:absolute;
+    font-size:6px;
 
-    left:0;
-    right:0;
-    bottom:25px;
-
-    width:100%;
-    height:105px;
-
-    overflow:visible;
 }
 
 
-.chart path{
-
-    fill:none;
-
-    stroke:
-        url(#hexaGradient);
-
-    stroke-width:5;
-
-    stroke-linecap:round;
-
-    stroke-dasharray:600;
-
-    stroke-dashoffset:600;
-
-    animation:
-        drawChart
-        2.5s
-        ease
-        forwards
-        .4s;
-}
-
-
-/* =========================================================
-   METRICS
-========================================================= */
-
-.metrics{
+.dashboard-grid{
 
     display:grid;
 
     grid-template-columns:
-        repeat(3,1fr);
+        repeat(2,1fr);
 
-    gap:9px;
+    gap:12px;
+
 }
 
 
-.metric{
+.dashboard-module{
 
-    padding:13px;
+    min-height:116px;
+
+    padding:16px;
+
+    border-radius:17px;
 
     background:
 
         linear-gradient(
             145deg,
-            rgba(255,255,255,.065),
-            rgba(255,255,255,.035)
+            #f8fbfe,
+            #edf7ff
         );
 
     border:
         1px solid
-        rgba(255,255,255,.07);
+        #e4edf5;
 
-    border-radius:14px;
+    transition:.3s;
+
 }
 
 
-.metric i{
+.dashboard-module:hover{
 
-    margin-bottom:8px;
+    transform:
+        translateY(-4px);
 
-    color:
-        var(--hq-cyan);
+    box-shadow:
+        var(--shadow-soft);
+
 }
 
 
-.metric strong{
+.dashboard-module i{
+
+    width:38px;
+    height:38px;
+
+    display:grid;
+
+    place-items:center;
+
+    margin-bottom:12px;
+
+    border-radius:11px;
+
+    color:var(--blue);
+
+    background:#fff;
+
+    border:
+        1px solid
+        #e5eef5;
+
+}
+
+
+.dashboard-module:nth-child(2n) i{
+
+    color:var(--cyan);
+
+}
+
+
+.dashboard-module strong{
 
     display:block;
 
-    color:#ffffff;
+    color:var(--navy);
 
-    font-size:.82rem;
+    font-size:10px;
 
-    font-weight:900;
 }
 
 
-.metric span{
+.dashboard-module span{
 
-    color:#8999b2;
+    display:block;
 
-    font-size:.57rem;
+    margin-top:4px;
+
+    color:var(--muted);
+
+    font-size:8px;
+
+    line-height:1.5;
+
 }
 
-
-/* =========================================================
-   FLOAT CHIP
-========================================================= */
 
 .float-chip{
 
@@ -1665,34 +1572,32 @@ img{
     padding:
         10px 13px;
 
-    color:#ffffff;
+    color:#30455b;
 
-    background:
-        rgba(5,8,22,.91);
+    background:#fff;
 
     border:
         1px solid
-        rgba(22,214,255,.14);
+        var(--border);
 
     border-radius:14px;
 
-    backdrop-filter:
-        blur(14px);
-
     box-shadow:
 
-        0 18px 40px
-        rgba(0,0,0,.35);
+        0 16px 40px
+        rgba(12,51,85,.10);
 
-    font-size:.69rem;
+    font-size:9px;
 
-    font-weight:800;
+    font-weight:900;
 
     animation:
+
         floating
         4.5s
         ease-in-out
         infinite;
+
 }
 
 
@@ -1705,36 +1610,50 @@ img{
 
     place-items:center;
 
-    color:#ffffff;
+    color:#fff;
 
     background:
 
         linear-gradient(
             135deg,
-            var(--hq-blue),
-            var(--hq-violet)
+            var(--blue),
+            var(--cyan)
         );
 
     border-radius:10px;
+
 }
 
 
 .chip-one{
 
-    top:52px;
-
+    top:58px;
     left:0;
+
 }
 
 
 .chip-two{
 
     right:0;
-
-    bottom:70px;
+    bottom:72px;
 
     animation-delay:-1.6s;
+
 }
+
+
+@keyframes floating{
+
+    50%{
+
+        transform:
+            translateY(-11px);
+
+    }
+
+}
+
 
 
 /* =========================================================
@@ -1747,7 +1666,10 @@ img{
 
     z-index:5;
 
-    margin-top:-58px;
+    margin-top:-50px;
+
+    padding-bottom:35px;
+
 }
 
 
@@ -1760,25 +1682,17 @@ img{
 
     overflow:hidden;
 
-    background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.095),
-            rgba(255,255,255,.035)
-        );
+    background:#fff;
 
     border:
         1px solid
-        var(--hq-line);
+        var(--border);
 
-    border-radius:26px;
-
-    backdrop-filter:
-        blur(22px);
+    border-radius:24px;
 
     box-shadow:
-        var(--hq-shadow);
+        var(--shadow);
+
 }
 
 
@@ -1787,9 +1701,10 @@ img{
     position:relative;
 
     padding:
-        29px 20px;
+        26px 18px;
 
     text-align:center;
+
 }
 
 
@@ -1809,9 +1724,10 @@ img{
 
         linear-gradient(
             transparent,
-            rgba(22,214,255,.20),
+            #dce8f1,
             transparent
         );
+
 }
 
 
@@ -1825,20 +1741,24 @@ img{
     place-items:center;
 
     margin:
-        0 auto
-        11px;
+        0 auto 10px;
 
-    color:
-        var(--hq-cyan);
+    color:var(--blue);
 
-    background:
-        rgba(22,214,255,.08);
-
-    border:
-        1px solid
-        rgba(22,214,255,.16);
+    background:#edf7ff;
 
     border-radius:13px;
+
+}
+
+
+.stat:nth-child(2n)
+.stat-icon{
+
+    color:var(--cyan);
+
+    background:#edfbfd;
+
 }
 
 
@@ -1848,41 +1768,31 @@ img{
 
     margin-bottom:4px;
 
-    color:#ffffff;
+    color:var(--navy);
 
-    font-size:1.9rem;
+    font-family:"Manrope";
 
-    font-weight:900;
+    font-size:18px;
 
-    background:
+    font-weight:800;
 
-        linear-gradient(
-            90deg,
-            var(--hq-cyan),
-            var(--hq-violet)
-        );
-
-    background-clip:text;
-
-    -webkit-background-clip:text;
-
-    -webkit-text-fill-color:
-        transparent;
 }
 
 
 .stat-label{
 
-    color:#aebbd1;
+    color:var(--muted);
 
-    font-size:.74rem;
+    font-size:9px;
 
     font-weight:600;
+
 }
 
 
+
 /* =========================================================
-   TITRES SECTION
+   TITRES
 ========================================================= */
 
 .section-heading{
@@ -1890,10 +1800,10 @@ img{
     max-width:850px;
 
     margin:
-        0 auto
-        58px;
+        0 auto 52px;
 
     text-align:center;
+
 }
 
 
@@ -1906,49 +1816,51 @@ img{
     gap:8px;
 
     padding:
-        9px 15px;
+        9px 14px;
 
-    margin-bottom:18px;
-
-    color:
-        var(--hq-cyan);
-
-    background:
-        rgba(22,214,255,.075);
-
-    border:
-        1px solid
-        rgba(22,214,255,.16);
+    margin-bottom:16px;
 
     border-radius:999px;
 
-    font-size:.74rem;
+    color:var(--blue);
 
-    font-weight:800;
+    background:#edf7ff;
 
-    letter-spacing:.04em;
+    border:
+        1px solid
+        #d8ebfa;
+
+    font-size:9px;
+
+    font-weight:900;
+
+    letter-spacing:.06em;
 
     text-transform:uppercase;
+
 }
 
 
 .section-heading h2{
 
-    margin-bottom:16px;
+    margin-bottom:15px;
+
+    color:var(--navy);
+
+    font-family:"Manrope";
 
     font-size:
 
         clamp(
-            2rem,
-            4.5vw,
-            3.7rem
+            32px,
+            4.3vw,
+            50px
         );
 
-    line-height:1.08;
+    line-height:1.1;
 
-    letter-spacing:-.045em;
+    letter-spacing:-1.7px;
 
-    font-weight:900;
 }
 
 
@@ -1958,19 +1870,16 @@ img{
 
         linear-gradient(
             90deg,
-            var(--hq-cyan),
-            var(--hq-blue),
-            var(--hq-violet)
+            var(--blue),
+            var(--cyan)
         );
-
-    background-clip:text;
 
     -webkit-background-clip:text;
 
+    background-clip:text;
+
     color:transparent;
 
-    -webkit-text-fill-color:
-        transparent;
 }
 
 
@@ -1980,13 +1889,14 @@ img{
 
     margin:auto;
 
-    color:
-        var(--hq-muted);
+    color:var(--muted);
+
+    font-size:13px;
 
     line-height:1.82;
 
-    font-size:.96rem;
 }
+
 
 
 /* =========================================================
@@ -1995,9 +1905,20 @@ img{
 
 .services{
 
+    position:relative;
+
     padding:
-        125px 0
-        105px;
+        95px 0 100px;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #fff,
+            #f8fbfe 48%,
+            #fff
+        );
+
 }
 
 
@@ -2008,11 +1929,12 @@ img{
     grid-template-columns:
 
         repeat(
-            4,
+            2,
             minmax(0,1fr)
         );
 
-    gap:21px;
+    gap:20px;
+
 }
 
 
@@ -2020,40 +1942,34 @@ img{
 
     position:relative;
 
-    min-height:420px;
+    min-height:400px;
 
     display:flex;
 
     flex-direction:column;
 
-    padding:27px;
+    padding:30px;
 
     overflow:hidden;
 
-    background:
-
-        linear-gradient(
-            155deg,
-            rgba(255,255,255,.085),
-            rgba(255,255,255,.027)
-        );
+    background:#fff;
 
     border:
         1px solid
-        rgba(255,255,255,.09);
+        var(--border);
 
-    border-radius:27px;
-
-    backdrop-filter:
-        blur(22px);
+    border-radius:24px;
 
     box-shadow:
 
-        0 22px 55px
-        rgba(0,0,0,.26);
+        0 8px 28px
+        rgba(12,57,92,.05);
 
-    transition:
-        .35s;
+    transition:.35s;
+
+    transform-style:
+        preserve-3d;
+
 }
 
 
@@ -2063,19 +1979,24 @@ img{
 
     position:absolute;
 
-    inset:0;
+    width:180px;
+    height:180px;
+
+    right:-110px;
+    bottom:-110px;
+
+    border-radius:50%;
 
     background:
 
         radial-gradient(
-            circle at 50% 0%,
-            rgba(22,214,255,.15),
-            transparent 40%
+            circle,
+            rgba(0,184,217,.14),
+            transparent 70%
         );
 
-    opacity:0;
-
     transition:.35s;
+
 }
 
 
@@ -2089,16 +2010,14 @@ img{
     left:0;
 
     width:100%;
-    height:4px;
+    height:3px;
 
     background:
 
         linear-gradient(
             90deg,
-            var(--hq-violet),
-            var(--hq-blue),
-            var(--hq-cyan),
-            var(--hq-green)
+            var(--blue),
+            var(--cyan)
         );
 
     transform:
@@ -2107,31 +2026,36 @@ img{
     transform-origin:left;
 
     transition:.4s;
+
 }
 
 
 .service-card:hover{
 
     transform:
-        translateY(-10px);
+        translateY(-8px);
 
-    border-color:
-        rgba(22,214,255,.24);
+    border-color:#c5dfee;
 
     box-shadow:
+        var(--shadow);
 
-        0 35px 75px
-        rgba(0,0,0,.38);
 }
 
 
 .service-card:hover::before{
-    opacity:1;
+
+    right:-60px;
+    bottom:-60px;
+
 }
 
 
 .service-card:hover::after{
-    transform:scaleX(1);
+
+    transform:
+        scaleX(1);
+
 }
 
 
@@ -2139,15 +2063,17 @@ img{
 
     position:absolute;
 
-    top:16px;
-    right:20px;
+    top:14px;
+    right:18px;
 
-    color:
-        rgba(255,255,255,.055);
+    color:#edf3f7;
 
-    font-size:3.1rem;
+    font-family:"Manrope";
 
-    font-weight:900;
+    font-size:44px;
+
+    font-weight:800;
+
 }
 
 
@@ -2157,53 +2083,45 @@ img{
 
     z-index:2;
 
-    width:70px;
-    height:70px;
+    width:58px;
+    height:58px;
 
     display:grid;
 
     place-items:center;
 
-    margin-bottom:24px;
+    margin-bottom:22px;
 
-    color:#ffffff;
+    color:var(--blue);
 
-    background:
+    background:#edf7ff;
 
-        linear-gradient(
-            135deg,
-            var(--hq-blue),
-            var(--hq-violet)
-        );
+    border-radius:16px;
 
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
-    border-radius:20px;
-
-    font-size:1.65rem;
-
-    box-shadow:
-
-        0 18px 38px
-        rgba(37,99,255,.25);
+    font-size:20px;
 
     transition:.35s;
+
 }
 
 
 .service-card:hover
 .service-icon{
 
+    color:#fff;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        );
+
     transform:
         rotate(-6deg)
         scale(1.07);
 
-    box-shadow:
-
-        0 23px 45px
-        rgba(124,92,255,.32);
 }
 
 
@@ -2213,15 +2131,14 @@ img{
 
     z-index:2;
 
-    margin-bottom:13px;
+    margin-bottom:12px;
 
-    color:#ffffff;
+    color:var(--navy);
 
-    font-size:1.12rem;
+    font-family:"Manrope";
 
-    line-height:1.4;
+    font-size:19px;
 
-    font-weight:900;
 }
 
 
@@ -2231,15 +2148,14 @@ img{
 
     z-index:2;
 
-    flex:1;
+    margin-bottom:18px;
 
-    margin-bottom:20px;
+    color:var(--muted);
 
-    color:#b5c1d5;
+    font-size:11px;
 
-    font-size:.82rem;
+    line-height:1.8;
 
-    line-height:1.76;
 }
 
 
@@ -2251,9 +2167,13 @@ img{
 
     display:grid;
 
-    gap:8px;
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:9px;
 
     margin-bottom:22px;
+
 }
 
 
@@ -2265,18 +2185,19 @@ img{
 
     gap:8px;
 
-    color:#d4dded;
+    color:#536579;
 
-    font-size:.70rem;
+    font-size:9px;
 
-    font-weight:600;
+    font-weight:700;
+
 }
 
 
 .feature i{
 
-    color:
-        var(--hq-green);
+    color:var(--blue);
+
 }
 
 
@@ -2292,25 +2213,29 @@ img{
 
     align-items:center;
 
-    gap:9px;
+    gap:8px;
 
-    color:
-        var(--hq-cyan);
+    margin-top:auto;
 
-    font-size:.76rem;
+    color:var(--blue);
+
+    font-size:10px;
 
     font-weight:900;
 
     transition:.25s;
+
 }
 
 
 .service-link:hover{
 
-    color:#ffffff;
+    color:var(--blue-dark);
 
-    gap:13px;
+    gap:12px;
+
 }
+
 
 
 /* =========================================================
@@ -2322,23 +2247,18 @@ img{
     position:relative;
 
     padding:
-        105px 0;
+        95px 0;
 
-    background:
-
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.018),
-            rgba(37,99,255,.025)
-        );
+    background:#fff;
 
     border-top:
         1px solid
-        rgba(255,255,255,.045);
+        #f0f4f7;
 
     border-bottom:
         1px solid
-        rgba(255,255,255,.045);
+        #f0f4f7;
+
 }
 
 
@@ -2349,7 +2269,8 @@ img{
     grid-template-columns:
         repeat(4,1fr);
 
-    gap:19px;
+    gap:18px;
+
 }
 
 
@@ -2358,81 +2279,76 @@ img{
     position:relative;
 
     padding:
-        27px 23px;
+        28px 22px;
 
     text-align:center;
 
-    background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.060),
-            rgba(255,255,255,.025)
-        );
+    background:#fff;
 
     border:
         1px solid
-        rgba(255,255,255,.075);
+        var(--border);
 
-    border-radius:23px;
+    border-radius:22px;
 
     transition:.35s;
+
+    box-shadow:
+
+        0 7px 24px
+        rgba(12,57,92,.04);
+
 }
 
 
 .process-card:hover{
 
     transform:
-        translateY(-8px);
+        translateY(-7px);
 
-    border-color:
-        rgba(22,214,255,.22);
+    border-color:#c6deee;
 
-    background:
+    box-shadow:
+        var(--shadow-soft);
 
-        linear-gradient(
-            145deg,
-            rgba(37,99,255,.09),
-            rgba(124,92,255,.07)
-        );
 }
 
 
 .step{
 
-    width:57px;
-    height:57px;
+    width:58px;
+    height:58px;
 
     display:grid;
 
     place-items:center;
 
     margin:
-        0 auto
-        17px;
+        0 auto 17px;
 
-    color:#ffffff;
+    color:#fff;
 
     background:
 
         linear-gradient(
             135deg,
-            var(--hq-blue),
-            var(--hq-violet)
+            var(--blue),
+            var(--cyan)
         );
 
     border:
         5px solid
-        #081127;
+        #edf7ff;
 
     border-radius:50%;
 
     box-shadow:
 
         0 13px 30px
-        rgba(37,99,255,.25);
+        rgba(7,104,201,.20);
 
     font-weight:900;
+
 }
 
 
@@ -2440,22 +2356,25 @@ img{
 
     margin-bottom:9px;
 
-    font-size:.96rem;
+    color:var(--navy);
 
-    font-weight:900;
+    font-family:"Manrope";
+
+    font-size:15px;
+
 }
 
 
 .process-card p{
 
-    margin:0;
+    color:var(--muted);
 
-    color:#aab7cc;
-
-    font-size:.75rem;
+    font-size:10px;
 
     line-height:1.7;
+
 }
+
 
 
 /* =========================================================
@@ -2465,8 +2384,16 @@ img{
 .cta-section{
 
     padding:
-        105px 0
-        115px;
+        95px 0 105px;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #fff,
+            #f8fbfe
+        );
+
 }
 
 
@@ -2477,30 +2404,26 @@ img{
     overflow:hidden;
 
     padding:
-        70px 42px;
+        68px 42px;
+
+    border-radius:32px;
+
+    color:#fff;
+
+    text-align:center;
 
     background:
 
         linear-gradient(
-            120deg,
-            rgba(5,8,22,.96),
-            rgba(7,16,32,.84)
-        ),
-
-        url("{% static 'images/forest-bg.png' %}")
-        center / cover
-        no-repeat;
-
-    border:
-        1px solid
-        rgba(22,214,255,.13);
-
-    border-radius:36px;
+            135deg,
+            #071a2f,
+            #075f93 70%,
+            #047fa8
+        );
 
     box-shadow:
-        var(--hq-shadow);
+        var(--shadow);
 
-    text-align:center;
 }
 
 
@@ -2510,11 +2433,11 @@ img{
 
     position:absolute;
 
-    width:460px;
-    height:460px;
+    width:420px;
+    height:420px;
 
-    top:-260px;
-    right:-180px;
+    top:-250px;
+    right:-170px;
 
     border-radius:50%;
 
@@ -2522,9 +2445,10 @@ img{
 
         radial-gradient(
             circle,
-            rgba(124,92,255,.30),
+            rgba(0,184,217,.26),
             transparent 68%
         );
+
 }
 
 
@@ -2534,11 +2458,11 @@ img{
 
     position:absolute;
 
-    width:390px;
-    height:390px;
+    width:350px;
+    height:350px;
 
-    left:-190px;
-    bottom:-220px;
+    left:-170px;
+    bottom:-210px;
 
     border-radius:50%;
 
@@ -2546,9 +2470,10 @@ img{
 
         radial-gradient(
             circle,
-            rgba(22,214,255,.23),
+            rgba(7,104,201,.25),
             transparent 68%
         );
+
 }
 
 
@@ -2557,6 +2482,20 @@ img{
     position:relative;
 
     z-index:2;
+
+}
+
+
+.cta .kicker{
+
+    color:#c8f4fb;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border-color:
+        rgba(255,255,255,.14);
+
 }
 
 
@@ -2565,43 +2504,29 @@ img{
     max-width:780px;
 
     margin:
-        0 auto
-        18px;
+        0 auto 18px;
+
+    font-family:"Manrope";
 
     font-size:
 
         clamp(
-            2rem,
-            4.7vw,
-            3.8rem
+            32px,
+            4.4vw,
+            50px
         );
 
     line-height:1.08;
 
-    letter-spacing:-.045em;
+    letter-spacing:-1.7px;
 
-    font-weight:900;
 }
 
 
 .cta h2 span{
 
-    background:
+    color:#77e7f3;
 
-        linear-gradient(
-            90deg,
-            var(--hq-cyan),
-            var(--hq-violet)
-        );
-
-    background-clip:text;
-
-    -webkit-background-clip:text;
-
-    color:transparent;
-
-    -webkit-text-fill-color:
-        transparent;
 }
 
 
@@ -2610,14 +2535,14 @@ img{
     max-width:720px;
 
     margin:
-        0 auto
-        30px;
+        0 auto 30px;
 
-    color:#b8c5d9;
+    color:#c5d2dd;
 
-    font-size:.94rem;
+    font-size:12px;
 
     line-height:1.8;
+
 }
 
 
@@ -2629,8 +2554,35 @@ img{
 
     flex-wrap:wrap;
 
-    gap:13px;
+    gap:12px;
+
 }
+
+
+.cta
+.btn-glass{
+
+    color:#fff;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border-color:
+        rgba(255,255,255,.16);
+
+}
+
+
+.cta
+.btn-glass:hover{
+
+    color:#fff;
+
+    background:
+        rgba(255,255,255,.13);
+
+}
+
 
 
 /* =========================================================
@@ -2640,26 +2592,34 @@ img{
 .footer{
 
     padding:
-        35px 0;
+        42px 0 30px;
 
-    background:#030611;
+    color:#fff;
+
+    background:#061525;
 
     border-top:
-        1px solid
-        rgba(255,255,255,.07);
+        3px solid
+        var(--cyan);
+
 }
 
 
 .footer-inner{
 
-    display:flex;
+    display:grid;
 
-    align-items:center;
+    grid-template-columns:
 
-    justify-content:
-        space-between;
+        1.3fr
+        1fr
+        1fr
+        1fr;
 
-    gap:20px;
+    gap:36px;
+
+    align-items:start;
+
 }
 
 
@@ -2670,21 +2630,23 @@ img{
     align-items:center;
 
     gap:11px;
+
 }
 
 
 .footer-brand img{
 
-    width:46px;
-    height:46px;
+    width:48px;
+    height:48px;
 
     object-fit:contain;
 
     padding:4px;
 
-    background:#ffffff;
+    background:#fff;
 
     border-radius:12px;
+
 }
 
 
@@ -2692,72 +2654,90 @@ img{
 
     display:block;
 
-    font-size:.86rem;
+    font-size:15px;
 
-    font-weight:900;
+    font-family:"Manrope";
+
 }
 
 
-.footer-brand small,
-.footer-copy{
+.footer-brand small{
 
-    color:#8291aa;
+    display:block;
 
-    font-size:.68rem;
+    margin-top:4px;
+
+    color:#8ea1b3;
+
+    font-size:8px;
+
+    line-height:1.5;
+
 }
 
 
-.social{
+.footer-col h4{
+
+    margin-bottom:15px;
+
+    font-size:11px;
+
+}
+
+
+.footer-col a{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    color:#8ea1b3;
+
+    font-size:9px;
+
+    transition:.25s;
+
+}
+
+
+.footer-col a:hover{
+
+    color:#fff;
+
+    transform:
+        translateX(3px);
+
+}
+
+
+.footer-bottom{
 
     display:flex;
 
-    gap:8px;
-}
+    justify-content:
+        space-between;
 
+    gap:20px;
 
-.social a{
+    margin-top:36px;
 
-    width:40px;
-    height:40px;
+    padding-top:20px;
 
-    display:grid;
+    color:#7f91a1;
 
-    place-items:center;
+    border-top:
 
-    color:#dce7fa;
-
-    background:
-        rgba(255,255,255,.055);
-
-    border:
         1px solid
-        rgba(255,255,255,.075);
+        rgba(255,255,255,.08);
 
-    border-radius:11px;
+    font-size:9px;
 
-    transition:.25s;
 }
 
-
-.social a:hover{
-
-    color:#ffffff;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            var(--hq-blue),
-            var(--hq-violet)
-        );
-
-    transform:
-        translateY(-4px);
-}
 
 
 /* =========================================================
-   BACK TOP
+   BOUTONS FIXES
 ========================================================= */
 
 .back-top{
@@ -2765,36 +2745,35 @@ img{
     position:fixed;
 
     right:20px;
+    bottom:92px;
 
-    bottom:20px;
+    width:48px;
+    height:48px;
 
-    width:50px;
-    height:50px;
-
-    z-index:9999;
+    z-index:9000;
 
     display:grid;
 
     place-items:center;
 
-    color:#ffffff;
+    color:#fff;
 
     background:
 
         linear-gradient(
             135deg,
-            var(--hq-blue),
-            var(--hq-violet)
+            var(--blue),
+            var(--cyan)
         );
 
     border:0;
 
-    border-radius:16px;
+    border-radius:15px;
 
     box-shadow:
 
         0 18px 38px
-        rgba(37,99,255,.30);
+        rgba(7,104,201,.24);
 
     opacity:0;
 
@@ -2804,6 +2783,7 @@ img{
         translateY(15px);
 
     transition:.3s;
+
 }
 
 
@@ -2814,104 +2794,126 @@ img{
     visibility:visible;
 
     transform:none;
+
 }
+
+
+.diam-fixed{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    z-index:9000;
+
+    height:58px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+        6px 12px
+        6px 6px;
+
+    border-radius:999px;
+
+    background:#fff;
+
+    border:
+        1px solid
+        #d5e8f4;
+
+    box-shadow:
+
+        0 16px 45px
+        rgba(9,59,97,.18);
+
+    transition:.25s;
+
+}
+
+
+.diam-fixed:hover{
+
+    transform:
+        translateY(-3px);
+
+}
+
+
+.diam-fixed img{
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:
+        2px solid
+        var(--cyan);
+
+}
+
+
+.diam-fixed strong{
+
+    display:block;
+
+    color:var(--navy);
+
+    font-size:9px;
+
+}
+
+
+.diam-fixed small{
+
+    display:block;
+
+    margin-top:2px;
+
+    color:var(--green);
+
+    font-size:7px;
+
+}
+
 
 
 /* =========================================================
-   ANIMATIONS
+   RESPONSIVE
 ========================================================= */
 
-@keyframes glowMove{
+@media(max-width:1180px){
 
-    0%,
-    100%{
-
-        transform:
-            translate(0)
-            scale(1);
+    .brand-copy small{
+        display:none;
     }
 
-    50%{
 
-        transform:
-            translate(-20px,35px)
-            scale(1.06);
+    .hq-desktop-nav
+    .nav-link{
+
+        padding:
+            0 6px;
+
+        font-size:8.5px;
+
     }
+
 }
 
 
-@keyframes rotateLogo{
 
-    to{
-        transform:
-            rotate(360deg);
-    }
-}
+@media(max-width:1050px){
 
-
-@keyframes pulseDot{
-
-    0%,
-    100%{
-
-        transform:
-            scale(1);
-    }
-
-    50%{
-
-        transform:
-            scale(1.28);
-    }
-}
-
-
-@keyframes textGradient{
-
-    to{
-
-        background-position:
-            250%
-            center;
-    }
-}
-
-
-@keyframes floating{
-
-    0%,
-    100%{
-
-        transform:
-            translateY(0);
-    }
-
-    50%{
-
-        transform:
-            translateY(-11px);
-    }
-}
-
-
-@keyframes drawChart{
-
-    to{
-
-        stroke-dashoffset:0;
-    }
-}
-
-
-/* =========================================================
-   TABLETTE
-========================================================= */
-
-@media(max-width:1199px){
-
-    .nav-links,
-    .nav-cta{
-
+    .hq-desktop-nav{
         display:none;
     }
 
@@ -2919,41 +2921,9 @@ img{
     .menu-toggle{
 
         display:grid;
-    }
 
+        place-items:center;
 
-    .hero-grid{
-
-        grid-template-columns:
-
-            1fr
-            430px;
-
-        gap:40px;
-    }
-
-
-    .services-grid{
-
-        grid-template-columns:
-            repeat(2,1fr);
-    }
-}
-
-
-/* =========================================================
-   TABLETTE PETITE
-========================================================= */
-
-@media(max-width:991px){
-
-    .hero{
-
-        min-height:auto;
-
-        padding:
-            135px 0
-            95px;
     }
 
 
@@ -2962,14 +2932,17 @@ img{
         grid-template-columns:1fr;
 
         text-align:center;
+
+        gap:38px;
+
     }
 
 
     .hero-text{
 
         margin-left:auto;
-
         margin-right:auto;
+
     }
 
 
@@ -2977,27 +2950,175 @@ img{
     .hero-trust{
 
         justify-content:center;
+
     }
 
 
     .hero-visual{
 
-        min-height:500px;
+        min-height:480px;
 
-        margin-top:20px;
+    }
+
+
+    .services-grid{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .process-grid{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .footer-inner{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+}
+
+
+
+@media(max-width:700px){
+
+    html{
+        scroll-padding-top:74px;
+    }
+
+
+    .navbar-modern{
+        height:72px;
+    }
+
+
+    .brand-copy strong{
+
+        font-size:16px;
+
+    }
+
+
+    .logo-box{
+
+        width:45px;
+        height:45px;
+
+    }
+
+
+    .logo-box img{
+
+        width:38px;
+        height:38px;
+
+    }
+
+
+    .hero{
+
+        min-height:auto;
+
+        padding:
+            116px 0
+            78px;
+
+    }
+
+
+    .hero h1{
+
+        font-size:41px;
+
+        letter-spacing:-2px;
+
+    }
+
+
+    .hero-text{
+
+        font-size:13px;
+
+    }
+
+
+    .hero-actions{
+
+        flex-direction:column;
+
+    }
+
+
+    .btn-hexa{
+
+        width:100%;
+
+    }
+
+
+    .hero-visual{
+
+        min-height:390px;
+
+    }
+
+
+    .dashboard{
+
+        padding:18px;
+
+    }
+
+
+    .dashboard-grid{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .float-chip{
+
+        display:none;
+
+    }
+
+
+    .orbit{
+
+        width:310px;
+
+    }
+
+
+    .stats-section{
+
+        margin-top:-28px;
+
     }
 
 
     .stats-box{
 
         grid-template-columns:
-            repeat(2,1fr);
+            1fr 1fr;
+
     }
 
 
     .stat:nth-child(2)::after{
 
         display:none;
+
     }
 
 
@@ -3005,187 +3126,16 @@ img{
 
         border-bottom:
             1px solid
-            rgba(255,255,255,.08);
-    }
+            var(--border);
 
-
-    .process-grid{
-
-        grid-template-columns:
-            repeat(2,1fr);
-    }
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:767px){
-
-    .shell{
-
-        width:
-            calc(100% - 24px);
-    }
-
-
-    .navbar-modern{
-
-        padding:
-            9px 0;
-    }
-
-
-    .logo-box{
-
-        width:55px;
-        height:55px;
-
-        border-radius:17px;
-    }
-
-
-    .logo-box img{
-
-        width:46px;
-        height:46px;
-    }
-
-
-    .brand-copy small{
-
-        display:none;
-    }
-
-
-    .hero{
-
-        padding:
-            116px 0
-            85px;
-    }
-
-
-    .hero h1{
-
-        font-size:
-
-            clamp(
-                2.35rem,
-                12vw,
-                4rem
-            );
-    }
-
-
-    .hero-text{
-
-        font-size:.90rem;
-
-        line-height:1.75;
-    }
-
-
-    .hero-actions{
-
-        flex-direction:column;
-    }
-
-
-    .btn-hexa{
-
-        width:100%;
-    }
-
-
-    .hero-trust{
-
-        gap:10px;
-    }
-
-
-    .hero-visual{
-
-        min-height:420px;
-    }
-
-
-    .dashboard{
-
-        padding:18px;
-    }
-
-
-    .float-chip{
-
-        display:none;
-    }
-
-
-    .metrics{
-
-        grid-template-columns:1fr;
-    }
-
-
-    .chart{
-
-        height:145px;
-    }
-
-
-    .stats-section{
-
-        margin-top:-35px;
-    }
-
-
-    .stats-box{
-
-        grid-template-columns:
-            repeat(2,1fr);
-
-        border-radius:22px;
-    }
-
-
-    .stat{
-
-        padding:
-            23px 12px;
-    }
-
-
-    .stat:nth-child(odd)::after{
-
-        display:block;
-    }
-
-
-    .stat:nth-child(even)::after{
-
-        display:none;
-    }
-
-
-    .stat-value{
-
-        font-size:1.45rem;
     }
 
 
     .services{
 
         padding:
-            90px 0
-            80px;
-    }
+            72px 0;
 
-
-    .section-heading{
-
-        margin-bottom:42px;
     }
 
 
@@ -3193,93 +3143,132 @@ img{
     .process-grid{
 
         grid-template-columns:1fr;
+
     }
 
 
     .service-card{
 
         min-height:auto;
+
+    }
+
+
+    .features{
+
+        grid-template-columns:1fr;
+
     }
 
 
     .process{
 
         padding:
-            82px 0;
+            72px 0;
+
     }
 
 
     .cta-section{
 
         padding:
-            82px 0
-            92px;
+            72px 0
+            82px;
+
     }
 
 
     .cta{
 
         padding:
-            48px 21px;
+            48px 20px;
 
-        border-radius:27px;
+        border-radius:26px;
+
     }
 
 
     .cta-actions{
 
         flex-direction:column;
+
     }
 
 
     .footer-inner{
 
+        grid-template-columns:1fr;
+
+    }
+
+
+    .footer-bottom{
+
         flex-direction:column;
 
-        text-align:center;
     }
+
+
+    .diam-fixed{
+
+        width:52px;
+        height:52px;
+
+        right:13px;
+        bottom:13px;
+
+        padding:4px;
+
+    }
+
+
+    .diam-fixed img{
+
+        width:42px;
+        height:42px;
+
+    }
+
+
+    .diam-fixed span{
+
+        display:none;
+
+    }
+
+
+    .back-top{
+
+        right:15px;
+        bottom:77px;
+
+    }
+
 }
 
 
-/* =========================================================
-   PETIT MOBILE
-========================================================= */
 
-@media(max-width:480px){
+@media(max-width:430px){
 
-    .brand-copy strong{
+    .hero h1{
 
-        font-size:.86rem;
+        font-size:37px;
+
     }
 
 
-    .hero-badge{
+    .section-heading h2,
+    .cta h2{
 
-        font-size:.64rem;
-    }
+        font-size:31px;
 
-
-    .hero-trust{
-
-        flex-direction:column;
-    }
-
-
-    .hero-visual{
-
-        min-height:385px;
-    }
-
-
-    .dashboard-status{
-
-        display:none;
     }
 
 
     .stats-box{
 
         grid-template-columns:1fr;
+
     }
 
 
@@ -3287,47 +3276,55 @@ img{
 
         border-bottom:
             1px solid
-            rgba(255,255,255,.08);
+            var(--border);
+
     }
 
 
     .stat::after{
 
         display:none!important;
+
     }
 
 
     .stat:last-child{
 
         border-bottom:0;
+
     }
+
+
+    .dashboard-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
 }
 
 
-/* =========================================================
-   ACCESSIBILITÉ
-========================================================= */
 
-@media(
-    prefers-reduced-motion:reduce
-){
+@media(prefers-reduced-motion:reduce){
 
     *,
     *::before,
     *::after{
 
         animation-duration:
-            .01ms!important;
+            .001ms!important;
 
         animation-iteration-count:
             1!important;
 
         transition-duration:
-            .01ms!important;
+            .001ms!important;
 
         scroll-behavior:
             auto!important;
+
     }
+
 }
 
 </style>
@@ -3335,12 +3332,9 @@ img{
 </head>
 
 
+
 <body>
 
-
-<!-- =====================================================
-     BARRE DE PROGRESSION
-===================================================== -->
 
 <div
     class="scroll-progress"
@@ -3348,24 +3342,9 @@ img{
 ></div>
 
 
-<!-- =====================================================
-     CANVAS
-===================================================== -->
-
-<canvas
-    id="networkCanvas"
-    aria-hidden="true"
-></canvas>
-
-
-<div class="page-glow glow-one"></div>
-
-<div class="page-glow glow-two"></div>
-
-
 
 <!-- =====================================================
-     NAVBAR
+     NAVIGATION
 ===================================================== -->
 
 <nav
@@ -3373,16 +3352,18 @@ img{
     id="navbar"
 >
 
+
     <div class="shell nav-inner">
 
 
         <!-- LOGO -->
 
         <a
-            href="{% url 'login_hexa' %}"
+            href="{% url 'home' %}"
             class="brand"
             aria-label="HexaQuébec"
         >
+
 
             <span class="logo-box">
 
@@ -3401,74 +3382,134 @@ img{
                 </strong>
 
                 <small>
-                    Solutions numériques intelligentes
+                    L’innovation au cœur du numérique québécois
                 </small>
 
             </span>
+
 
         </a>
 
 
 
-        <!-- MENU -->
+        <!-- MENU ORDINATEUR -->
 
-        <div class="nav-links">
+        <div class="hq-desktop-nav">
+
 
             <a
                 href="{% url 'home' %}"
+                class="nav-link"
             >
+
+                <i class="fa-solid fa-house"></i>
+
                 Accueil
+
             </a>
 
 
             <a
                 href="{% url 'services' %}"
-                class="active"
+                class="nav-link active"
             >
+
+                <i class="fa-solid fa-layer-group"></i>
+
                 Services
+
             </a>
 
 
             <a
                 href="{% url 'produits_list' %}"
+                class="nav-link"
             >
+
+                <i class="fa-solid fa-newspaper"></i>
+
                 Articles
+
             </a>
 
 
             <a
                 href="{% url 'portfolio' %}"
+                class="nav-link"
             >
+
+                <i class="fa-solid fa-briefcase"></i>
+
                 Projets
+
+            </a>
+
+
+            <a
+                href="{% url 'client_login' %}"
+                class="nav-link"
+            >
+
+                <i class="fa-solid fa-users"></i>
+
+                Clients
+
             </a>
 
 
             <a
                 href="{% url 'contact' %}"
+                class="nav-link"
             >
+
+                <i class="fa-solid fa-envelope"></i>
+
                 Contact
+
             </a>
+
+
+            <a
+                href="{% url 'a_propos' %}"
+                class="nav-link"
+            >
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                À propos
+
+            </a>
+
+
+            <a
+                href="{% url 'solutions_applications' %}"
+                class="nav-link"
+            >
+
+                <i class="fa-solid fa-laptop-code"></i>
+
+                Solutions & tarifs
+
+            </a>
+
+
+            <a
+                href="{% url 'conference' %}"
+                class="nav-link"
+            >
+
+                <i class="fa-solid fa-video"></i>
+
+                Conférence
+
+            </a>
+
 
         </div>
 
 
 
-        <!-- DEVIS -->
-
-        <a
-            href="{% url 'contact' %}"
-            class="nav-cta"
-        >
-
-            <i class="fa-solid fa-paper-plane"></i>
-
-            Demander un devis
-
-        </a>
-
-
-
-        <!-- MENU MOBILE -->
+        <!-- BOUTON MOBILE -->
 
         <button
             type="button"
@@ -3481,7 +3522,9 @@ img{
 
         </button>
 
+
     </div>
+
 
 </nav>
 
@@ -3502,15 +3545,18 @@ img{
     id="mobilePanel"
 >
 
+
     <button
         type="button"
         class="mobile-close"
         id="mobileClose"
+        aria-label="Fermer le menu"
     >
 
         <i class="fa-solid fa-xmark"></i>
 
     </button>
+
 
 
     <a href="{% url 'home' %}">
@@ -3522,7 +3568,10 @@ img{
     </a>
 
 
-    <a href="{% url 'services' %}">
+    <a
+        href="{% url 'services' %}"
+        class="active"
+    >
 
         <i class="fa-solid fa-layer-group"></i>
 
@@ -3549,6 +3598,15 @@ img{
     </a>
 
 
+    <a href="{% url 'client_login' %}">
+
+        <i class="fa-solid fa-users"></i>
+
+        Clients
+
+    </a>
+
+
     <a href="{% url 'contact' %}">
 
         <i class="fa-solid fa-envelope"></i>
@@ -3556,6 +3614,34 @@ img{
         Contact
 
     </a>
+
+
+    <a href="{% url 'a_propos' %}">
+
+        <i class="fa-solid fa-circle-info"></i>
+
+        À propos
+
+    </a>
+
+
+    <a href="{% url 'solutions_applications' %}">
+
+        <i class="fa-solid fa-laptop-code"></i>
+
+        Solutions & tarifs
+
+    </a>
+
+
+    <a href="{% url 'conference' %}">
+
+        <i class="fa-solid fa-video"></i>
+
+        Conférence
+
+    </a>
+
 
 </aside>
 
@@ -3567,12 +3653,19 @@ img{
 
 <header class="hero">
 
+
+    <div class="hero-grid-bg"></div>
+
+    <span class="hero-blob one"></span>
+
+    <span class="hero-blob two"></span>
+
+
+
     <div class="shell hero-grid">
 
 
-        <!-- TEXTE -->
-
-        <div class="reveal">
+        <div class="reveal from-left">
 
 
             <div class="hero-badge">
@@ -3600,13 +3693,18 @@ img{
             <p class="hero-text">
 
                 HexaQuébec accompagne les entreprises,
-                organisations et entrepreneurs dans la
-                conception de solutions numériques modernes,
-                performantes et professionnelles.
+                organisations et entrepreneurs
+                dans la conception de solutions numériques
+                modernes,
+                performantes
+                et professionnelles.
 
-                Développement Web, applications mobiles,
-                intelligence artificielle, UI/UX,
-                maintenance et solutions sur mesure.
+                Développement Web,
+                applications mobiles,
+                intelligence artificielle,
+                UI/UX,
+                maintenance
+                et solutions sur mesure.
 
             </p>
 
@@ -3616,16 +3714,15 @@ img{
 
 
                 <a
-                    href="{% url 'services_detail' %}"
+                    href="#services"
                     class="btn-hexa btn-primary-hexa"
                 >
 
-                    <i class="fa-solid fa-arrow-right"></i>
+                    <i class="fa-solid fa-arrow-down"></i>
 
-                    Voir tous nos services
+                    Voir nos services
 
                 </a>
-
 
 
                 <a
@@ -3633,7 +3730,7 @@ img{
                     class="btn-hexa btn-glass"
                 >
 
-                    <i class="fa-solid fa-phone-volume"></i>
+                    <i class="fa-solid fa-comments"></i>
 
                     Parler de votre projet
 
@@ -3681,9 +3778,12 @@ img{
 
 
 
-        <!-- VISUEL -->
+        <!-- HERO DROITE -->
 
-        <div class="hero-visual reveal">
+        <div
+            class="hero-visual reveal from-right"
+            id="heroVisual"
+        >
 
 
             <div class="orbit"></div>
@@ -3735,7 +3835,7 @@ img{
                             </strong>
 
                             <small>
-                                Performance numérique
+                                Solutions numériques professionnelles
                             </small>
 
                         </div>
@@ -3749,7 +3849,7 @@ img{
 
                         <i class="fa-solid fa-circle"></i>
 
-                        Système actif
+                        Disponible
 
                     </span>
 
@@ -3758,119 +3858,67 @@ img{
 
 
 
-                <!-- CHART -->
-
-                <div class="chart">
+                <div class="dashboard-grid">
 
 
-                    <svg
-                        viewBox="0 0 360 100"
-                        preserveAspectRatio="none"
-                    >
-
-                        <defs>
-
-                            <linearGradient
-                                id="hexaGradient"
-                                x1="0"
-                                y1="0"
-                                x2="1"
-                                y2="0"
-                            >
-
-                                <stop
-                                    offset="0%"
-                                    stop-color="#7c5cff"
-                                ></stop>
-
-
-                                <stop
-                                    offset="48%"
-                                    stop-color="#2563ff"
-                                ></stop>
-
-
-                                <stop
-                                    offset="78%"
-                                    stop-color="#16d6ff"
-                                ></stop>
-
-
-                                <stop
-                                    offset="100%"
-                                    stop-color="#2ee6a6"
-                                ></stop>
-
-                            </linearGradient>
-
-                        </defs>
-
-
-                        <path
-                            d="
-                            M0,83
-                            C35,79 42,59 75,63
-                            C110,67 118,40 150,45
-                            C190,52 199,23 232,32
-                            C270,42 287,11 323,19
-                            C340,22 352,12 360,8
-                            "
-                        ></path>
-
-                    </svg>
-
-
-                </div>
-
-
-
-                <!-- METRICS -->
-
-                <div class="metrics">
-
-
-                    <div class="metric">
+                    <div class="dashboard-module">
 
                         <i class="fa-solid fa-code"></i>
 
                         <strong>
-                            Web
+                            Développement Web
                         </strong>
 
                         <span>
-                            Moderne & sécurisé
+                            Sites et plateformes professionnelles.
                         </span>
 
                     </div>
 
 
 
-                    <div class="metric">
+                    <div class="dashboard-module">
 
                         <i class="fa-solid fa-mobile-screen"></i>
 
                         <strong>
-                            Mobile
+                            Applications mobiles
                         </strong>
 
                         <span>
-                            Android & iOS
+                            Android, iOS et expériences fluides.
                         </span>
 
                     </div>
 
 
 
-                    <div class="metric">
+                    <div class="dashboard-module">
 
                         <i class="fa-solid fa-brain"></i>
 
                         <strong>
-                            IA
+                            Intelligence artificielle
                         </strong>
 
                         <span>
-                            Solutions intelligentes
+                            Assistants et automatisation.
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="dashboard-module">
+
+                        <i class="fa-solid fa-pen-ruler"></i>
+
+                        <strong>
+                            UI / UX
+                        </strong>
+
+                        <span>
+                            Interfaces modernes et accessibles.
                         </span>
 
                     </div>
@@ -3881,19 +3929,23 @@ img{
 
             </div>
 
+
         </div>
 
+
     </div>
+
 
 </header>
 
 
 
 <!-- =====================================================
-     STATISTIQUES
+     STATS
 ===================================================== -->
 
 <section class="stats-section">
+
 
     <div class="shell">
 
@@ -3903,25 +3955,30 @@ img{
 
             <div class="stat">
 
+
                 <div class="stat-icon">
 
                     <i class="fa-solid fa-code"></i>
 
                 </div>
 
+
                 <span class="stat-value">
                     Web
                 </span>
 
+
                 <span class="stat-label">
                     Développement professionnel
                 </span>
+
 
             </div>
 
 
 
             <div class="stat">
+
 
                 <div class="stat-icon">
 
@@ -3929,19 +3986,23 @@ img{
 
                 </div>
 
+
                 <span class="stat-value">
                     Mobile
                 </span>
 
+
                 <span class="stat-label">
                     Applications modernes
                 </span>
+
 
             </div>
 
 
 
             <div class="stat">
+
 
                 <div class="stat-icon">
 
@@ -3949,13 +4010,16 @@ img{
 
                 </div>
 
+
                 <span class="stat-value">
                     IA
                 </span>
 
+
                 <span class="stat-label">
                     Intelligence artificielle
                 </span>
+
 
             </div>
 
@@ -3963,26 +4027,32 @@ img{
 
             <div class="stat">
 
+
                 <div class="stat-icon">
 
                     <i class="fa-solid fa-headset"></i>
 
                 </div>
 
+
                 <span class="stat-value">
                     Support
                 </span>
 
+
                 <span class="stat-label">
                     Accompagnement professionnel
                 </span>
+
 
             </div>
 
 
         </div>
 
+
     </div>
+
 
 </section>
 
@@ -3996,6 +4066,7 @@ img{
     class="services"
     id="services"
 >
+
 
     <div class="shell">
 
@@ -4027,11 +4098,13 @@ img{
 
             <p>
 
-                De la conception d’un site Web jusqu’à
-                l’intégration de solutions d’intelligence
-                artificielle, HexaQuébec développe des outils
-                numériques adaptés aux besoins réels de
-                votre organisation.
+                De la conception d’un site Web
+                jusqu’à l’intégration de solutions
+                d’intelligence artificielle,
+                HexaQuébec développe
+                des outils numériques
+                adaptés aux besoins réels
+                de votre organisation.
 
             </p>
 
@@ -4043,9 +4116,7 @@ img{
         <div class="services-grid">
 
 
-            <!-- =================================================
-                 WEB
-            ================================================= -->
+            <!-- WEB -->
 
             <article class="service-card reveal">
 
@@ -4070,10 +4141,11 @@ img{
                 <p>
 
                     Création de sites Internet,
-                    plateformes Web et applications
-                    professionnelles rapides,
-                    sécurisées et adaptées à votre
-                    entreprise.
+                    plateformes Web
+                    et applications professionnelles
+                    rapides,
+                    sécurisées
+                    et adaptées à votre entreprise.
 
                 </p>
 
@@ -4136,9 +4208,7 @@ img{
 
 
 
-            <!-- =================================================
-                 MOBILE
-            ================================================= -->
+            <!-- MOBILE -->
 
             <article class="service-card reveal">
 
@@ -4163,9 +4233,12 @@ img{
                 <p>
 
                     Applications mobiles professionnelles
-                    développées pour Android et iOS avec
-                    une expérience utilisateur moderne,
-                    rapide et intuitive.
+                    développées pour Android
+                    et iOS
+                    avec une expérience utilisateur
+                    moderne,
+                    rapide
+                    et intuitive.
 
                 </p>
 
@@ -4228,9 +4301,7 @@ img{
 
 
 
-            <!-- =================================================
-                 IA
-            ================================================= -->
+            <!-- IA -->
 
             <article class="service-card reveal">
 
@@ -4256,8 +4327,9 @@ img{
 
                     Intégration de solutions intelligentes
                     permettant d’automatiser des tâches,
-                    améliorer le service client et
-                    transformer vos données en outils utiles.
+                    améliorer le service client
+                    et transformer vos données
+                    en outils utiles.
 
                 </p>
 
@@ -4287,7 +4359,7 @@ img{
 
                         <i class="fa-solid fa-circle-check"></i>
 
-                        Chatbots professionnels
+                        Analyse de données
 
                     </span>
 
@@ -4296,7 +4368,7 @@ img{
 
                         <i class="fa-solid fa-circle-check"></i>
 
-                        API intelligentes
+                        Intégration IA
 
                     </span>
 
@@ -4320,9 +4392,7 @@ img{
 
 
 
-            <!-- =================================================
-                 UI UX
-            ================================================= -->
+            <!-- UI UX -->
 
             <article class="service-card reveal">
 
@@ -4347,9 +4417,11 @@ img{
                 <p>
 
                     Interfaces numériques modernes,
-                    professionnelles et accessibles,
-                    conçues pour améliorer l’expérience
-                    utilisateur et renforcer votre image.
+                    professionnelles
+                    et accessibles,
+                    conçues pour améliorer
+                    l’expérience utilisateur
+                    et renforcer votre image.
 
                 </p>
 
@@ -4413,7 +4485,9 @@ img{
 
         </div>
 
+
     </div>
+
 
 </section>
 
@@ -4424,6 +4498,7 @@ img{
 ===================================================== -->
 
 <section class="process">
+
 
     <div class="shell">
 
@@ -4453,9 +4528,13 @@ img{
 
             <p>
 
-                Nous travaillons avec une méthode claire
-                permettant de transformer votre idée en une
-                solution numérique fiable et professionnelle.
+                Nous travaillons avec
+                une méthode claire
+                permettant de transformer
+                votre idée
+                en une solution numérique
+                fiable
+                et professionnelle.
 
             </p>
 
@@ -4469,62 +4548,80 @@ img{
 
             <div class="process-card reveal">
 
+
                 <div class="step">
                     01
                 </div>
+
 
                 <h3>
                     Analyse
                 </h3>
 
+
                 <p>
 
                     Compréhension de vos besoins,
-                    objectifs, contraintes et utilisateurs.
+                    objectifs,
+                    contraintes
+                    et utilisateurs.
 
                 </p>
+
 
             </div>
 
 
 
             <div class="process-card reveal">
+
 
                 <div class="step">
                     02
                 </div>
 
+
                 <h3>
                     Conception
                 </h3>
 
+
                 <p>
 
-                    Architecture, expérience utilisateur
-                    et conception de la solution.
+                    Architecture,
+                    expérience utilisateur
+                    et conception
+                    de la solution.
 
                 </p>
+
 
             </div>
 
 
 
             <div class="process-card reveal">
+
 
                 <div class="step">
                     03
                 </div>
 
+
                 <h3>
                     Développement
                 </h3>
 
+
                 <p>
 
-                    Programmation, intégration,
-                    optimisation et tests techniques.
+                    Programmation,
+                    intégration,
+                    optimisation
+                    et tests techniques.
 
                 </p>
+
 
             </div>
 
@@ -4532,27 +4629,35 @@ img{
 
             <div class="process-card reveal">
 
+
                 <div class="step">
                     04
                 </div>
+
 
                 <h3>
                     Mise en ligne
                 </h3>
 
+
                 <p>
 
-                    Déploiement, vérification,
-                    accompagnement et suivi.
+                    Déploiement,
+                    vérification,
+                    accompagnement
+                    et suivi.
 
                 </p>
+
 
             </div>
 
 
         </div>
 
+
     </div>
+
 
 </section>
 
@@ -4563,6 +4668,7 @@ img{
 ===================================================== -->
 
 <section class="cta-section">
+
 
     <div class="shell">
 
@@ -4597,11 +4703,13 @@ img{
 
                 <p>
 
-                    Vous avez un projet Web, mobile ou
-                    d’intelligence artificielle ?
+                    Vous avez un projet Web,
+                    mobile
+                    ou d’intelligence artificielle ?
 
-                    Présentez-nous votre idée et découvrez
-                    comment HexaQuébec peut vous accompagner
+                    Présentez-nous votre idée
+                    et découvrez comment
+                    HexaQuébec peut vous accompagner
                     dans sa réalisation.
 
                 </p>
@@ -4623,7 +4731,6 @@ img{
                     </a>
 
 
-
                     <a
                         href="{% url 'portfolio' %}"
                         class="btn-hexa btn-glass"
@@ -4641,9 +4748,12 @@ img{
 
             </div>
 
+
         </div>
 
+
     </div>
+
 
 </section>
 
@@ -4655,27 +4765,139 @@ img{
 
 <footer class="footer">
 
-    <div class="shell footer-inner">
+
+    <div class="shell">
 
 
-        <div class="footer-brand">
-
-
-            <img
-                src="{% static 'images/logoHexa.png' %}"
-                alt="HexaQuébec"
-            >
+        <div class="footer-inner">
 
 
             <div>
 
-                <strong>
-                    HexaQuébec
-                </strong>
 
-                <small>
-                    L’innovation au cœur du numérique québécois
-                </small>
+                <div class="footer-brand">
+
+
+                    <img
+                        src="{% static 'images/logoHexa.png' %}"
+                        alt="HexaQuébec"
+                    >
+
+
+                    <div>
+
+
+                        <strong>
+                            HexaQuébec
+                        </strong>
+
+
+                        <small>
+                            L’innovation au cœur du numérique québécois
+                        </small>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="footer-col">
+
+
+                <h4>
+                    Navigation
+                </h4>
+
+
+                <a href="{% url 'home' %}">
+                    Accueil
+                </a>
+
+
+                <a href="{% url 'services' %}">
+                    Services
+                </a>
+
+
+                <a href="{% url 'portfolio' %}">
+                    Projets
+                </a>
+
+
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+
+
+            </div>
+
+
+
+            <div class="footer-col">
+
+
+                <h4>
+                    Solutions
+                </h4>
+
+
+                <a href="#services">
+                    Développement Web
+                </a>
+
+
+                <a href="#services">
+                    Applications mobiles
+                </a>
+
+
+                <a href="#services">
+                    Intelligence artificielle
+                </a>
+
+
+                <a href="{% url 'solutions_applications' %}">
+                    Solutions & tarifs
+                </a>
+
+
+            </div>
+
+
+
+            <div class="footer-col">
+
+
+                <h4>
+                    Accès
+                </h4>
+
+
+                <a href="{% url 'client_login' %}">
+                    Clients
+                </a>
+
+
+                <a href="{% url 'a_propos' %}">
+                    À propos
+                </a>
+
+
+                <a href="{% url 'conference' %}">
+                    Conférence
+                </a>
+
+
+                <a href="{% url 'login_hexa' %}">
+                    Administration
+                </a>
+
 
             </div>
 
@@ -4684,48 +4906,24 @@ img{
 
 
 
-        <div class="footer-copy">
-
-            © {% now "Y" %} HexaQuébec.
-            Tous droits réservés.
-
-        </div>
+        <div class="footer-bottom">
 
 
+            <span>
 
-        <div class="social">
+                © {% now "Y" %}
+                HexaQuébec —
+                Tous droits réservés.
 
-
-            <a
-                href="#"
-                aria-label="Facebook"
-            >
-                <i class="fa-brands fa-facebook-f"></i>
-            </a>
+            </span>
 
 
-            <a
-                href="#"
-                aria-label="LinkedIn"
-            >
-                <i class="fa-brands fa-linkedin-in"></i>
-            </a>
+            <span>
 
+                L’innovation au cœur
+                du numérique québécois.
 
-            <a
-                href="#"
-                aria-label="Instagram"
-            >
-                <i class="fa-brands fa-instagram"></i>
-            </a>
-
-
-            <a
-                href="#"
-                aria-label="TikTok"
-            >
-                <i class="fa-brands fa-tiktok"></i>
-            </a>
+            </span>
 
 
         </div>
@@ -4733,12 +4931,13 @@ img{
 
     </div>
 
+
 </footer>
 
 
 
 <!-- =====================================================
-     RETOUR HAUT
+     RETOUR EN HAUT
 ===================================================== -->
 
 <button
@@ -4755,688 +4954,752 @@ img{
 
 
 <!-- =====================================================
+     DIAM IA FIXE
+===================================================== -->
+
+<a
+    href="{% url 'home' %}#diam"
+    class="diam-fixed"
+    aria-label="Ouvrir Diam IA"
+>
+
+
+    <img
+        src="{% static 'images/diam.jpeg' %}"
+        alt="Diam IA"
+    >
+
+
+    <span>
+
+        <strong>
+            Diam IA
+        </strong>
+
+        <small>
+            ● En ligne
+        </small>
+
+    </span>
+
+
+</a>
+
+
+
+<!-- =====================================================
      JAVASCRIPT
 ===================================================== -->
 
 <script>
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
+(function(){
 
-        /* =================================================
-           VARIABLES
-        ================================================= */
-
-        const navbar =
-            document.getElementById(
-                "navbar"
-            );
-
-        const scrollProgress =
-            document.getElementById(
-                "scrollProgress"
-            );
-
-        const backTop =
-            document.getElementById(
-                "backTop"
-            );
-
-        const menuToggle =
-            document.getElementById(
-                "menuToggle"
-            );
-
-        const mobilePanel =
-            document.getElementById(
-                "mobilePanel"
-            );
-
-        const mobileOverlay =
-            document.getElementById(
-                "mobileOverlay"
-            );
-
-        const mobileClose =
-            document.getElementById(
-                "mobileClose"
-            );
+"use strict";
 
 
-
-        /* =================================================
-           SCROLL
-        ================================================= */
-
-        function handleScroll(){
-
-            const scrollTop =
-                window.scrollY ||
-                document.documentElement.scrollTop;
+const $ =
+    (selector, context = document) =>
+        context.querySelector(selector);
 
 
-            const documentHeight =
-                document.documentElement.scrollHeight -
-                window.innerHeight;
-
-
-            const progress =
-                documentHeight > 0
-                    ? (
-                        scrollTop /
-                        documentHeight
-                    ) * 100
-                    : 0;
-
-
-            if(scrollProgress){
-
-                scrollProgress.style.width =
-                    progress + "%";
-            }
-
-
-            if(navbar){
-
-                if(scrollTop > 30){
-
-                    navbar.classList.add(
-                        "scrolled"
-                    );
-
-                }else{
-
-                    navbar.classList.remove(
-                        "scrolled"
-                    );
-                }
-            }
-
-
-            if(backTop){
-
-                if(scrollTop > 500){
-
-                    backTop.classList.add(
-                        "show"
-                    );
-
-                }else{
-
-                    backTop.classList.remove(
-                        "show"
-                    );
-                }
-            }
-        }
-
-
-        window.addEventListener(
-            "scroll",
-            handleScroll,
-            {
-                passive:true
-            }
+const $$ =
+    (selector, context = document) =>
+        Array.from(
+            context.querySelectorAll(selector)
         );
 
 
-        handleScroll();
+
+/* =========================================================
+   NAVBAR + SCROLL
+========================================================= */
+
+const navbar =
+    $("#navbar");
+
+
+const progress =
+    $("#scrollProgress");
+
+
+const backTop =
+    $("#backTop");
 
 
 
-        /* =================================================
-           MENU MOBILE
-        ================================================= */
+function onScroll(){
 
-        function openMenu(){
 
-            mobilePanel.classList.add(
-                "open"
-            );
-
-            mobileOverlay.classList.add(
-                "show"
-            );
-
-            document.body.classList.add(
-                "menu-open"
-            );
-        }
+    const y =
+        window.scrollY;
 
 
 
-        function closeMenu(){
+    if(navbar){
 
-            mobilePanel.classList.remove(
-                "open"
-            );
+        navbar.classList.toggle(
+            "scrolled",
+            y > 18
+        );
 
-            mobileOverlay.classList.remove(
-                "show"
-            );
-
-            document.body.classList.remove(
-                "menu-open"
-            );
-        }
+    }
 
 
-        if(menuToggle){
 
-            menuToggle.addEventListener(
-                "click",
-                openMenu
-            );
-        }
+    if(backTop){
 
+        backTop.classList.toggle(
+            "show",
+            y > 520
+        );
 
-        if(mobileClose){
-
-            mobileClose.addEventListener(
-                "click",
-                closeMenu
-            );
-        }
+    }
 
 
-        if(mobileOverlay){
 
-            mobileOverlay.addEventListener(
-                "click",
-                closeMenu
-            );
-        }
+    if(progress){
 
 
-        document
-            .querySelectorAll(
-                ".mobile-panel a"
+        const max =
+
+            document.documentElement.scrollHeight
+
+            -
+
+            window.innerHeight;
+
+
+
+        progress.style.width =
+
+            (
+                max > 0
+
+                ?
+
+                Math.min(
+                    100,
+                    (
+                        y
+                        /
+                        max
+                    )
+                    *
+                    100
+                )
+
+                :
+
+                0
             )
-            .forEach(
-                function(link){
 
-                    link.addEventListener(
-                        "click",
-                        closeMenu
-                    );
-                }
-            );
+            +
+
+            "%";
 
 
+    }
 
-        /* =================================================
-           REVEAL
-        ================================================= */
 
-        const revealElements =
-            document.querySelectorAll(
-                ".reveal"
-            );
+}
+
+
+
+onScroll();
+
+
+
+window.addEventListener(
+
+    "scroll",
+
+    onScroll,
+
+    {
+        passive:true
+    }
+
+);
+
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+const menuToggle =
+    $("#menuToggle");
+
+
+const mobilePanel =
+    $("#mobilePanel");
+
+
+const mobileOverlay =
+    $("#mobileOverlay");
+
+
+const mobileClose =
+    $("#mobileClose");
+
+
+
+function setMenu(open){
+
+
+    if(
+        !mobilePanel
+        ||
+        !mobileOverlay
+    ){
+
+        return;
+
+    }
+
+
+
+    mobilePanel.classList.toggle(
+        "open",
+        open
+    );
+
+
+    mobileOverlay.classList.toggle(
+        "show",
+        open
+    );
+
+
+    document.body.classList.toggle(
+        "menu-open",
+        open
+    );
+
+
+}
+
+
+
+if(menuToggle){
+
+
+    menuToggle.addEventListener(
+
+        "click",
+
+        function(){
+
+            setMenu(true);
+
+        }
+
+    );
+
+
+}
+
+
+
+if(mobileClose){
+
+
+    mobileClose.addEventListener(
+
+        "click",
+
+        function(){
+
+            setMenu(false);
+
+        }
+
+    );
+
+
+}
+
+
+
+if(mobileOverlay){
+
+
+    mobileOverlay.addEventListener(
+
+        "click",
+
+        function(){
+
+            setMenu(false);
+
+        }
+
+    );
+
+
+}
+
+
+
+$$(
+    ".mobile-panel a"
+)
+.forEach(
+
+    function(link){
+
+
+        link.addEventListener(
+
+            "click",
+
+            function(){
+
+                setMenu(false);
+
+            }
+
+        );
+
+
+    }
+
+);
+
+
+
+document.addEventListener(
+
+    "keydown",
+
+    function(event){
 
 
         if(
-            "IntersectionObserver"
-            in window
+            event.key
+            ===
+            "Escape"
         ){
 
-            const observer =
-                new IntersectionObserver(
+            setMenu(false);
 
-                    function(entries){
+        }
 
-                        entries.forEach(
-                            function(entry){
 
-                                if(
-                                    entry.isIntersecting
-                                ){
+    }
 
-                                    entry.target
-                                        .classList
-                                        .add(
-                                            "visible"
-                                        );
+);
 
-                                    observer.unobserve(
-                                        entry.target
-                                    );
-                                }
-                            }
-                        );
 
-                    },
 
-                    {
-                        threshold:.12
+/* =========================================================
+   REVEAL AU SCROLL
+========================================================= */
+
+const observer =
+
+    new IntersectionObserver(
+
+        function(entries){
+
+
+            entries.forEach(
+
+                function(entry){
+
+
+                    if(
+                        !entry.isIntersecting
+                    ){
+
+                        return;
+
                     }
 
-                );
 
-
-            revealElements.forEach(
-                function(element){
-
-                    observer.observe(
-                        element
-                    );
-                }
-            );
-
-        }else{
-
-            revealElements.forEach(
-                function(element){
-
-                    element.classList.add(
+                    entry.target
+                    .classList
+                    .add(
                         "visible"
                     );
+
+
+                    observer
+                    .unobserve(
+                        entry.target
+                    );
+
+
                 }
+
             );
+
+
+        },
+
+        {
+
+            threshold:.12,
+
+            rootMargin:
+                "0px 0px -45px 0px"
+
         }
 
+    );
 
 
-        /* =================================================
-           DASHBOARD 3D
-        ================================================= */
 
-        const dashboard =
-            document.getElementById(
-                "dashboardCard"
-            );
+$$(
+    ".reveal"
+)
+.forEach(
+
+    function(element){
+
+        observer.observe(
+            element
+        );
+
+    }
+
+);
 
 
-        if(
-            dashboard &&
-            window.innerWidth > 900
-        ){
 
-            dashboard.addEventListener(
-                "mousemove",
+/* =========================================================
+   HERO PARALLAX
+========================================================= */
+
+const heroVisual =
+    $("#heroVisual");
+
+
+if(
+    heroVisual
+    &&
+    matchMedia(
+        "(pointer:fine)"
+    ).matches
+){
+
+
+    document.addEventListener(
+
+        "pointermove",
+
+        function(event){
+
+
+            const x =
+
+                (
+                    event.clientX
+                    /
+                    window.innerWidth
+                    -
+                    .5
+                )
+
+                *
+
+                10;
+
+
+            const y =
+
+                (
+                    event.clientY
+                    /
+                    window.innerHeight
+                    -
+                    .5
+                )
+
+                *
+
+                8;
+
+
+
+            heroVisual.style.transform =
+
+                `translate3d(
+                    ${x}px,
+                    ${y}px,
+                    0
+                )`;
+
+
+        }
+
+    );
+
+
+}
+
+
+
+/* =========================================================
+   DASHBOARD 3D
+========================================================= */
+
+const dashboard =
+    $("#dashboardCard");
+
+
+if(
+    dashboard
+    &&
+    matchMedia(
+        "(pointer:fine)"
+    ).matches
+){
+
+
+    dashboard.addEventListener(
+
+        "pointermove",
+
+        function(event){
+
+
+            const rect =
+                dashboard
+                .getBoundingClientRect();
+
+
+            const rotateX =
+
+                (
+                    (
+                        event.clientY
+                        -
+                        rect.top
+                    )
+
+                    /
+
+                    rect.height
+
+                    -
+
+                    .5
+                )
+
+                *
+
+                -4;
+
+
+            const rotateY =
+
+                (
+                    (
+                        event.clientX
+                        -
+                        rect.left
+                    )
+
+                    /
+
+                    rect.width
+
+                    -
+
+                    .5
+                )
+
+                *
+
+                5;
+
+
+
+            dashboard.style.transform =
+
+                `perspective(1000px)
+                 rotateX(${rotateX}deg)
+                 rotateY(${rotateY}deg)`;
+
+
+        }
+
+    );
+
+
+
+    dashboard.addEventListener(
+
+        "pointerleave",
+
+        function(){
+
+            dashboard.style.transform =
+                "";
+
+        }
+
+    );
+
+
+}
+
+
+
+/* =========================================================
+   CARTES SERVICES 3D
+========================================================= */
+
+if(
+    matchMedia(
+        "(pointer:fine)"
+    ).matches
+){
+
+
+    $$(
+        ".service-card"
+    )
+    .forEach(
+
+        function(card){
+
+
+            card.addEventListener(
+
+                "pointermove",
+
                 function(event){
 
+
                     const rect =
-                        dashboard
-                            .getBoundingClientRect();
-
-
-                    const x =
-                        event.clientX -
-                        rect.left;
-
-
-                    const y =
-                        event.clientY -
-                        rect.top;
-
-
-                    const centerX =
-                        rect.width / 2;
-
-
-                    const centerY =
-                        rect.height / 2;
-
-
-                    const rotateY =
-                        (
-                            x -
-                            centerX
-                        ) /
-                        centerX *
-                        5;
+                        card
+                        .getBoundingClientRect();
 
 
                     const rotateX =
-                        -(
-                            y -
-                            centerY
-                        ) /
-                        centerY *
-                        5;
+
+                        (
+                            (
+                                event.clientY
+                                -
+                                rect.top
+                            )
+
+                            /
+
+                            rect.height
+
+                            -
+
+                            .5
+                        )
+
+                        *
+
+                        -2.6;
 
 
-                    dashboard.style.transform =
+                    const rotateY =
 
-                        "perspective(1000px) " +
+                        (
+                            (
+                                event.clientX
+                                -
+                                rect.left
+                            )
 
-                        "rotateX(" +
-                        rotateX +
-                        "deg) " +
+                            /
 
-                        "rotateY(" +
-                        rotateY +
-                        "deg)";
+                            rect.width
+
+                            -
+
+                            .5
+                        )
+
+                        *
+
+                        3.3;
+
+
+
+                    card.style.transform =
+
+                        `translateY(-8px)
+                         perspective(900px)
+                         rotateX(${rotateX}deg)
+                         rotateY(${rotateY}deg)`;
+
+
                 }
+
             );
 
 
-            dashboard.addEventListener(
-                "mouseleave",
+
+            card.addEventListener(
+
+                "pointerleave",
+
                 function(){
 
-                    dashboard.style.transform =
-                        "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+                    card.style.transform =
+                        "";
+
                 }
+
             );
+
+
         }
 
+    );
 
 
-        /* =================================================
-           BACK TOP
-        ================================================= */
+}
 
-        if(backTop){
 
-            backTop.addEventListener(
-                "click",
-                function(){
 
-                    window.scrollTo(
-                        {
-                            top:0,
-                            behavior:"smooth"
-                        }
-                    );
+/* =========================================================
+   RETOUR HAUT
+========================================================= */
+
+if(backTop){
+
+
+    backTop.addEventListener(
+
+        "click",
+
+        function(){
+
+
+            window.scrollTo(
+
+                {
+                    top:0,
+                    behavior:"smooth"
                 }
+
             );
+
+
         }
 
+    );
 
 
-        /* =================================================
-           CANVAS
-        ================================================= */
+}
 
-        const canvas =
-            document.getElementById(
-                "networkCanvas"
-            );
 
-
-        if(canvas){
-
-            const ctx =
-                canvas.getContext(
-                    "2d"
-                );
-
-
-            let particles = [];
-
-
-            function resizeCanvas(){
-
-                const pixelRatio =
-                    Math.min(
-                        window.devicePixelRatio || 1,
-                        2
-                    );
-
-
-                canvas.width =
-                    window.innerWidth *
-                    pixelRatio;
-
-
-                canvas.height =
-                    window.innerHeight *
-                    pixelRatio;
-
-
-                canvas.style.width =
-                    window.innerWidth +
-                    "px";
-
-
-                canvas.style.height =
-                    window.innerHeight +
-                    "px";
-
-
-                ctx.setTransform(
-                    pixelRatio,
-                    0,
-                    0,
-                    pixelRatio,
-                    0,
-                    0
-                );
-
-
-                const count =
-                    window.innerWidth < 768
-                        ? 25
-                        : 50;
-
-
-                particles =
-                    Array.from(
-                        {
-                            length:count
-                        },
-                        function(){
-
-                            return{
-
-                                x:
-                                    Math.random() *
-                                    window.innerWidth,
-
-                                y:
-                                    Math.random() *
-                                    window.innerHeight,
-
-                                vx:
-                                    (
-                                        Math.random() -
-                                        .5
-                                    ) *
-                                    .25,
-
-                                vy:
-                                    (
-                                        Math.random() -
-                                        .5
-                                    ) *
-                                    .25,
-
-                                radius:
-                                    Math.random() *
-                                    1.5 +
-                                    .7
-
-                            };
-                        }
-                    );
-            }
-
-
-
-            function animateCanvas(){
-
-                ctx.clearRect(
-                    0,
-                    0,
-                    window.innerWidth,
-                    window.innerHeight
-                );
-
-
-                particles.forEach(
-                    function(
-                        particle,
-                        index
-                    ){
-
-                        particle.x +=
-                            particle.vx;
-
-
-                        particle.y +=
-                            particle.vy;
-
-
-                        if(
-                            particle.x < 0 ||
-                            particle.x >
-                            window.innerWidth
-                        ){
-
-                            particle.vx *= -1;
-                        }
-
-
-                        if(
-                            particle.y < 0 ||
-                            particle.y >
-                            window.innerHeight
-                        ){
-
-                            particle.vy *= -1;
-                        }
-
-
-
-                        /* POINT */
-
-                        ctx.beginPath();
-
-
-                        ctx.arc(
-                            particle.x,
-                            particle.y,
-                            particle.radius,
-                            0,
-                            Math.PI * 2
-                        );
-
-
-                        ctx.fillStyle =
-                            "rgba(22,214,255,.68)";
-
-
-                        ctx.fill();
-
-
-
-                        /* LIGNES */
-
-                        for(
-                            let j =
-                                index + 1;
-
-                            j <
-                                particles.length;
-
-                            j++
-                        ){
-
-                            const other =
-                                particles[j];
-
-
-                            const dx =
-                                particle.x -
-                                other.x;
-
-
-                            const dy =
-                                particle.y -
-                                other.y;
-
-
-                            const distance =
-                                Math.sqrt(
-                                    dx * dx +
-                                    dy * dy
-                                );
-
-
-                            if(
-                                distance <
-                                135
-                            ){
-
-                                ctx.beginPath();
-
-
-                                ctx.moveTo(
-                                    particle.x,
-                                    particle.y
-                                );
-
-
-                                ctx.lineTo(
-                                    other.x,
-                                    other.y
-                                );
-
-
-                                const opacity =
-                                    (
-                                        1 -
-                                        distance /
-                                        135
-                                    ) *
-                                    .15;
-
-
-                                ctx.strokeStyle =
-
-                                    "rgba(37,99,255," +
-                                    opacity +
-                                    ")";
-
-
-                                ctx.stroke();
-                            }
-                        }
-                    }
-                );
-
-
-                requestAnimationFrame(
-                    animateCanvas
-                );
-            }
-
-
-
-            resizeCanvas();
-
-            animateCanvas();
-
-
-
-            let resizeTimer;
-
-
-            window.addEventListener(
-                "resize",
-                function(){
-
-                    clearTimeout(
-                        resizeTimer
-                    );
-
-
-                    resizeTimer =
-                        setTimeout(
-                            resizeCanvas,
-                            180
-                        );
-                }
-            );
-        }
-
-    }
-);
+})();
 
 </script>
 
 
 </body>
+
 </html>

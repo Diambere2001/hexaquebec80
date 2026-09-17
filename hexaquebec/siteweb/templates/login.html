@@ -3,527 +3,2647 @@
 <html lang="fr">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Connexion Client | HexaQuébec</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta
+    name="description"
+    content="Connexion à l’espace client sécurisé HexaQuébec."
+>
+
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<title>
+    Connexion Client | HexaQuébec
+</title>
+
+
+<link
+    rel="icon"
+    type="image/png"
+    href="{% static 'images/logoHexa.png' %}"
+>
+
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+>
+
 
 <style>
 
+/* =========================================================
+   HEXAQUÉBEC
+========================================================= */
+
 :root{
-    --bg:#070b1a;
-    --bg2:#0b132b;
-    --gold:#c6a87d;
-    --gold-light:#f0d49d;
+
+    --blue:#0768c9;
+    --blue-dark:#034a91;
+    --blue-light:#0b84f3;
+
+    --cyan:#00b8d9;
+
+    --navy:#071a2f;
+    --navy-soft:#0b2948;
+
     --white:#ffffff;
+
+    --bg:#f6f9fc;
+    --bg-soft:#fbfdff;
+
+    --text:#17263a;
+    --muted:#687b8f;
+
+    --border:#e4edf5;
+
+    --green:#16a36a;
+
+    --danger:#d94a5a;
+
+    --shadow:
+        0 28px 80px
+        rgba(12,57,92,.13);
+
+    --shadow-soft:
+        0 14px 40px
+        rgba(12,57,92,.08);
+
 }
 
-/* ===== BASE ===== */
+
+/* =========================================================
+   RESET
+========================================================= */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
 }
+
+
+html{
+    scroll-behavior:smooth;
+}
+
 
 body{
+
     min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    position:relative;
-    background:
-    linear-gradient(rgba(7,11,26,0.88),rgba(7,11,26,0.92)),
-    url("{% static 'images/forest-bg.png' %}") center/cover no-repeat;
-    padding:20px;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    color:var(--text);
+
+    background:#fff;
+
+    overflow-x:hidden;
+
 }
 
-/* ===== BACKGROUND EFFECT ===== */
 
-.glow{
-    position:absolute;
-    width:500px;
-    height:500px;
-    background:radial-gradient(circle, rgba(198,168,125,0.18), transparent 70%);
-    top:-180px;
-    right:-150px;
-    z-index:0;
-    animation:floatGlow 8s ease-in-out infinite;
+a{
+    color:inherit;
+    text-decoration:none;
 }
 
-.glow2{
-    position:absolute;
-    width:400px;
-    height:400px;
-    background:radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
-    bottom:-150px;
-    left:-100px;
-    z-index:0;
-    animation:floatGlow 10s ease-in-out infinite alternate;
+
+img{
+    display:block;
+    max-width:100%;
 }
 
-@keyframes floatGlow{
-    0%{
-        transform:translateY(0px);
-    }
-    50%{
-        transform:translateY(30px);
-    }
-    100%{
-        transform:translateY(0px);
-    }
+
+button,
+input{
+    font:inherit;
 }
 
-/* ===== LOGIN CARD ===== */
 
-.login-wrapper{
-    position:relative;
-    z-index:2;
-    width:100%;
-    max-width:430px;
-}
-
-.login-card{
-    position:relative;
-    overflow:hidden;
-    padding:40px 35px;
-    border-radius:30px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.08);
-    backdrop-filter:blur(18px);
-    box-shadow:
-    0 25px 60px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-    animation:fadeUp 1s ease;
-}
-
-.login-card::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    border-radius:30px;
-    padding:1px;
-    background:linear-gradient(
-        135deg,
-        rgba(198,168,125,0.6),
-        rgba(255,255,255,0.1),
-        rgba(198,168,125,0.3)
-    );
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;
-    mask-composite:exclude;
-}
-
-/* ===== HEADER ===== */
-
-.login-header{
-    text-align:center;
-    margin-bottom:35px;
-}
-
-.logo-box{
-    width:90px;
-    height:90px;
-    margin:auto;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    background:linear-gradient(135deg,#f0d49d,#c6a87d);
-    box-shadow:0 10px 35px rgba(198,168,125,0.45);
-}
-
-.logo-box::before{
-    content:'';
-    position:absolute;
-    inset:-6px;
-    border-radius:50%;
-    border:2px solid rgba(255,255,255,0.15);
-    animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-    0%{
-        transform:scale(1);
-        opacity:1;
-    }
-    100%{
-        transform:scale(1.15);
-        opacity:0;
-    }
-}
-
-.logo-box i{
-    font-size:2rem;
-    color:#0b132b;
-}
-
-.login-title{
-    font-size:2rem;
-    font-weight:800;
-    margin-top:22px;
-    color:#fff;
-}
-
-.login-subtitle{
-    color:#cfcfcf;
-    margin-top:8px;
-    font-size:0.95rem;
-    line-height:1.6;
-}
-
-/* ===== ALERT ===== */
-
-.alert{
-    border:none;
-    border-radius:15px;
-    background:rgba(220,53,69,0.15);
-    color:#fff;
-    backdrop-filter:blur(10px);
-}
-
-/* ===== INPUT ===== */
-
-.form-label{
-    color:#f1f1f1;
-    font-size:0.88rem;
-    font-weight:500;
-    margin-bottom:8px;
-}
-
-.input-box{
-    position:relative;
-    margin-bottom:22px;
-}
-
-.input-group{
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:18px;
-    overflow:hidden;
-    transition:0.3s ease;
-    backdrop-filter:blur(10px);
-}
-
-.input-group:focus-within{
-    border-color:rgba(198,168,125,0.7);
-    box-shadow:0 0 20px rgba(198,168,125,0.2);
-}
-
-.input-group-text{
-    background:transparent;
-    border:none;
-    color:var(--gold);
-    padding-left:18px;
-}
-
-.form-control{
-    background:transparent !important;
-    border:none !important;
-    color:#fff !important;
-    font-size:0.95rem;
-    padding:14px 12px;
-}
-
-.form-control:focus{
-    box-shadow:none !important;
-}
-
-.form-control::placeholder{
-    color:rgba(255,255,255,0.45);
-}
-
-/* ===== INFO ===== */
-
-.info-box{
-    background:rgba(250,204,21,0.08);
-    border:1px solid rgba(250,204,21,0.15);
-    padding:12px 15px;
-    border-radius:15px;
-    color:#facc15;
-    font-size:0.83rem;
-    margin-bottom:20px;
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-}
-
-/* ===== BUTTON ===== */
-
-.btn-login{
-    width:100%;
-    height:58px;
-    border:none;
-    border-radius:18px;
-    background:linear-gradient(135deg,#f0d49d,#c6a87d);
-    color:#0b132b;
-    font-weight:700;
-    font-size:1rem;
-    transition:all 0.35s ease;
-    box-shadow:0 10px 25px rgba(198,168,125,0.25);
+button{
     cursor:pointer;
-    position:relative;
-    overflow:hidden;
 }
 
-.btn-login::before{
-    content:'';
+
+::selection{
+    color:var(--navy);
+    background:#dff4f8;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.login-page{
+
+    position:relative;
+
+    min-height:100vh;
+
+    display:grid;
+
+    place-items:center;
+
+    padding:
+        115px 24px
+        50px;
+
+    overflow:hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 88% 16%,
+            rgba(0,184,217,.18),
+            transparent 27%
+        ),
+
+        radial-gradient(
+            circle at 8% 82%,
+            rgba(7,104,201,.11),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f7fbfe
+        );
+
+}
+
+
+/* GRILLE ARRIÈRE PLAN */
+
+.login-page::before{
+
+    content:"";
+
     position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+
+    opacity:.24;
+
+    background-image:
+
+        linear-gradient(
+            #dfeaf5 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            #dfeaf5 1px,
+            transparent 1px
+        );
+
+    background-size:
+        52px 52px;
+
+    mask-image:
+
+        linear-gradient(
+            to bottom,
+            #000,
+            transparent 92%
+        );
+
+}
+
+
+/* =========================================================
+   DÉCORATIONS
+========================================================= */
+
+.blur-circle{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(8px);
+
+    pointer-events:none;
+
+    opacity:.7;
+
+}
+
+
+.blur-circle.one{
+
+    width:240px;
+    height:240px;
+
+    top:10%;
+    right:7%;
+
+    background:
+        rgba(0,184,217,.10);
+
+    animation:
+        floatingCircle
+        8s
+        ease-in-out
+        infinite alternate;
+
+}
+
+
+.blur-circle.two{
+
+    width:180px;
+    height:180px;
+
+    left:4%;
+    bottom:8%;
+
+    background:
+        rgba(7,104,201,.08);
+
+    animation:
+        floatingCircle
+        10s
+        ease-in-out
+        infinite alternate-reverse;
+
+}
+
+
+@keyframes floatingCircle{
+
+    to{
+
+        transform:
+            translate(
+                25px,
+                -18px
+            )
+            scale(1.07);
+
+    }
+
+}
+
+
+/* =========================================================
+   NAVBAR MINI
+========================================================= */
+
+.login-nav{
+
+    position:absolute;
+
     top:0;
-    left:-100%;
+    left:0;
+
+    z-index:20;
+
+    width:100%;
+    height:82px;
+
+    display:flex;
+
+    align-items:center;
+
+    background:
+        rgba(255,255,255,.91);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    border-bottom:
+        1px solid
+        rgba(221,231,240,.88);
+
+}
+
+
+.nav-inner{
+
+    width:min(
+        1180px,
+        92%
+    );
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:
+        space-between;
+
+    gap:20px;
+
+}
+
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+}
+
+
+.brand-logo{
+
+    width:50px;
+    height:50px;
+
+    display:grid;
+
+    place-items:center;
+
+    padding:4px;
+
+    border-radius:15px;
+
+    background:#fff;
+
+    border:
+        1px solid
+        var(--border);
+
+    box-shadow:
+        0 8px 24px
+        rgba(5,55,90,.08);
+
+}
+
+
+.brand-logo img{
+
     width:100%;
     height:100%;
-    background:rgba(255,255,255,0.25);
-    transition:0.6s;
+
+    object-fit:contain;
+
 }
 
-.btn-login:hover::before{
-    left:100%;
+
+.brand-text strong{
+
+    display:block;
+
+    color:var(--navy);
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:18px;
+
+    font-weight:800;
+
 }
+
+
+.brand-text small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:8px;
+
+}
+
+
+.back-home{
+
+    min-height:43px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:
+        0 15px;
+
+    border-radius:12px;
+
+    color:var(--navy);
+
+    background:#fff;
+
+    border:
+        1px solid
+        var(--border);
+
+    font-size:10px;
+
+    font-weight:800;
+
+    transition:.25s;
+
+}
+
+
+.back-home i{
+
+    color:var(--blue);
+
+}
+
+
+.back-home:hover{
+
+    color:var(--blue);
+
+    border-color:#bddbea;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(--shadow-soft);
+
+}
+
+
+/* =========================================================
+   CONTENEUR PRINCIPAL
+========================================================= */
+
+.login-container{
+
+    position:relative;
+
+    z-index:5;
+
+    width:min(
+        1050px,
+        100%
+    );
+
+    display:grid;
+
+    grid-template-columns:
+        1.05fr
+        .95fr;
+
+    overflow:hidden;
+
+    border-radius:32px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    border:
+        1px solid
+        var(--border);
+
+    box-shadow:
+        var(--shadow);
+
+    animation:
+        loginAppear
+        .8s
+        cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+@keyframes loginAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(28px)
+            scale(.985);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+
+/* =========================================================
+   CÔTÉ GAUCHE
+========================================================= */
+
+.login-info{
+
+    position:relative;
+
+    min-height:610px;
+
+    padding:
+        55px 48px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:
+        space-between;
+
+    color:#fff;
+
+    background:
+
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(0,184,217,.25),
+            transparent 32%
+        ),
+
+        linear-gradient(
+            145deg,
+            #071a2f,
+            #075f93
+        );
+
+}
+
+
+.login-info::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:390px;
+    height:390px;
+
+    top:-220px;
+    right:-190px;
+
+    border-radius:50%;
+
+    border:
+        65px solid
+        rgba(255,255,255,.04);
+
+}
+
+
+.login-info::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:320px;
+    height:320px;
+
+    left:-190px;
+    bottom:-210px;
+
+    border-radius:50%;
+
+    background:
+        rgba(0,184,217,.08);
+
+}
+
+
+.info-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+.info-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+        9px 13px;
+
+    border-radius:999px;
+
+    color:#bdf6fb;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    font-size:9px;
+
+    font-weight:900;
+
+    text-transform:uppercase;
+
+    letter-spacing:.07em;
+
+}
+
+
+.login-info h1{
+
+    max-width:470px;
+
+    margin-top:25px;
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:
+        clamp(
+            36px,
+            4vw,
+            52px
+        );
+
+    line-height:1.08;
+
+    letter-spacing:-2px;
+
+}
+
+
+.login-info h1 span{
+
+    color:#7deaf3;
+
+}
+
+
+.login-info-text{
+
+    max-width:500px;
+
+    margin-top:18px;
+
+    color:#cedbe5;
+
+    font-size:12px;
+
+    line-height:1.85;
+
+}
+
+
+.security-list{
+
+    position:relative;
+
+    z-index:2;
+
+    display:grid;
+
+    gap:11px;
+
+    margin-top:35px;
+
+}
+
+
+.security-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:
+        13px 14px;
+
+    border-radius:15px;
+
+    background:
+        rgba(255,255,255,.065);
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    backdrop-filter:
+        blur(10px);
+
+}
+
+
+.security-icon{
+
+    width:39px;
+    height:39px;
+
+    flex:none;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:11px;
+
+    color:#fff;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        );
+
+}
+
+
+.security-item strong{
+
+    display:block;
+
+    font-size:10px;
+
+}
+
+
+.security-item small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:#b9c9d6;
+
+    font-size:8px;
+
+    line-height:1.5;
+
+}
+
+
+.info-footer{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-top:35px;
+
+    color:#a9bdcc;
+
+    font-size:9px;
+
+}
+
+
+.status-dot{
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#37d693;
+
+    box-shadow:
+        0 0 0 6px
+        rgba(55,214,147,.10);
+
+    animation:
+        statusPulse
+        2s
+        infinite;
+
+}
+
+
+@keyframes statusPulse{
+
+    50%{
+
+        box-shadow:
+            0 0 0 11px
+            rgba(55,214,147,0);
+
+    }
+
+}
+
+
+/* =========================================================
+   FORMULAIRE
+========================================================= */
+
+.login-form-side{
+
+    position:relative;
+
+    padding:
+        54px 45px;
+
+    display:flex;
+
+    align-items:center;
+
+    background:#fff;
+
+}
+
+
+.form-wrapper{
+
+    width:100%;
+
+}
+
+
+.mobile-logo{
+
+    display:none;
+
+}
+
+
+.form-label-top{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-bottom:14px;
+
+    color:var(--blue);
+
+    font-size:9px;
+
+    font-weight:900;
+
+    text-transform:uppercase;
+
+    letter-spacing:.07em;
+
+}
+
+
+.login-title{
+
+    color:var(--navy);
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:
+        clamp(
+            29px,
+            3vw,
+            38px
+        );
+
+    font-weight:800;
+
+    letter-spacing:-1.3px;
+
+}
+
+
+.login-subtitle{
+
+    margin-top:9px;
+
+    margin-bottom:30px;
+
+    color:#63778a;
+
+    font-size:11px;
+
+    line-height:1.75;
+
+}
+
+
+/* =========================================================
+   ALERTES
+========================================================= */
+
+.alert-message{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+    margin-bottom:18px;
+
+    padding:
+        12px 14px;
+
+    border-radius:14px;
+
+    color:#9b2c3c;
+
+    background:#fff2f4;
+
+    border:
+        1px solid
+        #f3cbd2;
+
+    font-size:10px;
+
+    line-height:1.6;
+
+}
+
+
+.alert-message i{
+
+    margin-top:2px;
+
+    color:var(--danger);
+
+}
+
+
+/* =========================================================
+   CHAMPS
+========================================================= */
+
+.field-box{
+
+    margin-bottom:20px;
+
+}
+
+
+.field-label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#34495e;
+
+    font-size:10px;
+
+    font-weight:800;
+
+}
+
+
+.field-control{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    min-height:56px;
+
+    overflow:hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:15px;
+
+    background:#f9fcfe;
+
+    transition:.25s;
+
+}
+
+
+.field-control:focus-within{
+
+    background:#fff;
+
+    border-color:
+        rgba(7,104,201,.45);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(7,104,201,.07);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+.field-icon{
+
+    width:52px;
+
+    display:grid;
+
+    place-items:center;
+
+    flex:none;
+
+    color:var(--blue);
+
+    font-size:14px;
+
+}
+
+
+.field-control input{
+
+    width:100%;
+
+    height:54px;
+
+    padding:
+        0 48px
+        0 0;
+
+    border:0;
+
+    outline:0;
+
+    color:var(--navy);
+
+    background:transparent;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+
+.field-control input::placeholder{
+
+    color:#a0afbd;
+
+    font-weight:500;
+
+}
+
+
+/* =========================================================
+   ICÔNE VALIDATION
+========================================================= */
+
+.field-state{
+
+    position:absolute;
+
+    right:16px;
+
+    width:24px;
+    height:24px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:50%;
+
+    color:#fff;
+
+    background:var(--green);
+
+    font-size:9px;
+
+    opacity:0;
+
+    transform:scale(.7);
+
+    transition:.25s;
+
+}
+
+
+.field-control.valid
+.field-state{
+
+    opacity:1;
+
+    transform:scale(1);
+
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-box{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:11px;
+
+    margin:
+        3px 0
+        21px;
+
+    padding:
+        13px 14px;
+
+    border-radius:14px;
+
+    color:#36566e;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #eef8ff,
+            #eefcfd
+        );
+
+    border:
+        1px solid
+        #d5eaf5;
+
+    font-size:9px;
+
+    line-height:1.6;
+
+}
+
+
+.info-box i{
+
+    margin-top:2px;
+
+    color:var(--cyan);
+
+}
+
+
+/* =========================================================
+   BOUTON CONNEXION
+========================================================= */
+
+.btn-login{
+
+    position:relative;
+
+    width:100%;
+    height:56px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:9px;
+
+    overflow:hidden;
+
+    border:0;
+
+    border-radius:15px;
+
+    color:#fff;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        );
+
+    box-shadow:
+        0 15px 35px
+        rgba(7,104,201,.22);
+
+    font-size:11px;
+
+    font-weight:900;
+
+    transition:.3s;
+
+}
+
+
+.btn-login::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-100%;
+    left:-30%;
+
+    width:23%;
+    height:300%;
+
+    background:
+        rgba(255,255,255,.30);
+
+    transform:
+        rotate(22deg);
+
+    transition:.6s;
+
+}
+
 
 .btn-login:hover{
-    transform:translateY(-3px);
-    box-shadow:0 18px 35px rgba(198,168,125,0.38);
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 20px 42px
+        rgba(7,104,201,.28);
+
 }
+
+
+.btn-login:hover::before{
+
+    left:125%;
+
+}
+
 
 .btn-login:active{
-    transform:scale(0.98);
+
+    transform:
+        scale(.985);
+
 }
 
-.btn-login i{
-    margin-right:8px;
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.btn-login.loading{
+
+    pointer-events:none;
+
+    opacity:.86;
+
 }
 
-/* ===== FOOTER ===== */
+
+.btn-login.loading
+.login-button-content{
+
+    opacity:0;
+
+}
+
+
+.button-loader{
+
+    position:absolute;
+
+    width:22px;
+    height:22px;
+
+    border:
+        3px solid
+        rgba(255,255,255,.35);
+
+    border-top-color:#fff;
+
+    border-radius:50%;
+
+    opacity:0;
+
+    animation:
+        spin
+        .8s
+        linear
+        infinite;
+
+}
+
+
+.btn-login.loading
+.button-loader{
+
+    opacity:1;
+
+}
+
+
+@keyframes spin{
+
+    to{
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   INSCRIPTION
+========================================================= */
 
 .login-footer{
-    margin-top:22px;
+
+    position:relative;
+
+    z-index:5;
+
+    margin-top:23px;
+
     text-align:center;
-    font-size:0.92rem;
-    color:rgba(255,255,255,0.72);
+
+    color:#718395;
+
+    font-size:10px;
+
+    line-height:1.7;
+
 }
 
+
 .login-link{
-    color:#c6a87d;
-    font-weight:600;
-    text-decoration:none;
+
+    position:relative;
+
+    z-index:5;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:5px;
+
     margin-left:4px;
-    transition:0.3s ease;
+
+    color:var(--blue);
+
+    font-weight:900;
+
+    transition:.25s;
+
 }
+
 
 .login-link:hover{
-    color:#f0d49d;
+
+    color:var(--cyan);
+
+    gap:8px;
+
 }
 
-/* ===== ANIMATION ===== */
 
-@keyframes fadeUp{
-    0%{
-        opacity:0;
-        transform:translateY(40px);
-    }
-    100%{
-        opacity:1;
-        transform:translateY(0);
-    }
+/* =========================================================
+   SÉPARATION
+========================================================= */
+
+.secure-label{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    margin-top:25px;
+
+    padding-top:20px;
+
+    color:#8998a7;
+
+    border-top:
+        1px solid
+        #edf1f4;
+
+    font-size:8px;
+
+    font-weight:700;
+
 }
 
-/* ===== MOBILE ===== */
 
-@media(max-width:576px){
+.secure-label i{
 
-    body{
+    color:var(--green);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+    .login-container{
+
+        max-width:520px;
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .login-info{
+
+        min-height:auto;
+
+        padding:
+            37px 32px;
+
+    }
+
+
+    .login-info h1{
+
+        font-size:34px;
+
+    }
+
+
+    .security-list{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .info-footer{
+
+        display:none;
+
+    }
+
+
+    .login-form-side{
+
+        padding:
+            42px 32px;
+
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .login-page{
+
+        display:block;
+
+        min-height:100vh;
+
+        padding:
+            92px 15px
+            30px;
+
+    }
+
+
+    .login-nav{
+
+        height:72px;
+
+    }
+
+
+    .nav-inner{
+
+        width:92%;
+
+    }
+
+
+    .brand-logo{
+
+        width:43px;
+        height:43px;
+
+    }
+
+
+    .brand-text strong{
+
+        font-size:15px;
+
+    }
+
+
+    .brand-text small{
+
+        display:none;
+
+    }
+
+
+    .back-home span{
+
+        display:none;
+
+    }
+
+
+    .back-home{
+
+        width:43px;
+
+        padding:0;
+
+    }
+
+
+    .login-container{
+
+        width:100%;
+
+        border-radius:24px;
+
+    }
+
+
+    .login-info{
+
+        display:none;
+
+    }
+
+
+    .login-form-side{
+
+        min-height:
+            calc(
+                100vh
+                -
+                125px
+            );
+
+        padding:
+            34px 22px;
+
         align-items:flex-start;
-        padding-top:40px;
+
     }
 
-    .login-card{
-        padding:30px 20px;
-        border-radius:25px;
+
+    .mobile-logo{
+
+        width:78px;
+        height:78px;
+
+        display:grid;
+
+        place-items:center;
+
+        margin:
+            0 auto 25px;
+
+        padding:8px;
+
+        border-radius:21px;
+
+        background:#fff;
+
+        border:
+            1px solid
+            var(--border);
+
+        box-shadow:
+            var(--shadow-soft);
+
     }
 
-    .logo-box{
-        width:75px;
-        height:75px;
+
+    .mobile-logo img{
+
+        width:100%;
+        height:100%;
+
+        object-fit:contain;
+
     }
 
-    .logo-box i{
-        font-size:1.7rem;
+
+    .form-label-top{
+
+        width:100%;
+
+        justify-content:center;
+
     }
+
 
     .login-title{
-        font-size:1.6rem;
+
+        text-align:center;
+
+        font-size:29px;
+
     }
+
 
     .login-subtitle{
-        font-size:0.88rem;
+
+        max-width:330px;
+
+        margin:
+            9px auto
+            28px;
+
+        text-align:center;
+
     }
+
+
+    .field-control{
+
+        min-height:55px;
+
+    }
+
 
     .btn-login{
-        height:54px;
-        font-size:0.95rem;
+
+        height:55px;
+
     }
+
 }
 
 
-.login-footer{
-    position: relative;
-    z-index: 10;
+@media(max-width:390px){
+
+    .login-form-side{
+
+        padding:
+            30px 17px;
+
+    }
+
+
+    .login-title{
+
+        font-size:26px;
+
+    }
+
 }
 
-.login-link{
-    position: relative;
-    z-index: 20;
-    pointer-events: auto;
-}
 
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation-duration:
+            .001ms!important;
+
+        animation-iteration-count:
+            1!important;
+
+        transition-duration:
+            .001ms!important;
+
+    }
+
+}
 
 </style>
+
 </head>
+
 
 <body>
 
-<div class="glow"></div>
-<div class="glow2"></div>
 
-<div class="login-wrapper">
+<main class="login-page">
 
-<div class="login-card">
 
-<!-- HEADER -->
+    <span class="blur-circle one"></span>
 
-<div class="login-header">
+    <span class="blur-circle two"></span>
 
-<div class="logo-box">
-<i class="fa-solid fa-user-shield"></i>
-</div>
 
-<h1 class="login-title">
-Connexion Client
-</h1>
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
 
-<p class="login-subtitle">
-Accédez à votre espace sécurisé HexaQuébec
-et gérez vos services facilement.
-</p>
+    <nav class="login-nav">
 
-</div>
 
-<!-- MESSAGES -->
+        <div class="nav-inner">
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert text-center">
-            {{ message }}
+
+            <a
+                href="{% url 'home' %}"
+                class="brand"
+            >
+
+
+                <span class="brand-logo">
+
+
+                    <img
+                        src="{% static 'images/logoHexa.png' %}"
+                        alt="Logo HexaQuébec"
+                    >
+
+
+                </span>
+
+
+                <span class="brand-text">
+
+
+                    <strong>
+                        HexaQuébec
+                    </strong>
+
+
+                    <small>
+                        L’innovation au cœur du numérique québécois
+                    </small>
+
+
+                </span>
+
+
+            </a>
+
+
+            <a
+                href="{% url 'home' %}"
+                class="back-home"
+            >
+
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+
+                <span>
+                    Retour à l’accueil
+                </span>
+
+
+            </a>
+
+
         </div>
-    {% endfor %}
-{% endif %}
 
-<!-- FORM -->
 
-<form method="POST" autocomplete="off">
+    </nav>
 
-{% csrf_token %}
 
-<!-- EMAIL -->
+    <!-- =====================================================
+         LOGIN
+    ====================================================== -->
 
-<div class="input-box">
+    <div class="login-container">
 
-<label class="form-label">
-Adresse courriel
-</label>
 
-<div class="input-group">
+        <!-- =================================================
+             CÔTÉ PRÉSENTATION
+        ================================================== -->
 
-<span class="input-group-text">
-<i class="fa-solid fa-envelope"></i>
-</span>
+        <section class="login-info">
 
-<input type="email"
-       name="email"
-       class="form-control"
-       placeholder="exemple@gmail.com"
-       required
-       oninput="this.value = this.value.toLowerCase().trim()">
 
-</div>
+            <div class="info-content">
 
-</div>
 
-<!-- CODE CLIENT -->
+                <div class="info-badge">
 
-<div class="input-box">
 
-<label class="form-label">
-Code client
-</label>
+                    <i class="fa-solid fa-shield-halved"></i>
 
-<div class="input-group">
 
-<span class="input-group-text">
-<i class="fa-solid fa-key"></i>
-</span>
+                    Espace client sécurisé
 
-<input type="text"
-       name="client_code"
-       class="form-control"
-       placeholder="HEX-000000"
-       required
-       oninput="this.value = this.value.toUpperCase().trim()">
 
-</div>
+                </div>
 
-</div>
 
-<!-- INFO -->
+                <h1>
 
-<div class="info-box">
+                    Votre espace client
 
-<i class="fa-solid fa-circle-info mt-1"></i>
+                    <span>
+                        HexaQuébec.
+                    </span>
 
-<div>
-Vérifiez votre adresse email pour récupérer
-votre code client sécurisé.
-</div>
+                </h1>
 
-</div>
 
-<!-- BUTTON -->
+                <p class="login-info-text">
 
-<button type="submit" class="btn-login">
+                    Connectez-vous à votre espace
+                    pour accéder à vos informations
+                    et aux services numériques
+                    associés à votre compte HexaQuébec.
 
-<i class="fa-solid fa-arrow-right-to-bracket"></i>
-Connexion
+                </p>
 
-</button>
 
-<!-- FOOTER -->
+                <div class="security-list">
 
-<div class="login-footer">
 
-Vous n’avez pas encore de compte ?
+                    <div class="security-item">
 
-<a href="{% url 'client_register' %}" class="login-link">
-Créer un compte
-<i class="fa-solid fa-arrow-right ms-1"></i>
-</a>
 
-</div>
+                        <div class="security-icon">
 
-</form>
+                            <i class="fa-solid fa-lock"></i>
 
-</div>
+                        </div>
 
-</div>
+
+                        <div>
+
+                            <strong>
+                                Accès sécurisé
+                            </strong>
+
+                            <small>
+                                Votre espace est accessible
+                                avec votre adresse courriel
+                                et votre code client.
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="security-item">
+
+
+                        <div class="security-icon">
+
+                            <i class="fa-solid fa-user-check"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Compte personnel
+                            </strong>
+
+                            <small>
+                                Chaque client dispose
+                                de son propre accès HexaQuébec.
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="security-item">
+
+
+                        <div class="security-icon">
+
+                            <i class="fa-solid fa-headset"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Accompagnement
+                            </strong>
+
+                            <small>
+                                Contactez HexaQuébec
+                                si vous avez besoin d’aide
+                                avec votre accès.
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="info-footer">
+
+
+                <span class="status-dot"></span>
+
+
+                Services HexaQuébec disponibles
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             FORMULAIRE
+        ================================================== -->
+
+        <section class="login-form-side">
+
+
+            <div class="form-wrapper">
+
+
+                <!-- LOGO MOBILE -->
+
+                <div class="mobile-logo">
+
+
+                    <img
+                        src="{% static 'images/logoHexa.png' %}"
+                        alt="HexaQuébec"
+                    >
+
+
+                </div>
+
+
+                <div class="form-label-top">
+
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+
+                    Connexion sécurisée
+
+
+                </div>
+
+
+                <h2 class="login-title">
+
+                    Connexion Client
+
+                </h2>
+
+
+                <p class="login-subtitle">
+
+                    Entrez votre adresse courriel
+                    et votre code client HexaQuébec
+                    pour accéder à votre espace.
+
+                </p>
+
+
+                <!-- =========================================
+                     MESSAGES DJANGO
+                ========================================== -->
+
+                {% if messages %}
+
+                    {% for message in messages %}
+
+
+                        <div class="alert-message">
+
+
+                            <i class="fa-solid fa-circle-exclamation"></i>
+
+
+                            <div>
+
+                                {{ message }}
+
+                            </div>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+                <!-- =========================================
+                     FORMULAIRE
+                ========================================== -->
+
+                <form
+                    method="POST"
+                    autocomplete="off"
+                    id="clientLoginForm"
+                >
+
+
+                    {% csrf_token %}
+
+
+                    <!-- EMAIL -->
+
+                    <div class="field-box">
+
+
+                        <label
+                            for="email"
+                            class="field-label"
+                        >
+
+                            Adresse courriel
+
+                        </label>
+
+
+                        <div
+                            class="field-control"
+                            id="emailControl"
+                        >
+
+
+                            <span class="field-icon">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                            </span>
+
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="exemple@gmail.com"
+                                autocomplete="email"
+                                inputmode="email"
+                                required
+                            >
+
+
+                            <span class="field-state">
+
+                                <i class="fa-solid fa-check"></i>
+
+                            </span>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- CODE CLIENT -->
+
+                    <div class="field-box">
+
+
+                        <label
+                            for="client_code"
+                            class="field-label"
+                        >
+
+                            Code client
+
+                        </label>
+
+
+                        <div
+                            class="field-control"
+                            id="codeControl"
+                        >
+
+
+                            <span class="field-icon">
+
+                                <i class="fa-solid fa-key"></i>
+
+                            </span>
+
+
+                            <input
+                                type="text"
+                                id="client_code"
+                                name="client_code"
+                                placeholder="HEX-000000"
+                                autocomplete="off"
+                                autocapitalize="characters"
+                                spellcheck="false"
+                                required
+                            >
+
+
+                            <span class="field-state">
+
+                                <i class="fa-solid fa-check"></i>
+
+                            </span>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- INFO -->
+
+                    <div class="info-box">
+
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+
+                        <div>
+
+                            Vérifiez votre adresse courriel
+                            pour retrouver le code client
+                            sécurisé transmis par HexaQuébec.
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- BOUTON -->
+
+                    <button
+                        type="submit"
+                        class="btn-login"
+                        id="loginButton"
+                    >
+
+
+                        <span class="login-button-content">
+
+
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+
+
+                            Connexion
+
+
+                        </span>
+
+
+                        <span class="button-loader"></span>
+
+
+                    </button>
+
+
+                    <!-- INSCRIPTION -->
+
+                    <div class="login-footer">
+
+
+                        Vous n’avez pas encore de compte ?
+
+
+                        <a
+                            href="{% url 'client_register' %}"
+                            class="login-link"
+                        >
+
+
+                            Créer un compte
+
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+
+                        </a>
+
+
+                    </div>
+
+
+                    <div class="secure-label">
+
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+
+                        Accès client HexaQuébec
+
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+(function(){
+
+"use strict";
+
+
+/* =========================================================
+   ÉLÉMENTS
+========================================================= */
+
+const form =
+    document.getElementById(
+        "clientLoginForm"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+const codeInput =
+    document.getElementById(
+        "client_code"
+    );
+
+
+const emailControl =
+    document.getElementById(
+        "emailControl"
+    );
+
+
+const codeControl =
+    document.getElementById(
+        "codeControl"
+    );
+
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+
+/* =========================================================
+   EMAIL
+========================================================= */
+
+function validateEmail(){
+
+
+    if(
+        !emailInput
+        ||
+        !emailControl
+    ){
+
+        return;
+
+    }
+
+
+    emailInput.value =
+
+        emailInput.value
+        .toLowerCase()
+        .replace(/\s/g,"");
+
+
+    const valid =
+
+        emailInput
+        .checkValidity()
+
+        &&
+
+        emailInput.value.length > 4;
+
+
+    emailControl
+    .classList.toggle(
+        "valid",
+        valid
+    );
+
+
+}
+
+
+if(emailInput){
+
+
+    emailInput.addEventListener(
+
+        "input",
+
+        validateEmail
+
+    );
+
+
+}
+
+
+/* =========================================================
+   CODE CLIENT
+========================================================= */
+
+function formatClientCode(){
+
+
+    if(
+        !codeInput
+        ||
+        !codeControl
+    ){
+
+        return;
+
+    }
+
+
+    let value =
+
+        codeInput.value
+        .toUpperCase()
+        .replace(/\s/g,"");
+
+
+    codeInput.value =
+        value;
+
+
+    const valid =
+
+        value.length >= 4;
+
+
+    codeControl
+    .classList.toggle(
+        "valid",
+        valid
+    );
+
+
+}
+
+
+if(codeInput){
+
+
+    codeInput.addEventListener(
+
+        "input",
+
+        formatClientCode
+
+    );
+
+
+}
+
+
+/* =========================================================
+   SOUMISSION
+========================================================= */
+
+if(
+    form
+    &&
+    loginButton
+){
+
+
+    form.addEventListener(
+
+        "submit",
+
+        function(){
+
+
+            /*
+            On ne bloque PAS le POST Django.
+
+            L'animation est seulement visuelle
+            pendant l'envoi du formulaire.
+            */
+
+
+            loginButton
+            .classList
+            .add(
+                "loading"
+            );
+
+
+        }
+
+    );
+
+
+}
+
+
+/* =========================================================
+   PETIT EFFET SUR LA CARTE
+========================================================= */
+
+const loginContainer =
+    document.querySelector(
+        ".login-container"
+    );
+
+
+if(
+    loginContainer
+    &&
+    window.matchMedia(
+        "(pointer:fine)"
+    ).matches
+){
+
+
+    document.addEventListener(
+
+        "pointermove",
+
+        function(event){
+
+
+            const x =
+
+                (
+                    event.clientX
+                    /
+                    window.innerWidth
+                    -
+                    .5
+                )
+
+                *
+
+                3;
+
+
+            const y =
+
+                (
+                    event.clientY
+                    /
+                    window.innerHeight
+                    -
+                    .5
+                )
+
+                *
+
+                2;
+
+
+            loginContainer.style.transform =
+
+                "perspective(1400px) "
+
+                +
+
+                "rotateX("
+
+                +
+
+                (-y)
+
+                +
+
+                "deg) "
+
+                +
+
+                "rotateY("
+
+                +
+
+                x
+
+                +
+
+                "deg)";
+
+
+        }
+
+    );
+
+
+    document.addEventListener(
+
+        "mouseleave",
+
+        function(){
+
+
+            loginContainer.style.transform =
+                "";
+
+
+        }
+
+    );
+
+
+}
+
+
+})();
+
+</script>
+
 
 </body>
+
 </html>
