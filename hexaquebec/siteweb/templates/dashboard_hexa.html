@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HexaQuébec Admin Dashboard</title>
+<title>HexaQuébec — Administration</title>
 
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +17,7 @@
 <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 
 <!-- Chart -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -468,13 +468,35 @@ body{
 
 <body>
 
+<div class="hq-admin-overlay" id="hqAdminOverlay" aria-hidden="true"></div>
+
 <!-- SIDEBAR -->
 
 <div class="sidebar">
 
     <div class="logo-box">
-        <img src="{% static 'images/logoHexa.png' %}">
-        <h3>Hexa<span>Québec</span></h3>
+
+        <button
+            type="button"
+            class="hq-sidebar-close"
+            id="hqSidebarClose"
+            aria-label="Fermer le menu"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="hq-brand-logo-admin">
+            <img
+                src="{% static 'images/logoHexa.png' %}"
+                alt="HexaQuébec"
+            >
+        </div>
+
+        <div class="hq-brand-text-admin">
+            <strong>HexaQuébec</strong>
+            <small>Administration numérique</small>
+        </div>
+
     </div>
 
    <!-- MENU ADMINISTRATION -->
@@ -484,67 +506,117 @@ body{
 <div class="sidebar-menu">
 
     <div class="menu-title">
-        Administration
+        Tableau de bord
+    </div>
+
+    <a href="#overview" class="hq-dashboard-anchor">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>
+            <strong>Vue d’ensemble</strong>
+            <small>Indicateurs principaux</small>
+        </span>
+    </a>
+
+
+    <div class="menu-title">
+        Gestion
     </div>
 
     <a href="{% url 'envoyer_message' %}">
         <i class="fa-solid fa-paper-plane"></i>
-        <span>Messages</span>
+        <span>
+            <strong>Messages</strong>
+            <small>Communication clients</small>
+        </span>
     </a>
 
     <a href="{% url 'facture_create' %}">
-        <i class="fa-solid fa-file-invoice"></i>
-        <span>Nouvelle facture</span>
+        <i class="fa-solid fa-file-circle-plus"></i>
+        <span>
+            <strong>Nouvelle facture</strong>
+            <small>Créer une facturation</small>
+        </span>
     </a>
 
     <a href="{% url 'facture_list' %}">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Factures</span>
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <span>
+            <strong>Factures</strong>
+            <small>Suivi des factures</small>
+        </span>
+    </a>
+
+    <a href="{% url 'projet_list' %}" class="project-btn">
+        <div class="project-icon">
+            <i class="fa-solid fa-diagram-project"></i>
+        </div>
+
+        <div class="project-text">
+            <strong>Projets</strong>
+            <small>Gestion des projets</small>
+        </div>
     </a>
 
 
-      <a href="{% url 'projet_list' %}" class="project-btn">
-
-    <div class="project-icon">
-        <i class="fa-solid fa-diagram-project"></i>
+    <div class="menu-title">
+        Publication
     </div>
 
-    <div class="project-text">
-        <strong>Projets</strong>
-        <small>Gestion des projets</small>
-    </div>
-
-</a>
-    <!-- ANNONCES -->
-
-  <button class="btn btn-hexa" onclick="toggleForm('annonceForm')">
-    + Ajouter annonce
-</button>
-
+    <button
+        class="hq-sidebar-action"
+        type="button"
+        onclick="toggleForm('annonceForm')"
+    >
+        <i class="fa-solid fa-circle-plus"></i>
+        <span>
+            <strong>Ajouter une annonce</strong>
+            <small>Publication rapide</small>
+        </span>
+    </button>
 
     <a href="{% url 'annonce_list' %}">
         <i class="fa-solid fa-newspaper"></i>
-        <span>Gérer annonces</span>
+        <span>
+            <strong>Gérer les annonces</strong>
+            <small>Modifier les publications</small>
+        </span>
     </a>
 
+
+    <div class="menu-title">
+        Stages
+    </div>
+
     <a href="{% url 'login_groupe_stagiaire' %}">
-    <i class="fa-solid fa-comments"></i>
-    <span>Groupe stagiaires</span>
-</a>
+        <i class="fa-solid fa-user-group"></i>
+        <span>
+            <strong>Groupe stagiaires</strong>
+            <small>Suivi et échanges</small>
+        </span>
+    </a>
 
-<a href="{% url 'creer_attestation_stagiaire' %}">
-    <i class="fa-solid fa-file-signature"></i>
+    <a href="{% url 'creer_attestation_stagiaire' %}">
+        <i class="fa-solid fa-file-signature"></i>
+        <span>
+            <strong>Attestation</strong>
+            <small>Attester un stagiaire</small>
+        </span>
+    </a>
 
-    <span>
-        Attester un stagiaire
-    </span>
-</a>
 
+    <div class="menu-title">
+        Navigation
+    </div>
 
-<a href="{% url 'home' %}" class="logout-btn">
-    <i class="fa-solid fa-right-from-bracket"></i>
-    <span>Déconnexion</span>
-</a>
+    <a href="{% url 'home' %}" class="logout-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>
+            <strong>Retour au site</strong>
+            <small>Accueil HexaQuébec</small>
+        </span>
+    </a>
+
+</div>
 
 </div>
 
@@ -558,27 +630,109 @@ body{
 
     <div class="topbar" data-aos="fade-down">
 
-        <div>
-            <h1>Administration Dashboard</h1>
-            <p>Bienvenue dans votre espace de gestion HexaQuébec</p>
-        </div>
+        <button
+            type="button"
+            class="hq-admin-menu-btn"
+            id="hqAdminMenuBtn"
+            aria-label="Ouvrir le menu"
+            aria-expanded="false"
+        >
+            <i class="fa-solid fa-bars"></i>
+        </button>
 
-        <div class="d-flex align-items-center gap-3">
-            <div class="text-end">
-                <strong>Admin</strong><br>
-                <small class="text-secondary">Gestion SaaS</small>
+        <div class="hq-topbar-copy">
+
+            <div class="hq-admin-breadcrumb">
+                <span>HexaQuébec</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                Administration
             </div>
 
-            <img src="{% static 'images/logoHexa.png' %}" class="admin-avatar">
+            <h1>Centre d’administration</h1>
+
+            <p>
+                Pilotage des clients, factures, commandes,
+                paiements, projets et rapports.
+            </p>
+
+        </div>
+
+        <div class="hq-admin-identity">
+
+            <div class="hq-admin-status">
+                <span></span>
+                Session active
+            </div>
+
+            <div class="hq-admin-profile">
+                <div class="hq-admin-profile-copy">
+                    <strong>Administrateur</strong>
+                    <small>Espace de gestion</small>
+                </div>
+
+                <img
+                    src="{% static 'images/logoHexa.png' %}"
+                    class="admin-avatar"
+                    alt="HexaQuébec"
+                >
+            </div>
+
         </div>
 
     </div>
 
+    <nav class="hq-admin-tabs" aria-label="Navigation du tableau de bord">
+
+        <a href="#overview" class="active">
+            <i class="fa-solid fa-chart-pie"></i>
+            Vue d’ensemble
+        </a>
+
+        <a href="#clients-section">
+            <i class="fa-solid fa-users"></i>
+            Clients
+        </a>
+
+        <a href="#messages-section">
+            <i class="fa-solid fa-envelope"></i>
+            Messages
+        </a>
+
+        <a href="#commandes-section">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Commandes
+        </a>
+
+        <a href="#paiements-section">
+            <i class="fa-solid fa-credit-card"></i>
+            Paiements
+        </a>
+
+        <a href="#rapport-section">
+            <i class="fa-solid fa-chart-line"></i>
+            Rapports
+        </a>
+
+    </nav>
+
     <!-- STATS -->
 
-    <div class="row g-4 mb-4">
+    <section class="hq-admin-section-head" id="overview">
+        <div>
+            <span class="hq-admin-kicker">Vue d’ensemble</span>
+            <h2>Activité de l’entreprise</h2>
+            <p>Les indicateurs essentiels pour suivre rapidement l’administration HexaQuébec.</p>
+        </div>
 
-        <div class="col-md-4" data-aos="zoom-in">
+        <div class="hq-security-chip">
+            <i class="fa-solid fa-shield-halved"></i>
+            Espace administrateur
+        </div>
+    </section>
+
+    <div class="row g-3 mb-3 hq-main-kpis">
+
+        <div class="col-md-4" data-aos="fade-up">
             <div class="stats-card">
 
                 <div class="stats-icon icon-blue">
@@ -591,7 +745,7 @@ body{
             </div>
         </div>
 
-        <div class="col-md-4" data-aos="zoom-in">
+        <div class="col-md-4" data-aos="fade-up">
 
             <div class="stats-card">
 
@@ -606,7 +760,7 @@ body{
 
         </div>
 
-        <div class="col-md-4" data-aos="zoom-in">
+        <div class="col-md-4" data-aos="fade-up">
 
             <div class="stats-card">
 
@@ -623,23 +777,11 @@ body{
 
     </div>
 
-    <!-- CHART -->
-
-    <div class="dashboard-card" data-aos="fade-up">
-
-        <h3 class="section-title">
-            <i class="fa-solid fa-chart-column"></i>
-            Statistiques des factures
-        </h3>
-
-        <canvas id="facturesChart" height="100"></canvas>
-
-    </div>
-<!-- 💰 KPI PAIEMENTS STYLE PRO -->
-<div class="row g-2 mb-4" data-aos="fade-up">
+    <!-- 💰 KPI PAIEMENTS STYLE PRO -->
+<div class="row g-3 mb-4 hq-finance-kpis" data-aos="fade-up">
 
     <!-- PAYÉS -->
-    <div class="col-6 col-lg-3">
+    <div class="col-12 col-md-6">
         <div class="stats-card d-flex align-items-center gap-3 p-3">
 
             <div class="stats-icon icon-green"
@@ -660,7 +802,7 @@ body{
     </div>
 
     <!-- NON PAYÉS -->
-    <div class="col-6 col-lg-3">
+    <div class="col-12 col-md-6">
         <div class="stats-card d-flex align-items-center gap-3 p-3">
 
             <div class="stats-icon icon-gold"
@@ -682,11 +824,24 @@ body{
 
 </div>
 
-   <div class="row g-4">
+   <!-- CHART -->
+
+    <div class="dashboard-card hq-chart-card" data-aos="fade-up">
+
+        <h3 class="section-title">
+            <i class="fa-solid fa-chart-column"></i>
+            Statistiques des factures
+        </h3>
+
+        <canvas id="facturesChart" height="100"></canvas>
+
+    </div>
+
+<div class="row g-4">
 
     <!-- CLIENTS -->
 
-    <div class="col-lg-5" data-aos="fade-right">
+    <div class="col-lg-5" id="clients-section" data-aos="fade-up">
 
         <div class="dashboard-card client-card-admin">
 
@@ -917,7 +1072,7 @@ body{
 
     <!-- MESSAGES -->
 
-<div class="col-lg-7" data-aos="fade-left">
+<div class="col-lg-7" id="messages-section" data-aos="fade-up">
 
     <div class="dashboard-card message-card-admin">
 
@@ -2026,6 +2181,2229 @@ body.modal-open{
 }
 </style>
 
+
+<style id="hexaquebec-admin-home-theme">
+/* =========================================================
+   HEXAQUÉBEC ADMIN — MÊME DESIGN QUE L'ACCUEIL
+   Palette reprise du design fourni :
+   blue #0768c9 | cyan #00b8d9 | navy #071a2f
+   bg #f6f9fc | border #e4edf5
+========================================================= */
+
+:root{
+    --blue:#0768c9;
+    --blue-light:#0b84f3;
+    --cyan:#00b8d9;
+
+    --navy:#071a2f;
+    --navy-soft:#0b2948;
+
+    --white:#ffffff;
+
+    --bg:#f6f9fc;
+    --bg-soft:#fbfdff;
+
+    --text:#17263a;
+    --muted:#687b8f;
+
+    --border:#e4edf5;
+
+    --green:#16a36a;
+    --red:#d94355;
+    --gold:#d49a21;
+
+    --shadow:
+        0 26px 75px
+        rgba(12,57,92,.12);
+}
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh !important;
+    overflow-x:hidden !important;
+
+    color:var(--text) !important;
+
+    font-family:
+        "Inter",
+        sans-serif !important;
+
+    background:
+        radial-gradient(
+            circle at 88% 8%,
+            rgba(0,184,217,.075),
+            transparent 27%
+        ),
+        radial-gradient(
+            circle at 5% 92%,
+            rgba(7,104,201,.055),
+            transparent 28%
+        ),
+        var(--bg) !important;
+}
+
+body::before{
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-3;
+
+    pointer-events:none;
+
+    opacity:.35;
+
+    background-image:
+        linear-gradient(
+            #e7eff6 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            #e7eff6 1px,
+            transparent 1px
+        );
+
+    background-size:
+        58px 58px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            #000,
+            transparent 92%
+        );
+}
+
+
+/* =========================================================
+   SIDEBAR
+   Même famille visuelle que les sections sombres de l'accueil
+========================================================= */
+
+.sidebar{
+    position:fixed !important;
+
+    top:0 !important;
+    left:0 !important;
+
+    width:282px !important;
+    height:100dvh !important;
+
+    z-index:1000 !important;
+
+    padding:
+        18px 15px
+        25px !important;
+
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(0,184,217,.12),
+            transparent 36%
+        ),
+        linear-gradient(
+            160deg,
+            #061525,
+            #082944 72%,
+            #073451
+        ) !important;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,.08) !important;
+
+    box-shadow:
+        25px 0 70px
+        rgba(7,42,72,.12) !important;
+
+    backdrop-filter:
+        blur(18px) !important;
+}
+
+.sidebar::-webkit-scrollbar{
+    width:5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+    border-radius:20px;
+
+    background:
+        rgba(255,255,255,.14);
+}
+
+
+/* LOGO */
+
+.logo-box{
+    position:relative;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    gap:11px !important;
+
+    margin:
+        0 0
+        20px !important;
+
+    padding:
+        8px 8px
+        18px !important;
+
+    text-align:left !important;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.hq-brand-logo-admin{
+    width:54px;
+    height:54px;
+
+    flex:none;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:16px;
+
+    background:#fff;
+
+    box-shadow:
+        0 12px 30px
+        rgba(0,0,0,.18);
+}
+
+.hq-brand-logo-admin img{
+    width:45px !important;
+    height:45px !important;
+
+    margin:0 !important;
+
+    object-fit:contain;
+}
+
+.hq-brand-text-admin{
+    min-width:0;
+}
+
+.hq-brand-text-admin strong{
+    display:block;
+
+    color:#fff;
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:17px;
+
+    font-weight:800;
+}
+
+.hq-brand-text-admin small{
+    display:block;
+
+    margin-top:3px;
+
+    color:#8ee9f4;
+
+    font-size:8px;
+
+    font-weight:700;
+}
+
+.hq-sidebar-close{
+    display:none;
+
+    position:absolute;
+
+    right:0;
+    top:0;
+
+    width:38px;
+    height:38px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    border-radius:11px;
+
+    color:#fff;
+
+    background:
+        rgba(255,255,255,.07);
+}
+
+
+/* MENU */
+
+.menu-title{
+    margin:
+        17px 10px
+        8px;
+
+    color:
+        rgba(255,255,255,.32);
+
+    font-size:8px;
+
+    font-weight:900;
+
+    letter-spacing:1.4px;
+
+    text-transform:uppercase;
+}
+
+.sidebar-menu a,
+.sidebar-menu .project-btn,
+.sidebar-menu > button{
+    width:100%;
+
+    min-height:50px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin:
+        5px 0 !important;
+
+    padding:
+        8px 10px !important;
+
+    border:
+        1px solid
+        transparent !important;
+
+    border-radius:
+        14px !important;
+
+    color:
+        rgba(255,255,255,.72) !important;
+
+    background:
+        transparent !important;
+
+    box-shadow:none !important;
+
+    text-align:left;
+
+    font-size:
+        10px !important;
+
+    font-weight:
+        700 !important;
+
+    transition:
+        .25s ease !important;
+}
+
+.sidebar-menu a > i,
+.sidebar-menu > button > i,
+.project-icon{
+    width:37px !important;
+    height:37px !important;
+
+    flex:
+        0 0 37px !important;
+
+    display:grid !important;
+
+    place-items:center !important;
+
+    border-radius:
+        11px !important;
+
+    color:#75dceb !important;
+
+    background:
+        rgba(255,255,255,.06) !important;
+
+    transition:.25s;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu .project-btn:hover,
+.sidebar-menu > button:hover,
+.sidebar-menu a.is-current{
+    color:#fff !important;
+
+    transform:
+        translateX(3px) !important;
+
+    border-color:
+        rgba(102,224,239,.14) !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(7,104,201,.22),
+            rgba(0,184,217,.10)
+        ) !important;
+}
+
+.sidebar-menu a:hover > i,
+.sidebar-menu > button:hover > i,
+.sidebar-menu a.is-current > i{
+    color:#fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        ) !important;
+}
+
+.project-text{
+    display:flex;
+
+    flex-direction:column;
+}
+
+.project-text strong{
+    color:#fff;
+
+    font-size:10px;
+}
+
+.project-text small{
+    margin-top:2px;
+
+    color:
+        rgba(255,255,255,.42);
+
+    font-size:8px;
+}
+
+.logout-btn{
+    margin-top:
+        19px !important;
+
+    color:#ffc4cb !important;
+
+    border-color:
+        rgba(255,116,132,.14) !important;
+
+    background:
+        rgba(255,116,132,.055) !important;
+}
+
+.logout-btn > i{
+    color:#ffc3cb !important;
+
+    background:
+        rgba(255,116,132,.10) !important;
+}
+
+.logout-btn:hover{
+    background:
+        rgba(255,116,132,.11) !important;
+
+    box-shadow:none !important;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main-content{
+    margin-left:
+        282px !important;
+
+    min-width:0;
+
+    padding:
+        26px 30px
+        60px !important;
+}
+
+
+/* =========================================================
+   TOPBAR
+   Même effet que la navbar blanche de l'accueil
+========================================================= */
+
+.topbar{
+    position:sticky !important;
+
+    top:14px !important;
+
+    z-index:120 !important;
+
+    min-height:86px;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    justify-content:
+        space-between !important;
+
+    gap:18px !important;
+
+    margin-bottom:
+        26px !important;
+
+    padding:
+        17px 20px !important;
+
+    border:
+        1px solid
+        rgba(221,231,240,.90) !important;
+
+    border-radius:
+        22px !important;
+
+    background:
+        rgba(255,255,255,.90) !important;
+
+    box-shadow:
+        0 12px 38px
+        rgba(10,48,80,.08) !important;
+
+    backdrop-filter:
+        blur(18px) !important;
+
+    -webkit-backdrop-filter:
+        blur(18px) !important;
+}
+
+.hq-topbar-copy{
+    min-width:0;
+}
+
+.topbar h1{
+    margin:0 !important;
+
+    color:var(--navy) !important;
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:
+        clamp(
+            22px,
+            2.3vw,
+            29px
+        ) !important;
+
+    font-weight:
+        800 !important;
+
+    letter-spacing:
+        -.8px;
+}
+
+.topbar p{
+    margin:
+        5px 0 0 !important;
+
+    color:
+        var(--muted) !important;
+
+    font-size:
+        10px !important;
+}
+
+.topbar strong{
+    color:
+        var(--navy);
+}
+
+.topbar .text-secondary{
+    color:
+        var(--muted) !important;
+}
+
+.admin-avatar{
+    width:48px !important;
+    height:48px !important;
+
+    padding:3px;
+
+    object-fit:contain;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        14px !important;
+
+    background:#fff;
+
+    box-shadow:
+        0 8px 24px
+        rgba(5,55,90,.08);
+}
+
+.hq-admin-menu-btn{
+    display:none;
+
+    width:45px;
+    height:45px;
+
+    flex:
+        0 0 45px;
+
+    border:none;
+
+    border-radius:
+        12px;
+
+    color:
+        var(--navy);
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef7ff,
+            #edfaff
+        );
+
+    font-size:18px;
+}
+
+
+/* =========================================================
+   STATISTIQUES
+========================================================= */
+
+.stats-card{
+    position:relative !important;
+
+    min-height:145px;
+
+    isolation:isolate;
+
+    overflow:hidden !important;
+
+    padding:
+        20px !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        21px !important;
+
+    background:
+        #fff !important;
+
+    box-shadow:
+        0 8px 28px
+        rgba(12,57,92,.045) !important;
+
+    transition:
+        .3s !important;
+}
+
+.stats-card::before{
+    content:"";
+
+    position:absolute;
+
+    z-index:-1;
+
+    width:135px;
+    height:135px;
+
+    top:-80px;
+    right:-78px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,184,217,.13),
+            transparent 70%
+        );
+
+    transition:
+        .35s;
+}
+
+.stats-card::after{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    width:4px;
+    height:100%;
+
+    border-radius:
+        21px 0 0 21px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--blue),
+            var(--cyan)
+        );
+}
+
+.stats-card:hover{
+    transform:
+        translateY(-6px) !important;
+
+    border-color:
+        #c7ddec !important;
+
+    box-shadow:
+        var(--shadow) !important;
+}
+
+.stats-card:hover::before{
+    transform:
+        scale(1.4);
+}
+
+.stats-icon{
+    width:50px !important;
+    height:50px !important;
+
+    display:grid !important;
+
+    place-items:center !important;
+
+    margin-bottom:
+        14px !important;
+
+    border-radius:
+        14px !important;
+
+    font-size:
+        19px !important;
+}
+
+.icon-blue{
+    color:
+        var(--blue) !important;
+
+    background:
+        #edf7ff !important;
+}
+
+.icon-gold{
+    color:
+        #b4780d !important;
+
+    background:
+        #fff6df !important;
+}
+
+.icon-green{
+    color:
+        var(--green) !important;
+
+    background:
+        #eaf9f3 !important;
+}
+
+.stats-card h2,
+.stats-card h4{
+    color:
+        var(--navy) !important;
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-weight:
+        800 !important;
+}
+
+.stats-card h2{
+    font-size:
+        30px !important;
+}
+
+.stats-card p,
+.stats-card small{
+    color:
+        var(--muted) !important;
+
+    font-size:
+        10px !important;
+}
+
+
+/* =========================================================
+   CARTES PRINCIPALES
+========================================================= */
+
+.dashboard-card{
+    position:relative !important;
+
+    display:block !important;
+
+    overflow:hidden !important;
+
+    padding:
+        22px !important;
+
+    margin-bottom:
+        22px !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        23px !important;
+
+    background:
+        #fff !important;
+
+    box-shadow:
+        0 9px 32px
+        rgba(12,57,92,.05) !important;
+
+    backdrop-filter:none !important;
+}
+
+.dashboard-card::after{
+    content:"";
+
+    position:absolute;
+
+    width:210px;
+    height:210px;
+
+    right:-155px;
+    top:-155px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    background:
+        rgba(0,184,217,.055);
+}
+
+.section-title{
+    margin:0 !important;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    gap:10px !important;
+
+    color:
+        var(--navy) !important;
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:
+        18px !important;
+
+    font-weight:
+        800 !important;
+
+    letter-spacing:
+        -.35px;
+}
+
+.section-title i{
+    width:38px;
+    height:38px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:
+        11px;
+
+    color:
+        var(--blue) !important;
+
+    background:
+        #edf7ff !important;
+}
+
+.card-header-custom{
+    margin-bottom:
+        18px !important;
+}
+
+.card-subtitle{
+    margin:
+        6px 0 0 !important;
+
+    color:
+        var(--muted) !important;
+
+    font-size:
+        9px !important;
+}
+
+.badge-total{
+    width:auto !important;
+
+    min-width:46px !important;
+    height:46px !important;
+
+    padding:
+        0 14px !important;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    justify-content:center !important;
+
+    border:
+        1px solid
+        #d5e8f5 !important;
+
+    border-radius:
+        13px !important;
+
+    color:
+        var(--blue) !important;
+
+    background:
+        #edf7ff !important;
+
+    box-shadow:none !important;
+
+    font-size:
+        14px !important;
+
+    font-weight:
+        900 !important;
+}
+
+
+/* =========================================================
+   RECHERCHE
+========================================================= */
+
+.search-box-client{
+    position:relative;
+
+    margin-bottom:
+        15px !important;
+}
+
+.search-box-client i{
+    position:absolute;
+
+    left:16px !important;
+
+    top:50% !important;
+
+    transform:
+        translateY(-50%);
+
+    color:
+        #8ca0b4 !important;
+}
+
+.search-box-client input{
+    width:100%;
+
+    height:48px !important;
+
+    padding:
+        0 14px
+        0 45px !important;
+
+    outline:none;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        13px !important;
+
+    color:
+        var(--text) !important;
+
+    background:
+        var(--bg-soft) !important;
+}
+
+.search-box-client input:focus{
+    border-color:
+        #b7d8ec !important;
+
+    background:#fff !important;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(7,104,201,.055);
+}
+
+
+/* =========================================================
+   CLIENTS ET MESSAGES
+========================================================= */
+
+.client-box-item,
+.message-box{
+    padding:
+        16px !important;
+
+    margin-bottom:
+        12px !important;
+
+    overflow:visible !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        17px !important;
+
+    background:
+        #fbfdff !important;
+
+    box-shadow:none !important;
+
+    transition:
+        .28s !important;
+}
+
+.client-box-item:hover,
+.message-box:hover{
+    transform:
+        translateY(-3px) !important;
+
+    border-color:
+        #c8deed !important;
+
+    background:
+        #fff !important;
+
+    box-shadow:
+        0 14px 36px
+        rgba(12,57,92,.065) !important;
+}
+
+.client-avatar,
+.message-avatar{
+    width:48px !important;
+    height:48px !important;
+
+    flex:
+        0 0 48px;
+
+    display:grid !important;
+
+    place-items:center !important;
+
+    overflow:hidden;
+
+    border-radius:
+        13px !important;
+
+    color:#fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        ) !important;
+
+    box-shadow:
+        0 10px 25px
+        rgba(7,104,201,.14) !important;
+
+    font-size:
+        16px !important;
+
+    font-weight:
+        800 !important;
+}
+
+.client-avatar img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+.client-main h5,
+.message-user strong{
+    margin:0;
+
+    color:
+        var(--navy) !important;
+
+    font-size:
+        12px !important;
+
+    font-weight:
+        800 !important;
+}
+
+.client-number{
+    color:
+        var(--blue) !important;
+
+    font-size:
+        8px !important;
+}
+
+.message-date{
+    color:
+        var(--muted) !important;
+
+    font-size:
+        8px !important;
+}
+
+.mini-info{
+    justify-content:
+        flex-start !important;
+
+    gap:
+        8px 18px !important;
+
+    margin-top:
+        12px !important;
+
+    color:
+        #63768a !important;
+
+    font-size:
+        9px !important;
+}
+
+.mini-info div{
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+}
+
+.mini-info i{
+    color:
+        var(--blue);
+}
+
+.btn-toggle-info{
+    width:38px !important;
+    height:38px !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        11px !important;
+
+    color:
+        var(--blue) !important;
+
+    background:
+        #edf7ff !important;
+}
+
+.btn-toggle-info:hover{
+    color:#fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        ) !important;
+}
+
+.client-details{
+    margin-top:
+        14px !important;
+
+    padding-top:
+        14px !important;
+
+    overflow:visible !important;
+
+    border-top:
+        1px solid
+        var(--border) !important;
+}
+
+.details-grid{
+    gap:
+        9px !important;
+}
+
+.detail-card{
+    padding:
+        12px !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        12px !important;
+
+    background:
+        #fff !important;
+}
+
+.detail-card small{
+    margin-bottom:
+        4px !important;
+
+    color:
+        var(--muted) !important;
+
+    font-size:
+        7px !important;
+
+    font-weight:800;
+
+    letter-spacing:
+        .6px;
+
+    text-transform:
+        uppercase;
+}
+
+.detail-card strong{
+    color:
+        var(--text) !important;
+
+    font-size:
+        9px !important;
+
+    word-break:
+        break-word;
+}
+
+.message-content{
+    margin:
+        13px 0 !important;
+
+    padding:
+        14px !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-left:
+        3px solid
+        var(--blue) !important;
+
+    border-radius:
+        0 12px 12px 0 !important;
+
+    color:
+        #46596d !important;
+
+    background:
+        #fff !important;
+
+    font-size:
+        10px !important;
+
+    line-height:
+        1.75 !important;
+}
+
+.response-box{
+    margin-top:
+        12px !important;
+
+    padding:
+        13px !important;
+
+    border:
+        1px solid
+        #ccebdd !important;
+
+    border-radius:
+        12px !important;
+
+    color:
+        #176b4a !important;
+
+    background:
+        #eefaf5 !important;
+}
+
+.response-box strong{
+    color:
+        #11815a !important;
+
+    font-size:
+        9px !important;
+}
+
+.response-box p{
+    color:
+        #4d7162 !important;
+
+    font-size:
+        9px !important;
+}
+
+
+/* =========================================================
+   ZONES DE SCROLL
+========================================================= */
+
+.custom-scroll,
+.scroll-area{
+    max-height:
+        620px !important;
+
+    overflow-y:
+        auto !important;
+
+    overflow-x:
+        hidden !important;
+
+    padding-right:
+        7px !important;
+
+    padding-bottom:
+        8px !important;
+}
+
+.custom-scroll::-webkit-scrollbar,
+.scroll-area::-webkit-scrollbar{
+    width:
+        5px !important;
+}
+
+.custom-scroll::-webkit-scrollbar-track,
+.scroll-area::-webkit-scrollbar-track{
+    background:
+        transparent !important;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb,
+.scroll-area::-webkit-scrollbar-thumb{
+    background:
+        #c9d9e5 !important;
+
+    border-radius:
+        20px !important;
+}
+
+
+/* =========================================================
+   TABLEAUX
+========================================================= */
+
+.table-responsive{
+    overflow-x:
+        auto !important;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        15px;
+
+    background:#fff;
+}
+
+.table{
+    min-width:760px;
+
+    margin:0 !important;
+
+    color:
+        var(--text) !important;
+
+    --bs-table-bg:
+        transparent;
+
+    --bs-table-color:
+        var(--text);
+
+    --bs-table-border-color:
+        var(--border);
+}
+
+.table thead{
+    background:
+        #f6f9fc !important;
+}
+
+.table thead th{
+    padding:
+        13px 14px !important;
+
+    border:none !important;
+
+    color:
+        #687b8f !important;
+
+    background:
+        #f6f9fc !important;
+
+    font-size:
+        8px !important;
+
+    font-weight:
+        900 !important;
+
+    letter-spacing:
+        .5px;
+
+    text-transform:
+        uppercase;
+
+    white-space:
+        nowrap;
+}
+
+.table tbody td{
+    padding:
+        13px 14px !important;
+
+    border-color:
+        #edf2f6 !important;
+
+    color:
+        #46596d !important;
+
+    font-size:
+        9px !important;
+
+    vertical-align:
+        middle !important;
+}
+
+.table tbody tr{
+    transition:
+        .2s;
+}
+
+.table tbody tr:hover{
+    background:
+        #f8fcff !important;
+}
+
+.table .text-warning{
+    color:
+        #b67b0f !important;
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge-success,
+.badge-danger{
+    display:inline-flex !important;
+
+    align-items:center !important;
+
+    min-height:
+        27px !important;
+
+    padding:
+        0 9px !important;
+
+    border-radius:
+        999px !important;
+
+    font-size:
+        8px !important;
+
+    font-weight:
+        900 !important;
+}
+
+.badge-success{
+    color:
+        #11815a !important;
+
+    background:
+        #eaf9f3 !important;
+
+    border:
+        1px solid
+        #cbeede !important;
+}
+
+.badge-danger{
+    color:
+        #bd3547 !important;
+
+    background:
+        #fff0f2 !important;
+
+    border:
+        1px solid
+        #f5d0d6 !important;
+}
+
+
+/* =========================================================
+   BOUTONS
+========================================================= */
+
+.btn-hexa{
+    position:relative;
+
+    min-height:
+        42px !important;
+
+    display:inline-flex !important;
+
+    align-items:center !important;
+
+    justify-content:center !important;
+
+    gap:
+        7px !important;
+
+    overflow:hidden;
+
+    padding:
+        0 15px !important;
+
+    border:
+        none !important;
+
+    border-radius:
+        11px !important;
+
+    color:
+        #fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        ) !important;
+
+    box-shadow:
+        0 12px 27px
+        rgba(7,104,201,.17) !important;
+
+    font-size:
+        9px !important;
+
+    font-weight:
+        900 !important;
+
+    transition:
+        .28s !important;
+}
+
+.btn-hexa::after{
+    content:"";
+
+    position:absolute;
+
+    top:-100%;
+    left:-32%;
+
+    width:25%;
+    height:300%;
+
+    background:
+        rgba(255,255,255,.28);
+
+    transform:
+        rotate(22deg);
+
+    transition:
+        .55s;
+}
+
+.btn-hexa:hover{
+    transform:
+        translateY(-2px) !important;
+
+    color:#fff !important;
+
+    box-shadow:
+        0 16px 34px
+        rgba(7,104,201,.23) !important;
+}
+
+.btn-hexa:hover::after{
+    left:120%;
+}
+
+.btn-sm{
+    min-height:
+        34px !important;
+
+    border-radius:
+        9px !important;
+}
+
+
+/* =========================================================
+   FORMULAIRES
+========================================================= */
+
+.form-control,
+.form-select,
+.reply-textarea{
+    min-height:
+        47px;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        12px !important;
+
+    color:
+        var(--text) !important;
+
+    background:
+        #fbfdff !important;
+
+    box-shadow:
+        none !important;
+
+    font-size:
+        10px !important;
+}
+
+.form-control{
+    padding:
+        11px 13px !important;
+}
+
+textarea.form-control{
+    min-height:
+        130px;
+}
+
+.form-control::placeholder,
+.reply-textarea::placeholder{
+    color:
+        #91a1b2 !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.reply-textarea:focus{
+    border-color:
+        #acd2e9 !important;
+
+    background:
+        #fff !important;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(7,104,201,.055) !important;
+}
+
+.form-select option{
+    color:
+        var(--text);
+
+    background:#fff;
+}
+
+label{
+    margin-bottom:
+        6px;
+
+    color:
+        #536579;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal{
+    z-index:
+        999999 !important;
+}
+
+.modal-backdrop{
+    z-index:
+        999990 !important;
+}
+
+.modal-content,
+.custom-modal{
+    position:relative;
+
+    z-index:
+        999999 !important;
+
+    overflow:hidden !important;
+
+    pointer-events:
+        auto !important;
+
+    border:
+        1px solid
+        var(--border) !important;
+
+    border-radius:
+        22px !important;
+
+    color:
+        var(--text) !important;
+
+    background:
+        #fff !important;
+
+    box-shadow:
+        0 30px 90px
+        rgba(7,46,79,.24) !important;
+}
+
+.custom-header{
+    padding:
+        18px 20px !important;
+
+    border-bottom:
+        1px solid
+        var(--border) !important;
+
+    color:
+        var(--navy) !important;
+
+    background:
+        #f8fbfe !important;
+}
+
+.custom-header
+.modal-title{
+    color:
+        var(--navy) !important;
+
+    font-size:
+        13px;
+}
+
+.btn-close{
+    filter:none !important;
+}
+
+.modal-body{
+    padding:
+        20px !important;
+}
+
+.custom-footer{
+    padding:
+        0 20px
+        20px !important;
+
+    border:none !important;
+}
+
+.reply-textarea{
+    min-height:
+        180px !important;
+
+    padding:
+        15px !important;
+}
+
+.send-btn{
+    min-height:
+        48px !important;
+
+    border:
+        none !important;
+
+    border-radius:
+        12px !important;
+
+    color:#fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        ) !important;
+}
+
+body.modal-open{
+    overflow:
+        hidden !important;
+
+    padding-right:
+        0 !important;
+}
+
+
+/* =========================================================
+   FORMULAIRES AFFICHÉS
+========================================================= */
+
+#annonceForm,
+#payeForm{
+    border-color:
+        #cfe3f1 !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff,
+            #fbfdff
+        ) !important;
+}
+
+
+/* =========================================================
+   ÉTAT VIDE
+========================================================= */
+
+.empty-box{
+    padding:
+        45px 18px !important;
+
+    border:
+        1px dashed
+        #ccdce8 !important;
+
+    border-radius:
+        18px !important;
+
+    color:
+        #7c8da0 !important;
+
+    background:
+        #fbfdff !important;
+}
+
+.empty-box i{
+    margin-bottom:
+        13px !important;
+
+    color:
+        var(--blue) !important;
+
+    font-size:
+        40px !important;
+}
+
+.empty-box h5{
+    color:
+        var(--navy) !important;
+
+    font-size:
+        15px !important;
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+#facturesChart,
+#payeChart{
+    width:
+        100% !important;
+}
+
+
+/* =========================================================
+   MOBILE OVERLAY
+========================================================= */
+
+.hq-admin-overlay{
+    position:fixed;
+
+    inset:0;
+
+    z-index:990;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    background:
+        rgba(7,26,47,.62);
+
+    backdrop-filter:
+        blur(7px);
+
+    transition:
+        .35s;
+}
+
+.hq-admin-overlay.active{
+    opacity:1;
+
+    visibility:visible;
+}
+
+
+/* =========================================================
+   RESPONSIVE TABLETTE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .main-content{
+        padding:
+            22px 20px
+            55px !important;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+
+@media(max-width:991px){
+
+    .sidebar{
+        width:
+            min(
+                88vw,
+                355px
+            ) !important;
+
+        transform:
+            translateX(-105%);
+
+        transition:
+            transform
+            .48s
+            cubic-bezier(
+                .2,.8,.2,1
+            );
+    }
+
+    .sidebar.active{
+        transform:
+            translateX(0);
+    }
+
+    .hq-sidebar-close{
+        display:grid;
+
+        place-items:center;
+    }
+
+    .main-content{
+        width:100%;
+
+        margin-left:
+            0 !important;
+
+        padding:
+            18px 15px
+            48px !important;
+    }
+
+    .topbar{
+        top:
+            10px !important;
+
+        min-height:
+            76px;
+
+        padding:
+            13px 14px !important;
+
+        flex-wrap:
+            nowrap !important;
+    }
+
+    .hq-admin-menu-btn{
+        display:grid;
+
+        place-items:center;
+    }
+
+    .topbar
+    .d-flex.align-items-center.gap-3
+    .text-end{
+        display:none;
+    }
+
+    body.hq-sidebar-open{
+        overflow:hidden;
+    }
+
+}
+
+
+/* =========================================================
+   TÉLÉPHONE
+========================================================= */
+
+@media(max-width:768px){
+
+    .main-content{
+        padding:
+            12px 12px
+            38px !important;
+    }
+
+    .topbar{
+        margin-bottom:
+            15px !important;
+
+        border-radius:
+            17px !important;
+    }
+
+    .topbar h1{
+        font-size:
+            18px !important;
+    }
+
+    .topbar p{
+        display:none;
+    }
+
+    .admin-avatar{
+        width:
+            41px !important;
+
+        height:
+            41px !important;
+
+        border-radius:
+            11px !important;
+    }
+
+    .row.g-4{
+        --bs-gutter-x:
+            .75rem;
+
+        --bs-gutter-y:
+            .75rem;
+    }
+
+    .stats-card{
+        min-height:
+            118px;
+
+        padding:
+            15px !important;
+
+        border-radius:
+            18px !important;
+    }
+
+    .stats-card h2{
+        font-size:
+            25px !important;
+    }
+
+    .dashboard-card{
+        padding:
+            15px !important;
+
+        margin-bottom:
+            14px !important;
+
+        border-radius:
+            18px !important;
+    }
+
+    .card-header-custom{
+        flex-direction:
+            row !important;
+
+        align-items:
+            center !important;
+
+        gap:
+            10px !important;
+    }
+
+    .section-title{
+        font-size:
+            15px !important;
+    }
+
+    .section-title i{
+        width:
+            34px;
+
+        height:
+            34px;
+    }
+
+    .badge-total{
+        min-width:
+            40px !important;
+
+        height:
+            40px !important;
+
+        padding:
+            0 11px !important;
+    }
+
+    .client-box-item,
+    .message-box{
+        padding:
+            13px !important;
+
+        border-radius:
+            14px !important;
+    }
+
+    .custom-scroll,
+    .scroll-area{
+        max-height:
+            none !important;
+
+        overflow:
+            visible !important;
+
+        padding-right:
+            0 !important;
+    }
+
+    .table-responsive{
+        border-radius:
+            12px;
+    }
+
+}
+
+
+/* =========================================================
+   PETITS TÉLÉPHONES
+========================================================= */
+
+@media(max-width:480px){
+
+    .topbar{
+        gap:
+            9px !important;
+    }
+
+    .hq-topbar-copy{
+        min-width:0;
+
+        flex:1;
+    }
+
+    .topbar h1{
+        overflow:hidden;
+
+        font-size:
+            16px !important;
+
+        white-space:
+            nowrap;
+
+        text-overflow:
+            ellipsis;
+    }
+
+    .hq-admin-menu-btn{
+        width:
+            41px;
+
+        height:
+            41px;
+
+        flex:
+            0 0 41px;
+    }
+
+    .admin-avatar{
+        width:
+            37px !important;
+
+        height:
+            37px !important;
+    }
+
+    .stats-icon{
+        width:
+            42px !important;
+
+        height:
+            42px !important;
+
+        font-size:
+            16px !important;
+    }
+
+    .client-avatar,
+    .message-avatar{
+        width:
+            42px !important;
+
+        height:
+            42px !important;
+
+        flex:
+            0 0 42px;
+
+        font-size:
+            14px !important;
+    }
+
+    .mini-info{
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+    }
+
+}
+</style>
+
+
 <!-- SCRIPT -->
 
 <script>
@@ -2075,7 +4453,7 @@ function searchClient(){
 </script>
     <!-- COMMANDES -->
 
-    <div class="dashboard-card" data-aos="fade-up">
+    <div class="dashboard-card hq-section-card" id="commandes-section" data-aos="fade-up">
 
         <h3 class="section-title">
             <i class="fa-solid fa-cart-shopping"></i>
@@ -2164,7 +4542,7 @@ function searchClient(){
 
     </div>
 <!-- 💳 GESTION PAIEMENTS -->
-<div class="dashboard-card" data-aos="fade-up">
+<div class="dashboard-card hq-section-card" id="paiements-section" data-aos="fade-up">
 
     <h3 class="section-title">
         <i class="fa-solid fa-money-bill-transfer"></i>
@@ -2288,7 +4666,7 @@ onclick="return confirm('Supprimer ce paiement ?')">
 
 <!-- ================= RAPPORT MENSUEL ================= -->
 
-<div class="dashboard-card" data-aos="fade-up">
+<div class="dashboard-card hq-section-card" id="rapport-section" data-aos="fade-up">
 
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
 
@@ -2489,6 +4867,630 @@ onclick="return confirm('Supprimer ce paiement ?')">
 
 </div>
 
+
+<style id="hq-admin-serious-layout">
+/* =========================================================
+   ADMINISTRATION HEXAQUÉBEC — QUALITÉ CORPORATIVE
+   Ce bloc finalise le placement sans supprimer les fonctions.
+========================================================= */
+
+:root{
+    --admin-sidebar:272px;
+    --admin-max:1680px;
+}
+
+/* STRUCTURE */
+
+.sidebar{
+    width:var(--admin-sidebar) !important;
+    padding:18px 14px 22px !important;
+}
+
+.main-content{
+    width:calc(100% - var(--admin-sidebar));
+    max-width:var(--admin-max);
+    margin-left:var(--admin-sidebar) !important;
+    padding:24px 28px 64px !important;
+}
+
+/* BRAND */
+
+.logo-box{
+    min-height:76px;
+    padding:8px 7px 17px !important;
+    margin-bottom:13px !important;
+}
+
+.hq-brand-logo-admin{
+    width:50px;
+    height:50px;
+    flex-basis:50px;
+    border-radius:14px;
+}
+
+.hq-brand-logo-admin img{
+    width:41px !important;
+    height:41px !important;
+}
+
+.hq-brand-text-admin strong{
+    font-size:16px;
+}
+
+.hq-brand-text-admin small{
+    font-size:7px;
+    letter-spacing:.45px;
+}
+
+/* SIDEBAR — meilleure hiérarchie */
+
+.menu-title{
+    margin:20px 10px 7px;
+    padding-top:2px;
+    color:rgba(255,255,255,.34);
+    font-size:7px;
+    letter-spacing:1.6px;
+}
+
+.sidebar-menu a,
+.sidebar-menu > button,
+.sidebar-menu .project-btn{
+    min-height:54px;
+    padding:8px 9px !important;
+    gap:10px;
+    border-radius:13px !important;
+}
+
+.sidebar-menu a > span,
+.sidebar-menu > button > span{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar-menu a > span strong,
+.sidebar-menu > button > span strong{
+    color:inherit;
+    font-size:10px;
+    font-weight:800;
+    line-height:1.25;
+}
+
+.sidebar-menu a > span small,
+.sidebar-menu > button > span small{
+    margin-top:3px;
+    color:rgba(255,255,255,.35);
+    font-size:7px;
+    line-height:1.25;
+}
+
+.sidebar-menu a > i,
+.sidebar-menu > button > i,
+.project-icon{
+    width:36px !important;
+    height:36px !important;
+    flex-basis:36px !important;
+}
+
+.hq-sidebar-action{
+    font-family:"Inter",sans-serif;
+}
+
+/* TOPBAR */
+
+.topbar{
+    top:12px !important;
+    min-height:96px;
+    margin-bottom:12px !important;
+    padding:16px 18px !important;
+    border-radius:18px !important;
+}
+
+.hq-admin-breadcrumb{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:5px;
+    color:#8292a4;
+    font-size:8px;
+    font-weight:700;
+}
+
+.hq-admin-breadcrumb span{
+    color:var(--blue);
+}
+
+.hq-admin-breadcrumb i{
+    font-size:6px;
+    color:#a7b4c1;
+}
+
+.topbar h1{
+    font-size:25px !important;
+    letter-spacing:-.8px;
+}
+
+.topbar p{
+    max-width:640px;
+    margin-top:5px !important;
+    font-size:9px !important;
+}
+
+.hq-admin-identity{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-left:auto;
+}
+
+.hq-admin-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 10px;
+    border:1px solid #dcece5;
+    border-radius:999px;
+    color:#22724f;
+    background:#f3fbf7;
+    font-size:8px;
+    font-weight:800;
+}
+
+.hq-admin-status span{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#16a36a;
+    box-shadow:0 0 0 4px rgba(22,163,106,.10);
+}
+
+.hq-admin-profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding-left:16px;
+    border-left:1px solid var(--border);
+}
+
+.hq-admin-profile-copy{
+    text-align:right;
+}
+
+.hq-admin-profile-copy strong{
+    display:block;
+    color:var(--navy);
+    font-size:10px;
+    font-weight:800;
+}
+
+.hq-admin-profile-copy small{
+    display:block;
+    margin-top:2px;
+    color:var(--muted);
+    font-size:7px;
+}
+
+/* NAVIGATION SECONDAIRE */
+
+.hq-admin-tabs{
+    position:relative;
+    z-index:90;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    margin-bottom:24px;
+    padding:6px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:rgba(255,255,255,.88);
+    box-shadow:0 8px 28px rgba(12,57,92,.045);
+    backdrop-filter:blur(15px);
+}
+
+.hq-admin-tabs::-webkit-scrollbar{
+    display:none;
+}
+
+.hq-admin-tabs a{
+    flex:0 0 auto;
+    min-height:38px;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:0 12px;
+    border-radius:10px;
+    color:#607285;
+    font-size:9px;
+    font-weight:800;
+    transition:.22s ease;
+}
+
+.hq-admin-tabs a i{
+    color:var(--blue);
+}
+
+.hq-admin-tabs a:hover,
+.hq-admin-tabs a.active{
+    color:var(--navy);
+    background:#edf7ff;
+}
+
+/* EN-TÊTE DE SECTION */
+
+.hq-admin-section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    margin:0 0 18px;
+    scroll-margin-top:145px;
+}
+
+.hq-admin-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:6px;
+    color:var(--blue);
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+}
+
+.hq-admin-kicker::before{
+    content:"";
+    width:22px;
+    height:2px;
+    border-radius:10px;
+    background:linear-gradient(90deg,var(--blue),var(--cyan));
+}
+
+.hq-admin-section-head h2{
+    margin:0;
+    color:var(--navy);
+    font-family:"Manrope",sans-serif;
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:-.8px;
+}
+
+.hq-admin-section-head p{
+    max-width:620px;
+    margin:7px 0 0;
+    color:var(--muted);
+    font-size:9px;
+    line-height:1.6;
+}
+
+.hq-security-chip{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:9px 11px;
+    border:1px solid #d8e8f4;
+    border-radius:11px;
+    color:#41627b;
+    background:#fff;
+    font-size:8px;
+    font-weight:800;
+}
+
+.hq-security-chip i{
+    color:var(--blue);
+}
+
+/* KPI */
+
+.hq-main-kpis .stats-card{
+    min-height:138px;
+}
+
+.hq-main-kpis .stats-card h2{
+    margin:0;
+    font-size:29px !important;
+}
+
+.hq-main-kpis .stats-card p{
+    margin:5px 0 0 !important;
+    font-size:9px !important;
+    font-weight:700;
+}
+
+.hq-finance-kpis .stats-card{
+    min-height:88px;
+    padding:14px 16px !important;
+    flex-direction:row !important;
+    align-items:center !important;
+}
+
+.hq-finance-kpis .stats-card::after{
+    width:3px;
+}
+
+.hq-finance-kpis .stats-icon{
+    margin:0 !important;
+}
+
+.hq-finance-kpis .stats-card > div:last-child > div:first-child{
+    color:var(--navy);
+    font-family:"Manrope",sans-serif;
+    font-size:20px !important;
+    font-weight:800 !important;
+}
+
+.hq-finance-kpis .stats-card > div:last-child > div:last-child{
+    color:var(--muted) !important;
+    font-size:9px !important;
+    font-weight:700;
+}
+
+/* CARDS */
+
+.dashboard-card{
+    padding:20px !important;
+    margin-bottom:18px !important;
+    border-radius:19px !important;
+    box-shadow:0 7px 26px rgba(12,57,92,.045) !important;
+}
+
+.client-card-admin,
+.message-card-admin{
+    height:100%;
+}
+
+.section-title{
+    font-size:17px !important;
+}
+
+.section-title i{
+    width:36px;
+    height:36px;
+}
+
+.card-subtitle{
+    font-size:9px !important;
+}
+
+/* Chart */
+
+.hq-chart-card{
+    min-height:350px;
+    margin-bottom:22px !important;
+}
+
+.hq-chart-card .section-title{
+    margin-bottom:16px !important;
+}
+
+.hq-chart-card canvas{
+    width:100% !important;
+    height:275px !important;
+    max-height:275px !important;
+}
+
+/* Clients/messages */
+
+#clients-section,
+#messages-section,
+#commandes-section,
+#paiements-section,
+#rapport-section{
+    scroll-margin-top:145px;
+}
+
+.client-box-item,
+.message-box{
+    border-radius:14px !important;
+}
+
+.client-main h5,
+.message-user strong{
+    font-size:11px !important;
+}
+
+.message-content{
+    font-size:10px !important;
+}
+
+/* Tables serious */
+
+.table-responsive{
+    border-radius:13px;
+}
+
+.table{
+    min-width:820px;
+}
+
+.table thead th{
+    height:44px;
+    padding:10px 12px !important;
+    font-size:7px !important;
+    letter-spacing:.65px;
+}
+
+.table tbody td{
+    padding:11px 12px !important;
+    font-size:9px !important;
+}
+
+.table tbody tr:last-child td{
+    border-bottom:0 !important;
+}
+
+/* Buttons */
+
+.btn-hexa{
+    min-height:40px !important;
+    padding:0 14px !important;
+    font-size:9px !important;
+    border-radius:10px !important;
+}
+
+/* Forms */
+
+.form-control,
+.form-select,
+.reply-textarea{
+    border-radius:10px !important;
+}
+
+/* Form de rapport : alignement plus propre */
+
+#rapport-section form .row{
+    align-items:end;
+}
+
+/* Titres des grosses sections */
+
+.hq-section-card > .section-title{
+    margin-bottom:16px !important;
+}
+
+/* Mobile */
+
+@media(max-width:991px){
+
+    .sidebar{
+        width:min(88vw,330px) !important;
+    }
+
+    .main-content{
+        width:100%;
+        max-width:none;
+        margin-left:0 !important;
+        padding:14px 14px 46px !important;
+    }
+
+    .topbar{
+        min-height:78px;
+    }
+
+    .hq-admin-status{
+        display:none;
+    }
+
+    .hq-admin-profile-copy{
+        display:none;
+    }
+
+    .hq-admin-profile{
+        padding-left:0;
+        border-left:0;
+    }
+
+    .hq-admin-tabs{
+        margin-bottom:18px;
+    }
+
+    .hq-admin-section-head{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .hq-security-chip{
+        display:none;
+    }
+}
+
+@media(max-width:768px){
+
+    .topbar{
+        top:8px !important;
+        border-radius:15px !important;
+    }
+
+    .hq-admin-breadcrumb{
+        display:none;
+    }
+
+    .topbar h1{
+        font-size:17px !important;
+    }
+
+    .hq-admin-tabs{
+        margin-left:-2px;
+        margin-right:-2px;
+        padding:5px;
+        border-radius:13px;
+    }
+
+    .hq-admin-tabs a{
+        min-height:36px;
+        padding:0 10px;
+        font-size:8px;
+    }
+
+    .hq-admin-section-head h2{
+        font-size:21px;
+    }
+
+    .hq-main-kpis{
+        --bs-gutter-x:.7rem;
+        --bs-gutter-y:.7rem;
+    }
+
+    .hq-main-kpis .stats-card{
+        min-height:116px;
+    }
+
+    .hq-chart-card{
+        min-height:315px;
+    }
+
+    .hq-chart-card canvas{
+        height:235px !important;
+        max-height:235px !important;
+    }
+
+    .dashboard-card{
+        padding:14px !important;
+        border-radius:16px !important;
+    }
+
+    .section-title{
+        font-size:14px !important;
+    }
+}
+
+@media(max-width:480px){
+
+    .main-content{
+        padding:10px 10px 38px !important;
+    }
+
+    .topbar{
+        padding:11px !important;
+    }
+
+    .hq-admin-tabs a span{
+        display:none;
+    }
+
+    .hq-admin-tabs a{
+        gap:5px;
+    }
+
+    .hq-admin-section-head{
+        margin-bottom:14px;
+    }
+
+    .hq-main-kpis .col-md-4{
+        width:100%;
+    }
+
+    .hq-finance-kpis .col-12{
+        width:100%;
+    }
+}
+</style>
+
+
 <!-- JS -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -2497,8 +5499,10 @@ onclick="return confirm('Supprimer ce paiement ?')">
 
 <script>
 AOS.init({
-    duration:900,
-    once:true
+    duration:650,
+    easing:'ease-out-cubic',
+    once:true,
+    offset:20
 });
 </script>
 
@@ -2522,15 +5526,15 @@ new Chart(ctx, {
 
             data:facturesData,
 
-            borderColor:'#d4af37',
+            borderColor:'#0768c9',
 
-            backgroundColor:'rgba(212,175,55,0.2)',
+            backgroundColor:'rgba(7,104,201,0.10)',
 
             tension:0.4,
 
             fill:true,
 
-            pointBackgroundColor:'#fff',
+            pointBackgroundColor:'#00b8d9',
 
             pointRadius:5
 
@@ -2540,11 +5544,12 @@ new Chart(ctx, {
     options:{
 
         responsive:true,
+        maintainAspectRatio:false,
 
         plugins:{
             legend:{
                 labels:{
-                    color:'#fff'
+                    color:'#46596d'
                 }
             }
         },
@@ -2553,20 +5558,20 @@ new Chart(ctx, {
 
             x:{
                 ticks:{
-                    color:'#cbd5e1'
+                    color:'#687b8f'
                 },
                 grid:{
-                    color:'rgba(255,255,255,0.05)'
+                    color:'rgba(7,104,201,0.08)'
                 }
             },
 
             y:{
                 beginAtZero:true,
                 ticks:{
-                    color:'#cbd5e1'
+                    color:'#687b8f'
                 },
                 grid:{
-                    color:'rgba(255,255,255,0.05)'
+                    color:'rgba(7,104,201,0.08)'
                 }
             }
 
@@ -2593,14 +5598,14 @@ new Chart(ctx2, {
                 Number("{{ total_revenus|floatformat:2 }}"),
                 Number("{{ total_non_paye|floatformat:2 }}")
             ],
-            backgroundColor: ['#22c55e', '#ef4444'],
+            backgroundColor: ['#16a36a', '#d94355'],
             borderWidth: 0
         }]
     },
     options: {
         plugins: {
             legend: {
-                labels: { color: '#fff' }
+                labels: { color: '#46596d' }
             }
         }
     }
@@ -2647,9 +5652,10 @@ function toggleForm(event){
 </script>
 <script>
 
-const replyModal = new bootstrap.Modal(
-    document.getElementById('replyModal')
-);
+const replyModalElement = document.getElementById('replyModal');
+const replyModal = replyModalElement
+    ? new bootstrap.Modal(replyModalElement)
+    : null;
 
 document.querySelectorAll('.openReplyModal')
 .forEach(button => {
@@ -2668,7 +5674,7 @@ document.querySelectorAll('.openReplyModal')
         .action = `/repondre-message/${messageId}/`;
 
         // open modal
-        replyModal.show();
+        if (replyModal) { replyModal.show(); }
 
     });
 
@@ -2699,5 +5705,407 @@ window.addEventListener("load", function(){
 });
 
 </script>
+
+<script id="hexaquebec-admin-home-js">
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const sidebar =
+            document.querySelector(
+                ".sidebar"
+            );
+
+        const overlay =
+            document.getElementById(
+                "hqAdminOverlay"
+            );
+
+        const openButton =
+            document.getElementById(
+                "hqAdminMenuBtn"
+            );
+
+        const closeButton =
+            document.getElementById(
+                "hqSidebarClose"
+            );
+
+
+        function openAdminMenu(){
+
+            if(!sidebar){
+                return;
+            }
+
+            sidebar
+                .classList
+                .add(
+                    "active"
+                );
+
+            overlay
+                ?.classList
+                .add(
+                    "active"
+                );
+
+            document.body
+                .classList
+                .add(
+                    "hq-sidebar-open"
+                );
+
+            openButton
+                ?.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+        }
+
+
+        function closeAdminMenu(){
+
+            if(!sidebar){
+                return;
+            }
+
+            sidebar
+                .classList
+                .remove(
+                    "active"
+                );
+
+            overlay
+                ?.classList
+                .remove(
+                    "active"
+                );
+
+            document.body
+                .classList
+                .remove(
+                    "hq-sidebar-open"
+                );
+
+            openButton
+                ?.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+        }
+
+
+        openButton
+            ?.addEventListener(
+                "click",
+                openAdminMenu
+            );
+
+
+        closeButton
+            ?.addEventListener(
+                "click",
+                closeAdminMenu
+            );
+
+
+        overlay
+            ?.addEventListener(
+                "click",
+                closeAdminMenu
+            );
+
+
+        document
+            .addEventListener(
+                "keydown",
+                function(event){
+
+                    if(
+                        event.key
+                        ===
+                        "Escape"
+                    ){
+                        closeAdminMenu();
+                    }
+                }
+            );
+
+
+        document
+            .querySelectorAll(
+                ".sidebar-menu a"
+            )
+            .forEach(
+                function(link){
+
+                    const href =
+                        link.getAttribute(
+                            "href"
+                        );
+
+                    if(
+                        href
+                        &&
+                        href !== "#"
+                        &&
+                        href
+                        ===
+                        window.location.pathname
+                    ){
+                        link
+                            .classList
+                            .add(
+                                "is-current"
+                            );
+                    }
+
+                    link
+                        .addEventListener(
+                            "click",
+                            function(){
+
+                                if(
+                                    window
+                                        .matchMedia(
+                                            "(max-width:991px)"
+                                        )
+                                        .matches
+                                ){
+                                    closeAdminMenu();
+                                }
+                            }
+                        );
+                }
+            );
+
+    }
+);
+
+
+/* =========================================================
+   FONCTION UNIQUE POUR TES 2 FORMULAIRES
+========================================================= */
+
+window.toggleForm =
+function(value){
+
+    /*
+        Utilisation 1 :
+        toggleForm('annonceForm')
+    */
+
+    if(
+        typeof value
+        ===
+        "string"
+    ){
+
+        const element =
+            document
+                .getElementById(
+                    value
+                );
+
+        if(!element){
+            return;
+        }
+
+        const hidden =
+            window
+                .getComputedStyle(
+                    element
+                )
+                .display
+            ===
+            "none";
+
+        element.style.display =
+            hidden
+            ?
+            "block"
+            :
+            "none";
+
+        if(hidden){
+
+            element
+                .scrollIntoView(
+                    {
+                        behavior:
+                            "smooth",
+
+                        block:
+                            "start"
+                    }
+                );
+        }
+
+        return;
+    }
+
+
+    /*
+        Utilisation 2 :
+        toggleForm(event)
+        pour payeForm
+    */
+
+    if(
+        value
+        &&
+        typeof value.preventDefault
+        ===
+        "function"
+    ){
+        value.preventDefault();
+    }
+
+    const payeForm =
+        document
+            .getElementById(
+                "payeForm"
+            );
+
+    if(!payeForm){
+        return;
+    }
+
+    const hidden =
+        window
+            .getComputedStyle(
+                payeForm
+            )
+            .display
+        ===
+        "none";
+
+    payeForm.style.display =
+        hidden
+        ?
+        "block"
+        :
+        "none";
+
+    if(hidden){
+
+        payeForm
+            .scrollIntoView(
+                {
+                    behavior:
+                        "smooth",
+
+                    block:
+                        "start"
+                }
+            );
+    }
+};
+
+</script>
+
+
+<script id="hq-admin-serious-js">
+document.addEventListener("DOMContentLoaded", function(){
+
+    const tabs =
+        Array.from(
+            document.querySelectorAll(
+                ".hq-admin-tabs a[href^='#']"
+            )
+        );
+
+    const sections =
+        tabs
+            .map(function(tab){
+                return document.querySelector(
+                    tab.getAttribute("href")
+                );
+            })
+            .filter(Boolean);
+
+    if(sections.length){
+
+        const observer =
+            new IntersectionObserver(
+                function(entries){
+
+                    entries.forEach(
+                        function(entry){
+
+                            if(!entry.isIntersecting){
+                                return;
+                            }
+
+                            tabs.forEach(
+                                function(tab){
+
+                                    tab.classList.toggle(
+                                        "active",
+                                        tab.getAttribute("href")
+                                        ===
+                                        "#" + entry.target.id
+                                    );
+                                }
+                            );
+                        }
+                    );
+                },
+                {
+                    threshold:.28,
+                    rootMargin:"-110px 0px -55% 0px"
+                }
+            );
+
+        sections.forEach(
+            function(section){
+                observer.observe(section);
+            }
+        );
+    }
+
+    document
+        .querySelectorAll(
+            ".hq-admin-tabs a[href^='#'], .hq-dashboard-anchor"
+        )
+        .forEach(function(link){
+
+            link.addEventListener(
+                "click",
+                function(event){
+
+                    const selector =
+                        this.getAttribute("href");
+
+                    if(
+                        !selector
+                        ||
+                        !selector.startsWith("#")
+                    ){
+                        return;
+                    }
+
+                    const target =
+                        document.querySelector(selector);
+
+                    if(!target){
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    target.scrollIntoView({
+                        behavior:"smooth",
+                        block:"start"
+                    });
+                }
+            );
+        });
+
+});
+</script>
+
 </body>
 </html>

@@ -5,671 +5,1672 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>{{ annonce.titre }} | HexaQuébec</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    {{ annonce.titre }} | HexaQuébec
+</title>
+
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<link
+    rel="icon"
+    type="image/png"
+    href="{% static 'images/logoHexa.png' %}"
+>
 
 <!-- BOOTSTRAP -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
 
 <!-- FONT AWESOME -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+>
 
-<!-- GOOGLE FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- FONTS -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+    rel="stylesheet"
+>
 
-<!-- AOS -->
-<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-<!-- ANIMATE -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
 
-/* ======================================================
+/* =========================================================
+   HEXAQUÉBEC
+   PAGE DÉTAIL ANNONCE
+========================================================= */
+
+:root{
+
+    --blue:#0768c9;
+    --blue2:#0b84f3;
+
+    --cyan:#00b8d9;
+
+    --navy:#071a2f;
+    --navy2:#0b2948;
+
+    --white:#ffffff;
+
+    --bg:#f6f9fc;
+    --bg-soft:#fbfdff;
+
+    --text:#17263a;
+    --muted:#687b8f;
+
+    --border:#e4edf5;
+
+    --green:#16a36a;
+
+    --shadow:
+        0 26px 70px
+        rgba(12,57,92,.11);
+
+}
+
+
+/* =========================================================
    RESET
-====================================================== */
+========================================================= */
 
 *{
+
     margin:0;
+
     padding:0;
+
     box-sizing:border-box;
+
 }
+
 
 html{
+
     scroll-behavior:smooth;
+
 }
+
 
 body{
-    font-family:'Poppins',sans-serif;
-    background:
-    linear-gradient(
-        180deg,
-        #050816 0%,
-        #081120 40%,
-        #0b132b 100%
-    );
 
-    color:#fff;
+    min-height:100vh;
+
     overflow-x:hidden;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    color:
+        var(--text);
+
+    background:
+
+        radial-gradient(
+            circle at 90% 5%,
+            rgba(0,184,217,.08),
+            transparent 27%
+        ),
+
+        radial-gradient(
+            circle at 5% 85%,
+            rgba(7,104,201,.055),
+            transparent 28%
+        ),
+
+        var(--bg);
+
 }
 
-/* ======================================================
-   BACKGROUND EFFECT
-====================================================== */
 
-.bg-effect{
+body::before{
+
+    content:"";
+
     position:fixed;
+
     inset:0;
-    z-index:-1;
-    overflow:hidden;
-}
 
-.bg-effect::before{
-    content:"";
+    z-index:-3;
 
-    position:absolute;
-    top:-200px;
-    left:-150px;
+    pointer-events:none;
 
-    width:500px;
-    height:500px;
+    opacity:.28;
 
-    border-radius:50%;
+    background-image:
 
-    background:
-    radial-gradient(
-        circle,
-        rgba(124,92,255,0.25),
-        transparent 70%
-    );
+        linear-gradient(
+            #e7eff6 1px,
+            transparent 1px
+        ),
 
-    filter:blur(50px);
+        linear-gradient(
+            90deg,
+            #e7eff6 1px,
+            transparent 1px
+        );
 
-    animation:floatGlow 8s ease-in-out infinite;
-}
+    background-size:
+        58px 58px;
 
-.bg-effect::after{
-    content:"";
+    mask-image:
 
-    position:absolute;
-    bottom:-200px;
-    right:-150px;
-
-    width:500px;
-    height:500px;
-
-    border-radius:50%;
-
-    background:
-    radial-gradient(
-        circle,
-        rgba(0,212,255,0.18),
-        transparent 70%
-    );
-
-    filter:blur(50px);
-
-    animation:floatGlow 10s ease-in-out infinite;
-}
-
-@keyframes floatGlow{
-
-    0%,100%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-30px);
-    }
+        linear-gradient(
+            to bottom,
+            #000,
+            transparent 92%
+        );
 
 }
 
-/* ======================================================
-   HEADER
-====================================================== */
 
-.annonce-header{
-    padding:80px 0 40px;
-    position:relative;
+a{
+
+    color:inherit;
+
+    text-decoration:none;
+
 }
 
-/* CARD */
 
-.main-card{
-    position:relative;
+img{
 
-    overflow:hidden;
+    max-width:100%;
 
-    border-radius:35px;
+    display:block;
 
-    padding:50px;
+}
 
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
+
+button{
+
+    font:inherit;
+
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.hq-container{
+
+    width:
+        min(
+            1180px,
+            calc(100% - 34px)
+        );
+
+    margin:auto;
+
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.hq-navbar{
+
+    position:sticky;
+
+    top:12px;
+
+    z-index:5000;
+
+    margin-top:12px;
 
     border:
-    1px solid rgba(255,255,255,0.08);
 
-    backdrop-filter:blur(22px);
+        1px solid
+        rgba(221,231,240,.95);
 
-    box-shadow:
-    0 25px 60px rgba(0,0,0,0.45);
-
-    transition:.45s ease;
-}
-
-.main-card:hover{
-    transform:translateY(-8px);
-
-    box-shadow:
-    0 35px 70px rgba(0,0,0,0.55);
-}
-
-/* LIGHT EFFECT */
-
-.main-card::before{
-    content:"";
-
-    position:absolute;
-    top:-150px;
-    right:-150px;
-
-    width:350px;
-    height:350px;
-
-    border-radius:50%;
+    border-radius:19px;
 
     background:
-    radial-gradient(
-        circle,
-        rgba(124,92,255,0.25),
-        transparent 70%
-    );
 
-    filter:blur(30px);
+        rgba(255,255,255,.93);
+
+    box-shadow:
+
+        0 12px 38px
+        rgba(10,48,80,.08);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
 }
 
-/* TOP INFO */
 
-.top-info{
+.hq-navbar-inner{
+
+    min-height:76px;
+
     display:flex;
+
     align-items:center;
-    gap:22px;
-    flex-wrap:wrap;
 
-    position:relative;
-    z-index:2;
+    justify-content:
+        space-between;
+
+    gap:18px;
+
+    padding:
+        11px 14px;
+
 }
 
-/* LOGO */
 
-.logo-box{
-    width:95px;
-    height:95px;
+/* BRAND */
 
-    border-radius:50%;
+.hq-brand{
 
-    padding:6px;
+    display:flex;
 
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
+    align-items:center;
 
-    box-shadow:
-    0 10px 35px rgba(124,92,255,0.35);
+    gap:10px;
 
-    animation:rotateBorder 5s linear infinite;
 }
 
-.logo-inner{
-    width:100%;
-    height:100%;
+
+.hq-brand-logo{
+
+    width:49px;
+    height:49px;
+
+    flex:none;
+
+    display:grid;
+
+    place-items:center;
+
+    border:
+
+        1px solid
+        var(--border);
+
+    border-radius:14px;
 
     background:#fff;
 
-    border-radius:50%;
+    box-shadow:
+
+        0 7px 22px
+        rgba(6,56,90,.07);
+
+}
+
+
+.hq-brand-logo img{
+
+    width:41px;
+
+    height:41px;
+
+    object-fit:contain;
+
+}
+
+
+.hq-brand-copy strong{
+
+    display:block;
+
+    color:
+        var(--navy);
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:16px;
+
+    font-weight:800;
+
+}
+
+
+.hq-brand-copy small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:
+        var(--muted);
+
+    font-size:8px;
+
+    font-weight:700;
+
+}
+
+
+/* ACTIONS NAV */
+
+.hq-navbar-actions{
 
     display:flex;
+
     align-items:center;
+
+    gap:8px;
+
+}
+
+
+.hq-nav-btn{
+
+    min-height:41px;
+
+    display:inline-flex;
+
+    align-items:center;
+
     justify-content:center;
 
-    overflow:hidden;
-}
+    gap:8px;
 
-.logo-inner img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-@keyframes rotateBorder{
-
-    0%{
-        transform:rotate(0deg);
-    }
-
-    100%{
-        transform:rotate(360deg);
-    }
-
-}
-
-/* BADGE */
-
-.publish-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-
-    padding:12px 22px;
-
-    border-radius:100px;
-
-    background:
-    rgba(255,255,255,0.08);
+    padding:
+        0 13px;
 
     border:
-    1px solid rgba(255,255,255,0.08);
 
-    color:#8be9ff;
+        1px solid
+        var(--border);
 
-    font-size:14px;
-    font-weight:600;
+    border-radius:11px;
 
-    margin-top:10px;
+    color:#53677a;
+
+    background:#fff;
+
+    font-size:9px;
+
+    font-weight:900;
+
+    transition:.24s ease;
+
 }
+
+
+.hq-nav-btn i{
+
+    color:
+        var(--blue);
+
+}
+
+
+.hq-nav-btn:hover{
+
+    color:
+        var(--blue);
+
+    border-color:#c6ddec;
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.hq-nav-btn.primary{
+
+    color:#fff;
+
+    border:none;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        );
+
+    box-shadow:
+
+        0 11px 25px
+        rgba(7,104,201,.16);
+
+}
+
+
+.hq-nav-btn.primary i{
+
+    color:#fff;
+
+}
+
+
+.hq-nav-btn.primary:hover{
+
+    color:#fff;
+
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hq-hero{
+
+    padding:
+        34px 0
+        20px;
+
+}
+
+
+.hq-hero-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:grid;
+
+    grid-template-columns:
+
+        minmax(0,1.05fr)
+        minmax(320px,.95fr);
+
+    min-height:520px;
+
+    border:
+
+        1px solid
+        var(--border);
+
+    border-radius:28px;
+
+    background:#fff;
+
+    box-shadow:
+        var(--shadow);
+
+}
+
+
+/* HERO CONTENT */
+
+.hq-hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    padding:
+        48px 44px;
+
+}
+
+
+.hq-kicker{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    width:max-content;
+
+    margin-bottom:14px;
+
+    color:
+        var(--blue);
+
+    font-size:8px;
+
+    font-weight:900;
+
+    letter-spacing:1.4px;
+
+    text-transform:uppercase;
+
+}
+
+
+.hq-kicker::before{
+
+    content:"";
+
+    width:24px;
+
+    height:2px;
+
+    border-radius:10px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            var(--blue),
+            var(--cyan)
+        );
+
+}
+
+
+/* META */
+
+.hq-publish-row{
+
+    display:flex;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-bottom:18px;
+
+}
+
+
+.hq-brand-badge{
+
+    min-height:34px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+        0 10px;
+
+    border:
+
+        1px solid
+        var(--border);
+
+    border-radius:999px;
+
+    color:
+        var(--navy);
+
+    background:#fbfdff;
+
+    font-size:8px;
+
+    font-weight:800;
+
+}
+
+
+.hq-brand-badge img{
+
+    width:22px;
+
+    height:22px;
+
+    object-fit:contain;
+
+}
+
+
+.hq-date-badge{
+
+    min-height:34px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:
+        0 10px;
+
+    border:
+
+        1px solid
+        #d8e9f5;
+
+    border-radius:999px;
+
+    color:#49677d;
+
+    background:#f4faff;
+
+    font-size:8px;
+
+    font-weight:800;
+
+}
+
+
+.hq-date-badge i{
+
+    color:
+        var(--blue);
+
+}
+
 
 /* TITLE */
 
-.annonce-title{
-    font-size:58px;
-    font-weight:900;
+.hq-title{
 
-    line-height:1.1;
+    max-width:720px;
 
-    margin-top:35px;
-    margin-bottom:25px;
+    margin:0;
 
-    position:relative;
-    z-index:2;
-}
+    color:
+        var(--navy);
 
-.annonce-title span{
-    background:
-    linear-gradient(
-        to right,
-        #7c5cff,
-        #00d4ff
-    );
+    font-family:
+        "Manrope",
+        sans-serif;
 
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
+    font-size:
 
-/* GOLD LINE */
+        clamp(
+            35px,
+            5vw,
+            58px
+        );
 
-.gold-line{
-    width:180px;
-    height:6px;
+    line-height:1.02;
 
-    border-radius:50px;
+    letter-spacing:-2px;
 
-    background:
-    linear-gradient(
-        90deg,
-        #ffdd8a,
-        #ffb703,
-        #ffdd8a
-    );
-
-    background-size:300% 100%;
-
-    animation:moveGold 5s linear infinite;
-
-    margin-bottom:30px;
-}
-
-@keyframes moveGold{
-
-    0%{
-        background-position:0%;
-    }
-
-    100%{
-        background-position:300%;
-    }
+    font-weight:800;
 
 }
 
-/* TEXT */
 
-.annonce-text{
-    color:rgba(255,255,255,0.75);
+.hq-official{
 
-    line-height:2;
-    font-size:17px;
+    display:block;
 
-    position:relative;
-    z-index:2;
+    margin-top:8px;
+
+    color:
+        var(--blue);
+
+    font-size:
+
+        clamp(
+            16px,
+            2vw,
+            21px
+        );
+
+    letter-spacing:-.4px;
+
 }
 
-/* BUTTONS */
 
-.action-buttons{
+.hq-intro{
+
+    max-width:670px;
+
+    margin-top:20px;
+
+    color:#56697d;
+
+    font-size:11px;
+
+    line-height:1.8;
+
+}
+
+
+/* HERO BUTTONS */
+
+.hq-hero-actions{
+
     display:flex;
-    gap:18px;
+
     flex-wrap:wrap;
 
-    margin-top:40px;
+    gap:9px;
+
+    margin-top:24px;
+
 }
 
-.custom-btn{
-    padding:15px 28px;
 
-    border-radius:18px;
+.hq-btn{
 
-    text-decoration:none;
-
-    font-weight:600;
+    min-height:45px;
 
     display:inline-flex;
-    align-items:center;
-    gap:12px;
 
-    transition:.4s ease;
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:
+        0 15px;
+
+    border:
+
+        1px solid
+        var(--border);
+
+    border-radius:11px;
+
+    font-size:9px;
+
+    font-weight:900;
+
+    transition:.25s ease;
+
 }
 
-.btn-home{
-    background:
-    linear-gradient(
-        135deg,
-        #7c5cff,
-        #00d4ff
-    );
+
+.hq-btn:hover{
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.hq-btn-primary{
 
     color:#fff;
-}
 
-.btn-share{
+    border:none;
+
     background:
-    linear-gradient(
-        135deg,
-        #ffbe0b,
-        #fb8500
-    );
 
-    color:#111;
-}
-
-.custom-btn:hover{
-    transform:translateY(-6px);
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        );
 
     box-shadow:
-    0 20px 40px rgba(0,0,0,0.4);
+
+        0 12px 28px
+        rgba(7,104,201,.18);
+
 }
 
-/* ======================================================
-   IMAGE
-====================================================== */
 
-.image-section{
-    padding:10px 0 80px;
+.hq-btn-primary:hover{
+
+    color:#fff;
+
 }
 
-.image-card{
+
+.hq-btn-light{
+
+    color:#52687b;
+
+    background:#fff;
+
+}
+
+
+.hq-btn-light:hover{
+
+    color:
+        var(--blue);
+
+    border-color:#c7dfed;
+
+}
+
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.hq-hero-media{
+
     position:relative;
 
     overflow:hidden;
 
-    border-radius:35px;
+    min-height:520px;
 
     background:
-    rgba(255,255,255,0.05);
 
-    border:
-    1px solid rgba(255,255,255,0.08);
+        linear-gradient(
+            145deg,
+            #eaf4fb,
+            #f9fcfe
+        );
 
-    padding:20px;
-
-    backdrop-filter:blur(20px);
-
-    transition:.45s ease;
 }
 
-.image-card:hover{
-    transform:translateY(-8px);
-}
 
-.annonce-img{
-    width:100%;
-    max-height:650px;
+.hq-hero-media::after{
 
-    object-fit:cover;
+    content:"";
 
-    border-radius:25px;
-
-    transition:.6s ease;
-}
-
-.image-card:hover .annonce-img{
-    transform:scale(1.04);
-}
-
-/* OVERLAY */
-
-.image-overlay{
     position:absolute;
 
     inset:0;
 
-    background:
-    linear-gradient(
-        180deg,
-        transparent,
-        rgba(0,0,0,0.5)
-    );
-
-    opacity:0;
-
-    transition:.45s ease;
-}
-
-.image-card:hover .image-overlay{
-    opacity:1;
-}
-
-/* ======================================================
-   SOCIAL SHARE
-====================================================== */
-
-.social-section{
-    padding-bottom:100px;
-}
-
-.social-box{
-    text-align:center;
-
-    padding:50px;
-
-    border-radius:35px;
+    pointer-events:none;
 
     background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.03)
-    );
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.16),
+            transparent 32%
+        ),
+
+        linear-gradient(
+            0deg,
+            rgba(7,26,47,.24),
+            transparent 45%
+        );
+
+}
+
+
+.hq-annonce-image{
+
+    width:100%;
+
+    height:100%;
+
+    min-height:520px;
+
+    object-fit:cover;
+
+    transition:.5s ease;
+
+}
+
+
+.hq-hero-card:hover
+.hq-annonce-image{
+
+    transform:
+        scale(1.018);
+
+}
+
+
+.hq-image-label{
+
+    position:absolute;
+
+    left:18px;
+
+    bottom:18px;
+
+    z-index:3;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+        9px 11px;
 
     border:
-    1px solid rgba(255,255,255,0.08);
 
-    backdrop-filter:blur(20px);
-}
+        1px solid
+        rgba(255,255,255,.20);
 
-.social-title{
-    font-size:38px;
-    font-weight:800;
-
-    margin-bottom:15px;
-}
-
-.social-text{
-    color:rgba(255,255,255,0.70);
-
-    margin-bottom:35px;
-}
-
-/* ICONS */
-
-.social-links{
-    display:flex;
-    justify-content:center;
-    gap:25px;
-    flex-wrap:wrap;
-}
-
-.social-link{
-    width:80px;
-    height:80px;
-
-    border-radius:25px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:28px;
-
-    text-decoration:none;
+    border-radius:11px;
 
     color:#fff;
 
-    position:relative;
+    background:
+
+        rgba(7,26,47,.60);
+
+    backdrop-filter:
+        blur(12px);
+
+    font-size:8px;
+
+    font-weight:800;
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.hq-main{
+
+    padding:
+
+        0 0
+        24px;
+
+}
+
+
+.hq-layout{
+
+    display:grid;
+
+    grid-template-columns:
+
+        minmax(0,1fr)
+        320px;
+
+    align-items:start;
+
+    gap:20px;
+
+}
+
+
+/* =========================================================
+   ARTICLE CARD
+========================================================= */
+
+.hq-article-card,
+.hq-share-card{
+
+    border:
+
+        1px solid
+        var(--border);
+
+    border-radius:22px;
+
+    background:#fff;
+
+    box-shadow:
+
+        0 8px 30px
+        rgba(12,57,92,.05);
+
+}
+
+
+.hq-article-card{
+
+    padding:30px;
+
+}
+
+
+.hq-section-label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:17px;
+
+    color:
+        var(--navy);
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:17px;
+
+    font-weight:800;
+
+}
+
+
+.hq-section-label i{
+
+    width:37px;
+
+    height:37px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:11px;
+
+    color:
+        var(--blue);
+
+    background:#edf7ff;
+
+    font-size:13px;
+
+}
+
+
+.hq-article-text{
+
+    color:#4d6174;
+
+    font-size:11px;
+
+    line-height:1.95;
+
+    white-space:pre-line;
+
+    overflow-wrap:anywhere;
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+.hq-share-card{
+
+    position:sticky;
+
+    top:106px;
 
     overflow:hidden;
 
-    transition:.45s ease;
+    padding:21px;
+
 }
 
-.facebook{
+
+.hq-share-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:160px;
+
+    height:160px;
+
+    right:-105px;
+
+    top:-105px;
+
+    border-radius:50%;
+
     background:
-    linear-gradient(
-        135deg,
-        #1877f2,
-        #0d5bd7
-    );
+
+        rgba(0,184,217,.06);
+
 }
 
-.tiktok{
+
+.hq-share-icon{
+
+    width:44px;
+
+    height:44px;
+
+    display:grid;
+
+    place-items:center;
+
+    margin-bottom:13px;
+
+    border-radius:13px;
+
+    color:#fff;
+
     background:
-    linear-gradient(
-        135deg,
-        #ff0050,
-        #000
-    );
+
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--cyan)
+        );
+
+    font-size:15px;
+
 }
 
-.whatsapp{
-    background:
-    linear-gradient(
-        135deg,
-        #25d366,
-        #128c7e
-    );
+
+.hq-share-card h2{
+
+    margin:0;
+
+    color:
+        var(--navy);
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:19px;
+
+    font-weight:800;
+
 }
 
-.social-link:hover{
+
+.hq-share-card p{
+
+    margin:
+
+        7px 0
+        16px;
+
+    color:
+        var(--muted);
+
+    font-size:9px;
+
+    line-height:1.65;
+
+}
+
+
+/* SOCIALS */
+
+.hq-socials{
+
+    display:grid;
+
+    grid-template-columns:
+
+        1fr 1fr;
+
+    gap:8px;
+
+}
+
+
+.hq-social-btn{
+
+    min-height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    border:
+
+        1px solid
+        var(--border);
+
+    border-radius:10px;
+
+    color:#4c6377;
+
+    background:#fbfdff;
+
+    font-size:8px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    transition:.23s ease;
+
+}
+
+
+.hq-social-btn:hover{
+
     transform:
-    translateY(-10px)
-    scale(1.08);
+        translateY(-2px);
 
-    box-shadow:
-    0 20px 40px rgba(0,0,0,0.4);
+    background:#fff;
+
 }
 
-/* ======================================================
+
+.hq-social-btn.facebook i{
+
+    color:#1877f2;
+
+}
+
+
+.hq-social-btn.whatsapp i{
+
+    color:#1aa95f;
+
+}
+
+
+.hq-social-btn.copy i{
+
+    color:
+        var(--blue);
+
+}
+
+
+.hq-social-btn.share i{
+
+    color:
+        var(--cyan);
+
+}
+
+
+.hq-share-note{
+
+    margin-top:13px;
+
+    padding:11px;
+
+    border:
+
+        1px solid
+        #deebf3;
+
+    border-radius:10px;
+
+    color:#61778a;
+
+    background:#f7fbfe;
+
+    font-size:8px;
+
+    line-height:1.55;
+
+}
+
+
+/* =========================================================
    FOOTER
-====================================================== */
+========================================================= */
 
-.footer{
-    padding:40px 0;
+.hq-footer{
 
-    text-align:center;
+    margin-top:20px;
 
-    color:rgba(255,255,255,0.55);
+    padding:
 
-    border-top:
-    1px solid rgba(255,255,255,0.08);
-}
+        31px 0
+        34px;
 
-/* ======================================================
-   RESPONSIVE
-====================================================== */
+    color:#a7b7c6;
 
-@media(max-width:991px){
+    background:
 
-    .annonce-title{
-        font-size:42px;
-    }
-
-    .main-card{
-        padding:35px;
-    }
+        linear-gradient(
+            145deg,
+            #061525,
+            #082944
+        );
 
 }
 
-@media(max-width:768px){
 
-    .annonce-header{
-        padding-top:40px;
+.hq-footer-inner{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:
+        space-between;
+
+    gap:20px;
+
+}
+
+
+.hq-footer-brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+}
+
+
+.hq-footer-brand img{
+
+    width:39px;
+
+    height:39px;
+
+    padding:2px;
+
+    object-fit:contain;
+
+    border-radius:10px;
+
+    background:#fff;
+
+}
+
+
+.hq-footer-brand strong{
+
+    display:block;
+
+    color:#fff;
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:12px;
+
+}
+
+
+.hq-footer-brand small{
+
+    display:block;
+
+    margin-top:2px;
+
+    color:#9bb0c2;
+
+    font-size:7px;
+
+}
+
+
+.hq-footer-copy{
+
+    color:#8ca0b2;
+
+    font-size:8px;
+
+    text-align:right;
+
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+.hq-reveal{
+
+    opacity:0;
+
+    transform:
+        translateY(22px);
+
+    transition:
+
+        opacity .55s ease,
+        transform .55s
+        cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+.hq-reveal.visible{
+
+    opacity:1;
+
+    transform:none;
+
+}
+
+
+/* =========================================================
+   TABLETTE
+========================================================= */
+
+@media(max-width:980px){
+
+    .hq-hero-card{
+
+        grid-template-columns:1fr;
+
     }
 
-    .annonce-title{
-        font-size:32px;
+
+    .hq-hero-media{
+
+        min-height:360px;
+
     }
 
-    .main-card{
-        padding:28px;
-        border-radius:28px;
+
+    .hq-annonce-image{
+
+        min-height:360px;
+
+        max-height:480px;
+
     }
 
-    .top-info{
-        flex-direction:column;
-        align-items:flex-start;
+
+    .hq-layout{
+
+        grid-template-columns:1fr;
+
     }
 
-    .action-buttons{
-        flex-direction:column;
+
+    .hq-share-card{
+
+        position:relative;
+
+        top:auto;
+
     }
 
-    .custom-btn{
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:700px){
+
+    .hq-container{
+
+        width:
+            calc(
+                100% - 20px
+            );
+
+    }
+
+
+    .hq-navbar{
+
+        top:7px;
+
+        margin-top:7px;
+
+        border-radius:15px;
+
+    }
+
+
+    .hq-navbar-inner{
+
+        min-height:66px;
+
+        padding:
+            8px 9px;
+
+    }
+
+
+    .hq-brand-logo{
+
+        width:44px;
+
+        height:44px;
+
+        border-radius:12px;
+
+    }
+
+
+    .hq-brand-logo img{
+
+        width:36px;
+
+        height:36px;
+
+    }
+
+
+    .hq-brand-copy strong{
+
+        font-size:14px;
+
+    }
+
+
+    .hq-brand-copy small{
+
+        display:none;
+
+    }
+
+
+    .hq-nav-btn{
+
+        width:40px;
+
+        min-height:40px;
+
+        padding:0;
+
+    }
+
+
+    .hq-nav-btn span{
+
+        display:none;
+
+    }
+
+
+    .hq-hero{
+
+        padding-top:18px;
+
+    }
+
+
+    .hq-hero-card{
+
+        border-radius:20px;
+
+    }
+
+
+    .hq-hero-content{
+
+        padding:
+            28px 20px;
+
+    }
+
+
+    .hq-title{
+
+        font-size:34px;
+
+        letter-spacing:-1.2px;
+
+    }
+
+
+    .hq-official{
+
+        font-size:16px;
+
+    }
+
+
+    .hq-hero-actions{
+
+        display:grid;
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .hq-btn{
+
         width:100%;
-        justify-content:center;
+
     }
 
-    .social-box{
-        padding:35px 20px;
+
+    .hq-hero-media,
+    .hq-annonce-image{
+
+        min-height:280px;
+
     }
 
-    .social-title{
-        font-size:28px;
+
+    .hq-article-card,
+    .hq-share-card{
+
+        border-radius:17px;
+
     }
 
-    .social-link{
-        width:65px;
-        height:65px;
 
-        font-size:22px;
+    .hq-article-card{
+
+        padding:20px;
+
+    }
+
+
+    .hq-socials{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .hq-footer-inner{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+
+    .hq-footer-copy{
+
+        text-align:left;
+
     }
 
 }
@@ -678,234 +1679,990 @@ body{
 
 </head>
 
+
 <body>
 
-<!-- BACKGROUND EFFECT -->
-<div class="bg-effect"></div>
 
-<!-- ======================================================
-     HEADER
-====================================================== -->
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
 
-<section class="annonce-header">
+<div class="hq-container">
 
-<div class="container">
 
-<div class="main-card animate__animated animate__fadeInUp"
-data-aos="zoom-in">
+    <header class="hq-navbar">
 
-<!-- TOP -->
 
-<div class="top-info">
+        <div class="hq-navbar-inner">
 
-<div class="logo-box">
 
-<div class="logo-inner">
+            <!-- BRAND -->
 
-<img src="{% static 'images/logoHexa.png' %}"
-alt="HexaQuébec">
+            <a
+
+                href="{% url 'home' %}"
+
+                class="hq-brand"
+
+            >
+
+
+                <span class="hq-brand-logo">
+
+
+                    <img
+
+                        src="{% static 'images/logoHexa.png' %}"
+
+                        alt="HexaQuébec"
+
+                    >
+
+
+                </span>
+
+
+                <span class="hq-brand-copy">
+
+
+                    <strong>
+
+                        HexaQuébec
+
+                    </strong>
+
+
+                    <small>
+
+                        L’innovation au cœur du numérique québécois
+
+                    </small>
+
+
+                </span>
+
+
+            </a>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="hq-navbar-actions">
+
+
+                <a
+
+                    href="{% url 'home' %}"
+
+                    class="hq-nav-btn"
+
+                >
+
+
+                    <i class="fa-solid fa-house"></i>
+
+
+                    <span>
+
+                        Accueil
+
+                    </span>
+
+
+                </a>
+
+
+
+                <a
+
+                    href="#partage"
+
+                    class="hq-nav-btn primary"
+
+                >
+
+
+                    <i class="fa-solid fa-share-nodes"></i>
+
+
+                    <span>
+
+                        Partager
+
+                    </span>
+
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
 
 </div>
 
-</div>
 
-<div>
 
-<h3 class="fw-bold mb-1">
-HexaQuébec
-</h3>
+<!-- =========================================================
+     HERO
+========================================================= -->
 
-<div class="publish-badge">
+<section class="hq-hero">
 
-<i class="fa-solid fa-calendar-days"></i>
 
-Publié le
-{{ annonce.published_at|date:"d M Y" }}
+    <div class="hq-container">
 
-</div>
 
-</div>
+        <article class="hq-hero-card hq-reveal">
 
-</div>
 
-<!-- TITLE -->
+            <!-- =================================================
+                 CONTENU
+            ================================================== -->
 
-<h1 class="annonce-title">
+            <div class="hq-hero-content">
 
-{{ annonce.titre }}
 
-<span>Annonce officielle</span>
+                <span class="hq-kicker">
 
-</h1>
+                    Actualité HexaQuébec
 
-<div class="gold-line"></div>
+                </span>
 
-<!-- CONTENT -->
 
-<p class="annonce-text">
 
-{{ annonce.content }}
+                <!-- META -->
 
-</p>
+                <div class="hq-publish-row">
 
-<!-- BUTTONS -->
 
-<div class="action-buttons">
+                    <span class="hq-brand-badge">
 
-<a href="{% url 'home' %}"
-class="custom-btn btn-home">
 
-<i class="fa-solid fa-arrow-left"></i>
+                        <img
 
-Retour Accueil
+                            src="{% static 'images/logoHexa.png' %}"
 
-</a>
+                            alt=""
 
-<a href="#partage"
-class="custom-btn btn-share">
+                        >
 
-<i class="fa-solid fa-share-nodes"></i>
 
-Partager
+                        Publication officielle
 
-</a>
 
-</div>
+                    </span>
 
-</div>
 
-</div>
+
+                    <span class="hq-date-badge">
+
+
+                        <i class="fa-regular fa-calendar"></i>
+
+
+                        Publié le
+
+                        {{ annonce.published_at|date:"d M Y" }}
+
+
+                    </span>
+
+
+                </div>
+
+
+
+                <!-- TITRE -->
+
+                <h1 class="hq-title">
+
+
+                    {{ annonce.titre }}
+
+
+                    <span class="hq-official">
+
+                        Annonce officielle
+
+                    </span>
+
+
+                </h1>
+
+
+
+                <!-- INTRO -->
+
+                <p class="hq-intro">
+
+
+                    Retrouvez ci-dessous les informations
+                    complètes de cette publication officielle
+                    HexaQuébec.
+
+
+                </p>
+
+
+
+                <!-- BUTTONS -->
+
+                <div class="hq-hero-actions">
+
+
+                    <a
+
+                        href="{% url 'home' %}"
+
+                        class="hq-btn hq-btn-primary"
+
+                    >
+
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+
+                        Retour à l’accueil
+
+
+                    </a>
+
+
+
+                    <a
+
+                        href="#contenu"
+
+                        class="hq-btn hq-btn-light"
+
+                    >
+
+
+                        <i class="fa-solid fa-arrow-down"></i>
+
+
+                        Lire l’annonce
+
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 IMAGE
+            ================================================== -->
+
+            <div class="hq-hero-media">
+
+
+                {% if annonce.image %}
+
+
+                    <img
+
+                        src="{{ annonce.image.url }}"
+
+                        alt="{{ annonce.titre }}"
+
+                        class="hq-annonce-image"
+
+                    >
+
+
+                {% else %}
+
+
+                    <img
+
+                        src="{% static 'images/default-annonce.jpg' %}"
+
+                        alt="Annonce HexaQuébec"
+
+                        class="hq-annonce-image"
+
+                    >
+
+
+                {% endif %}
+
+
+
+                <div class="hq-image-label">
+
+
+                    <i class="fa-solid fa-building"></i>
+
+
+                    HexaQuébec
+
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+    </div>
+
 
 </section>
 
-<!-- ======================================================
-     IMAGE
-====================================================== -->
 
-<section class="image-section">
 
-<div class="container">
+<!-- =========================================================
+     CONTENU
+========================================================= -->
 
-<div class="image-card"
-data-aos="zoom-in-up">
+<main
 
-{% if annonce.image %}
+    class="hq-main"
 
-<img src="{{ annonce.image.url }}"
-alt="{{ annonce.titre }}"
-class="annonce-img">
+    id="contenu"
 
-{% else %}
+>
 
-<img src="{% static 'images/default-annonce.jpg' %}"
-alt="Annonce"
-class="annonce-img">
 
-{% endif %}
+    <div class="hq-container">
 
-<div class="image-overlay"></div>
 
-</div>
+        <div class="hq-layout">
 
-</div>
 
-</section>
+            <!-- =================================================
+                 TEXTE ANNONCE
+            ================================================== -->
 
-<!-- ======================================================
-     SHARE
-====================================================== -->
+            <article class="hq-article-card hq-reveal">
 
-<section class="social-section"
-id="partage">
 
-<div class="container">
+                <h2 class="hq-section-label">
 
-<div class="social-box"
-data-aos="fade-up">
 
-<h2 class="social-title">
-Partager cette annonce
-</h2>
+                    <i class="fa-solid fa-file-lines"></i>
 
-<p class="social-text">
 
-Partagez cette annonce HexaQuébec
-sur vos réseaux sociaux.
+                    Détails de l’annonce
 
-</p>
 
-<div class="social-links">
+                </h2>
 
-<!-- FACEBOOK -->
 
-<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
-target="_blank"
-class="social-link facebook">
 
-<i class="fab fa-facebook-f"></i>
+                <div class="hq-article-text">
 
-</a>
 
-<!-- TIKTOK -->
+                    {{ annonce.content }}
 
-<a href="https://www.tiktok.com/"
-target="_blank"
-class="social-link tiktok">
 
-<i class="fab fa-tiktok"></i>
+                </div>
 
-</a>
 
-<!-- WHATSAPP -->
+            </article>
 
-<a href="https://wa.me/?text={{ request.build_absolute_uri }}"
-target="_blank"
-class="social-link whatsapp">
 
-<i class="fab fa-whatsapp"></i>
 
-</a>
+            <!-- =================================================
+                 PARTAGE
+            ================================================== -->
 
-</div>
+            <aside
 
-</div>
+                class="hq-share-card hq-reveal"
 
-</div>
+                id="partage"
 
-</section>
+            >
 
-<!-- ======================================================
+
+                <div class="hq-share-icon">
+
+
+                    <i class="fa-solid fa-share-nodes"></i>
+
+
+                </div>
+
+
+
+                <h2>
+
+                    Partager l’annonce
+
+                </h2>
+
+
+
+                <p>
+
+
+                    Faites connaître cette publication
+                    HexaQuébec sur vos réseaux sociaux
+                    ou copiez directement son lien.
+
+
+                </p>
+
+
+
+                <!-- SOCIAL BUTTONS -->
+
+                <div class="hq-socials">
+
+
+                    <!-- FACEBOOK -->
+
+                    <a
+
+                        href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}"
+
+                        target="_blank"
+
+                        rel="noopener noreferrer"
+
+                        class="hq-social-btn facebook"
+
+                    >
+
+
+                        <i class="fa-brands fa-facebook-f"></i>
+
+
+                        Facebook
+
+
+                    </a>
+
+
+
+                    <!-- WHATSAPP -->
+
+                    <a
+
+                        href="https://wa.me/?text={{ request.build_absolute_uri|urlencode }}"
+
+                        target="_blank"
+
+                        rel="noopener noreferrer"
+
+                        class="hq-social-btn whatsapp"
+
+                    >
+
+
+                        <i class="fa-brands fa-whatsapp"></i>
+
+
+                        WhatsApp
+
+
+                    </a>
+
+
+
+                    <!-- COPIER -->
+
+                    <button
+
+                        type="button"
+
+                        class="hq-social-btn copy"
+
+                        id="copyAnnonceLink"
+
+                    >
+
+
+                        <i class="fa-regular fa-copy"></i>
+
+
+                        Copier le lien
+
+
+                    </button>
+
+
+
+                    <!-- SHARE -->
+
+                    <button
+
+                        type="button"
+
+                        class="hq-social-btn share"
+
+                        id="nativeShare"
+
+                    >
+
+
+                        <i class="fa-solid fa-share-from-square"></i>
+
+
+                        Partager
+
+
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- FEEDBACK -->
+
+                <div
+
+                    class="hq-share-note"
+
+                    id="shareFeedback"
+
+                >
+
+
+                    Publication officielle HexaQuébec.
+
+
+                </div>
+
+
+            </aside>
+
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =========================================================
      FOOTER
-====================================================== -->
+========================================================= -->
 
-<footer class="footer">
+<footer class="hq-footer">
 
-<div class="container">
 
-<p>
-© 2026 HexaQuébec — Tous droits réservés
-</p>
+    <div class="hq-container">
 
-</div>
+
+        <div class="hq-footer-inner">
+
+
+            <!-- BRAND -->
+
+            <div class="hq-footer-brand">
+
+
+                <img
+
+                    src="{% static 'images/logoHexa.png' %}"
+
+                    alt="HexaQuébec"
+
+                >
+
+
+                <div>
+
+
+                    <strong>
+
+                        HexaQuébec
+
+                    </strong>
+
+
+                    <small>
+
+                        Entreprise informatique québécoise
+
+                    </small>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- COPYRIGHT -->
+
+            <div class="hq-footer-copy">
+
+
+                © 2026 HexaQuébec —
+                Tous droits réservés.
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
 
 </footer>
 
-<!-- ======================================================
-     JS
-====================================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
 <script>
 
-AOS.init({
-    duration:1000,
-    once:true
-});
+
+/* =========================================================
+   ANIMATIONS AU SCROLL
+========================================================= */
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    function(){
+
+
+        const elements =
+
+            document.querySelectorAll(
+
+                ".hq-reveal"
+
+            );
+
+
+
+        const observer =
+
+            new IntersectionObserver(
+
+                function(entries){
+
+
+                    entries.forEach(
+
+                        function(entry){
+
+
+                            if(
+
+                                entry.isIntersecting
+
+                            ){
+
+
+                                entry.target
+
+                                    .classList
+
+                                    .add(
+
+                                        "visible"
+
+                                    );
+
+
+
+                                observer
+
+                                    .unobserve(
+
+                                        entry.target
+
+                                    );
+
+
+                            }
+
+
+                        }
+
+                    );
+
+
+                },
+
+                {
+
+                    threshold:.10,
+
+                    rootMargin:
+
+                        "0px 0px -25px 0px"
+
+                }
+
+            );
+
+
+
+        elements.forEach(
+
+            function(element){
+
+
+                observer.observe(
+
+                    element
+
+                );
+
+
+            }
+
+        );
+
+
+    }
+
+);
+
+
+
+/* =========================================================
+   COPIER LIEN
+========================================================= */
+
+const copyButton =
+
+    document.getElementById(
+
+        "copyAnnonceLink"
+
+    );
+
+
+const shareFeedback =
+
+    document.getElementById(
+
+        "shareFeedback"
+
+    );
+
+
+
+copyButton
+
+?.addEventListener(
+
+    "click",
+
+    async function(){
+
+
+        try{
+
+
+            await navigator.clipboard
+
+                .writeText(
+
+                    window.location.href
+
+                );
+
+
+
+            if(
+
+                shareFeedback
+
+            ){
+
+
+                shareFeedback.textContent =
+
+                    "Lien copié avec succès.";
+
+
+            }
+
+
+        }
+
+        catch(error){
+
+
+            if(
+
+                shareFeedback
+
+            ){
+
+
+                shareFeedback.textContent =
+
+                    "Impossible de copier automatiquement le lien.";
+
+
+            }
+
+
+        }
+
+
+    }
+
+);
+
+
+
+/* =========================================================
+   PARTAGE NATIF TÉLÉPHONE
+========================================================= */
+
+const nativeShare =
+
+    document.getElementById(
+
+        "nativeShare"
+
+    );
+
+
+
+nativeShare
+
+?.addEventListener(
+
+    "click",
+
+    async function(){
+
+
+        if(
+
+            navigator.share
+
+        ){
+
+
+            try{
+
+
+                await navigator.share({
+
+
+                    title:
+
+                        "{{ annonce.titre|escapejs }}",
+
+
+                    text:
+
+                        "Annonce officielle HexaQuébec",
+
+
+                    url:
+
+                        window.location.href
+
+
+                });
+
+
+            }
+
+            catch(error){
+
+
+                /* utilisateur a fermé le partage */
+
+
+            }
+
+
+        }
+
+        else{
+
+
+            try{
+
+
+                await navigator.clipboard
+
+                    .writeText(
+
+                        window.location.href
+
+                    );
+
+
+
+                if(
+
+                    shareFeedback
+
+                ){
+
+
+                    shareFeedback.textContent =
+
+                        "Lien copié pour le partage.";
+
+
+                }
+
+
+            }
+
+            catch(error){
+
+
+                if(
+
+                    shareFeedback
+
+                ){
+
+
+                    shareFeedback.textContent =
+
+                        "Le partage direct n’est pas disponible sur cet appareil.";
+
+
+                }
+
+
+            }
+
+
+        }
+
+
+    }
+
+);
+
 
 </script>
 
+
 </body>
+
 </html>
