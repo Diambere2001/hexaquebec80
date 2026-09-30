@@ -7335,3 +7335,336 @@ def generer_jaas_jwt(
 
 
     return token
+
+
+
+
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
+
+from .forms import AttestationBoutiqueForm
+from .models import AttestationBoutique
+
+
+# =========================================================
+# CRÉER UNE ATTESTATION
+# =========================================================
+
+@staff_member_required
+def creer_attestation_boutique(request):
+
+    if request.method == "POST":
+
+        form = AttestationBoutiqueForm(
+            request.POST,
+            request.FILES,
+        )
+
+        if form.is_valid():
+
+            attestation = form.save()
+
+            messages.success(
+                request,
+                (
+                    f"L'attestation "
+                    f"{attestation.numero_certificat} "
+                    f"a été créée et signée avec succès."
+                )
+            )
+
+            return redirect(
+                "detail_attestation_boutique",
+                pk=attestation.pk,
+            )
+
+        else:
+
+            messages.error(
+                request,
+                (
+                    "L'attestation n'a pas pu être créée. "
+                    "Veuillez vérifier les champs du formulaire."
+                )
+            )
+
+    else:
+
+        form = AttestationBoutiqueForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "administration/attestations/creer_attestation_boutique.html",
+        context,
+    )
+
+
+# =========================================================
+# LISTE DES ATTESTATIONS
+# =========================================================
+
+@staff_member_required
+def liste_attestations_boutiques(request):
+
+    attestations = (
+        AttestationBoutique.objects
+        .all()
+        .order_by("-date_creation")
+    )
+
+    context = {
+        "attestations": attestations,
+    }
+
+    return render(
+        request,
+        "administration/attestations/liste_attestations_boutiques.html",
+        context,
+    )
+
+
+# =========================================================
+# DÉTAIL / CERTIFICAT
+# =========================================================
+
+@staff_member_required
+def detail_attestation_boutique(request, pk):
+
+    attestation = get_object_or_404(
+        AttestationBoutique,
+        pk=pk,
+    )
+
+    context = {
+        "attestation": attestation,
+    }
+
+    return render(
+        request,
+        "administration/attestations/detail_attestation_boutique.html",
+        context,
+    )
+
+
+# =========================================================
+# VÉRIFICATION PUBLIQUE
+# =========================================================
+
+def verifier_attestation_boutique(request):
+
+    numero = request.GET.get(
+        "numero",
+        ""
+    ).strip()
+
+    attestation = None
+    recherche_effectuee = False
+
+    if numero:
+
+        recherche_effectuee = True
+
+        attestation = (
+            AttestationBoutique.objects
+            .filter(
+                numero_certificat__iexact=numero
+            )
+            .first()
+        )
+
+    context = {
+        "attestation": attestation,
+        "numero": numero,
+        "recherche_effectuee": recherche_effectuee,
+    }
+
+    return render(
+        request,
+        "attestations/verifier_attestation.html",
+        context,
+    )
+
+
+
+import os
+import tempfile
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404, render
+
+from playwright.sync_api import sync_playwright
+
+from .models import AttestationBoutique
+
+
+import os
+import tempfile
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+
+from playwright.sync_api import sync_playwright
+
+from .models import AttestationBoutique
+
+
+@staff_member_required
+def telecharger_attestation_pdf(request, pk):
+
+    attestation = get_object_or_404(
+        AttestationBoutique,
+        pk=pk,
+    )
+
+    # URL de base réelle du site
+    # Exemple :
+    # http://127.0.0.1:8000/
+    # ou
+    # https://hexaquebec.com/
+    base_url = request.build_absolute_uri("/")
+
+
+    # On rend directement le template PDF
+    html_content = render_to_string(
+        "administration/attestations/attestation_pdf.html",
+        {
+            "attestation": attestation,
+            "base_url": base_url,
+        },
+        request=request,
+    )
+
+
+    temp_file = tempfile.NamedTemporaryFile(
+        suffix=".pdf",
+        delete=False,
+    )
+
+    temp_path = temp_file.name
+
+    temp_file.close()
+
+
+    try:
+
+        with sync_playwright() as p:
+
+            browser = p.chromium.launch(
+                headless=True
+            )
+
+
+            page = browser.new_page(
+                viewport={
+                    "width": 1400,
+                    "height": 1000,
+                }
+            )
+
+
+            # IMPORTANT :
+            # on charge d'abord l'URL de base
+            # pour donner un contexte HTTP réel
+            page.goto(
+                base_url,
+                wait_until="domcontentloaded",
+            )
+
+
+            # Puis on remplace le contenu
+            # par notre certificat
+            page.set_content(
+                html_content,
+                wait_until="networkidle",
+            )
+
+
+            # Attend le chargement des images
+            page.wait_for_function(
+                """
+                () => Array.from(
+                    document.images
+                ).every(
+                    img =>
+                        img.complete &&
+                        img.naturalWidth > 0
+                )
+                """,
+                timeout=15000,
+            )
+
+
+            # Attend les polices
+            page.evaluate(
+                """
+                () => document.fonts
+                    ? document.fonts.ready
+                    : Promise.resolve()
+                """
+            )
+
+
+            page.pdf(
+                path=temp_path,
+
+                format="A4",
+
+                landscape=True,
+
+                print_background=True,
+
+                margin={
+                    "top": "0mm",
+                    "right": "0mm",
+                    "bottom": "0mm",
+                    "left": "0mm",
+                },
+
+                prefer_css_page_size=True,
+            )
+
+
+            browser.close()
+
+
+        nom_entreprise = (
+            attestation.nom_entreprise
+            .replace(" ", "_")
+            .replace("/", "-")
+            .replace("\\", "-")
+        )
+
+
+        filename = (
+            f"Attestation_HexaQuebec_"
+            f"{nom_entreprise}_"
+            f"{attestation.numero_certificat}.pdf"
+        )
+
+
+        return FileResponse(
+            open(temp_path, "rb"),
+            as_attachment=True,
+            filename=filename,
+            content_type="application/pdf",
+        )
+
+
+    except Exception:
+
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+        raise

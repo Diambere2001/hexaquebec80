@@ -1,0 +1,249 @@
+<!-- templates/administration/base.html -->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+        Administration — HexaQuébec
+        {% endblock %}
+    </title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f3f6fa;
+            color: #1c2b42;
+        }
+
+        .admin-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #06152f,
+                    #0c4d9c
+                );
+
+            color: white;
+
+            padding: 18px 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, .15);
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-brand-icon {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255, 255, 255, .12);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .admin-brand strong {
+            display: block;
+            font-size: 19px;
+        }
+
+        .admin-brand small {
+            color:
+                rgba(255, 255, 255, .7);
+        }
+
+        .admin-back {
+            color: white;
+            text-decoration: none;
+
+            padding:
+                10px 15px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255, 255, 255, .10);
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .admin-back:hover {
+            background:
+                rgba(255, 255, 255, .18);
+        }
+
+        main {
+            min-height:
+                calc(100vh - 82px);
+        }
+
+        .messages {
+            max-width: 1100px;
+            margin:
+                20px auto 0;
+            padding:
+                0 20px;
+        }
+
+        .message {
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #e9f8ef;
+            color: #166534;
+            border: 1px solid #b7e5c8;
+        }
+
+        .message.error {
+            background: #fff0f0;
+            color: #b42318;
+            border: 1px solid #f0c2c2;
+        }
+
+        .message.warning {
+            background: #fff8e6;
+            color: #8a6116;
+            border: 1px solid #f1db9c;
+        }
+
+        @media (
+            max-width: 600px
+        ) {
+
+            .admin-header {
+                padding:
+                    15px 16px;
+            }
+
+            .admin-brand small {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+    <header class="admin-header">
+
+        <div class="admin-brand">
+
+            <div class="admin-brand-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+
+                <strong>
+                    HexaQuébec
+                </strong>
+
+                <small>
+                    Administration
+                </small>
+
+            </div>
+
+        </div>
+
+        <a
+            href="/hexa/dashboard/"
+            class="admin-back"
+        >
+            <i class="fa-solid fa-gauge-high"></i>
+            Dashboard
+        </a>
+
+    </header>
+
+
+    {% if messages %}
+
+        <div class="messages">
+
+            {% for message in messages %}
+
+                <div
+                    class="message {{ message.tags }}"
+                >
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <main>
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+
+</html>

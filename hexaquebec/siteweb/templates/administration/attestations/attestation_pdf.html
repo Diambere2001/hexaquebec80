@@ -1,0 +1,1081 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <base href="{{ base_url }}">
+
+    <title>
+        Attestation {{ attestation.numero_certificat }}
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        .certificate {
+            position: relative;
+
+            width: 297mm;
+            height: 210mm;
+
+            overflow: hidden;
+
+            padding:
+                12mm 16mm 10mm;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 0%,
+                    #fbfcfe 100%
+                );
+
+            border:
+                2.5px solid #caa34b;
+
+            color: #17253a;
+        }
+
+        .certificate::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 11px;
+
+            border:
+                1px solid #e4cf91;
+
+            pointer-events: none;
+        }
+
+        .certificate::after {
+            content: "HQ";
+
+            position: absolute;
+
+            right: 25mm;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 180px;
+
+            font-weight: 900;
+
+            color:
+                rgba(8, 70, 128, .025);
+
+            pointer-events: none;
+        }
+
+        .corner {
+            position: absolute;
+
+            width: 14mm;
+            height: 14mm;
+
+            z-index: 2;
+        }
+
+        .corner-tl {
+            top: 7mm;
+            left: 7mm;
+
+            border-top:
+                2px solid #c79e3c;
+
+            border-left:
+                2px solid #c79e3c;
+        }
+
+        .corner-tr {
+            top: 7mm;
+            right: 7mm;
+
+            border-top:
+                2px solid #c79e3c;
+
+            border-right:
+                2px solid #c79e3c;
+        }
+
+        .corner-bl {
+            bottom: 7mm;
+            left: 7mm;
+
+            border-bottom:
+                2px solid #c79e3c;
+
+            border-left:
+                2px solid #c79e3c;
+        }
+
+        .corner-br {
+            bottom: 7mm;
+            right: 7mm;
+
+            border-bottom:
+                2px solid #c79e3c;
+
+            border-right:
+                2px solid #c79e3c;
+        }
+
+        .certificate-top {
+            position: relative;
+            z-index: 3;
+
+            display: grid;
+
+            grid-template-columns:
+                55mm 1fr 55mm;
+
+            align-items: center;
+
+            gap: 5mm;
+
+            padding-bottom: 5mm;
+
+            border-bottom:
+                1px solid #e8e0ca;
+        }
+
+        .legal-brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 3mm;
+        }
+
+        .legal-brand img {
+            width: 30mm;
+            max-height: 20mm;
+
+            object-fit: contain;
+        }
+
+        .legal-brand-info {
+            font-size: 7pt;
+
+            line-height: 1.5;
+
+            color: #6e7b8d;
+        }
+
+        .legal-brand-info strong {
+            display: block;
+
+            color: #123d69;
+
+            font-size: 8pt;
+
+            margin-bottom: 1mm;
+        }
+
+        .certificate-heading {
+            text-align: center;
+        }
+
+        .certificate-label {
+            color: #aa8130;
+
+            font-size: 7pt;
+
+            font-weight: 900;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 1mm;
+        }
+
+        .certificate-title {
+            margin: 0;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 21pt;
+
+            font-weight: 800;
+
+            color: #132c48;
+        }
+
+        .certificate-subtitle {
+            margin-top: 1.5mm;
+
+            font-size: 7.5pt;
+
+            font-weight: 800;
+
+            color: #65748a;
+
+            letter-spacing: .7px;
+
+            text-transform: uppercase;
+        }
+
+        .certificate-ref {
+            text-align: right;
+
+            font-size: 6.5pt;
+
+            color: #758296;
+
+            line-height: 1.6;
+        }
+
+        .certificate-ref strong {
+            display: block;
+
+            color: #123d69;
+
+            font-size: 7.5pt;
+        }
+
+        .certificate-body {
+            position: relative;
+            z-index: 3;
+
+            padding-top: 5mm;
+
+            text-align: center;
+        }
+
+        .certification-intro {
+            margin: 0 0 2mm;
+
+            font-size: 8pt;
+
+            color: #677588;
+        }
+
+        .client-name {
+            margin: 0;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 19pt;
+
+            font-weight: 800;
+
+            color: #0b447c;
+        }
+
+        .client-line {
+            width: 75mm;
+
+            height: 1px;
+
+            margin:
+                2mm auto 3mm;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #c8a148,
+                    transparent
+                );
+        }
+
+        .company-row {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 3mm;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 2mm;
+        }
+
+        .company-name {
+            font-size: 11pt;
+
+            font-weight: 900;
+
+            color: #172d49;
+        }
+
+        .company-separator {
+            color: #c7a458;
+        }
+
+        .company-activity {
+            font-size: 8pt;
+
+            color: #68778b;
+        }
+
+        .site-web {
+            font-size: 7pt;
+
+            color: #0b63b6;
+
+            font-weight: 700;
+        }
+
+        .attestation-text {
+            max-width: 220mm;
+
+            margin:
+                2mm auto 3mm;
+
+            font-size: 8pt;
+
+            line-height: 1.5;
+
+            color: #36485f;
+        }
+
+        .attestation-text p {
+            margin: 1.5mm 0;
+        }
+
+        .status-row {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 2mm;
+
+            flex-wrap: wrap;
+
+            margin:
+                2mm 0 3mm;
+        }
+
+        .status-badge {
+            padding:
+                1.5mm 3mm;
+
+            border-radius: 50px;
+
+            background: #f6f9fc;
+
+            border:
+                1px solid #e0e7ef;
+
+            font-size: 6.5pt;
+
+            font-weight: 800;
+
+            color: #324760;
+        }
+
+        .certificate-data {
+            max-width: 210mm;
+
+            margin:
+                0 auto 3mm;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 2mm;
+        }
+
+        .data-item {
+            padding:
+                2.5mm;
+
+            border-radius: 2mm;
+
+            background: #f9fafc;
+
+            border:
+                1px solid #e4e9ef;
+        }
+
+        .data-label {
+            margin-bottom: 1mm;
+
+            font-size: 5.5pt;
+
+            color: #8c96a4;
+
+            font-weight: 900;
+
+            text-transform: uppercase;
+        }
+
+        .data-value {
+            font-size: 7pt;
+
+            color: #24384f;
+
+            font-weight: 900;
+        }
+
+        .certificate-bottom {
+            position: relative;
+            z-index: 3;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1.2fr 1fr;
+
+            align-items: end;
+
+            gap: 8mm;
+
+            margin-top: 2mm;
+        }
+
+        .verify-box {
+            text-align: left;
+
+            padding: 3mm;
+
+            border-radius: 2mm;
+
+            border:
+                1px dashed #d3bd80;
+
+            background: #fffdf7;
+        }
+
+        .verify-title {
+            margin-bottom: 1mm;
+
+            color: #745b23;
+
+            font-size: 6.5pt;
+
+            font-weight: 900;
+        }
+
+        .verify-text {
+            font-size: 5.5pt;
+
+            line-height: 1.5;
+
+            color: #766d59;
+
+            word-break: break-word;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-image-container {
+            height: 18mm;
+
+            display: flex;
+
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .signature-image {
+            max-width: 55mm;
+            max-height: 18mm;
+
+            object-fit: contain;
+        }
+
+        .signature-line {
+            width: 52mm;
+
+            margin:
+                1mm auto;
+
+            border-top:
+                1px solid #aeb7c2;
+        }
+
+        .signature-person {
+            font-size: 7pt;
+
+            font-weight: 900;
+
+            color: #1d314b;
+        }
+
+        .signature-role {
+            margin-top: 1mm;
+
+            font-size: 5.5pt;
+
+            line-height: 1.35;
+
+            color: #778394;
+        }
+
+        .seal-area {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hexa-seal {
+            position: relative;
+
+            width: 31mm;
+            height: 31mm;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            color: white;
+
+            background:
+                repeating-conic-gradient(
+                    from 0deg,
+                    #0875b9 0deg 8deg,
+                    transparent 8deg 10deg
+                );
+
+            border-radius: 50%;
+        }
+
+        .hexa-seal::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 2.5mm;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0a7bc0,
+                    #075e9d
+                );
+        }
+
+        .hexa-seal-inner {
+            position: relative;
+            z-index: 2;
+
+            width: 22mm;
+            height: 22mm;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            border:
+                1px solid
+                rgba(255,255,255,.75);
+
+            text-transform: uppercase;
+        }
+
+        .hexa-seal-icon {
+            font-size: 10pt;
+
+            margin-bottom: 1mm;
+        }
+
+        .hexa-seal-name {
+            font-size: 5.5pt;
+
+            font-weight: 900;
+        }
+
+        .hexa-seal-certified {
+            margin-top: .5mm;
+
+            font-size: 4.5pt;
+
+            font-weight: 800;
+        }
+
+        .hexa-seal-country {
+            margin-top: .7mm;
+
+            font-size: 4pt;
+        }
+
+        .tampon-image {
+            width: 31mm;
+            height: 31mm;
+
+            object-fit: contain;
+        }
+.certificate-footer {
+    position: relative;
+
+    z-index: 4;
+
+    margin-top: 3mm;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 5mm;
+
+    padding-top: 2mm;
+
+    border-top:
+        1px solid #ece6d7;
+
+    font-size: 5pt;
+
+    color: #8a93a0;
+}
+
+.footer-slogan {
+    font-style: italic;
+}
+
+.footer-country {
+    color: #927224;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: .6px;
+}
+    </style>
+
+</head>
+
+
+<body>
+
+
+<section class="certificate">
+
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="certificate-top">
+
+
+        <div class="legal-brand">
+
+            <img
+                src="{% static 'images/logoHexa.png' %}"
+                alt="HexaQuébec"
+            >
+
+            <div class="legal-brand-info">
+
+                <strong>
+                    HexaQuébec
+                </strong>
+
+                Entreprise numérique
+                <br>
+
+                Québec · Canada
+
+            </div>
+
+        </div>
+
+
+        <div class="certificate-heading">
+
+            <div class="certificate-label">
+                HexaQuébec
+            </div>
+
+            <h1 class="certificate-title">
+                Attestation de boutique
+            </h1>
+
+            <div class="certificate-subtitle">
+                Création · Mise en ligne · Certification numérique
+            </div>
+
+        </div>
+
+
+        <div class="certificate-ref">
+
+            N° d'attestation
+
+            <strong>
+                {{ attestation.numero_certificat }}
+            </strong>
+
+            Délivrée le
+
+            <strong>
+                {{ attestation.date_delivrance|date:"d/m/Y" }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BODY
+    ====================================================== -->
+
+    <div class="certificate-body">
+
+        <p class="certification-intro">
+            HexaQuébec atteste par la présente
+            que cette attestation est délivrée à :
+        </p>
+
+
+        <h2 class="client-name">
+
+            {{ attestation.prenom }}
+            {{ attestation.nom }}
+
+        </h2>
+
+
+        <div class="client-line"></div>
+
+
+        <div class="company-row">
+
+            <span class="company-name">
+                {{ attestation.nom_entreprise }}
+            </span>
+
+
+            <span class="company-separator">
+                •
+            </span>
+
+
+            <span class="company-activity">
+                {{ attestation.activite }}
+            </span>
+
+
+            {% if attestation.site_web %}
+
+                <span class="company-separator">
+                    •
+                </span>
+
+                <span class="site-web">
+                    {{ attestation.site_web }}
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="attestation-text">
+
+            {% if attestation.description %}
+
+                {{ attestation.description|linebreaks }}
+
+            {% else %}
+
+                <p>
+                    HexaQuébec atteste que cette boutique
+                    numérique a été créée, configurée
+                    et mise en ligne avec l'accompagnement
+                    professionnel de HexaQuébec.
+                </p>
+
+            {% endif %}
+
+
+            <p>
+                Cette attestation confirme que les services
+                techniques convenus pour la création et la
+                mise en ligne de la boutique ont été réalisés
+                dans le cadre de l'accompagnement fourni par
+                HexaQuébec.
+            </p>
+
+        </div>
+
+
+        <div class="status-row">
+
+            {% if attestation.est_certifiee %}
+
+                <div class="status-badge">
+                    ✓ Boutique certifiée
+                </div>
+
+            {% endif %}
+
+
+            {% if attestation.est_protegee %}
+
+                <div class="status-badge">
+                    ✓ Protection numérique appliquée
+                </div>
+
+            {% endif %}
+
+
+            {% if attestation.statut == "ACTIVE" %}
+
+                <div class="status-badge">
+                    ✓ Attestation active
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="certificate-data">
+
+            <div class="data-item">
+
+                <div class="data-label">
+                    Certificat
+                </div>
+
+                <div class="data-value">
+                    {{ attestation.numero_certificat }}
+                </div>
+
+            </div>
+
+
+            <div class="data-item">
+
+                <div class="data-label">
+                    Boutique
+                </div>
+
+                <div class="data-value">
+                    {{ attestation.numero_boutique }}
+                </div>
+
+            </div>
+
+
+            <div class="data-item">
+
+                <div class="data-label">
+                    Date
+                </div>
+
+                <div class="data-value">
+                    {{ attestation.date_delivrance|date:"d/m/Y" }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BAS DU CERTIFICAT
+    ====================================================== -->
+
+    <div class="certificate-bottom">
+
+
+        <div class="verify-box">
+
+            <div class="verify-title">
+                Vérification d'authenticité
+            </div>
+
+            <div class="verify-text">
+
+                N° :
+
+                <strong>
+                    {{ attestation.numero_certificat }}
+                </strong>
+
+                <br>
+
+                Code :
+
+                {{ attestation.code_verification }}
+
+            </div>
+
+        </div>
+
+
+        <!-- SIGNATURE -->
+
+        <div class="signature-box">
+
+            <div class="signature-image-container">
+
+                {% if attestation.signature_electronique %}
+
+                    <img
+                        src="{{ attestation.signature_electronique }}"
+                        class="signature-image"
+                        alt="Signature"
+                    >
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="signature-line"></div>
+
+
+            <div class="signature-person">
+
+                {% if attestation.nom_signataire %}
+
+                    {{ attestation.nom_signataire }}
+
+                {% else %}
+
+                    Diambere Kamara
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="signature-role">
+
+                {% if attestation.fonction_signataire %}
+
+                    {{ attestation.fonction_signataire }}
+
+                {% else %}
+
+                    Directeur technique et fondateur
+
+                {% endif %}
+
+                <br>
+
+                HexaQuébec
+
+                <br>
+
+                Signature électronique
+
+            </div>
+
+        </div>
+
+
+        <!-- TAMPON -->
+
+        <div class="seal-area">
+
+            {% if attestation.tampon_electronique %}
+
+                <img
+                    src="{{ attestation.tampon_electronique.url }}"
+                    class="tampon-image"
+                    alt="Tampon HexaQuébec"
+                >
+
+            {% else %}
+
+                <div class="hexa-seal">
+
+                    <div class="hexa-seal-inner">
+
+                        <div class="hexa-seal-icon">
+                            ★
+                        </div>
+
+                        <div class="hexa-seal-name">
+                            HexaQuébec
+                        </div>
+
+                        <div class="hexa-seal-certified">
+                            Certifié
+                        </div>
+
+                        <div class="hexa-seal-country">
+                            Québec · Canada
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="certificate-footer">
+
+        <span class="footer-slogan">
+            L’innovation au cœur du numérique québécois
+        </span>
+
+        <span class="footer-country">
+            HexaQuébec · Québec · Canada
+        </span>
+
+    </div>
+
+</section>
+
+
+</body>
+
+</html>

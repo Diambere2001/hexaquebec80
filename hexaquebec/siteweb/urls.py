@@ -235,5 +235,46 @@ urlpatterns = [
         views.conference_room,
         name="conference_room"
     ),
+        # =====================================================
+    # ATTESTATIONS BOUTIQUES
+    # =====================================================
+
+    path(
+        "administration/attestations/boutiques/creer/",
+        views.creer_attestation_boutique,
+        name="creer_attestation_boutique",
+    ),
+
+    path(
+        "administration/attestations/boutiques/",
+        views.liste_attestations_boutiques,
+        name="liste_attestations_boutiques",
+    ),
+
+    path(
+        "administration/attestations/boutiques/<int:pk>/",
+        views.detail_attestation_boutique,
+        name="detail_attestation_boutique",
+    ),
+
+    path(
+        "certificat/verifier/",
+        views.verifier_attestation_boutique,
+        name="verifier_attestation_boutique",
+    ),
+    
+
+    path(
+    "administration/attestations/boutiques/<int:pk>/pdf/",
+    views.telecharger_attestation_pdf,
+    name="telecharger_attestation_pdf",
+    ),
+
+
+
+
+
+
+
 ]
 

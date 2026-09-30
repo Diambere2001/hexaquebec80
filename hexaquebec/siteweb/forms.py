@@ -635,3 +635,168 @@ class DemandeConferenceForm(forms.ModelForm):
         self.fields["date_souhaitee"].input_formats = [
             "%Y-%m-%dT%H:%M"
         ]
+
+
+
+
+
+from django import forms
+
+from .models import AttestationBoutique
+
+
+class AttestationBoutiqueForm(forms.ModelForm):
+
+    class Meta:
+        model = AttestationBoutique
+
+        fields = [
+            "prenom",
+            "nom",
+            "nom_entreprise",
+            "activite",
+            "site_web",
+            "email",
+            "telephone",
+            "date_delivrance",
+            "description",
+            "est_protegee",
+            "est_certifiee",
+        ]
+
+        widgets = {
+
+            "prenom": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ex. Grâce",
+                }
+            ),
+
+            "nom": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ex. Manuela",
+                }
+            ),
+
+            "nom_entreprise": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ex. Grace GM",
+                }
+            ),
+
+            "activite": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ex. Boutique de produits bien-être",
+                }
+            ),
+
+            "site_web": forms.URLInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "https://www.exemple.com",
+                }
+            ),
+
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "client@email.com",
+                }
+            ),
+
+            "telephone": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "+1 514 000 0000",
+                }
+            ),
+
+            "date_delivrance": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 5,
+                }
+            ),
+        }
+
+        labels = {
+            "prenom": "Prénom du client",
+            "nom": "Nom du client",
+            "nom_entreprise": "Nom de l'entreprise / boutique",
+            "activite": "Activité",
+            "site_web": "Site Web",
+            "email": "Email",
+            "telephone": "Téléphone",
+            "date_delivrance": "Date de délivrance",
+            "description": "Texte de l'attestation",
+            "est_protegee": "Protection numérique HexaQuébec",
+            "est_certifiee": "Boutique certifiée par HexaQuébec",
+        }
+
+
+
+
+from django import forms
+from .models import AttestationBoutique
+
+
+class AttestationBoutiqueForm(forms.ModelForm):
+
+    class Meta:
+        model = AttestationBoutique
+
+        fields = [
+            "prenom",
+            "nom",
+            "nom_entreprise",
+            "activite",
+            "site_web",
+            "email",
+            "telephone",
+            "date_delivrance",
+            "description",
+            "est_protegee",
+            "est_certifiee",
+            "signature_electronique",
+            "tampon_electronique",
+            "nom_signataire",
+            "fonction_signataire",
+            "date_signature",
+        ]
+
+        widgets = {
+
+            "signature_electronique": forms.HiddenInput(),
+
+            "tampon_electronique": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-control",
+                    "accept": "image/*",
+                }
+            ),
+
+            "date_delivrance": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                }
+            ),
+
+            "date_signature": forms.DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+        }

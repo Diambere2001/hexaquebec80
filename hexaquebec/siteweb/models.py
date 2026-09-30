@@ -1408,3 +1408,228 @@ class DemandeConference(models.Model):
     @property
     def conference_creee(self):
         return bool(self.room_name)
+
+
+
+
+
+
+import uuid
+
+from django.db import models
+from django.utils import timezone
+
+
+class AttestationBoutique(models.Model):
+
+    STATUT_CHOICES = (
+        ("ACTIVE", "Active"),
+        ("SUSPENDUE", "Suspendue"),
+        ("REVOQUEE", "Révoquée"),
+    )
+
+    # =========================================================
+    # NUMÉROS AUTOMATIQUES
+    # =========================================================
+
+    numero_certificat = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        editable=False,
+        verbose_name="Numéro du certificat",
+    )
+
+    numero_boutique = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        editable=False,
+        verbose_name="Numéro de boutique",
+    )
+
+    # =========================================================
+    # CLIENT
+    # =========================================================
+
+    nom = models.CharField(
+        max_length=100,
+        verbose_name="Nom",
+    )
+
+    prenom = models.CharField(
+        max_length=100,
+        verbose_name="Prénom",
+    )
+
+    nom_entreprise = models.CharField(
+        max_length=200,
+        verbose_name="Nom de l'entreprise / boutique",
+    )
+
+    activite = models.CharField(
+        max_length=255,
+        verbose_name="Activité de l'entreprise",
+    )
+
+    # =========================================================
+    # INFORMATIONS BOUTIQUE
+    # =========================================================
+
+    site_web = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name="Adresse du site Web",
+    )
+
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name="Email du client",
+    )
+
+    telephone = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="Téléphone",
+    )
+
+    # =========================================================
+    # CERTIFICATION
+    # =========================================================
+
+    date_delivrance = models.DateField(
+        default=timezone.now,
+        verbose_name="Date de délivrance",
+    )
+
+    statut = models.CharField(
+        max_length=20,
+        choices=STATUT_CHOICES,
+        default="ACTIVE",
+        verbose_name="Statut",
+    )
+
+    description = models.TextField(
+        blank=True,
+        default=(
+            "HexaQuébec atteste que cette boutique numérique "
+            "a été créée, configurée et mise en ligne avec "
+            "l'accompagnement de HexaQuébec."
+        ),
+        verbose_name="Texte de l'attestation",
+    )
+
+    est_protegee = models.BooleanField(
+        default=True,
+        verbose_name="Protection numérique HexaQuébec",
+    )
+
+    est_certifiee = models.BooleanField(
+        default=True,
+        verbose_name="Boutique certifiée",
+    )
+
+    # =========================================================
+    # SIGNATURE ÉLECTRONIQUE
+    # =========================================================
+
+    signature_electronique = models.TextField(
+    blank=True,
+    verbose_name="Signature électronique dessinée",
+    )
+
+    # =========================================================
+    # TAMPON ÉLECTRONIQUE HEXAQUÉBEC
+    # =========================================================
+
+    tampon_electronique = models.ImageField(
+        upload_to="attestations/tampons/",
+        blank=True,
+        null=True,
+        verbose_name="Tampon électronique HexaQuébec",
+    )
+
+    # =========================================================
+    # SIGNATAIRE
+    # =========================================================
+
+    nom_signataire = models.CharField(
+        max_length=150,
+        default="Diambere Kamara",
+        verbose_name="Nom du signataire",
+    )
+
+    fonction_signataire = models.CharField(
+        max_length=200,
+        default="Directeur technique et fondateur",
+        verbose_name="Fonction du signataire",
+    )
+
+    date_signature = models.DateTimeField(
+        default=timezone.now,
+        verbose_name="Date de signature",
+    )
+
+    # =========================================================
+    # IDENTIFIANT PUBLIC POUR VÉRIFICATION
+    # =========================================================
+
+    code_verification = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        verbose_name="Code de vérification",
+    )
+
+    date_creation = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Date de création",
+    )
+
+    date_modification = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Dernière modification",
+    )
+
+    class Meta:
+        verbose_name = "Attestation boutique"
+        verbose_name_plural = "Attestations boutiques"
+        ordering = ["-date_creation"]
+
+    def __str__(self):
+        return (
+            f"{self.numero_certificat} - "
+            f"{self.nom_entreprise}"
+        )
+
+    def save(self, *args, **kwargs):
+
+        # Première sauvegarde pour obtenir l'ID
+        if not self.pk:
+            super().save(*args, **kwargs)
+
+        annee = self.date_delivrance.year
+
+        # Numéro automatique du certificat
+        if not self.numero_certificat:
+            self.numero_certificat = (
+                f"HQ-CERT-{annee}-{self.pk:05d}"
+            )
+
+        # Numéro automatique de boutique
+        if not self.numero_boutique:
+            self.numero_boutique = (
+                f"HQ-BOUT-{self.pk:05d}"
+            )
+
+        super().save(*args, **kwargs)
+
+    @property
+    def nom_complet(self):
+        return f"{self.prenom} {self.nom}"
+
+    @property
+    def est_active(self):
+        return self.statut == "ACTIVE"

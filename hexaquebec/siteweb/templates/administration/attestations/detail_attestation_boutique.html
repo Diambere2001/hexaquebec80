@@ -1,0 +1,1910 @@
+{% extends "administration/base.html" %}
+{% load static %}
+
+{% block title %}
+Attestation {{ attestation.numero_certificat }} — HexaQuébec
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #eef2f6;
+    }
+
+    .certificate-page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 28px 18px 60px;
+    }
+
+    /* =========================================================
+       ACTIONS
+    ========================================================= */
+
+    .top-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .actions-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        min-height: 43px;
+
+        padding: 10px 16px;
+
+        border-radius: 11px;
+
+        border: none;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+    }
+
+    .btn-light {
+        background: white;
+        border: 1px solid #dde3eb;
+        color: #35445a;
+    }
+
+    .btn-dark {
+        background: #142033;
+        color: white;
+    }
+
+    .btn-primary {
+        background:
+            linear-gradient(
+                135deg,
+                #07539f,
+                #1476dc
+            );
+
+        color: white;
+
+        box-shadow:
+            0 7px 20px
+            rgba(16, 93, 180, .19);
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+        opacity: .65;
+        cursor: wait;
+        transform: none;
+    }
+
+    /* =========================================================
+       WRAPPER
+    ========================================================= */
+
+    .certificate-wrapper {
+        display: flex;
+        justify-content: center;
+
+        padding: 14px;
+
+        border-radius: 22px;
+
+        background: white;
+
+        box-shadow:
+            0 18px 55px
+            rgba(22, 42, 70, .13);
+
+        overflow-x: auto;
+    }
+
+    /* =========================================================
+       CERTIFICATE A4 LANDSCAPE
+    ========================================================= */
+
+    .certificate {
+        position: relative;
+
+        width: 100%;
+        max-width: 1050px;
+
+        aspect-ratio: 297 / 210;
+
+        overflow: hidden;
+
+        padding: 30px 42px 26px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #fbfcfe 100%
+            );
+
+        border:
+            3px solid #caa34b;
+
+        color: #17253a;
+    }
+
+    .certificate::before {
+        content: "";
+
+        position: absolute;
+
+        inset: 11px;
+
+        border:
+            1px solid #e4cf91;
+
+        pointer-events: none;
+    }
+
+    .certificate::after {
+        content: "HQ";
+
+        position: absolute;
+
+        right: 70px;
+        top: 50%;
+
+        transform:
+            translateY(-50%);
+
+        font-size: 240px;
+
+        font-weight: 900;
+
+        color:
+            rgba(8, 70, 128, .025);
+
+        pointer-events: none;
+    }
+
+    /* =========================================================
+       CORNERS
+    ========================================================= */
+
+    .corner {
+        position: absolute;
+
+        width: 48px;
+        height: 48px;
+
+        z-index: 2;
+    }
+
+    .corner-tl {
+        top: 19px;
+        left: 19px;
+
+        border-top:
+            3px solid #c79e3c;
+
+        border-left:
+            3px solid #c79e3c;
+    }
+
+    .corner-tr {
+        top: 19px;
+        right: 19px;
+
+        border-top:
+            3px solid #c79e3c;
+
+        border-right:
+            3px solid #c79e3c;
+    }
+
+    .corner-bl {
+        bottom: 19px;
+        left: 19px;
+
+        border-bottom:
+            3px solid #c79e3c;
+
+        border-left:
+            3px solid #c79e3c;
+    }
+
+    .corner-br {
+        bottom: 19px;
+        right: 19px;
+
+        border-bottom:
+            3px solid #c79e3c;
+
+        border-right:
+            3px solid #c79e3c;
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .certificate-top {
+        position: relative;
+        z-index: 3;
+
+        display: grid;
+
+        grid-template-columns:
+            190px 1fr 190px;
+
+        align-items: center;
+
+        gap: 20px;
+
+        padding-bottom: 16px;
+
+        border-bottom:
+            1px solid #e8e0ca;
+    }
+
+    .legal-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .legal-brand img {
+        width: 120px;
+        max-height: 78px;
+
+        object-fit: contain;
+    }
+
+    .legal-brand-info {
+        font-size: 10px;
+        line-height: 1.55;
+        color: #6e7b8d;
+    }
+
+    .legal-brand-info strong {
+        display: block;
+
+        color: #123d69;
+
+        font-size: 11px;
+
+        margin-bottom: 2px;
+    }
+
+    .certificate-heading {
+        text-align: center;
+    }
+
+    .certificate-label {
+        color: #aa8130;
+
+        font-size: 10px;
+
+        font-weight: 900;
+
+        letter-spacing: 2.6px;
+
+        text-transform: uppercase;
+
+        margin-bottom: 5px;
+    }
+
+    .certificate-title {
+        margin: 0;
+
+        font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+        font-size: 30px;
+
+        font-weight: 800;
+
+        color: #132c48;
+
+        letter-spacing: 1.2px;
+    }
+
+    .certificate-subtitle {
+        margin-top: 5px;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        color: #65748a;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+    }
+
+    .certificate-ref {
+        text-align: right;
+
+        font-size: 9px;
+
+        color: #758296;
+
+        line-height: 1.7;
+    }
+
+    .certificate-ref strong {
+        display: block;
+
+        color: #123d69;
+
+        font-size: 11px;
+    }
+
+    /* =========================================================
+       BODY
+    ========================================================= */
+
+    .certificate-body {
+        position: relative;
+
+        z-index: 3;
+
+        padding-top: 20px;
+
+        text-align: center;
+    }
+
+    .certification-intro {
+        margin: 0 0 7px;
+
+        font-size: 12px;
+
+        color: #677588;
+    }
+
+    .client-name {
+        margin: 0;
+
+        font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+        font-size: 27px;
+
+        font-weight: 800;
+
+        color: #0b447c;
+    }
+
+    .client-line {
+        width: 280px;
+
+        max-width: 70%;
+
+        height: 1px;
+
+        margin:
+            7px auto 13px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #c8a148,
+                transparent
+            );
+    }
+
+    .company-row {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 10px;
+
+        flex-wrap: wrap;
+
+        margin-bottom: 10px;
+    }
+
+    .company-name {
+        font-size: 17px;
+
+        font-weight: 900;
+
+        color: #172d49;
+    }
+
+    .company-separator {
+        color: #c7a458;
+    }
+
+    .company-activity {
+        font-size: 12px;
+
+        color: #68778b;
+    }
+
+    .site-web {
+        font-size: 10px;
+
+        color: #0b63b6;
+
+        font-weight: 700;
+    }
+
+    .attestation-text {
+        max-width: 820px;
+
+        margin:
+            10px auto 12px;
+
+        font-size: 11.5px;
+
+        line-height: 1.6;
+
+        color: #36485f;
+    }
+
+    .attestation-text p {
+        margin: 5px 0;
+    }
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .status-row {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+        margin:
+            10px 0 13px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding:
+            6px 10px;
+
+        border-radius: 999px;
+
+        background: #f6f9fc;
+
+        border:
+            1px solid #e0e7ef;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        color: #324760;
+    }
+
+    .status-badge i {
+        color: #16824b;
+    }
+
+    /* =========================================================
+       DATA
+    ========================================================= */
+
+    .certificate-data {
+        max-width: 780px;
+
+        margin:
+            0 auto 13px;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 9px;
+    }
+
+    .data-item {
+        padding:
+            9px 8px;
+
+        border-radius: 9px;
+
+        background: #f9fafc;
+
+        border:
+            1px solid #e4e9ef;
+    }
+
+    .data-label {
+        margin-bottom: 3px;
+
+        font-size: 7.5px;
+
+        color: #8c96a4;
+
+        font-weight: 900;
+
+        letter-spacing: .8px;
+
+        text-transform: uppercase;
+    }
+
+    .data-value {
+        font-size: 10px;
+
+        color: #24384f;
+
+        font-weight: 900;
+    }
+
+    /* =========================================================
+       BOTTOM
+    ========================================================= */
+
+    .certificate-bottom {
+        position: relative;
+
+        z-index: 3;
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1.2fr 1fr;
+
+        align-items: end;
+
+        gap: 30px;
+
+        margin-top: 12px;
+    }
+
+    /* =========================================================
+       VERIFY
+    ========================================================= */
+
+    .verify-box {
+        text-align: left;
+
+        padding: 10px;
+
+        border-radius: 9px;
+
+        border:
+            1px dashed #d3bd80;
+
+        background: #fffdf7;
+    }
+
+    .verify-title {
+        display: flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        margin-bottom: 4px;
+
+        color: #745b23;
+
+        font-size: 9px;
+
+        font-weight: 900;
+    }
+
+    .verify-text {
+        font-size: 7.8px;
+
+        line-height: 1.5;
+
+        color: #766d59;
+
+        word-break: break-word;
+    }
+
+    /* =========================================================
+       SIGNATURE
+    ========================================================= */
+
+    .signature-box {
+        text-align: center;
+    }
+
+    .signature-image-container {
+        height: 65px;
+
+        display: flex;
+
+        align-items: flex-end;
+        justify-content: center;
+
+        margin-bottom: 1px;
+    }
+
+    .signature-image {
+        max-width: 210px;
+        max-height: 65px;
+
+        object-fit: contain;
+    }
+
+    .signature-line {
+        width: 200px;
+
+        margin:
+            1px auto 5px;
+
+        border-top:
+            1px solid #aeb7c2;
+    }
+
+    .signature-person {
+        font-size: 10px;
+
+        font-weight: 900;
+
+        color: #1d314b;
+    }
+
+    .signature-role {
+        margin-top: 2px;
+
+        font-size: 8px;
+
+        line-height: 1.35;
+
+        color: #778394;
+    }
+
+    /* =========================================================
+       SCEAU
+    ========================================================= */
+
+    .seal-area {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+    }
+
+    .hexa-seal {
+        position: relative;
+
+        width: 115px;
+        height: 115px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+
+        color: white;
+
+        background:
+            repeating-conic-gradient(
+                from 0deg,
+                #0875b9 0deg 8deg,
+                transparent 8deg 10deg
+            );
+
+        border-radius: 50%;
+    }
+
+    .hexa-seal::before {
+        content: "";
+
+        position: absolute;
+
+        inset: 9px;
+
+        border-radius: 50%;
+
+        background:
+            linear-gradient(
+                145deg,
+                #0a7bc0,
+                #075e9d
+            );
+    }
+
+    .hexa-seal-inner {
+        position: relative;
+
+        z-index: 2;
+
+        width: 83px;
+        height: 83px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        border:
+            1px solid
+            rgba(255,255,255,.75);
+
+        padding: 8px;
+
+        text-transform: uppercase;
+    }
+
+    .hexa-seal-icon {
+        font-size: 17px;
+
+        margin-bottom: 4px;
+    }
+
+    .hexa-seal-name {
+        font-size: 9px;
+
+        font-weight: 900;
+
+        letter-spacing: .7px;
+    }
+
+    .hexa-seal-certified {
+        margin-top: 2px;
+
+        font-size: 7px;
+
+        font-weight: 800;
+
+        letter-spacing: .5px;
+    }
+
+    .hexa-seal-country {
+        margin-top: 3px;
+
+        font-size: 6px;
+
+        opacity: .9;
+    }
+
+    .tampon-image {
+        width: 115px;
+        height: 115px;
+
+        object-fit: contain;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+.certificate-footer {
+    position: relative;
+
+    z-index: 4;
+
+    margin-top: 10px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    padding-top: 7px;
+
+    border-top:
+        1px solid #ece6d7;
+
+    font-size: 7px;
+
+    color: #8a93a0;
+}
+
+.footer-slogan {
+    font-style: italic;
+}
+
+.footer-country {
+    color: #927224;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: .8px;
+}
+    /* =========================================================
+       NOTE
+    ========================================================= */
+
+    .admin-note {
+        max-width: 850px;
+
+        margin:
+            18px auto 0;
+
+        padding:
+            13px 16px;
+
+        border-radius: 12px;
+
+        background: #f8fafc;
+
+        border:
+            1px solid #e3e8ef;
+
+        color: #647185;
+
+        font-size: 11px;
+    }
+
+    @media(max-width: 800px) {
+
+        .certificate {
+            min-width: 820px;
+        }
+
+    }
+
+    /* =========================================================
+       PRINT
+    ========================================================= */
+
+    @media print {
+
+        body {
+            background: white !important;
+        }
+
+        .top-actions,
+        .admin-note,
+        header,
+        nav,
+        aside,
+        footer {
+            display: none !important;
+        }
+
+        .certificate-page {
+            padding: 0;
+            margin: 0;
+
+            max-width: none;
+        }
+
+        .certificate-wrapper {
+            padding: 0;
+
+            box-shadow: none;
+
+            border-radius: 0;
+
+            overflow: visible;
+        }
+
+        .certificate {
+            width: 297mm;
+            height: 210mm;
+
+            max-width: none;
+
+            aspect-ratio: auto;
+
+            margin: 0;
+
+            padding:
+                12mm 16mm 10mm;
+
+            border:
+                2.5px solid #caa34b;
+
+            page-break-inside: avoid;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+    }
+
+</style>
+
+
+<div class="certificate-page">
+
+    <!-- =====================================================
+         ACTIONS
+    ====================================================== -->
+
+    <div class="top-actions">
+
+        <div class="actions-group">
+
+            <a
+                href="{% url 'liste_attestations_boutiques' %}"
+                class="btn btn-light"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Retour
+
+            </a>
+
+        </div>
+
+<div class="actions-group">
+
+    <button
+        type="button"
+        onclick="window.print()"
+        class="btn btn-dark"
+    >
+        <i class="fa-solid fa-print"></i>
+        Imprimer
+    </button>
+<a
+    href="{% url 'telecharger_attestation_pdf' attestation.pk %}"
+    class="btn btn-primary"
+>
+    <i class="fa-solid fa-file-pdf"></i>
+    Télécharger le PDF
+</a>
+</div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CERTIFICATE
+    ====================================================== -->
+
+    <div class="certificate-wrapper">
+
+        <section
+            class="certificate"
+            id="certificateToPdf"
+        >
+
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <div class="certificate-top">
+
+                <div class="legal-brand">
+
+                    <img
+                        src="{% static 'images/logoHexa.png' %}"
+                        alt="Logo HexaQuébec"
+                        id="logoHexaPdf"
+                    >
+
+                    <div class="legal-brand-info">
+
+                        <strong>
+                            HexaQuébec
+                        </strong>
+
+                        Entreprise numérique
+                        <br>
+                        Québec · Canada
+
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-heading">
+
+                    <div class="certificate-label">
+                        HexaQuébec
+                    </div>
+
+                    <h1 class="certificate-title">
+                        Attestation de boutique
+                    </h1>
+
+                    <div class="certificate-subtitle">
+                        Création · Mise en ligne · Certification numérique
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-ref">
+
+                    <span>
+                        N° d'attestation
+                    </span>
+
+                    <strong>
+                        {{ attestation.numero_certificat }}
+                    </strong>
+
+
+                    <span>
+                        Délivrée le
+                    </span>
+
+                    <strong>
+                        {{ attestation.date_delivrance|date:"d/m/Y" }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BODY
+            ================================================== -->
+
+            <div class="certificate-body">
+
+                <p class="certification-intro">
+
+                    HexaQuébec atteste par la présente que cette
+                    attestation est délivrée à :
+
+                </p>
+
+
+                <h2 class="client-name">
+
+                    {{ attestation.prenom }}
+                    {{ attestation.nom }}
+
+                </h2>
+
+
+                <div class="client-line"></div>
+
+
+                <div class="company-row">
+
+                    <span class="company-name">
+                        {{ attestation.nom_entreprise }}
+                    </span>
+
+                    <span class="company-separator">
+                        •
+                    </span>
+
+                    <span class="company-activity">
+                        {{ attestation.activite }}
+                    </span>
+
+
+                    {% if attestation.site_web %}
+
+                        <span class="company-separator">
+                            •
+                        </span>
+
+                        <span class="site-web">
+
+                            <i class="fa-solid fa-globe"></i>
+
+                            {{ attestation.site_web }}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="attestation-text">
+
+                    {% if attestation.description %}
+
+                        {{ attestation.description|linebreaks }}
+
+                    {% else %}
+
+                        <p>
+                            HexaQuébec atteste que cette boutique
+                            numérique a été créée, configurée et
+                            mise en ligne avec l'accompagnement
+                            professionnel de HexaQuébec.
+                        </p>
+
+                    {% endif %}
+
+
+                    <p>
+                        Cette attestation confirme que les services
+                        techniques convenus pour la création et la
+                        mise en ligne de la boutique ont été réalisés
+                        dans le cadre de l'accompagnement fourni par
+                        HexaQuébec.
+                    </p>
+
+                </div>
+
+
+                <div class="status-row">
+
+                    {% if attestation.est_certifiee %}
+
+                        <div class="status-badge">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Boutique certifiée
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if attestation.est_protegee %}
+
+                        <div class="status-badge">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            Protection numérique appliquée
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if attestation.statut == "ACTIVE" %}
+
+                        <div class="status-badge">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Attestation active
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="certificate-data">
+
+                    <div class="data-item">
+
+                        <div class="data-label">
+                            Certificat
+                        </div>
+
+                        <div class="data-value">
+                            {{ attestation.numero_certificat }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="data-item">
+
+                        <div class="data-label">
+                            Boutique
+                        </div>
+
+                        <div class="data-value">
+                            {{ attestation.numero_boutique }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="data-item">
+
+                        <div class="data-label">
+                            Date
+                        </div>
+
+                        <div class="data-value">
+                            {{ attestation.date_delivrance|date:"d/m/Y" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BOTTOM
+            ================================================== -->
+
+            <div class="certificate-bottom">
+
+                <div class="verify-box">
+
+                    <div class="verify-title">
+
+                        <i class="fa-solid fa-shield-check"></i>
+
+                        Vérification d'authenticité
+
+                    </div>
+
+
+                    <div class="verify-text">
+
+                        N° :
+
+                        <strong>
+                            {{ attestation.numero_certificat }}
+                        </strong>
+
+                        <br>
+
+                        Code :
+
+                        {{ attestation.code_verification }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- SIGNATURE -->
+
+                <div class="signature-box">
+
+                    <div class="signature-image-container">
+
+                        {% if attestation.signature_electronique %}
+
+                            <img
+                                src="{{ attestation.signature_electronique }}"
+                                alt="Signature électronique"
+                                class="signature-image"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="signature-line"></div>
+
+
+                    <div class="signature-person">
+
+                        {% if attestation.nom_signataire %}
+
+                            {{ attestation.nom_signataire }}
+
+                        {% else %}
+
+                            Diambere Kamara
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="signature-role">
+
+                        {% if attestation.fonction_signataire %}
+
+                            {{ attestation.fonction_signataire }}
+
+                        {% else %}
+
+                            Directeur technique et fondateur
+
+                        {% endif %}
+
+                        <br>
+
+                        HexaQuébec
+
+                        <br>
+
+                        Signature électronique
+
+                    </div>
+
+                </div>
+
+
+                <!-- TAMPON -->
+
+                <div class="seal-area">
+
+                    {% if attestation.tampon_electronique %}
+
+                        <img
+                            src="{{ attestation.tampon_electronique.url }}"
+                            alt="Tampon HexaQuébec"
+                            class="tampon-image"
+                        >
+
+                    {% else %}
+
+                        <div class="hexa-seal">
+
+                            <div class="hexa-seal-inner">
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-certificate
+                                        hexa-seal-icon
+                                    "
+                                ></i>
+
+                                <div class="hexa-seal-name">
+                                    HexaQuébec
+                                </div>
+
+                                <div class="hexa-seal-certified">
+                                    Certifié
+                                </div>
+
+                                <div class="hexa-seal-country">
+                                    Québec · Canada
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <div class="certificate-footer">
+
+                <span class="footer-slogan">
+                    L’innovation au cœur du numérique québécois
+                </span>
+
+                <span class="footer-country">
+                    HexaQuébec · Québec · Canada
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <div class="admin-note">
+
+        <i class="fa-solid fa-circle-info"></i>
+
+        Le bouton
+        <strong>Télécharger le PDF</strong>
+        génère directement le certificat en PDF
+        avec le même design affiché ci-dessus.
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     LIBRAIRIES PDF
+========================================================= -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+></script>
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+></script>
+
+
+<!-- =========================================================
+     PDF
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const downloadButton =
+            document.getElementById(
+                "downloadPdf"
+            );
+
+        const certificate =
+            document.getElementById(
+                "certificateToPdf"
+            );
+
+
+        if (!downloadButton) {
+
+            console.error(
+                "Bouton #downloadPdf introuvable."
+            );
+
+            return;
+        }
+
+
+        if (!certificate) {
+
+            console.error(
+                "Certificat #certificateToPdf introuvable."
+            );
+
+            return;
+        }
+
+
+        /* =====================================================
+           ATTENDRE LES IMAGES
+        ===================================================== */
+
+        async function waitForImages(
+            element
+        ) {
+
+            const images =
+                Array.from(
+                    element.querySelectorAll(
+                        "img"
+                    )
+                );
+
+
+            const promises =
+                images.map(
+                    function (img) {
+
+                        if (
+                            img.complete &&
+                            img.naturalWidth > 0
+                        ) {
+
+                            return Promise.resolve();
+
+                        }
+
+
+                        return new Promise(
+                            function (resolve) {
+
+                                img.addEventListener(
+                                    "load",
+                                    function () {
+
+                                        resolve();
+
+                                    },
+                                    {
+                                        once: true
+                                    }
+                                );
+
+
+                                img.addEventListener(
+                                    "error",
+                                    function () {
+
+                                        console.warn(
+                                            "Image non chargée :",
+                                            img.src
+                                        );
+
+                                        /*
+                                         * On continue quand même
+                                         * pour ne pas bloquer le PDF.
+                                         */
+
+                                        resolve();
+
+                                    },
+                                    {
+                                        once: true
+                                    }
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            await Promise.all(
+                promises
+            );
+
+        }
+
+
+        /* =====================================================
+           PDF
+        ===================================================== */
+
+        downloadButton.addEventListener(
+            "click",
+            async function () {
+
+                const originalContent =
+                    downloadButton.innerHTML;
+
+
+                downloadButton.disabled =
+                    true;
+
+
+                downloadButton.innerHTML = `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Création du PDF...
+                `;
+
+
+                try {
+
+                    /* =========================================
+                       TEST LIBRAIRIES
+                    ========================================= */
+
+                    if (
+                        typeof html2canvas ===
+                        "undefined"
+                    ) {
+
+                        throw new Error(
+                            "La bibliothèque html2canvas n'est pas chargée."
+                        );
+
+                    }
+
+
+                    if (
+                        typeof window.jspdf ===
+                        "undefined" ||
+                        typeof window.jspdf.jsPDF ===
+                        "undefined"
+                    ) {
+
+                        throw new Error(
+                            "La bibliothèque jsPDF n'est pas chargée."
+                        );
+
+                    }
+
+
+                    /* =========================================
+                       ATTENDRE IMAGES
+                    ========================================= */
+
+                    await waitForImages(
+                        certificate
+                    );
+
+
+                    /* =========================================
+                       ATTENDRE POLICES
+                    ========================================= */
+
+                    if (
+                        document.fonts &&
+                        document.fonts.ready
+                    ) {
+
+                        await document.fonts.ready;
+
+                    }
+
+
+                    /* =========================================
+                       CAPTURE
+                    ========================================= */
+
+                    const canvas =
+                        await html2canvas(
+                            certificate,
+                            {
+
+                                scale: 2,
+
+                                useCORS: true,
+
+                                allowTaint: false,
+
+                                backgroundColor:
+                                    "#ffffff",
+
+                                logging: false,
+
+                                scrollX: 0,
+
+                                scrollY: 0,
+
+                                imageTimeout:
+                                    15000
+
+                            }
+                        );
+
+
+                    if (
+                        !canvas.width ||
+                        !canvas.height
+                    ) {
+
+                        throw new Error(
+                            "Le certificat n'a pas pu être capturé."
+                        );
+
+                    }
+
+
+                    /* =========================================
+                       PNG
+                    ========================================= */
+
+                    const imageData =
+                        canvas.toDataURL(
+                            "image/png",
+                            1.0
+                        );
+
+
+                    /* =========================================
+                       PDF A4 LANDSCAPE
+                    ========================================= */
+
+                    const {
+                        jsPDF
+                    } = window.jspdf;
+
+
+                    const pdf =
+                        new jsPDF({
+
+                            orientation:
+                                "landscape",
+
+                            unit:
+                                "mm",
+
+                            format:
+                                "a4",
+
+                            compress:
+                                true
+
+                        });
+
+
+                    const pdfWidth =
+                        pdf.internal
+                            .pageSize
+                            .getWidth();
+
+
+                    const pdfHeight =
+                        pdf.internal
+                            .pageSize
+                            .getHeight();
+
+
+                    /* =========================================
+                       CALCUL DES DIMENSIONS
+                    ========================================= */
+
+                    const ratio =
+                        Math.min(
+
+                            pdfWidth /
+                            canvas.width,
+
+                            pdfHeight /
+                            canvas.height
+
+                        );
+
+
+                    const finalWidth =
+                        canvas.width *
+                        ratio;
+
+
+                    const finalHeight =
+                        canvas.height *
+                        ratio;
+
+
+                    const x =
+                        (
+                            pdfWidth -
+                            finalWidth
+                        ) / 2;
+
+
+                    const y =
+                        (
+                            pdfHeight -
+                            finalHeight
+                        ) / 2;
+
+
+                    /* =========================================
+                       IMAGE
+                    ========================================= */
+
+                    pdf.addImage(
+
+                        imageData,
+
+                        "PNG",
+
+                        x,
+
+                        y,
+
+                        finalWidth,
+
+                        finalHeight,
+
+                        undefined,
+
+                        "FAST"
+
+                    );
+
+
+                    /* =========================================
+                       PROPRIÉTÉS
+                    ========================================= */
+
+                    pdf.setProperties({
+
+                        title:
+                            "Attestation {{ attestation.numero_certificat|escapejs }}",
+
+                        subject:
+                            "Attestation de boutique HexaQuébec",
+
+                        author:
+                            "HexaQuébec",
+
+                        creator:
+                            "HexaQuébec"
+
+                    });
+
+
+                    /* =========================================
+                       NOM FICHIER
+                    ========================================= */
+
+                    let entreprise =
+                        "{{ attestation.nom_entreprise|escapejs }}";
+
+
+                    entreprise =
+                        entreprise
+                            .replace(
+                                /[^a-zA-Z0-9À-ÿ_-]+/g,
+                                "_"
+                            )
+                            .replace(
+                                /^_+|_+$/g,
+                                ""
+                            );
+
+
+                    const numero =
+                        "{{ attestation.numero_certificat|escapejs }}";
+
+
+                    const fileName =
+                        "Attestation_HexaQuebec_" +
+                        entreprise +
+                        "_" +
+                        numero +
+                        ".pdf";
+
+
+                    /* =========================================
+                       DOWNLOAD
+                    ========================================= */
+
+                    pdf.save(
+                        fileName
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "ERREUR PDF :",
+                        error
+                    );
+
+
+                    alert(
+                        "Erreur PDF : " +
+                        error.message
+                    );
+
+                }
+
+                finally {
+
+                    downloadButton.disabled =
+                        false;
+
+
+                    downloadButton.innerHTML =
+                        originalContent;
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

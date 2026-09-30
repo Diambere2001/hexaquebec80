@@ -1956,3 +1956,141 @@ class DemandeConferenceAdmin(admin.ModelAdmin):
             ),
             level=messages.WARNING,
         )
+
+
+
+from django.contrib import admin
+
+from .models import AttestationBoutique
+
+
+@admin.register(AttestationBoutique)
+class AttestationBoutiqueAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "numero_certificat",
+        "numero_boutique",
+        "nom_complet_admin",
+        "nom_entreprise",
+        "activite",
+        "date_delivrance",
+        "statut",
+        "est_certifiee",
+        "est_protegee",
+        "nom_signataire",
+    )
+
+    list_filter = (
+        "statut",
+        "est_certifiee",
+        "est_protegee",
+        "date_delivrance",
+        "date_signature",
+    )
+
+    search_fields = (
+        "numero_certificat",
+        "numero_boutique",
+        "nom",
+        "prenom",
+        "nom_entreprise",
+        "activite",
+        "email",
+        "telephone",
+        "nom_signataire",
+    )
+
+    readonly_fields = (
+        "numero_certificat",
+        "numero_boutique",
+        "code_verification",
+        "date_creation",
+        "date_modification",
+    )
+
+    fieldsets = (
+
+        (
+            "Identification",
+            {
+                "fields": (
+                    "numero_certificat",
+                    "numero_boutique",
+                    "code_verification",
+                )
+            },
+        ),
+
+        (
+            "Client",
+            {
+                "fields": (
+                    "prenom",
+                    "nom",
+                    "email",
+                    "telephone",
+                )
+            },
+        ),
+
+        (
+            "Boutique",
+            {
+                "fields": (
+                    "nom_entreprise",
+                    "activite",
+                    "site_web",
+                )
+            },
+        ),
+
+        (
+            "Certification HexaQuébec",
+            {
+                "fields": (
+                    "date_delivrance",
+                    "description",
+                    "est_certifiee",
+                    "est_protegee",
+                    "statut",
+                )
+            },
+        ),
+
+        (
+            "Signature électronique",
+            {
+                "fields": (
+                    "signature_electronique",
+                    "nom_signataire",
+                    "fonction_signataire",
+                    "date_signature",
+                )
+            },
+        ),
+
+        (
+            "Tampon électronique",
+            {
+                "fields": (
+                    "tampon_electronique",
+                )
+            },
+        ),
+
+        (
+            "Informations système",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "date_creation",
+                    "date_modification",
+                ),
+            },
+        ),
+    )
+
+    def nom_complet_admin(self, obj):
+        return obj.nom_complet
+
+    nom_complet_admin.short_description = "Client"
