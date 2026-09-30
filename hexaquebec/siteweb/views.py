@@ -7493,17 +7493,56 @@ def verifier_attestation_boutique(request):
         context,
     )
 
-
 import re
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
+from django.templatetags.static import static
 
 from weasyprint import HTML
 
 from .models import AttestationBoutique
+
+
+def _absolute_url(request, value):
+    """
+    Transforme une image/fichier Django en URL absolue exploitable
+    par WeasyPrint.
+
+    Compatible :
+    - /static/...
+    - /media/...
+    - Cloudinary
+    - URLField
+    - FileField / ImageField
+    """
+
+    if not value:
+        return ""
+
+    # ImageField / FileField
+    try:
+        url = value.url
+    except (AttributeError, ValueError):
+        url = str(value)
+
+    if not url:
+        return ""
+
+    url = str(url).strip()
+
+    # URL déjà absolue
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+
+    # URL commençant par //
+    if url.startswith("//"):
+        return f"https:{url}"
+
+    # URL relative Django
+    return request.build_absolute_uri(url)
 
 
 @staff_member_required
@@ -7514,29 +7553,79 @@ def telecharger_attestation_pdf(request, pk):
         pk=pk,
     )
 
-    # URL de base du site
-    # Exemple :
-    # https://hexaquebec.com/
+    # ==========================================================
+    # URL DE BASE
+    # ==========================================================
+
     base_url = request.build_absolute_uri("/")
 
-    # Génération du HTML depuis ton template
+    # ==========================================================
+    # LOGO HEXAQUÉBEC
+    # ==========================================================
+
+    logo_relative = static(
+        "images/logoHexa.png"
+    )
+
+    logo_url = request.build_absolute_uri(
+        logo_relative
+    )
+
+    # ==========================================================
+    # SIGNATURE ÉLECTRONIQUE
+    # ==========================================================
+
+    signature_url = _absolute_url(
+        request,
+        attestation.signature_electronique,
+    )
+
+    # ==========================================================
+    # TAMPON ÉLECTRONIQUE
+    # ==========================================================
+
+    tampon_url = _absolute_url(
+        request,
+        attestation.tampon_electronique,
+    )
+
+    # ==========================================================
+    # HTML
+    # ==========================================================
+
     html_content = render_to_string(
         "administration/attestations/attestation_pdf.html",
         {
             "attestation": attestation,
+
             "base_url": base_url,
+
+            "logo_url": logo_url,
+
+            "signature_url": signature_url,
+
+            "tampon_url": tampon_url,
         },
         request=request,
     )
 
-    # Génération directe du PDF avec WeasyPrint
+    # ==========================================================
+    # PDF
+    # ==========================================================
+
     pdf_content = HTML(
         string=html_content,
         base_url=base_url,
     ).write_pdf()
 
-    # Nettoyage du nom de l'entreprise pour le nom du fichier
-    nom_entreprise = attestation.nom_entreprise or "Boutique"
+    # ==========================================================
+    # NOM DU FICHIER
+    # ==========================================================
+
+    nom_entreprise = (
+        attestation.nom_entreprise
+        or "Boutique"
+    )
 
     nom_entreprise = re.sub(
         r'[\\/:*?"<>|]+',
@@ -7544,7 +7633,11 @@ def telecharger_attestation_pdf(request, pk):
         nom_entreprise,
     )
 
-    nom_entreprise = nom_entreprise.strip().replace(" ", "_")
+    nom_entreprise = (
+        nom_entreprise
+        .strip()
+        .replace(" ", "_")
+    )
 
     numero_certificat = (
         attestation.numero_certificat

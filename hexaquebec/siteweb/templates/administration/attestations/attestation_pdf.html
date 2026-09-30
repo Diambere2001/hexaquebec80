@@ -1,17 +1,17 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <html lang="fr">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <base href="{{ base_url }}">
-
     <title>
         Attestation {{ attestation.numero_certificat }}
     </title>
+
 
     <style>
 
@@ -19,34 +19,49 @@
             box-sizing: border-box;
         }
 
+
         html,
         body {
+
             margin: 0;
+
             padding: 0;
+
             background: #ffffff;
-            font-family: Arial, sans-serif;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
         }
+
 
         @page {
+
             size: A4 landscape;
+
             margin: 0;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            CERTIFICAT
-        ========================================================= */
+        ============================================================ */
 
         .certificate {
 
             position: relative;
 
             width: 297mm;
+
             height: 210mm;
 
             overflow: hidden;
 
             padding:
-                12mm 16mm 10mm;
+                12mm
+                16mm
+                10mm;
 
             background:
                 linear-gradient(
@@ -61,19 +76,27 @@
             color: #17253a;
         }
 
+
         .certificate::before {
 
             content: "";
 
             position: absolute;
 
-            inset: 11px;
+            top: 3mm;
+
+            right: 3mm;
+
+            bottom: 3mm;
+
+            left: 3mm;
 
             border:
                 1px solid #e4cf91;
 
             pointer-events: none;
         }
+
 
         .certificate::after {
 
@@ -82,36 +105,48 @@
             position: absolute;
 
             right: 25mm;
+
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                translateY(-50%);
 
             font-size: 180px;
+
             font-weight: 900;
 
             color:
-                rgba(8, 70, 128, .025);
+                rgba(
+                    8,
+                    70,
+                    128,
+                    .025
+                );
 
             pointer-events: none;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            COINS
-        ========================================================= */
+        ============================================================ */
 
         .corner {
 
             position: absolute;
 
             width: 14mm;
+
             height: 14mm;
 
             z-index: 2;
         }
 
+
         .corner-tl {
 
             top: 7mm;
+
             left: 7mm;
 
             border-top:
@@ -120,10 +155,12 @@
             border-left:
                 2px solid #c79e3c;
         }
+
 
         .corner-tr {
 
             top: 7mm;
+
             right: 7mm;
 
             border-top:
@@ -133,9 +170,11 @@
                 2px solid #c79e3c;
         }
 
+
         .corner-bl {
 
             bottom: 7mm;
+
             left: 7mm;
 
             border-bottom:
@@ -145,9 +184,11 @@
                 2px solid #c79e3c;
         }
 
+
         .corner-br {
 
             bottom: 7mm;
+
             right: 7mm;
 
             border-bottom:
@@ -157,19 +198,23 @@
                 2px solid #c79e3c;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            HEADER
-        ========================================================= */
+        ============================================================ */
 
         .certificate-top {
 
             position: relative;
+
             z-index: 3;
 
             display: grid;
 
             grid-template-columns:
-                55mm 1fr 55mm;
+                55mm
+                1fr
+                55mm;
 
             align-items: center;
 
@@ -181,6 +226,11 @@
                 1px solid #e8e0ca;
         }
 
+
+        /* ============================================================
+           LOGO
+        ============================================================ */
+
         .legal-brand {
 
             display: flex;
@@ -190,13 +240,22 @@
             gap: 3mm;
         }
 
-        .legal-brand img {
+
+        .hexa-logo {
+
+            display: block;
 
             width: 30mm;
+
+            max-width: 30mm;
+
+            height: auto;
+
             max-height: 20mm;
 
             object-fit: contain;
         }
+
 
         .legal-brand-info {
 
@@ -206,6 +265,7 @@
 
             color: #6e7b8d;
         }
+
 
         .legal-brand-info strong {
 
@@ -218,9 +278,16 @@
             margin-bottom: 1mm;
         }
 
+
+        /* ============================================================
+           TITRE
+        ============================================================ */
+
         .certificate-heading {
+
             text-align: center;
         }
+
 
         .certificate-label {
 
@@ -236,6 +303,7 @@
 
             margin-bottom: 1mm;
         }
+
 
         .certificate-title {
 
@@ -253,6 +321,7 @@
             color: #132c48;
         }
 
+
         .certificate-subtitle {
 
             margin-top: 1.5mm;
@@ -268,6 +337,11 @@
             text-transform: uppercase;
         }
 
+
+        /* ============================================================
+           NUMÉRO
+        ============================================================ */
+
         .certificate-ref {
 
             text-align: right;
@@ -279,6 +353,7 @@
             line-height: 1.6;
         }
 
+
         .certificate-ref strong {
 
             display: block;
@@ -288,13 +363,15 @@
             font-size: 7.5pt;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            BODY
-        ========================================================= */
+        ============================================================ */
 
         .certificate-body {
 
             position: relative;
+
             z-index: 3;
 
             padding-top: 5mm;
@@ -302,14 +379,19 @@
             text-align: center;
         }
 
+
         .certification-intro {
 
-            margin: 0 0 2mm;
+            margin:
+                0
+                0
+                2mm;
 
             font-size: 8pt;
 
             color: #677588;
         }
+
 
         .client-name {
 
@@ -327,6 +409,7 @@
             color: #0b447c;
         }
 
+
         .client-line {
 
             width: 75mm;
@@ -334,7 +417,9 @@
             height: 1px;
 
             margin:
-                2mm auto 3mm;
+                2mm
+                auto
+                3mm;
 
             background:
                 linear-gradient(
@@ -345,11 +430,14 @@
                 );
         }
 
+
         .company-row {
 
             display: flex;
 
             justify-content: center;
+
+            align-items: center;
 
             gap: 3mm;
 
@@ -357,6 +445,7 @@
 
             margin-bottom: 2mm;
         }
+
 
         .company-name {
 
@@ -367,9 +456,12 @@
             color: #172d49;
         }
 
+
         .company-separator {
+
             color: #c7a458;
         }
+
 
         .company-activity {
 
@@ -377,6 +469,7 @@
 
             color: #68778b;
         }
+
 
         .site-web {
 
@@ -387,12 +480,19 @@
             font-weight: 700;
         }
 
+
+        /* ============================================================
+           TEXTE
+        ============================================================ */
+
         .attestation-text {
 
             max-width: 220mm;
 
             margin:
-                2mm auto 3mm;
+                2mm
+                auto
+                3mm;
 
             font-size: 8pt;
 
@@ -401,13 +501,18 @@
             color: #36485f;
         }
 
+
         .attestation-text p {
-            margin: 1.5mm 0;
+
+            margin:
+                1.5mm
+                0;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            STATUS
-        ========================================================= */
+        ============================================================ */
 
         .status-row {
 
@@ -420,13 +525,17 @@
             flex-wrap: wrap;
 
             margin:
-                2mm 0 3mm;
+                2mm
+                0
+                3mm;
         }
+
 
         .status-badge {
 
             padding:
-                1.5mm 3mm;
+                1.5mm
+                3mm;
 
             border-radius: 50px;
 
@@ -442,29 +551,35 @@
             color: #324760;
         }
 
-        /* =========================================================
-           DONNÉES CERTIFICAT
-        ========================================================= */
+
+        /* ============================================================
+           DONNÉES
+        ============================================================ */
 
         .certificate-data {
 
             max-width: 210mm;
 
             margin:
-                0 auto 3mm;
+                0
+                auto
+                3mm;
 
             display: grid;
 
             grid-template-columns:
-                repeat(3, 1fr);
+                repeat(
+                    3,
+                    1fr
+                );
 
             gap: 2mm;
         }
 
+
         .data-item {
 
-            padding:
-                2.5mm;
+            padding: 2.5mm;
 
             border-radius: 2mm;
 
@@ -473,6 +588,7 @@
             border:
                 1px solid #e4e9ef;
         }
+
 
         .data-label {
 
@@ -487,6 +603,7 @@
             text-transform: uppercase;
         }
 
+
         .data-value {
 
             font-size: 7pt;
@@ -496,19 +613,23 @@
             font-weight: 900;
         }
 
-        /* =========================================================
-           BAS CERTIFICAT
-        ========================================================= */
+
+        /* ============================================================
+           PARTIE INFÉRIEURE
+        ============================================================ */
 
         .certificate-bottom {
 
             position: relative;
+
             z-index: 3;
 
             display: grid;
 
             grid-template-columns:
-                1fr 1.2fr 1fr;
+                1fr
+                1.2fr
+                1fr;
 
             align-items: end;
 
@@ -517,9 +638,10 @@
             margin-top: 2mm;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            VÉRIFICATION
-        ========================================================= */
+        ============================================================ */
 
         .verify-box {
 
@@ -535,6 +657,7 @@
             background: #fffdf7;
         }
 
+
         .verify-title {
 
             margin-bottom: 1mm;
@@ -545,6 +668,7 @@
 
             font-weight: 900;
         }
+
 
         .verify-text {
 
@@ -557,13 +681,20 @@
             word-break: break-word;
         }
 
-        /* =========================================================
+
+        /* ============================================================
            SIGNATURE
-        ========================================================= */
+        ============================================================ */
 
         .signature-box {
+
+            position: relative;
+
             text-align: center;
+
+            min-height: 34mm;
         }
+
 
         .signature-image-container {
 
@@ -576,25 +707,39 @@
             justify-content: center;
         }
 
+
         .signature-image {
+
+            display: block;
+
+            width: auto;
+
+            height: auto;
 
             max-width: 55mm;
 
             max-height: 18mm;
 
             object-fit: contain;
+
+            margin:
+                0
+                auto;
         }
+
 
         .signature-line {
 
             width: 52mm;
 
             margin:
-                1mm auto;
+                1mm
+                auto;
 
             border-top:
                 1px solid #aeb7c2;
         }
+
 
         .signature-person {
 
@@ -604,6 +749,7 @@
 
             color: #1d314b;
         }
+
 
         .signature-role {
 
@@ -616,11 +762,14 @@
             color: #778394;
         }
 
-        /* =========================================================
-           TAMPON
-        ========================================================= */
+
+        /* ============================================================
+           VRAI TAMPON
+        ============================================================ */
 
         .seal-area {
+
+            min-height: 38mm;
 
             display: flex;
 
@@ -628,133 +777,33 @@
 
             align-items: center;
 
-            min-height: 35mm;
+            text-align: center;
         }
+
 
         .tampon-image {
 
             display: block;
 
-            width: 35mm;
+            width: auto;
 
-            max-width: 35mm;
+            height: auto;
 
-            height: 35mm;
+            max-width: 40mm;
 
-            max-height: 35mm;
+            max-height: 40mm;
 
             object-fit: contain;
 
-            margin: 0 auto;
+            margin:
+                0
+                auto;
         }
 
-        /*
-        Tampon de secours lorsque
-        aucune image de tampon n'est enregistrée.
-        */
 
-        .hexa-seal {
-
-            position: relative;
-
-            width: 31mm;
-            height: 31mm;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            text-align: center;
-
-            color: #ffffff;
-
-            background: #0875b9;
-
-            border:
-                2mm solid #0875b9;
-
-            border-radius: 50%;
-        }
-
-        .hexa-seal::before {
-
-            content: "";
-
-            position: absolute;
-
-            inset: 2.5mm;
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #0a7bc0,
-                    #075e9d
-                );
-        }
-
-        .hexa-seal-inner {
-
-            position: relative;
-
-            z-index: 2;
-
-            width: 22mm;
-            height: 22mm;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            justify-content: center;
-
-            border-radius: 50%;
-
-            border:
-                1px solid
-                rgba(255,255,255,.75);
-
-            text-transform: uppercase;
-        }
-
-        .hexa-seal-icon {
-
-            font-size: 10pt;
-
-            margin-bottom: 1mm;
-        }
-
-        .hexa-seal-name {
-
-            font-size: 5.5pt;
-
-            font-weight: 900;
-        }
-
-        .hexa-seal-certified {
-
-            margin-top: .5mm;
-
-            font-size: 4.5pt;
-
-            font-weight: 800;
-        }
-
-        .hexa-seal-country {
-
-            margin-top: .7mm;
-
-            font-size: 4pt;
-        }
-
-        /* =========================================================
+        /* ============================================================
            FOOTER
-        ========================================================= */
+        ============================================================ */
 
         .certificate-footer {
 
@@ -782,9 +831,12 @@
             color: #8a93a0;
         }
 
+
         .footer-slogan {
+
             font-style: italic;
         }
+
 
         .footer-country {
 
@@ -808,29 +860,43 @@
 <section class="certificate">
 
 
-    <!-- COINS -->
+    <!-- ============================================================
+         COINS
+    ============================================================ -->
 
     <div class="corner corner-tl"></div>
+
     <div class="corner corner-tr"></div>
+
     <div class="corner corner-bl"></div>
+
     <div class="corner corner-br"></div>
 
 
-    <!-- =========================================================
+    <!-- ============================================================
          HEADER
-    ========================================================== -->
+    ============================================================ -->
 
     <div class="certificate-top">
 
 
-        <!-- LOGO -->
+        <!-- ========================================================
+             LOGO HEXAQUÉBEC
+        ========================================================= -->
 
         <div class="legal-brand">
 
-            <img
-                src="{% static 'images/logoHexa.png' %}"
-                alt="HexaQuébec"
-            >
+
+            {% if logo_url %}
+
+                <img
+                    src="{{ logo_url }}"
+                    class="hexa-logo"
+                    alt="Logo HexaQuébec"
+                >
+
+            {% endif %}
+
 
             <div class="legal-brand-info">
 
@@ -846,43 +912,67 @@
 
             </div>
 
+
         </div>
 
 
-        <!-- TITRE -->
+        <!-- ========================================================
+             TITRE
+        ========================================================= -->
 
         <div class="certificate-heading">
 
+
             <div class="certificate-label">
+
                 HexaQuébec
+
             </div>
+
 
             <h1 class="certificate-title">
+
                 Attestation de boutique
+
             </h1>
 
+
             <div class="certificate-subtitle">
+
                 Création · Mise en ligne · Certification numérique
+
             </div>
+
 
         </div>
 
 
-        <!-- NUMÉRO -->
+        <!-- ========================================================
+             RÉFÉRENCE
+        ========================================================= -->
 
         <div class="certificate-ref">
 
+
             N° d'attestation
 
+
             <strong>
+
                 {{ attestation.numero_certificat }}
+
             </strong>
+
 
             Délivrée le
 
+
             <strong>
+
                 {{ attestation.date_delivrance|date:"d/m/Y" }}
+
             </strong>
+
 
         </div>
 
@@ -890,9 +980,9 @@
     </div>
 
 
-    <!-- =========================================================
-         BODY
-    ========================================================== -->
+    <!-- ============================================================
+         CONTENU PRINCIPAL
+    ============================================================ -->
 
     <div class="certificate-body">
 
@@ -908,6 +998,7 @@
         <h2 class="client-name">
 
             {{ attestation.prenom }}
+
             {{ attestation.nom }}
 
         </h2>
@@ -916,7 +1007,12 @@
         <div class="client-line"></div>
 
 
+        <!-- ========================================================
+             ENTREPRISE
+        ========================================================= -->
+
         <div class="company-row">
+
 
             <span class="company-name">
 
@@ -954,12 +1050,16 @@
 
             {% endif %}
 
+
         </div>
 
 
-        <!-- TEXTE -->
+        <!-- ========================================================
+             DESCRIPTION
+        ========================================================= -->
 
         <div class="attestation-text">
+
 
             {% if attestation.description %}
 
@@ -989,10 +1089,13 @@
 
             </p>
 
+
         </div>
 
 
-        <!-- STATUS -->
+        <!-- ========================================================
+             STATUTS
+        ========================================================= -->
 
         <div class="status-row">
 
@@ -1000,7 +1103,9 @@
             {% if attestation.est_certifiee %}
 
                 <div class="status-badge">
+
                     ✓ Boutique certifiée
+
                 </div>
 
             {% endif %}
@@ -1009,7 +1114,9 @@
             {% if attestation.est_protegee %}
 
                 <div class="status-badge">
+
                     ✓ Protection numérique appliquée
+
                 </div>
 
             {% endif %}
@@ -1018,7 +1125,9 @@
             {% if attestation.statut == "ACTIVE" %}
 
                 <div class="status-badge">
+
                     ✓ Attestation active
+
                 </div>
 
             {% endif %}
@@ -1027,16 +1136,22 @@
         </div>
 
 
-        <!-- INFORMATIONS -->
+        <!-- ========================================================
+             DONNÉES DU CERTIFICAT
+        ========================================================= -->
 
         <div class="certificate-data">
 
 
             <div class="data-item">
 
+
                 <div class="data-label">
+
                     Certificat
+
                 </div>
+
 
                 <div class="data-value">
 
@@ -1044,14 +1159,19 @@
 
                 </div>
 
+
             </div>
 
 
             <div class="data-item">
 
+
                 <div class="data-label">
+
                     Boutique
+
                 </div>
+
 
                 <div class="data-value">
 
@@ -1059,20 +1179,26 @@
 
                 </div>
 
+
             </div>
 
 
             <div class="data-item">
 
+
                 <div class="data-label">
+
                     Date
+
                 </div>
+
 
                 <div class="data-value">
 
                     {{ attestation.date_delivrance|date:"d/m/Y" }}
 
                 </div>
+
 
             </div>
 
@@ -1083,16 +1209,19 @@
     </div>
 
 
-    <!-- =========================================================
+    <!-- ============================================================
          BAS DU CERTIFICAT
-    ========================================================== -->
+    ============================================================ -->
 
     <div class="certificate-bottom">
 
 
-        <!-- VÉRIFICATION -->
+        <!-- ========================================================
+             VÉRIFICATION
+        ========================================================= -->
 
         <div class="verify-box">
+
 
             <div class="verify-title">
 
@@ -1100,9 +1229,12 @@
 
             </div>
 
+
             <div class="verify-text">
 
+
                 N° :
+
 
                 <strong>
 
@@ -1110,20 +1242,25 @@
 
                 </strong>
 
+
                 <br>
+
 
                 Code :
 
+
                 {{ attestation.code_verification }}
 
+
             </div>
+
 
         </div>
 
 
-        <!-- =====================================================
-             SIGNATURE
-        ====================================================== -->
+        <!-- ========================================================
+             SIGNATURE ÉLECTRONIQUE
+        ========================================================= -->
 
         <div class="signature-box">
 
@@ -1131,29 +1268,13 @@
             <div class="signature-image-container">
 
 
-                {% if attestation.signature_electronique %}
+                {% if signature_url %}
 
-                    {% with signature_url=attestation.signature_electronique %}
-
-                        {% if "http://" in signature_url or "https://" in signature_url %}
-
-                            <img
-                                src="{{ signature_url }}"
-                                class="signature-image"
-                                alt="Signature électronique"
-                            >
-
-                        {% else %}
-
-                            <img
-                                src="{{ base_url|slice:':-1' }}{{ signature_url }}"
-                                class="signature-image"
-                                alt="Signature électronique"
-                            >
-
-                        {% endif %}
-
-                    {% endwith %}
+                    <img
+                        src="{{ signature_url }}"
+                        class="signature-image"
+                        alt="Signature électronique"
+                    >
 
                 {% endif %}
 
@@ -1197,9 +1318,12 @@
 
                 <br>
 
+
                 HexaQuébec
 
+
                 <br>
+
 
                 Signature électronique
 
@@ -1210,102 +1334,20 @@
         </div>
 
 
-        <!-- =====================================================
-             TAMPON
-        ====================================================== -->
+        <!-- ========================================================
+             VRAI TAMPON HEXAQUÉBEC
+        ========================================================= -->
 
         <div class="seal-area">
 
 
-            {% if attestation.tampon_electronique %}
+            {% if tampon_url %}
 
-
-                {% with tampon_url=attestation.tampon_electronique.url %}
-
-
-                    {% if "http://" in tampon_url or "https://" in tampon_url %}
-
-                        <!--
-                        Cloudinary ou autre stockage externe :
-                        l'URL est déjà complète.
-                        -->
-
-                        <img
-                            src="{{ tampon_url }}"
-                            class="tampon-image"
-                            alt="Tampon électronique HexaQuébec"
-                        >
-
-
-                    {% else %}
-
-                        <!--
-                        Stockage local :
-                        transforme /media/... en URL complète.
-                        Exemple :
-                        https://hexaquebec.com/media/tampon.png
-                        -->
-
-                        <img
-                            src="{{ base_url|slice:':-1' }}{{ tampon_url }}"
-                            class="tampon-image"
-                            alt="Tampon électronique HexaQuébec"
-                        >
-
-
-                    {% endif %}
-
-
-                {% endwith %}
-
-
-            {% else %}
-
-
-                <!--
-                TAMPON DE SECOURS
-                si aucune image de tampon n'est enregistrée.
-                -->
-
-                <div class="hexa-seal">
-
-
-                    <div class="hexa-seal-inner">
-
-
-                        <div class="hexa-seal-icon">
-
-                            ★
-
-                        </div>
-
-
-                        <div class="hexa-seal-name">
-
-                            HexaQuébec
-
-                        </div>
-
-
-                        <div class="hexa-seal-certified">
-
-                            Certifié
-
-                        </div>
-
-
-                        <div class="hexa-seal-country">
-
-                            Québec · Canada
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
+                <img
+                    src="{{ tampon_url }}"
+                    class="tampon-image"
+                    alt="Tampon officiel HexaQuébec"
+                >
 
             {% endif %}
 
@@ -1316,9 +1358,9 @@
     </div>
 
 
-    <!-- =========================================================
+    <!-- ============================================================
          FOOTER
-    ========================================================== -->
+    ============================================================ -->
 
     <div class="certificate-footer">
 
