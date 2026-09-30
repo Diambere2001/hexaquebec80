@@ -7494,28 +7494,14 @@ def verifier_attestation_boutique(request):
     )
 
 
-
-import os
-import tempfile
+import re
 
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import FileResponse
-from django.shortcuts import get_object_or_404, render
-
-from playwright.sync_api import sync_playwright
-
-from .models import AttestationBoutique
-
-
-import os
-import tempfile
-
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import FileResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 
-from playwright.sync_api import sync_playwright
+from weasyprint import HTML
 
 from .models import AttestationBoutique
 
@@ -7528,15 +7514,12 @@ def telecharger_attestation_pdf(request, pk):
         pk=pk,
     )
 
-    # URL de base réelle du site
+    # URL de base du site
     # Exemple :
-    # http://127.0.0.1:8000/
-    # ou
     # https://hexaquebec.com/
     base_url = request.build_absolute_uri("/")
 
-
-    # On rend directement le template PDF
+    # Génération du HTML depuis ton template
     html_content = render_to_string(
         "administration/attestations/attestation_pdf.html",
         {
@@ -7546,125 +7529,41 @@ def telecharger_attestation_pdf(request, pk):
         request=request,
     )
 
+    # Génération directe du PDF avec WeasyPrint
+    pdf_content = HTML(
+        string=html_content,
+        base_url=base_url,
+    ).write_pdf()
 
-    temp_file = tempfile.NamedTemporaryFile(
-        suffix=".pdf",
-        delete=False,
+    # Nettoyage du nom de l'entreprise pour le nom du fichier
+    nom_entreprise = attestation.nom_entreprise or "Boutique"
+
+    nom_entreprise = re.sub(
+        r'[\\/:*?"<>|]+',
+        "-",
+        nom_entreprise,
     )
 
-    temp_path = temp_file.name
+    nom_entreprise = nom_entreprise.strip().replace(" ", "_")
 
-    temp_file.close()
+    numero_certificat = (
+        attestation.numero_certificat
+        or str(attestation.pk)
+    )
 
+    filename = (
+        f"Attestation_HexaQuebec_"
+        f"{nom_entreprise}_"
+        f"{numero_certificat}.pdf"
+    )
 
-    try:
+    response = HttpResponse(
+        pdf_content,
+        content_type="application/pdf",
+    )
 
-        with sync_playwright() as p:
+    response["Content-Disposition"] = (
+        f'attachment; filename="{filename}"'
+    )
 
-            browser = p.chromium.launch(
-                headless=True
-            )
-
-
-            page = browser.new_page(
-                viewport={
-                    "width": 1400,
-                    "height": 1000,
-                }
-            )
-
-
-            # IMPORTANT :
-            # on charge d'abord l'URL de base
-            # pour donner un contexte HTTP réel
-            page.goto(
-                base_url,
-                wait_until="domcontentloaded",
-            )
-
-
-            # Puis on remplace le contenu
-            # par notre certificat
-            page.set_content(
-                html_content,
-                wait_until="networkidle",
-            )
-
-
-            # Attend le chargement des images
-            page.wait_for_function(
-                """
-                () => Array.from(
-                    document.images
-                ).every(
-                    img =>
-                        img.complete &&
-                        img.naturalWidth > 0
-                )
-                """,
-                timeout=15000,
-            )
-
-
-            # Attend les polices
-            page.evaluate(
-                """
-                () => document.fonts
-                    ? document.fonts.ready
-                    : Promise.resolve()
-                """
-            )
-
-
-            page.pdf(
-                path=temp_path,
-
-                format="A4",
-
-                landscape=True,
-
-                print_background=True,
-
-                margin={
-                    "top": "0mm",
-                    "right": "0mm",
-                    "bottom": "0mm",
-                    "left": "0mm",
-                },
-
-                prefer_css_page_size=True,
-            )
-
-
-            browser.close()
-
-
-        nom_entreprise = (
-            attestation.nom_entreprise
-            .replace(" ", "_")
-            .replace("/", "-")
-            .replace("\\", "-")
-        )
-
-
-        filename = (
-            f"Attestation_HexaQuebec_"
-            f"{nom_entreprise}_"
-            f"{attestation.numero_certificat}.pdf"
-        )
-
-
-        return FileResponse(
-            open(temp_path, "rb"),
-            as_attachment=True,
-            filename=filename,
-            content_type="application/pdf",
-        )
-
-
-    except Exception:
-
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-
-        raise
+    return response
