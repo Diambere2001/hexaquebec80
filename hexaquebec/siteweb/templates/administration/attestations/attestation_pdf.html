@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 
 <html lang="fr">
@@ -26,6 +24,10 @@
             margin: 0;
 
             padding: 0;
+
+            width: 297mm;
+
+            height: 210mm;
 
             background: #ffffff;
 
@@ -247,9 +249,9 @@
 
             width: 30mm;
 
-            max-width: 30mm;
-
             height: auto;
+
+            max-width: 30mm;
 
             max-height: 20mm;
 
@@ -615,7 +617,7 @@
 
 
         /* ============================================================
-           PARTIE INFÉRIEURE
+           BAS
         ============================================================ */
 
         .certificate-bottom {
@@ -764,7 +766,7 @@
 
 
         /* ============================================================
-           VRAI TAMPON
+           TAMPON
         ============================================================ */
 
         .seal-area {
@@ -886,7 +888,6 @@
 
         <div class="legal-brand">
 
-
             {% if logo_url %}
 
                 <img
@@ -912,7 +913,6 @@
 
             </div>
 
-
         </div>
 
 
@@ -921,7 +921,6 @@
         ========================================================= -->
 
         <div class="certificate-heading">
-
 
             <div class="certificate-label">
 
@@ -943,7 +942,6 @@
 
             </div>
 
-
         </div>
 
 
@@ -953,9 +951,7 @@
 
         <div class="certificate-ref">
 
-
             N° d'attestation
-
 
             <strong>
 
@@ -963,16 +959,13 @@
 
             </strong>
 
-
             Délivrée le
-
 
             <strong>
 
                 {{ attestation.date_delivrance|date:"d/m/Y" }}
 
             </strong>
-
 
         </div>
 
@@ -998,7 +991,6 @@
         <h2 class="client-name">
 
             {{ attestation.prenom }}
-
             {{ attestation.nom }}
 
         </h2>
@@ -1137,7 +1129,7 @@
 
 
         <!-- ========================================================
-             DONNÉES DU CERTIFICAT
+             DONNÉES
         ========================================================= -->
 
         <div class="certificate-data">
@@ -1145,13 +1137,11 @@
 
             <div class="data-item">
 
-
                 <div class="data-label">
 
                     Certificat
 
                 </div>
-
 
                 <div class="data-value">
 
@@ -1159,12 +1149,10 @@
 
                 </div>
 
-
             </div>
 
 
             <div class="data-item">
-
 
                 <div class="data-label">
 
@@ -1172,19 +1160,16 @@
 
                 </div>
 
-
                 <div class="data-value">
 
                     {{ attestation.numero_boutique }}
 
                 </div>
 
-
             </div>
 
 
             <div class="data-item">
-
 
                 <div class="data-label">
 
@@ -1192,13 +1177,11 @@
 
                 </div>
 
-
                 <div class="data-value">
 
                     {{ attestation.date_delivrance|date:"d/m/Y" }}
 
                 </div>
-
 
             </div>
 
@@ -1222,19 +1205,15 @@
 
         <div class="verify-box">
 
-
             <div class="verify-title">
 
                 Vérification d'authenticité
 
             </div>
 
-
             <div class="verify-text">
 
-
                 N° :
-
 
                 <strong>
 
@@ -1242,24 +1221,19 @@
 
                 </strong>
 
-
                 <br>
-
 
                 Code :
 
-
                 {{ attestation.code_verification }}
 
-
             </div>
-
 
         </div>
 
 
         <!-- ========================================================
-             SIGNATURE ÉLECTRONIQUE
+             SIGNATURE
         ========================================================= -->
 
         <div class="signature-box">
@@ -1273,7 +1247,7 @@
                     <img
                         src="{{ signature_url }}"
                         class="signature-image"
-                        alt="Signature électronique"
+                        alt=""
                     >
 
                 {% endif %}
@@ -1318,12 +1292,9 @@
 
                 <br>
 
-
                 HexaQuébec
 
-
                 <br>
-
 
                 Signature électronique
 
@@ -1335,7 +1306,7 @@
 
 
         <!-- ========================================================
-             VRAI TAMPON HEXAQUÉBEC
+             TAMPON
         ========================================================= -->
 
         <div class="seal-area">
@@ -1346,7 +1317,7 @@
                 <img
                     src="{{ tampon_url }}"
                     class="tampon-image"
-                    alt="Tampon officiel HexaQuébec"
+                    alt=""
                 >
 
             {% endif %}
@@ -1364,20 +1335,17 @@
 
     <div class="certificate-footer">
 
-
         <span class="footer-slogan">
 
             L’innovation au cœur du numérique québécois
 
         </span>
 
-
         <span class="footer-country">
 
             HexaQuébec · Québec · Canada
 
         </span>
-
 
     </div>
 

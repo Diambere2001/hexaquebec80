@@ -7493,9 +7493,14 @@ def verifier_attestation_boutique(request):
         context,
     )
 
+
+
+import os
 import re
+from pathlib import Path
 
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.staticfiles import finders
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -7506,26 +7511,46 @@ from weasyprint import HTML
 from .models import AttestationBoutique
 
 
+# ============================================================
+# IMAGE / FICHIER POUR WEASYPRINT
+# ============================================================
+
 def _absolute_url(request, value):
     """
-    Transforme une image/fichier Django en URL absolue exploitable
-    par WeasyPrint.
+    Retourne une source d'image utilisable par WeasyPrint.
 
-    Compatible :
-    - /static/...
-    - /media/...
+    Compatible avec :
+    - ImageField / FileField local
     - Cloudinary
     - URLField
-    - FileField / ImageField
+    - URL https://...
+    - /media/...
     """
 
     if not value:
         return ""
 
-    # ImageField / FileField
+    # ========================================================
+    # 1. FICHIER LOCAL
+    # ========================================================
+
+    try:
+        local_path = value.path
+
+        if local_path and os.path.exists(local_path):
+            return Path(local_path).resolve().as_uri()
+
+    except Exception:
+        pass
+
+    # ========================================================
+    # 2. RÉCUPÉRER .url SI C'EST UN FILEFIELD/IMAGEFIELD
+    # ========================================================
+
     try:
         url = value.url
-    except (AttributeError, ValueError):
+
+    except Exception:
         url = str(value)
 
     if not url:
@@ -7533,17 +7558,64 @@ def _absolute_url(request, value):
 
     url = str(url).strip()
 
-    # URL déjà absolue
-    if url.startswith("http://") or url.startswith("https://"):
+    # ========================================================
+    # 3. URL HTTPS/HTTP DÉJÀ COMPLÈTE
+    # ========================================================
+
+    if url.startswith("https://") or url.startswith("http://"):
         return url
 
-    # URL commençant par //
+    # Cloudinary peut retourner //res.cloudinary...
     if url.startswith("//"):
         return f"https:{url}"
 
-    # URL relative Django
+    # ========================================================
+    # 4. URL RELATIVE DJANGO
+    # ========================================================
+
+    if not url.startswith("/"):
+        url = "/" + url
+
     return request.build_absolute_uri(url)
 
+
+# ============================================================
+# LOGO HEXAQUÉBEC
+# ============================================================
+
+def _logo_url(request):
+    """
+    Cherche le logo directement dans les fichiers static.
+    Le chemin file:/// est beaucoup plus fiable pour WeasyPrint.
+    """
+
+    logo_path = finders.find(
+        "images/logoHexa.png"
+    )
+
+    if logo_path:
+
+        try:
+            return Path(
+                logo_path
+            ).resolve().as_uri()
+
+        except Exception:
+            pass
+
+    # Secours si le fichier physique n'est pas trouvé
+    logo_static_url = static(
+        "images/logoHexa.png"
+    )
+
+    return request.build_absolute_uri(
+        logo_static_url
+    )
+
+
+# ============================================================
+# TÉLÉCHARGEMENT PDF
+# ============================================================
 
 @staff_member_required
 def telecharger_attestation_pdf(request, pk):
@@ -7553,74 +7625,83 @@ def telecharger_attestation_pdf(request, pk):
         pk=pk,
     )
 
-    # ==========================================================
+    # ========================================================
     # URL DE BASE
-    # ==========================================================
+    # ========================================================
 
     base_url = request.build_absolute_uri("/")
 
-    # ==========================================================
-    # LOGO HEXAQUÉBEC
-    # ==========================================================
+    # ========================================================
+    # LOGO
+    # ========================================================
 
-    logo_relative = static(
-        "images/logoHexa.png"
+    logo_url = _logo_url(
+        request
     )
 
-    logo_url = request.build_absolute_uri(
-        logo_relative
-    )
-
-    # ==========================================================
-    # SIGNATURE ÉLECTRONIQUE
-    # ==========================================================
+    # ========================================================
+    # SIGNATURE
+    # ========================================================
 
     signature_url = _absolute_url(
         request,
         attestation.signature_electronique,
     )
 
-    # ==========================================================
-    # TAMPON ÉLECTRONIQUE
-    # ==========================================================
+    # ========================================================
+    # TAMPON
+    # ========================================================
 
     tampon_url = _absolute_url(
         request,
         attestation.tampon_electronique,
     )
 
-    # ==========================================================
+    # ========================================================
+    # DEBUG TEMPORAIRE
+    # Tu peux regarder ces valeurs dans le terminal Django.
+    # ========================================================
+
+    print("====================================")
+    print("LOGO PDF :", logo_url)
+    print("SIGNATURE PDF :", signature_url)
+    print("TAMPON PDF :", tampon_url)
+    print("====================================")
+
+    # ========================================================
+    # CONTEXTE
+    # ========================================================
+
+    context = {
+        "attestation": attestation,
+        "base_url": base_url,
+        "logo_url": logo_url,
+        "signature_url": signature_url,
+        "tampon_url": tampon_url,
+    }
+
+    # ========================================================
     # HTML
-    # ==========================================================
+    # ========================================================
 
     html_content = render_to_string(
         "administration/attestations/attestation_pdf.html",
-        {
-            "attestation": attestation,
-
-            "base_url": base_url,
-
-            "logo_url": logo_url,
-
-            "signature_url": signature_url,
-
-            "tampon_url": tampon_url,
-        },
+        context,
         request=request,
     )
 
-    # ==========================================================
+    # ========================================================
     # PDF
-    # ==========================================================
+    # ========================================================
 
     pdf_content = HTML(
         string=html_content,
         base_url=base_url,
     ).write_pdf()
 
-    # ==========================================================
-    # NOM DU FICHIER
-    # ==========================================================
+    # ========================================================
+    # NOM ENTREPRISE
+    # ========================================================
 
     nom_entreprise = (
         attestation.nom_entreprise
@@ -7639,16 +7720,28 @@ def telecharger_attestation_pdf(request, pk):
         .replace(" ", "_")
     )
 
+    # ========================================================
+    # NUMÉRO CERTIFICAT
+    # ========================================================
+
     numero_certificat = (
         attestation.numero_certificat
         or str(attestation.pk)
     )
+
+    # ========================================================
+    # NOM PDF
+    # ========================================================
 
     filename = (
         f"Attestation_HexaQuebec_"
         f"{nom_entreprise}_"
         f"{numero_certificat}.pdf"
     )
+
+    # ========================================================
+    # RÉPONSE
+    # ========================================================
 
     response = HttpResponse(
         pdf_content,
