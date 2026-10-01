@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 
 <head>
@@ -10,23 +9,18 @@
         Attestation {{ attestation.numero_certificat }}
     </title>
 
-
     <style>
 
         * {
             box-sizing: border-box;
         }
 
-
         html,
         body {
-
             margin: 0;
-
             padding: 0;
 
             width: 297mm;
-
             height: 210mm;
 
             background: #ffffff;
@@ -37,25 +31,20 @@
                 sans-serif;
         }
 
-
         @page {
-
             size: A4 landscape;
-
             margin: 0;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            CERTIFICAT
-        ============================================================ */
+        ========================================================= */
 
         .certificate {
 
             position: relative;
 
             width: 297mm;
-
             height: 210mm;
 
             overflow: hidden;
@@ -78,7 +67,6 @@
             color: #17253a;
         }
 
-
         .certificate::before {
 
             content: "";
@@ -86,11 +74,8 @@
             position: absolute;
 
             top: 3mm;
-
             right: 3mm;
-
             bottom: 3mm;
-
             left: 3mm;
 
             border:
@@ -98,7 +83,6 @@
 
             pointer-events: none;
         }
-
 
         .certificate::after {
 
@@ -128,27 +112,23 @@
             pointer-events: none;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            COINS
-        ============================================================ */
+        ========================================================= */
 
         .corner {
 
             position: absolute;
 
             width: 14mm;
-
             height: 14mm;
 
             z-index: 2;
         }
 
-
         .corner-tl {
 
             top: 7mm;
-
             left: 7mm;
 
             border-top:
@@ -157,12 +137,10 @@
             border-left:
                 2px solid #c79e3c;
         }
-
 
         .corner-tr {
 
             top: 7mm;
-
             right: 7mm;
 
             border-top:
@@ -172,11 +150,9 @@
                 2px solid #c79e3c;
         }
 
-
         .corner-bl {
 
             bottom: 7mm;
-
             left: 7mm;
 
             border-bottom:
@@ -186,11 +162,9 @@
                 2px solid #c79e3c;
         }
 
-
         .corner-br {
 
             bottom: 7mm;
-
             right: 7mm;
 
             border-bottom:
@@ -200,10 +174,9 @@
                 2px solid #c79e3c;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            HEADER
-        ============================================================ */
+        ========================================================= */
 
         .certificate-top {
 
@@ -228,10 +201,9 @@
                 1px solid #e8e0ca;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            LOGO
-        ============================================================ */
+        ========================================================= */
 
         .legal-brand {
 
@@ -242,22 +214,20 @@
             gap: 3mm;
         }
 
-
         .hexa-logo {
 
             display: block;
 
             width: 30mm;
 
-            height: auto;
-
             max-width: 30mm;
+
+            height: auto;
 
             max-height: 20mm;
 
             object-fit: contain;
         }
-
 
         .legal-brand-info {
 
@@ -267,7 +237,6 @@
 
             color: #6e7b8d;
         }
-
 
         .legal-brand-info strong {
 
@@ -280,16 +249,14 @@
             margin-bottom: 1mm;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            TITRE
-        ============================================================ */
+        ========================================================= */
 
         .certificate-heading {
 
             text-align: center;
         }
-
 
         .certificate-label {
 
@@ -305,7 +272,6 @@
 
             margin-bottom: 1mm;
         }
-
 
         .certificate-title {
 
@@ -323,7 +289,6 @@
             color: #132c48;
         }
 
-
         .certificate-subtitle {
 
             margin-top: 1.5mm;
@@ -339,10 +304,9 @@
             text-transform: uppercase;
         }
 
-
-        /* ============================================================
-           NUMÉRO
-        ============================================================ */
+        /* =========================================================
+           RÉFÉRENCE
+        ========================================================= */
 
         .certificate-ref {
 
@@ -355,7 +319,6 @@
             line-height: 1.6;
         }
 
-
         .certificate-ref strong {
 
             display: block;
@@ -365,10 +328,9 @@
             font-size: 7.5pt;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            BODY
-        ============================================================ */
+        ========================================================= */
 
         .certificate-body {
 
@@ -381,7 +343,6 @@
             text-align: center;
         }
 
-
         .certification-intro {
 
             margin:
@@ -393,7 +354,6 @@
 
             color: #677588;
         }
-
 
         .client-name {
 
@@ -410,7 +370,6 @@
 
             color: #0b447c;
         }
-
 
         .client-line {
 
@@ -432,7 +391,6 @@
                 );
         }
 
-
         .company-row {
 
             display: flex;
@@ -448,7 +406,6 @@
             margin-bottom: 2mm;
         }
 
-
         .company-name {
 
             font-size: 11pt;
@@ -458,12 +415,10 @@
             color: #172d49;
         }
 
-
         .company-separator {
 
             color: #c7a458;
         }
-
 
         .company-activity {
 
@@ -471,7 +426,6 @@
 
             color: #68778b;
         }
-
 
         .site-web {
 
@@ -482,10 +436,9 @@
             font-weight: 700;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            TEXTE
-        ============================================================ */
+        ========================================================= */
 
         .attestation-text {
 
@@ -503,7 +456,6 @@
             color: #36485f;
         }
 
-
         .attestation-text p {
 
             margin:
@@ -511,10 +463,9 @@
                 0;
         }
 
-
-        /* ============================================================
-           STATUS
-        ============================================================ */
+        /* =========================================================
+           STATUTS COLORÉS
+        ========================================================= */
 
         .status-row {
 
@@ -522,7 +473,9 @@
 
             justify-content: center;
 
-            gap: 2mm;
+            align-items: center;
+
+            gap: 2.5mm;
 
             flex-wrap: wrap;
 
@@ -532,31 +485,113 @@
                 3mm;
         }
 
-
         .status-badge {
 
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 1.4mm;
+
             padding:
-                1.5mm
+                1.6mm
                 3mm;
 
             border-radius: 50px;
 
-            background: #f6f9fc;
-
-            border:
-                1px solid #e0e7ef;
-
-            font-size: 6.5pt;
+            font-size: 6.4pt;
 
             font-weight: 800;
 
-            color: #324760;
+            line-height: 1;
+
+            white-space: nowrap;
         }
 
+        .status-icon {
 
-        /* ============================================================
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 4.2mm;
+            height: 4.2mm;
+
+            border-radius: 50%;
+
+            color: #ffffff;
+
+            font-size: 5.6pt;
+
+            font-weight: 900;
+
+            line-height: 1;
+        }
+
+        /* =========================================================
+           BOUTIQUE CERTIFIÉE
+        ========================================================= */
+
+        .status-certified {
+
+            color: #12663c;
+
+            background: #eaf8f0;
+
+            border:
+                1px solid #b9e3ca;
+        }
+
+        .status-certified .status-icon {
+
+            background: #16824b;
+        }
+
+        /* =========================================================
+           PROTECTION NUMÉRIQUE
+        ========================================================= */
+
+        .status-protected {
+
+            color: #075ea8;
+
+            background: #eaf4ff;
+
+            border:
+                1px solid #bad8f5;
+        }
+
+        .status-protected .status-icon {
+
+            background: #0b6fbd;
+        }
+
+        /* =========================================================
+           ATTESTATION ACTIVE
+        ========================================================= */
+
+        .status-active {
+
+            color: #896018;
+
+            background: #fff7e4;
+
+            border:
+                1px solid #ead09a;
+        }
+
+        .status-active .status-icon {
+
+            background: #c9972f;
+        }
+
+        /* =========================================================
            DONNÉES
-        ============================================================ */
+        ========================================================= */
 
         .certificate-data {
 
@@ -578,7 +613,6 @@
             gap: 2mm;
         }
 
-
         .data-item {
 
             padding: 2.5mm;
@@ -590,7 +624,6 @@
             border:
                 1px solid #e4e9ef;
         }
-
 
         .data-label {
 
@@ -605,7 +638,6 @@
             text-transform: uppercase;
         }
 
-
         .data-value {
 
             font-size: 7pt;
@@ -615,10 +647,9 @@
             font-weight: 900;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            BAS
-        ============================================================ */
+        ========================================================= */
 
         .certificate-bottom {
 
@@ -640,10 +671,9 @@
             margin-top: 2mm;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            VÉRIFICATION
-        ============================================================ */
+        ========================================================= */
 
         .verify-box {
 
@@ -659,7 +689,6 @@
             background: #fffdf7;
         }
 
-
         .verify-title {
 
             margin-bottom: 1mm;
@@ -671,7 +700,6 @@
             font-weight: 900;
         }
 
-
         .verify-text {
 
             font-size: 5.5pt;
@@ -680,13 +708,12 @@
 
             color: #766d59;
 
-            word-break: break-word;
+            overflow-wrap: anywhere;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            SIGNATURE
-        ============================================================ */
+        ========================================================= */
 
         .signature-box {
 
@@ -697,7 +724,6 @@
             min-height: 34mm;
         }
 
-
         .signature-image-container {
 
             height: 18mm;
@@ -707,8 +733,9 @@
             align-items: flex-end;
 
             justify-content: center;
-        }
 
+            margin-bottom: 1mm;
+        }
 
         .signature-image {
 
@@ -729,7 +756,6 @@
                 auto;
         }
 
-
         .signature-line {
 
             width: 52mm;
@@ -742,7 +768,6 @@
                 1px solid #aeb7c2;
         }
 
-
         .signature-person {
 
             font-size: 7pt;
@@ -751,7 +776,6 @@
 
             color: #1d314b;
         }
-
 
         .signature-role {
 
@@ -764,10 +788,9 @@
             color: #778394;
         }
 
-
-        /* ============================================================
+        /* =========================================================
            TAMPON
-        ============================================================ */
+        ========================================================= */
 
         .seal-area {
 
@@ -782,18 +805,13 @@
             text-align: center;
         }
 
-
         .tampon-image {
 
             display: block;
 
-            width: auto;
+            width: 34mm;
 
-            height: auto;
-
-            max-width: 40mm;
-
-            max-height: 40mm;
+            height: 34mm;
 
             object-fit: contain;
 
@@ -802,10 +820,22 @@
                 auto;
         }
 
+        .hexa-seal-svg {
 
-        /* ============================================================
+            display: block;
+
+            width: 34mm;
+
+            height: 34mm;
+
+            margin:
+                0
+                auto;
+        }
+
+        /* =========================================================
            FOOTER
-        ============================================================ */
+        ========================================================= */
 
         .certificate-footer {
 
@@ -833,12 +863,10 @@
             color: #8a93a0;
         }
 
-
         .footer-slogan {
 
             font-style: italic;
         }
-
 
         .footer-country {
 
@@ -862,38 +890,32 @@
 <section class="certificate">
 
 
-    <!-- ============================================================
-         COINS
-    ============================================================ -->
+    <!-- COINS -->
 
     <div class="corner corner-tl"></div>
-
     <div class="corner corner-tr"></div>
-
     <div class="corner corner-bl"></div>
-
     <div class="corner corner-br"></div>
 
 
-    <!-- ============================================================
+    <!-- =========================================================
          HEADER
-    ============================================================ -->
+    ========================================================== -->
 
     <div class="certificate-top">
 
 
-        <!-- ========================================================
-             LOGO HEXAQUÉBEC
-        ========================================================= -->
+        <!-- LOGO -->
 
         <div class="legal-brand">
+
 
             {% if logo_url %}
 
                 <img
                     src="{{ logo_url }}"
                     class="hexa-logo"
-                    alt="Logo HexaQuébec"
+                    alt=""
                 >
 
             {% endif %}
@@ -916,9 +938,7 @@
         </div>
 
 
-        <!-- ========================================================
-             TITRE
-        ========================================================= -->
+        <!-- TITRE -->
 
         <div class="certificate-heading">
 
@@ -945,9 +965,7 @@
         </div>
 
 
-        <!-- ========================================================
-             RÉFÉRENCE
-        ========================================================= -->
+        <!-- RÉFÉRENCE -->
 
         <div class="certificate-ref">
 
@@ -973,9 +991,9 @@
     </div>
 
 
-    <!-- ============================================================
-         CONTENU PRINCIPAL
-    ============================================================ -->
+    <!-- =========================================================
+         CONTENU
+    ========================================================== -->
 
     <div class="certificate-body">
 
@@ -999,9 +1017,7 @@
         <div class="client-line"></div>
 
 
-        <!-- ========================================================
-             ENTREPRISE
-        ========================================================= -->
+        <!-- ENTREPRISE -->
 
         <div class="company-row">
 
@@ -1046,9 +1062,7 @@
         </div>
 
 
-        <!-- ========================================================
-             DESCRIPTION
-        ========================================================= -->
+        <!-- DESCRIPTION -->
 
         <div class="attestation-text">
 
@@ -1085,18 +1099,24 @@
         </div>
 
 
-        <!-- ========================================================
-             STATUTS
-        ========================================================= -->
+        <!-- =====================================================
+             STATUTS COLORÉS
+        ====================================================== -->
 
         <div class="status-row">
 
 
             {% if attestation.est_certifiee %}
 
-                <div class="status-badge">
+                <div class="status-badge status-certified">
 
-                    ✓ Boutique certifiée
+                    <span class="status-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Boutique certifiée
+                    </span>
 
                 </div>
 
@@ -1105,9 +1125,15 @@
 
             {% if attestation.est_protegee %}
 
-                <div class="status-badge">
+                <div class="status-badge status-protected">
 
-                    ✓ Protection numérique appliquée
+                    <span class="status-icon">
+                        ◆
+                    </span>
+
+                    <span>
+                        Protection numérique appliquée
+                    </span>
 
                 </div>
 
@@ -1116,9 +1142,15 @@
 
             {% if attestation.statut == "ACTIVE" %}
 
-                <div class="status-badge">
+                <div class="status-badge status-active">
 
-                    ✓ Attestation active
+                    <span class="status-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Attestation active
+                    </span>
 
                 </div>
 
@@ -1128,9 +1160,7 @@
         </div>
 
 
-        <!-- ========================================================
-             DONNÉES
-        ========================================================= -->
+        <!-- DONNÉES -->
 
         <div class="certificate-data">
 
@@ -1192,24 +1222,24 @@
     </div>
 
 
-    <!-- ============================================================
+    <!-- =========================================================
          BAS DU CERTIFICAT
-    ============================================================ -->
+    ========================================================== -->
 
     <div class="certificate-bottom">
 
 
-        <!-- ========================================================
-             VÉRIFICATION
-        ========================================================= -->
+        <!-- VÉRIFICATION -->
 
         <div class="verify-box">
+
 
             <div class="verify-title">
 
                 Vérification d'authenticité
 
             </div>
+
 
             <div class="verify-text">
 
@@ -1229,12 +1259,11 @@
 
             </div>
 
+
         </div>
 
 
-        <!-- ========================================================
-             SIGNATURE
-        ========================================================= -->
+        <!-- SIGNATURE -->
 
         <div class="signature-box">
 
@@ -1305,20 +1334,209 @@
         </div>
 
 
-        <!-- ========================================================
+        <!-- =====================================================
              TAMPON
-        ========================================================= -->
+        ====================================================== -->
 
         <div class="seal-area">
 
 
             {% if tampon_url %}
 
+
                 <img
                     src="{{ tampon_url }}"
                     class="tampon-image"
                     alt=""
                 >
+
+
+            {% else %}
+
+
+                <svg
+                    class="hexa-seal-svg"
+                    viewBox="0 0 200 200"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+
+
+                    <defs>
+
+                        <linearGradient
+                            id="sealGradient"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                        >
+
+                            <stop
+                                offset="0%"
+                                stop-color="#1394d4"
+                            />
+
+                            <stop
+                                offset="100%"
+                                stop-color="#0762a6"
+                            />
+
+                        </linearGradient>
+
+                    </defs>
+
+
+                    <!-- CONTOUR DENTELÉ -->
+
+                    <g
+                        fill="#0875b9"
+                        transform="translate(100 100)"
+                    >
+
+                        <rect x="-4" y="-100" width="8" height="22" rx="2"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(9)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(18)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(27)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(36)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(45)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(54)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(63)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(72)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(81)"/>
+
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(90)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(99)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(108)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(117)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(126)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(135)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(144)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(153)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(162)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(171)"/>
+
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(180)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(189)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(198)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(207)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(216)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(225)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(234)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(243)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(252)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(261)"/>
+
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(270)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(279)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(288)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(297)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(306)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(315)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(324)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(333)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(342)"/>
+                        <rect x="-4" y="-100" width="8" height="22" rx="2" transform="rotate(351)"/>
+
+                    </g>
+
+
+                    <!-- CERCLE PRINCIPAL -->
+
+                    <circle
+                        cx="100"
+                        cy="100"
+                        r="80"
+                        fill="url(#sealGradient)"
+                    />
+
+
+                    <!-- DOUBLE CERCLE -->
+
+                    <circle
+                        cx="100"
+                        cy="100"
+                        r="69"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="1.6"
+                        opacity=".9"
+                    />
+
+                    <circle
+                        cx="100"
+                        cy="100"
+                        r="63"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        opacity=".35"
+                    />
+
+
+                    <!-- ÉTOILE -->
+
+                    <text
+                        x="100"
+                        y="70"
+                        text-anchor="middle"
+                        fill="#ffffff"
+                        font-size="20"
+                        font-weight="900"
+                        font-family="Arial, Helvetica, sans-serif"
+                    >
+                        ★
+                    </text>
+
+
+                    <!-- HEXAQUÉBEC -->
+
+                    <text
+                        x="100"
+                        y="101"
+                        text-anchor="middle"
+                        fill="#ffffff"
+                        font-size="14"
+                        font-weight="900"
+                        font-family="Arial, Helvetica, sans-serif"
+                        letter-spacing="1"
+                    >
+                        HEXAQUÉBEC
+                    </text>
+
+
+                    <!-- CERTIFIÉ -->
+
+                    <text
+                        x="100"
+                        y="121"
+                        text-anchor="middle"
+                        fill="#ffffff"
+                        font-size="11"
+                        font-weight="800"
+                        font-family="Arial, Helvetica, sans-serif"
+                        letter-spacing="1"
+                    >
+                        CERTIFIÉ
+                    </text>
+
+
+                    <!-- QUÉBEC CANADA -->
+
+                    <text
+                        x="100"
+                        y="140"
+                        text-anchor="middle"
+                        fill="#ffffff"
+                        font-size="8"
+                        font-weight="600"
+                        font-family="Arial, Helvetica, sans-serif"
+                    >
+                        QUÉBEC · CANADA
+                    </text>
+
+
+                </svg>
+
 
             {% endif %}
 
@@ -1329,11 +1547,12 @@
     </div>
 
 
-    <!-- ============================================================
+    <!-- =========================================================
          FOOTER
-    ============================================================ -->
+    ========================================================== -->
 
     <div class="certificate-footer">
+
 
         <span class="footer-slogan">
 
@@ -1341,11 +1560,13 @@
 
         </span>
 
+
         <span class="footer-country">
 
             HexaQuébec · Québec · Canada
 
         </span>
+
 
     </div>
 

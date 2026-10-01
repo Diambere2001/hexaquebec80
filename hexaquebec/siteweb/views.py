@@ -7494,8 +7494,6 @@ def verifier_attestation_boutique(request):
     )
 
 
-
-import os
 import re
 from pathlib import Path
 
@@ -7517,39 +7515,25 @@ from .models import AttestationBoutique
 
 def _absolute_url(request, value):
     """
-    Retourne une source d'image utilisable par WeasyPrint.
+    Retourne une source exploitable par WeasyPrint.
 
-    Compatible avec :
-    - ImageField / FileField local
-    - Cloudinary
+    Gère :
+    - data:image/png;base64,...
     - URLField
-    - URL https://...
+    - ImageField / FileField
+    - Cloudinary
     - /media/...
     """
 
     if not value:
         return ""
 
-    # ========================================================
-    # 1. FICHIER LOCAL
-    # ========================================================
-
-    try:
-        local_path = value.path
-
-        if local_path and os.path.exists(local_path):
-            return Path(local_path).resolve().as_uri()
-
-    except Exception:
-        pass
-
-    # ========================================================
-    # 2. RÉCUPÉRER .url SI C'EST UN FILEFIELD/IMAGEFIELD
-    # ========================================================
+    # --------------------------------------------------------
+    # Récupérer la vraie valeur
+    # --------------------------------------------------------
 
     try:
         url = value.url
-
     except Exception:
         url = str(value)
 
@@ -7558,20 +7542,31 @@ def _absolute_url(request, value):
 
     url = str(url).strip()
 
-    # ========================================================
-    # 3. URL HTTPS/HTTP DÉJÀ COMPLÈTE
-    # ========================================================
+    # --------------------------------------------------------
+    # Signature base64
+    # IMPORTANT : ne surtout pas ajouter http:// devant
+    # --------------------------------------------------------
 
-    if url.startswith("https://") or url.startswith("http://"):
+    if url.startswith("data:image/"):
         return url
 
-    # Cloudinary peut retourner //res.cloudinary...
+    # --------------------------------------------------------
+    # URL complète
+    # --------------------------------------------------------
+
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+
+    # --------------------------------------------------------
+    # URL du type //res.cloudinary.com/...
+    # --------------------------------------------------------
+
     if url.startswith("//"):
         return f"https:{url}"
 
-    # ========================================================
-    # 4. URL RELATIVE DJANGO
-    # ========================================================
+    # --------------------------------------------------------
+    # URL relative Django
+    # --------------------------------------------------------
 
     if not url.startswith("/"):
         url = "/" + url
@@ -7586,7 +7581,7 @@ def _absolute_url(request, value):
 def _logo_url(request):
     """
     Cherche le logo directement dans les fichiers static.
-    Le chemin file:/// est beaucoup plus fiable pour WeasyPrint.
+    Le chemin file:/// est le plus fiable avec WeasyPrint.
     """
 
     logo_path = finders.find(
@@ -7594,16 +7589,11 @@ def _logo_url(request):
     )
 
     if logo_path:
+        return Path(
+            logo_path
+        ).resolve().as_uri()
 
-        try:
-            return Path(
-                logo_path
-            ).resolve().as_uri()
-
-        except Exception:
-            pass
-
-    # Secours si le fichier physique n'est pas trouvé
+    # Secours
     logo_static_url = static(
         "images/logoHexa.png"
     )
@@ -7658,13 +7648,19 @@ def telecharger_attestation_pdf(request, pk):
     )
 
     # ========================================================
-    # DEBUG TEMPORAIRE
-    # Tu peux regarder ces valeurs dans le terminal Django.
+    # DEBUG
     # ========================================================
 
     print("====================================")
     print("LOGO PDF :", logo_url)
-    print("SIGNATURE PDF :", signature_url)
+    print(
+        "SIGNATURE PDF :",
+        (
+            signature_url[:100] + "..."
+            if signature_url.startswith("data:image/")
+            else signature_url
+        )
+    )
     print("TAMPON PDF :", tampon_url)
     print("====================================")
 
@@ -7691,7 +7687,7 @@ def telecharger_attestation_pdf(request, pk):
     )
 
     # ========================================================
-    # PDF
+    # GÉNÉRATION PDF
     # ========================================================
 
     pdf_content = HTML(
@@ -7730,7 +7726,7 @@ def telecharger_attestation_pdf(request, pk):
     )
 
     # ========================================================
-    # NOM PDF
+    # NOM DU PDF
     # ========================================================
 
     filename = (
