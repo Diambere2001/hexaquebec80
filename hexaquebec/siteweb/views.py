@@ -32,7 +32,19 @@ from .models import PaiementClient
 import time
 import uuid
 import jwt
+from datetime import datetime
 
+from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_GET
+
+from .models import DemandeAccompagnement
+
+# IMPORTANT :
+# remplace ceci par ton vrai modèle d'attestation
+from .models import AttestationBoutique
 
 from .models import (
     Product,
@@ -7749,3 +7761,439 @@ def telecharger_attestation_pdf(request, pk):
     )
 
     return response
+
+
+
+
+def accompagnement(request):
+    return render(
+        request,
+        "accompagnement.html"
+    )
+
+
+
+
+
+
+@require_GET
+def verifier_attestation(request):
+
+    numero = request.GET.get(
+        "numero",
+        ""
+    ).strip()
+
+    if not numero:
+        return JsonResponse({
+            "success": False,
+            "message": "Veuillez entrer votre numéro d'attestation."
+        })
+
+    try:
+
+        attestation = AttestationBoutique.objects.get(
+            numero_certificat__iexact=numero
+        )
+
+    except AttestationBoutique.DoesNotExist:
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "Ce numéro d'attestation n'a pas été trouvé. "
+                "Veuillez contacter le service à la clientèle "
+                "HexaQuébec au 514 467-7377."
+            )
+        })
+
+    if getattr(
+        attestation,
+        "statut",
+        ""
+    ).upper() != "ACTIVE":
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "Cette attestation n'est pas active. "
+                "Veuillez contacter HexaQuébec au 514 467-7377."
+            )
+        })
+
+    nom_complet = " ".join(
+        filter(
+            None,
+            [
+                getattr(
+                    attestation,
+                    "prenom",
+                    ""
+                ),
+                getattr(
+                    attestation,
+                    "nom",
+                    ""
+                ),
+            ]
+        )
+    )
+
+    return JsonResponse({
+        "success": True,
+
+        "proprietaire": nom_complet,
+
+        "boutique": getattr(
+            attestation,
+            "nom_entreprise",
+            ""
+        ),
+
+        "email": getattr(
+            attestation,
+            "email",
+            ""
+        ),
+
+        "telephone": getattr(
+            attestation,
+            "telephone",
+            ""
+        ),
+
+        "numero": getattr(
+            attestation,
+            "numero_certificat",
+            numero
+        ),
+    })
+
+
+
+
+
+
+
+def demande_accompagnement(request):
+
+    if request.method == "POST":
+
+        numero_attestation = request.POST.get(
+            "numero_attestation",
+            ""
+        ).strip()
+
+        telephone = request.POST.get(
+            "telephone",
+            ""
+        ).strip()
+
+        date_rdv = request.POST.get(
+            "date_rendez_vous",
+            ""
+        ).strip()
+
+        heure_rdv = request.POST.get(
+            "heure_rendez_vous",
+            ""
+        ).strip()
+
+        sujet = request.POST.get(
+            "sujet",
+            ""
+        ).strip()
+
+        whatsapp = (
+            request.POST.get("whatsapp_confirme")
+            == "oui"
+        )
+
+
+        # ==========================================
+        # VÉRIFICATION ATTESTATION
+        # ==========================================
+
+        try:
+
+            attestation = (
+                AttestationBoutique.objects.get(
+                    numero_certificat__iexact=
+                    numero_attestation
+                )
+            )
+
+        except AttestationBoutique.DoesNotExist:
+
+            messages.error(
+                request,
+                (
+                    "Attestation introuvable. "
+                    "Veuillez contacter HexaQuébec."
+                )
+            )
+
+            return redirect(
+                "demande_accompagnement"
+            )
+
+
+        if getattr(
+            attestation,
+            "statut",
+            ""
+        ).upper() != "ACTIVE":
+
+            messages.error(
+                request,
+                (
+                    "Cette attestation n'est pas active."
+                )
+            )
+
+            return redirect(
+                "demande_accompagnement"
+            )
+
+
+        # ==========================================
+        # INFORMATIONS PROPRIÉTAIRE
+        # ==========================================
+
+        nom_complet = " ".join(
+            filter(
+                None,
+                [
+                    getattr(
+                        attestation,
+                        "prenom",
+                        ""
+                    ),
+                    getattr(
+                        attestation,
+                        "nom",
+                        ""
+                    ),
+                ]
+            )
+        )
+
+        email_client = getattr(
+            attestation,
+            "email",
+            ""
+        )
+
+        nom_boutique = getattr(
+            attestation,
+            "nom_entreprise",
+            ""
+        )
+
+
+        if not email_client:
+
+            messages.error(
+                request,
+                (
+                    "Aucune adresse email n'est associée "
+                    "à cette attestation."
+                )
+            )
+
+            return redirect(
+                "demande_accompagnement"
+            )
+
+
+        # ==========================================
+        # DATE / HEURE
+        # ==========================================
+
+        try:
+
+            date_obj = datetime.strptime(
+                date_rdv,
+                "%Y-%m-%d"
+            ).date()
+
+            heure_obj = datetime.strptime(
+                heure_rdv,
+                "%H:%M"
+            ).time()
+
+        except ValueError:
+
+            messages.error(
+                request,
+                "Date ou heure invalide."
+            )
+
+            return redirect(
+                "demande_accompagnement"
+            )
+
+
+        # ==========================================
+        # ENREGISTREMENT
+        # ==========================================
+
+        demande = (
+            DemandeAccompagnement.objects.create(
+
+                numero_attestation=
+                numero_attestation,
+
+                nom_proprietaire=
+                nom_complet,
+
+                email=
+                email_client,
+
+                nom_boutique=
+                nom_boutique,
+
+                telephone=
+                telephone,
+
+                whatsapp_confirme=
+                whatsapp,
+
+                date_rendez_vous=
+                date_obj,
+
+                heure_rendez_vous=
+                heure_obj,
+
+                sujet=
+                sujet,
+            )
+        )
+
+
+        # ==========================================
+        # EMAIL HEXAQUÉBEC
+        # ==========================================
+
+        sujet_admin = (
+            f"Nouvelle demande d'accompagnement "
+            f"#{demande.pk}"
+        )
+
+        message_admin = f"""
+Bonjour HexaQuébec,
+
+Une nouvelle demande d'accompagnement vient d'être envoyée.
+
+PROPRIÉTAIRE
+------------------------------
+Nom : {nom_complet}
+Boutique : {nom_boutique}
+Attestation : {numero_attestation}
+
+CONTACT
+------------------------------
+Email : {email_client}
+Téléphone : {telephone}
+WhatsApp confirmé : {"Oui" if whatsapp else "Non"}
+
+RENDEZ-VOUS
+------------------------------
+Date : {date_obj.strftime("%d/%m/%Y")}
+Heure : {heure_obj.strftime("%H:%M")}
+
+SUJET
+------------------------------
+{sujet}
+
+Demande #{demande.pk}
+"""
+
+
+        email_admin = EmailMultiAlternatives(
+            subject=sujet_admin,
+            body=message_admin,
+            from_email=None,
+            to=[
+                "hexaquebec80@gmail.com"
+            ],
+        )
+
+        email_admin.send(
+            fail_silently=False
+        )
+
+
+        # ==========================================
+        # EMAIL CLIENT
+        # ==========================================
+
+        sujet_client = (
+            "Confirmation de votre demande "
+            "d'accompagnement — HexaQuébec"
+        )
+
+        message_client = f"""
+Bonjour {nom_complet},
+
+Nous avons bien reçu votre demande d'accompagnement HexaQuébec.
+
+Boutique :
+{nom_boutique}
+
+Numéro d'attestation :
+{numero_attestation}
+
+Votre rendez-vous demandé :
+
+Date :
+{date_obj.strftime("%d/%m/%Y")}
+
+Heure :
+{heure_obj.strftime("%H:%M")}
+
+Téléphone :
+{telephone}
+
+Sujet :
+{sujet}
+
+Notre équipe prendra connaissance de votre demande.
+
+Pour toute question :
+514 467-7377
+
+Merci de votre confiance.
+
+Service à la clientèle
+HexaQuébec
+"""
+
+
+        email_client_obj = EmailMultiAlternatives(
+            subject=sujet_client,
+            body=message_client,
+            from_email=None,
+            to=[
+                email_client
+            ],
+        )
+
+        email_client_obj.send(
+            fail_silently=False
+        )
+
+
+        return render(
+            request,
+            "siteweb/accompagnement_succes.html",
+            {
+                "demande": demande
+            }
+        )
+
+
+    return render(
+        request,
+        "siteweb/demande_accompagnement.html"
+    )

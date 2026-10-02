@@ -269,6 +269,23 @@ urlpatterns = [
     views.telecharger_attestation_pdf,
     name="telecharger_attestation_pdf",
     ),
+    path(
+    "accompagnement/",
+    views.accompagnement,
+    name="accompagnement",
+    ),
+
+    path(
+    "accompagnement/demande/",
+    views.demande_accompagnement,
+    name="demande_accompagnement",
+    ),
+
+    path(
+    "accompagnement/verifier-attestation/",
+    views.verifier_attestation,
+    name="verifier_attestation",
+    ),
 
 
 

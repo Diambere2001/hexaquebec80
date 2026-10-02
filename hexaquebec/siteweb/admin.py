@@ -2094,3 +2094,108 @@ class AttestationBoutiqueAdmin(admin.ModelAdmin):
         return obj.nom_complet
 
     nom_complet_admin.short_description = "Client"
+
+
+
+
+
+
+
+from .models import DemandeAccompagnement
+
+
+@admin.register(DemandeAccompagnement)
+class DemandeAccompagnementAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "id",
+        "nom_proprietaire",
+        "nom_boutique",
+        "numero_attestation",
+        "telephone",
+        "date_rendez_vous",
+        "heure_rendez_vous",
+        "statut",
+        "date_creation",
+    )
+
+    list_filter = (
+        "statut",
+        "date_rendez_vous",
+        "whatsapp_confirme",
+        "date_creation",
+    )
+
+    search_fields = (
+        "nom_proprietaire",
+        "nom_boutique",
+        "numero_attestation",
+        "email",
+        "telephone",
+        "sujet",
+    )
+
+    readonly_fields = (
+        "date_creation",
+    )
+
+    ordering = (
+        "-date_creation",
+    )
+
+    fieldsets = (
+
+        (
+            "Propriétaire",
+            {
+                "fields": (
+                    "nom_proprietaire",
+                    "email",
+                    "telephone",
+                    "whatsapp_confirme",
+                )
+            },
+        ),
+
+        (
+            "Boutique HexaQuébec",
+            {
+                "fields": (
+                    "nom_boutique",
+                    "numero_attestation",
+                )
+            },
+        ),
+
+        (
+            "Rendez-vous",
+            {
+                "fields": (
+                    "date_rendez_vous",
+                    "heure_rendez_vous",
+                )
+            },
+        ),
+
+        (
+            "Demande d'accompagnement",
+            {
+                "fields": (
+                    "sujet",
+                    "statut",
+                )
+            },
+        ),
+
+        (
+            "Informations système",
+            {
+                "fields": (
+                    "date_creation",
+                )
+            },
+        ),
+
+    )
+
+    list_per_page = 25

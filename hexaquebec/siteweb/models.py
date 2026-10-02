@@ -1633,3 +1633,63 @@ class AttestationBoutique(models.Model):
     @property
     def est_active(self):
         return self.statut == "ACTIVE"
+
+
+
+
+
+
+
+
+class DemandeAccompagnement(models.Model):
+
+    STATUT_CHOICES = [
+        ("NOUVELLE", "Nouvelle"),
+        ("CONFIRMEE", "Confirmée"),
+        ("TRAITEE", "Traitée"),
+        ("ANNULEE", "Annulée"),
+    ]
+
+    numero_attestation = models.CharField(
+        max_length=100
+    )
+
+    nom_proprietaire = models.CharField(
+        max_length=150
+    )
+
+    email = models.EmailField()
+
+    nom_boutique = models.CharField(
+        max_length=200
+    )
+
+    telephone = models.CharField(
+        max_length=30
+    )
+
+    whatsapp_confirme = models.BooleanField(
+        default=False
+    )
+
+    date_rendez_vous = models.DateField()
+
+    heure_rendez_vous = models.TimeField()
+
+    sujet = models.TextField()
+
+    statut = models.CharField(
+        max_length=20,
+        choices=STATUT_CHOICES,
+        default="NOUVELLE"
+    )
+
+    date_creation = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.nom_proprietaire} - "
+            f"{self.nom_boutique}"
+        )

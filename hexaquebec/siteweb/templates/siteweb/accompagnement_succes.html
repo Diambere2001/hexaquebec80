@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Demande envoyée — HexaQuébec
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.success-page {
+    min-height: 80vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background:
+        #f5f9fd;
+}
+
+.success-card {
+    max-width: 600px;
+
+    padding: 50px;
+
+    text-align: center;
+
+    border-radius: 25px;
+
+    background:
+        white;
+
+    box-shadow:
+        0 25px 70px
+        rgba(16,57,91,.12);
+}
+
+.success-icon {
+    width: 75px;
+    height: 75px;
+
+    margin:
+        0
+        auto
+        20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        #e9faf2;
+
+    color:
+        #18a568;
+
+    font-size: 30px;
+}
+
+.success-card h1 {
+    color:
+        #123752;
+}
+
+.success-card p {
+    color:
+        #6b7c8c;
+
+    line-height: 1.7;
+}
+
+</style>
+
+
+<div class="success-page">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h1>
+            Demande envoyée
+        </h1>
+
+        <p>
+            Merci {{ demande.nom_proprietaire }}.
+            Votre demande d'accompagnement HexaQuébec
+            a bien été enregistrée.
+        </p>
+
+        <p>
+            Rendez-vous demandé :
+            <strong>
+                {{ demande.date_rendez_vous }}
+                à
+                {{ demande.heure_rendez_vous }}
+            </strong>
+        </p>
+
+        <p>
+            Une confirmation a été envoyée
+            à votre adresse email.
+        </p>
+
+        <a
+            href="{% url 'home' %}"
+            class="btn btn-primary"
+        >
+            Retour à l'accueil
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

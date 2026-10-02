@@ -1,0 +1,1985 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Demande d'accompagnement — HexaQuébec
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    :root {
+        --hq-blue: #0867bd;
+        --hq-dark: #082b49;
+        --hq-green: #19a66a;
+        --hq-red: #d94452;
+        --hq-light: #f5f9fd;
+        --hq-border: #dce8f2;
+        --hq-text: #617487;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .wizard-page {
+        min-height: 100vh;
+
+        padding:
+            60px 20px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #edf6fd,
+                #ffffff
+            );
+    }
+
+
+    .wizard-container {
+        width:
+            min(
+                900px,
+                100%
+            );
+
+        margin:
+            0
+            auto;
+    }
+
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .wizard-header {
+        text-align: center;
+
+        margin-bottom: 35px;
+    }
+
+
+    .wizard-logo {
+        width: 76px;
+        height: 76px;
+
+        margin:
+            0
+            auto
+            17px;
+
+        padding: 9px;
+
+        border-radius: 18px;
+
+        background: white;
+
+        box-shadow:
+            0 12px 35px
+            rgba(16,54,87,.12);
+    }
+
+
+    .wizard-logo img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+    }
+
+
+    .wizard-header h1 {
+        margin:
+            0
+            0
+            8px;
+
+        color:
+            var(--hq-dark);
+
+        font-size:
+            clamp(
+                27px,
+                4vw,
+                38px
+            );
+    }
+
+
+    .wizard-header p {
+        margin: 0;
+
+        color:
+            var(--hq-text);
+
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       PROGRESSION
+    ========================= */
+
+    .steps-progress {
+        display: flex;
+
+        justify-content: space-between;
+
+        position: relative;
+
+        margin-bottom: 30px;
+    }
+
+
+    .steps-progress::before {
+        content: "";
+
+        position: absolute;
+
+        top: 20px;
+
+        left: 6%;
+        right: 6%;
+
+        height: 2px;
+
+        background:
+            #dfe8ef;
+
+        z-index: 0;
+    }
+
+
+    .progress-step {
+        position: relative;
+
+        z-index: 2;
+
+        width: 16.66%;
+
+        text-align: center;
+    }
+
+
+    .progress-icon {
+        width: 42px;
+        height: 42px;
+
+        margin:
+            0
+            auto
+            7px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            #edf2f6;
+
+        color:
+            #8c9aa7;
+
+        border:
+            3px solid
+            #ffffff;
+
+        transition:
+            .3s ease;
+    }
+
+
+    .progress-step.active
+    .progress-icon {
+
+        background:
+            var(--hq-blue);
+
+        color:
+            white;
+
+        box-shadow:
+            0 7px 20px
+            rgba(8,103,189,.24);
+    }
+
+
+    .progress-step.completed
+    .progress-icon {
+
+        background:
+            var(--hq-green);
+
+        color:
+            white;
+    }
+
+
+    .progress-step span {
+        display: block;
+
+        color:
+            #82909c;
+
+        font-size: 10px;
+
+        font-weight: 800;
+    }
+
+
+    .progress-step.active span {
+        color:
+            var(--hq-blue);
+    }
+
+
+    /* =========================
+       CARTE
+    ========================= */
+
+    .wizard-card {
+        overflow: hidden;
+
+        border:
+            1px solid
+            var(--hq-border);
+
+        border-radius: 25px;
+
+        background:
+            rgba(255,255,255,.98);
+
+        box-shadow:
+            0 25px 70px
+            rgba(16,57,91,.11);
+    }
+
+
+    .wizard-body {
+        min-height: 410px;
+
+        padding:
+            45px;
+    }
+
+
+    /* =========================
+       ÉTAPES
+    ========================= */
+
+    .wizard-step {
+        display: none;
+
+        animation:
+            stepIn
+            .45s
+            ease;
+    }
+
+
+    .wizard-step.active {
+        display: block;
+    }
+
+
+    @keyframes stepIn {
+
+        from {
+            opacity: 0;
+            transform:
+                translateX(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateX(0);
+        }
+
+    }
+
+
+    .step-icon-large {
+        width: 62px;
+        height: 62px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 20px;
+
+        border-radius: 18px;
+
+        background:
+            #eaf5ff;
+
+        color:
+            var(--hq-blue);
+
+        font-size: 24px;
+    }
+
+
+    .wizard-step h2 {
+        margin:
+            0
+            0
+            10px;
+
+        color:
+            var(--hq-dark);
+
+        font-size: 26px;
+    }
+
+
+    .step-description {
+        max-width: 650px;
+
+        margin:
+            0
+            0
+            28px;
+
+        color:
+            var(--hq-text);
+
+        font-size: 14px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =========================
+       OUI / NON
+    ========================= */
+
+    .choice-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+        gap: 15px;
+    }
+
+
+    .choice {
+        position: relative;
+    }
+
+
+    .choice input {
+        position: absolute;
+
+        opacity: 0;
+    }
+
+
+    .choice label {
+        display: flex;
+
+        align-items: center;
+
+        gap: 14px;
+
+        padding:
+            18px;
+
+        cursor: pointer;
+
+        border:
+            2px solid
+            #e1ebf3;
+
+        border-radius: 15px;
+
+        transition:
+            .25s ease;
+    }
+
+
+    .choice label i {
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background:
+            #eef6fc;
+
+        color:
+            var(--hq-blue);
+    }
+
+
+    .choice input:checked + label {
+
+        border-color:
+            var(--hq-blue);
+
+        background:
+            #f4faff;
+    }
+
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+
+    .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color:
+            #26455f;
+
+        font-size: 13px;
+
+        font-weight: 800;
+    }
+
+
+    .form-control {
+        width: 100%;
+
+        padding:
+            14px
+            15px;
+
+        border:
+            1px solid
+            #d6e2ec;
+
+        border-radius: 12px;
+
+        outline: none;
+
+        font-size: 14px;
+
+        transition:
+            .2s ease;
+    }
+
+
+    .form-control:focus {
+        border-color:
+            var(--hq-blue);
+
+        box-shadow:
+            0 0 0 4px
+            rgba(8,103,189,.08);
+    }
+
+
+    textarea.form-control {
+        min-height: 125px;
+
+        resize: vertical;
+    }
+
+
+    /* =========================
+       INFORMATION BOUTIQUE
+    ========================= */
+
+    .owner-card {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+        gap: 14px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .owner-info {
+        padding:
+            16px;
+
+        border:
+            1px solid
+            #dce8f1;
+
+        border-radius: 14px;
+
+        background:
+            #f8fbfe;
+    }
+
+
+    .owner-info small {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color:
+            #8493a0;
+
+        font-size: 10px;
+
+        text-transform: uppercase;
+
+        font-weight: 900;
+    }
+
+
+    .owner-info strong {
+        color:
+            #193b57;
+
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       ALERTES
+    ========================= */
+
+    .wizard-alert {
+        display: none;
+
+        margin-top: 20px;
+
+        padding:
+            15px
+            17px;
+
+        border-radius: 13px;
+
+        font-size: 13px;
+
+        line-height: 1.6;
+    }
+
+
+    .wizard-alert.show {
+        display: block;
+    }
+
+
+    .wizard-alert.error {
+        background:
+            #fff1f2;
+
+        color:
+            #a82936;
+
+        border:
+            1px solid
+            #ffd8dc;
+    }
+
+
+    .wizard-alert.success {
+        background:
+            #effbf5;
+
+        color:
+            #16784c;
+
+        border:
+            1px solid
+            #cceedd;
+    }
+
+
+    /* =========================
+       BOUTONS
+    ========================= */
+
+    .wizard-actions {
+        display: flex;
+
+        justify-content:
+            space-between;
+
+        align-items: center;
+
+        gap: 12px;
+
+        margin-top: 30px;
+    }
+
+
+    .btn-wizard {
+        border: 0;
+
+        padding:
+            13px
+            20px;
+
+        border-radius: 11px;
+
+        cursor: pointer;
+
+        font-size: 13px;
+
+        font-weight: 900;
+
+        transition:
+            .25s ease;
+    }
+
+
+    .btn-next {
+        margin-left: auto;
+
+        background:
+            linear-gradient(
+                135deg,
+                #075da8,
+                #1389e3
+            );
+
+        color:
+            white;
+
+        box-shadow:
+            0 10px 25px
+            rgba(8,103,189,.20);
+    }
+
+
+    .btn-next:hover {
+        transform:
+            translateY(-2px);
+    }
+
+
+    .btn-back {
+        background:
+            #edf3f7;
+
+        color:
+            #486174;
+    }
+
+
+    /* =========================
+       BLOCKED
+    ========================= */
+
+    .blocked-box {
+        display: none;
+
+        margin-top: 25px;
+
+        padding:
+            22px;
+
+        border-radius: 16px;
+
+        background:
+            #fff5f5;
+
+        border:
+            1px solid
+            #ffd9dc;
+
+        text-align: center;
+    }
+
+
+    .blocked-box.show {
+        display: block;
+    }
+
+
+    .blocked-box i {
+        margin-bottom: 12px;
+
+        color:
+            var(--hq-red);
+
+        font-size: 28px;
+    }
+
+
+    .blocked-box strong {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color:
+            #9b2631;
+    }
+
+
+    .blocked-box p {
+        margin: 0;
+
+        color:
+            #7d4c51;
+
+        font-size: 13px;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media(max-width: 700px) {
+
+        .wizard-page {
+            padding:
+                35px
+                12px;
+        }
+
+
+        .wizard-body {
+            min-height: auto;
+
+            padding:
+                28px
+                20px;
+        }
+
+
+        .progress-step span {
+            display: none;
+        }
+
+
+        .progress-icon {
+            width: 37px;
+            height: 37px;
+
+            font-size: 12px;
+        }
+
+
+        .choice-grid,
+        .owner-card {
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .wizard-step h2 {
+            font-size: 23px;
+        }
+
+    }
+
+</style>
+
+
+<div class="wizard-page">
+
+    <div class="wizard-container">
+
+
+        <!-- HEADER -->
+
+        <div class="wizard-header">
+
+            <div class="wizard-logo">
+
+                <img
+                    src="{% static 'images/logoHexa.png' %}"
+                    alt="HexaQuébec"
+                >
+
+            </div>
+
+            <h1>
+                Demande d'accompagnement
+            </h1>
+
+            <p>
+                Service réservé aux propriétaires de boutiques HexaQuébec.
+            </p>
+
+        </div>
+
+
+        <!-- PROGRESSION -->
+
+        <div class="steps-progress">
+
+            <div
+                class="progress-step active"
+                data-progress="1"
+            >
+                <div class="progress-icon">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+
+                <span>Boutique</span>
+            </div>
+
+
+            <div
+                class="progress-step"
+                data-progress="2"
+            >
+                <div class="progress-icon">
+                    <i class="fa-solid fa-certificate"></i>
+                </div>
+
+                <span>Attestation</span>
+            </div>
+
+
+            <div
+                class="progress-step"
+                data-progress="3"
+            >
+                <div class="progress-icon">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+
+                <span>Vérification</span>
+            </div>
+
+
+            <div
+                class="progress-step"
+                data-progress="4"
+            >
+                <div class="progress-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+
+                <span>Rendez-vous</span>
+            </div>
+
+
+            <div
+                class="progress-step"
+                data-progress="5"
+            >
+                <div class="progress-icon">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+
+                <span>WhatsApp</span>
+            </div>
+
+
+            <div
+                class="progress-step"
+                data-progress="6"
+            >
+                <div class="progress-icon">
+                    <i class="fa-solid fa-message"></i>
+                </div>
+
+                <span>Sujet</span>
+            </div>
+
+        </div>
+
+
+        <div class="wizard-card">
+
+            <form
+                method="POST"
+                id="accompagnementForm"
+            >
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="numero_attestation"
+                    id="hiddenAttestation"
+                >
+
+
+                <div class="wizard-body">
+
+
+                    <!-- =====================================
+                         ÉTAPE 1
+                    ====================================== -->
+
+                    <div
+                        class="wizard-step active"
+                        data-step="1"
+                    >
+
+                        <div class="step-icon-large">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+
+
+                        <h2>
+                            Êtes-vous propriétaire d'une boutique HexaQuébec ?
+                        </h2>
+
+
+                        <p class="step-description">
+
+                            Ce service d'accompagnement est destiné
+                            aux propriétaires de boutiques créées
+                            et suivies par HexaQuébec.
+
+                        </p>
+
+
+                        <div class="choice-grid">
+
+                            <div class="choice">
+
+                                <input
+                                    type="radio"
+                                    name="proprietaire"
+                                    id="ownerYes"
+                                    value="oui"
+                                >
+
+                                <label for="ownerYes">
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    <strong>
+                                        Oui
+                                    </strong>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="choice">
+
+                                <input
+                                    type="radio"
+                                    name="proprietaire"
+                                    id="ownerNo"
+                                    value="non"
+                                >
+
+                                <label for="ownerNo">
+
+                                    <i class="fa-solid fa-xmark"></i>
+
+                                    <strong>
+                                        Non
+                                    </strong>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="blocked-box"
+                            id="notOwnerBox"
+                        >
+
+                            <i class="fa-solid fa-headset"></i>
+
+                            <strong>
+                                Ce formulaire est réservé aux propriétaires HexaQuébec.
+                            </strong>
+
+                            <p>
+                                Veuillez appeler le service à la clientèle
+                                HexaQuébec au
+                                <strong>514 467-7377</strong>.
+                            </p>
+
+                        </div>
+
+
+                        <div class="wizard-actions">
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-next"
+                                onclick="stepOwner()"
+                            >
+                                Suivant
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ÉTAPE 2
+                    ====================================== -->
+
+                    <div
+                        class="wizard-step"
+                        data-step="2"
+                    >
+
+                        <div class="step-icon-large">
+                            <i class="fa-solid fa-certificate"></i>
+                        </div>
+
+
+                        <h2>
+                            Vérification de votre attestation
+                        </h2>
+
+
+                        <p class="step-description">
+                            Entrez le numéro officiel indiqué
+                            sur votre attestation HexaQuébec.
+                        </p>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Numéro d'attestation HexaQuébec
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="numeroAttestation"
+                                placeholder="Ex. HQ-CERT-2026-00001"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <div
+                            class="wizard-alert"
+                            id="attestationAlert"
+                        ></div>
+
+
+                        <div class="wizard-actions">
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-back"
+                                onclick="goToStep(1)"
+                            >
+                                Retour
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-next"
+                                onclick="verifyCertificate()"
+                            >
+                                Vérifier et continuer
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ÉTAPE 3
+                    ====================================== -->
+
+                    <div
+                        class="wizard-step"
+                        data-step="3"
+                    >
+
+                        <div class="step-icon-large">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+
+
+                        <h2>
+                            Vérifiez vos informations
+                        </h2>
+
+
+                        <p class="step-description">
+                            Ces informations correspondent
+                            à l'attestation trouvée dans notre système.
+                        </p>
+
+
+                        <div class="owner-card">
+
+                            <div class="owner-info">
+                                <small>Propriétaire</small>
+
+                                <strong id="ownerName">
+                                    —
+                                </strong>
+                            </div>
+
+
+                            <div class="owner-info">
+                                <small>Boutique</small>
+
+                                <strong id="shopName">
+                                    —
+                                </strong>
+                            </div>
+
+
+                            <div class="owner-info">
+                                <small>Email</small>
+
+                                <strong id="ownerEmail">
+                                    —
+                                </strong>
+                            </div>
+
+
+                            <div class="owner-info">
+                                <small>Attestation</small>
+
+                                <strong id="ownerCertificate">
+                                    —
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <p>
+                            <strong>
+                                Ces informations sont-elles correctes ?
+                            </strong>
+                        </p>
+
+
+                        <div class="choice-grid">
+
+                            <div class="choice">
+
+                                <input
+                                    type="radio"
+                                    name="infos_correctes"
+                                    id="infosYes"
+                                    value="oui"
+                                >
+
+                                <label for="infosYes">
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    <strong>
+                                        Oui
+                                    </strong>
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="choice">
+
+                                <input
+                                    type="radio"
+                                    name="infos_correctes"
+                                    id="infosNo"
+                                    value="non"
+                                >
+
+                                <label for="infosNo">
+
+                                    <i class="fa-solid fa-phone"></i>
+
+                                    <strong>
+                                        Non
+                                    </strong>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="blocked-box"
+                            id="incorrectInfoBox"
+                        >
+
+                            <i class="fa-solid fa-phone"></i>
+
+                            <strong>
+                                Informations incorrectes
+                            </strong>
+
+                            <p>
+                                Veuillez contacter HexaQuébec
+                                au <strong>514 467-7377</strong>
+                                avant de continuer.
+                            </p>
+
+                        </div>
+
+
+                        <div class="wizard-actions">
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-back"
+                                onclick="goToStep(2)"
+                            >
+                                Retour
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-next"
+                                onclick="verifyOwnerInformation()"
+                            >
+                                Suivant
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ÉTAPE 4
+                    ====================================== -->
+
+                    <div
+                        class="wizard-step"
+                        data-step="4"
+                    >
+
+                        <div class="step-icon-large">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
+
+
+                        <h2>
+                            Choisissez votre rendez-vous
+                        </h2>
+
+
+                        <p class="step-description">
+                            Sélectionnez la date et l'heure
+                            souhaitées pour votre accompagnement.
+                        </p>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Date
+                            </label>
+
+                            <input
+                                type="date"
+                                name="date_rendez_vous"
+                                id="appointmentDate"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Heure
+                            </label>
+
+                            <input
+                                type="time"
+                                name="heure_rendez_vous"
+                                id="appointmentTime"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="wizard-actions">
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-back"
+                                onclick="goToStep(3)"
+                            >
+                                Retour
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-next"
+                                onclick="verifyAppointment()"
+                            >
+                                Suivant
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ÉTAPE 5
+                    ====================================== -->
+
+                    <div
+                        class="wizard-step"
+                        data-step="5"
+                    >
+
+                        <div class="step-icon-large">
+
+                            <i class="fa-brands fa-whatsapp"></i>
+
+                        </div>
+
+
+                        <h2>
+                            Votre numéro WhatsApp
+                        </h2>
+
+
+                        <p class="step-description">
+
+                            Nous utiliserons ce numéro pour communiquer
+                            avec vous concernant votre accompagnement.
+
+                        </p>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Numéro de téléphone
+                            </label>
+
+                            <input
+                                type="tel"
+                                name="telephone"
+                                id="phoneNumber"
+                                class="form-control"
+                                placeholder="Ex. 514 123-4567"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="choice">
+
+                            <input
+                                type="checkbox"
+                                name="whatsapp_confirme"
+                                value="oui"
+                                id="whatsappConfirm"
+                            >
+
+                            <label for="whatsappConfirm">
+
+                                <i class="fa-brands fa-whatsapp"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Ce numéro est disponible sur WhatsApp
+                                    </strong>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="wizard-actions">
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-back"
+                                onclick="goToStep(4)"
+                            >
+                                Retour
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-next"
+                                onclick="verifyPhone()"
+                            >
+                                Suivant
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ÉTAPE 6
+                    ====================================== -->
+
+                    <div
+                        class="wizard-step"
+                        data-step="6"
+                    >
+
+                        <div class="step-icon-large">
+                            <i class="fa-solid fa-message"></i>
+                        </div>
+
+
+                        <h2>
+                            Quel est le sujet de votre demande ?
+                        </h2>
+
+
+                        <p class="step-description">
+                            Expliquez brièvement la difficulté
+                            ou le besoin pour lequel vous souhaitez
+                            être accompagné.
+                        </p>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Votre sujet
+                            </label>
+
+                            <textarea
+                                name="sujet"
+                                id="subject"
+                                class="form-control"
+                                placeholder="Expliquez votre demande..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="wizard-actions">
+
+                            <button
+                                type="button"
+                                class="btn-wizard btn-back"
+                                onclick="goToStep(5)"
+                            >
+                                Retour
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                class="btn-wizard btn-next"
+                            >
+                                <i class="fa-solid fa-paper-plane"></i>
+                                Envoyer ma demande
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let currentStep = 1;
+
+
+    function goToStep(step) {
+
+        document
+            .querySelectorAll(
+                ".wizard-step"
+            )
+            .forEach(
+                element => {
+                    element.classList.remove(
+                        "active"
+                    );
+                }
+            );
+
+
+        document
+            .querySelector(
+                `.wizard-step[data-step="${step}"]`
+            )
+            .classList
+            .add(
+                "active"
+            );
+
+
+        document
+            .querySelectorAll(
+                ".progress-step"
+            )
+            .forEach(
+                element => {
+
+                    const number =
+                        parseInt(
+                            element.dataset.progress
+                        );
+
+
+                    element.classList.remove(
+                        "active"
+                    );
+
+
+                    if (
+                        number < step
+                    ) {
+
+                        element.classList.add(
+                            "completed"
+                        );
+
+                    }
+                    else {
+
+                        element.classList.remove(
+                            "completed"
+                        );
+
+                    }
+
+
+                    if (
+                        number === step
+                    ) {
+
+                        element.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+
+        currentStep = step;
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* =====================================
+       ÉTAPE 1
+    ====================================== */
+
+    function stepOwner() {
+
+        const selected =
+            document.querySelector(
+                'input[name="proprietaire"]:checked'
+            );
+
+
+        const box =
+            document.getElementById(
+                "notOwnerBox"
+            );
+
+
+        if (!selected) {
+
+            alert(
+                "Veuillez sélectionner Oui ou Non."
+            );
+
+            return;
+        }
+
+
+        if (
+            selected.value === "non"
+        ) {
+
+            box.classList.add(
+                "show"
+            );
+
+            return;
+        }
+
+
+        box.classList.remove(
+            "show"
+        );
+
+
+        goToStep(2);
+
+    }
+
+
+    /* =====================================
+       ATTESTATION
+    ====================================== */
+
+    async function verifyCertificate() {
+
+        const input =
+            document.getElementById(
+                "numeroAttestation"
+            );
+
+
+        const alertBox =
+            document.getElementById(
+                "attestationAlert"
+            );
+
+
+        const numero =
+            input.value.trim();
+
+
+        if (!numero) {
+
+            alertBox.className =
+                "wizard-alert error show";
+
+            alertBox.innerHTML =
+                "Veuillez entrer votre numéro d'attestation.";
+
+            return;
+        }
+
+
+        alertBox.className =
+            "wizard-alert show";
+
+        alertBox.innerHTML =
+            "Vérification en cours...";
+
+
+        try {
+
+            const url =
+                "{% url 'verifier_attestation' %}"
+                + "?numero="
+                + encodeURIComponent(
+                    numero
+                );
+
+
+            const response =
+                await fetch(url);
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                alertBox.className =
+                    "wizard-alert error show";
+
+                alertBox.innerHTML =
+                    '<i class="fa-solid fa-circle-exclamation"></i> '
+                    + data.message;
+
+                return;
+            }
+
+
+            alertBox.className =
+                "wizard-alert success show";
+
+            alertBox.innerHTML =
+                '<i class="fa-solid fa-circle-check"></i> '
+                + "Attestation vérifiée avec succès.";
+
+
+            document.getElementById(
+                "hiddenAttestation"
+            ).value = data.numero;
+
+
+            document.getElementById(
+                "ownerName"
+            ).textContent =
+                data.proprietaire;
+
+
+            document.getElementById(
+                "shopName"
+            ).textContent =
+                data.boutique;
+
+
+            document.getElementById(
+                "ownerEmail"
+            ).textContent =
+                data.email;
+
+
+            document.getElementById(
+                "ownerCertificate"
+            ).textContent =
+                data.numero;
+
+
+            setTimeout(
+                function () {
+
+                    goToStep(3);
+
+                },
+                600
+            );
+
+
+        }
+        catch (error) {
+
+            alertBox.className =
+                "wizard-alert error show";
+
+            alertBox.innerHTML =
+                "Une erreur est survenue. Veuillez réessayer.";
+
+        }
+
+    }
+
+
+    /* =====================================
+       INFORMATIONS
+    ====================================== */
+
+    function verifyOwnerInformation() {
+
+        const selected =
+            document.querySelector(
+                'input[name="infos_correctes"]:checked'
+            );
+
+
+        const box =
+            document.getElementById(
+                "incorrectInfoBox"
+            );
+
+
+        if (!selected) {
+
+            alert(
+                "Veuillez confirmer vos informations."
+            );
+
+            return;
+        }
+
+
+        if (
+            selected.value === "non"
+        ) {
+
+            box.classList.add(
+                "show"
+            );
+
+            return;
+        }
+
+
+        box.classList.remove(
+            "show"
+        );
+
+
+        goToStep(4);
+
+    }
+
+
+    /* =====================================
+       DATE
+    ====================================== */
+
+    function verifyAppointment() {
+
+        const date =
+            document.getElementById(
+                "appointmentDate"
+            ).value;
+
+
+        const time =
+            document.getElementById(
+                "appointmentTime"
+            ).value;
+
+
+        if (
+            !date ||
+            !time
+        ) {
+
+            alert(
+                "Veuillez sélectionner une date et une heure."
+            );
+
+            return;
+        }
+
+
+        goToStep(5);
+
+    }
+
+
+    /* =====================================
+       TÉLÉPHONE
+    ====================================== */
+
+    function verifyPhone() {
+
+        const phone =
+            document.getElementById(
+                "phoneNumber"
+            ).value.trim();
+
+
+        const whatsapp =
+            document.getElementById(
+                "whatsappConfirm"
+            );
+
+
+        if (
+            phone.length < 8
+        ) {
+
+            alert(
+                "Veuillez entrer un numéro de téléphone valide."
+            );
+
+            return;
+        }
+
+
+        if (
+            !whatsapp.checked
+        ) {
+
+            alert(
+                "Veuillez confirmer que ce numéro est disponible sur WhatsApp."
+            );
+
+            return;
+        }
+
+
+        goToStep(6);
+
+    }
+
+
+    /* =====================================
+       DATE MINIMUM = AUJOURD'HUI
+    ====================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const dateInput =
+                document.getElementById(
+                    "appointmentDate"
+                );
+
+
+            const today =
+                new Date();
+
+
+            const year =
+                today.getFullYear();
+
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            dateInput.min =
+                `${year}-${month}-${day}`;
+
+        }
+    );
+
+</script>
+
+
+{% endblock %}
