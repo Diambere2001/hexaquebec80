@@ -8270,6 +8270,20 @@ def detail_avis_client(request, pk):
         }
     )
 
+import base64
+import mimetypes
+
+from pathlib import Path
+
+from django.contrib.staticfiles import finders
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+
+from weasyprint import HTML
+
+from .models import AvisClient
+
 
 def telecharger_avis_pdf(request, pk):
 
@@ -8278,17 +8292,65 @@ def telecharger_avis_pdf(request, pk):
         pk=pk
     )
 
+    # ==========================================================
+    # LOGO HEXAQUÉBEC
+    # Conversion en Base64 pour que WeasyPrint l'affiche toujours
+    # ==========================================================
+
+    logo_data_uri = ""
+
+    logo_path = finders.find(
+        "images/logoHexa.png"
+    )
+
+    if logo_path:
+
+        logo_path = Path(logo_path)
+
+        mime_type, _ = mimetypes.guess_type(
+            str(logo_path)
+        )
+
+        if not mime_type:
+            mime_type = "image/png"
+
+        with open(logo_path, "rb") as logo_file:
+
+            logo_base64 = base64.b64encode(
+                logo_file.read()
+            ).decode("utf-8")
+
+        logo_data_uri = (
+            f"data:{mime_type};base64,{logo_base64}"
+        )
+
+
+    # ==========================================================
+    # HTML
+    # ==========================================================
+
     html_string = render_to_string(
         "siteweb/avis/avis_pdf.html",
         {
             "avis": avis,
+            "logo_data_uri": logo_data_uri,
         }
     )
+
+
+    # ==========================================================
+    # PDF
+    # ==========================================================
 
     pdf = HTML(
         string=html_string,
         base_url=request.build_absolute_uri("/")
     ).write_pdf()
+
+
+    # ==========================================================
+    # RÉPONSE
+    # ==========================================================
 
     response = HttpResponse(
         pdf,
@@ -8299,9 +8361,7 @@ def telecharger_avis_pdf(request, pk):
         f"{avis.numero_avis}.pdf"
     )
 
-    response[
-        "Content-Disposition"
-    ] = (
+    response["Content-Disposition"] = (
         f'attachment; filename="{filename}"'
     )
 
