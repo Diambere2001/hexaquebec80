@@ -288,6 +288,31 @@ urlpatterns = [
     ),
 
 
+    path(
+    "avis/creer/",
+    views.creer_avis_client,
+    name="creer_avis_client",
+),
+
+path(
+    "avis/<int:pk>/",
+    views.detail_avis_client,
+    name="detail_avis_client",
+),
+
+path(
+    "avis/<int:pk>/pdf/",
+    views.telecharger_avis_pdf,
+    name="telecharger_avis_pdf",
+),
+
+path(
+    "avis/",
+    views.liste_avis_clients,
+    name="liste_avis_clients",
+),
+
+
 
 
 

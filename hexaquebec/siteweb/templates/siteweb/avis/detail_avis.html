@@ -1,0 +1,860 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{ avis.numero_avis }} — HexaQuébec
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    :root {
+        --hq-blue: #075ba8;
+        --hq-dark: #102e48;
+        --hq-text: #5f7384;
+        --hq-border: #dbe4eb;
+        --hq-light: #f5f9fc;
+        --hq-green: #17865d;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .notice-page {
+        min-height: 100vh;
+
+        padding:
+            45px
+            15px
+            80px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #edf2f5,
+                #f7f9fb
+            );
+    }
+
+    .notice-wrapper {
+        width: min(900px, 100%);
+        margin: auto;
+    }
+
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .notice-actions {
+        display: flex;
+
+        justify-content: flex-end;
+        align-items: center;
+
+        gap: 10px;
+
+        margin-bottom: 18px;
+    }
+
+    .action-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        padding:
+            12px
+            17px;
+
+        border-radius: 10px;
+
+        text-decoration: none;
+
+        font-size: 12px;
+        font-weight: 900;
+
+        transition: .2s ease;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .action-download {
+        background:
+            linear-gradient(
+                135deg,
+                #075ba8,
+                #1384d5
+            );
+
+        color: white;
+
+        box-shadow:
+            0 10px 25px
+            rgba(7,91,168,.18);
+    }
+
+    .action-new {
+        background: white;
+
+        color: #324e64;
+
+        border:
+            1px solid
+            #d4dfe7;
+    }
+
+
+    /* =====================================================
+       DOCUMENT
+    ===================================================== */
+
+    .notice-document {
+        position: relative;
+
+        width: 100%;
+
+        min-height: 1100px;
+
+        padding:
+            55px
+            60px;
+
+        background: #ffffff;
+
+        border:
+            1px solid
+            #e1e7ec;
+
+        box-shadow:
+            0 20px 60px
+            rgba(22,45,64,.13);
+    }
+
+    .notice-document::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        right: 0;
+
+        height: 5px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #075ba8,
+                #1591e3
+            );
+    }
+
+
+    /* =====================================================
+       HEADER DOCUMENT
+    ===================================================== */
+
+    .document-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: flex-start;
+
+        gap: 30px;
+
+        padding-bottom: 25px;
+
+        border-bottom:
+            1px solid
+            #dbe3e9;
+    }
+
+    .company {
+        display: flex;
+
+        gap: 15px;
+
+        align-items: center;
+    }
+
+    .company-logo {
+        width: 78px;
+        height: 78px;
+
+        padding: 7px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border:
+            1px solid
+            #edf2f5;
+
+        border-radius: 14px;
+
+        background: white;
+    }
+
+    .company-logo img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+    }
+
+    .company h2 {
+        margin:
+            0
+            0
+            5px;
+
+        font-size: 25px;
+
+        color: var(--hq-dark);
+
+        font-weight: 900;
+    }
+
+    .company p {
+        margin: 0;
+
+        color: #596d7d;
+
+        font-size: 11px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       IDENTIFICATION
+    ===================================================== */
+
+    .notice-identification {
+        min-width: 225px;
+
+        padding: 16px 18px;
+
+        text-align: right;
+
+        border:
+            1px solid
+            #e0e8ef;
+
+        border-radius: 12px;
+
+        background:
+            #f8fbfd;
+    }
+
+    .notice-identification strong {
+        display: block;
+
+        margin-bottom: 10px;
+
+        color: var(--hq-dark);
+
+        font-size: 20px;
+
+        font-weight: 900;
+
+        letter-spacing: .8px;
+    }
+
+    .notice-identification span {
+        display: block;
+
+        margin-bottom: 5px;
+
+        color: #637687;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+    .notice-identification b {
+        color: #294d68;
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    .notice-date {
+        margin-top: 30px;
+
+        text-align: right;
+
+        color: #506678;
+
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       DESTINATAIRE
+    ===================================================== */
+
+    .recipient {
+        max-width: 400px;
+
+        margin-top: 45px;
+
+        padding:
+            18px
+            20px;
+
+        border-left:
+            4px solid
+            #dbe7f0;
+
+        background:
+            #fafcfd;
+
+        color: #203d54;
+
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+    .recipient strong {
+        display: inline-block;
+
+        margin-bottom: 2px;
+
+        font-size: 14px;
+
+        color: var(--hq-dark);
+    }
+
+
+    /* =====================================================
+       OBJET
+    ===================================================== */
+
+    .notice-title {
+        margin:
+            45px
+            0
+            25px;
+
+        padding:
+            18px
+            20px;
+
+        border-left:
+            5px solid
+            var(--hq-blue);
+
+        background:
+            var(--hq-light);
+
+        color:
+            #123854;
+
+        font-size: 18px;
+
+        font-weight: 900;
+    }
+
+
+    /* =====================================================
+       TEXTE
+    ===================================================== */
+
+    .notice-text {
+        color:
+            #293f50;
+
+        font-size: 13px;
+
+        line-height: 1.95;
+
+        white-space: pre-line;
+    }
+
+
+    /* =====================================================
+       SIGNATURE
+    ===================================================== */
+
+    .signature-section {
+        margin-top: 55px;
+    }
+
+    .signature-closing {
+        margin:
+            0
+            0
+            10px;
+
+        color:
+            #344e62;
+
+        font-size: 13px;
+    }
+
+    .signature-card {
+        width: 310px;
+
+        padding:
+            16px
+            18px;
+
+        border:
+            1px solid
+            #e2e8ed;
+
+        border-radius:
+            12px;
+
+        background:
+            #fbfcfd;
+    }
+
+    .signature-image-wrap {
+        width: 100%;
+
+        min-height: 90px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        padding-bottom: 8px;
+
+        margin-bottom: 9px;
+
+        border-bottom:
+            1px solid
+            #dfe6eb;
+    }
+
+    .signature-image {
+        display: block;
+
+        max-width: 210px;
+        max-height: 85px;
+
+        object-fit: contain;
+
+        object-position: left center;
+    }
+
+    .signature-empty {
+        color: #9aa7b2;
+
+        font-size: 10px;
+
+        font-style: italic;
+    }
+
+    .signature-name {
+        display: block;
+
+        color:
+            #173b57;
+
+        font-size:
+            13px;
+
+        font-weight:
+            900;
+    }
+
+    .signature-role {
+        display: block;
+
+        margin-top: 3px;
+
+        color:
+            #687a89;
+
+        font-size:
+            11px;
+    }
+
+    .signature-company {
+        display: block;
+
+        margin-top: 2px;
+
+        color:
+            var(--hq-blue);
+
+        font-size:
+            11px;
+
+        font-weight:
+            800;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .notice-footer {
+        margin-top: 80px;
+
+        padding-top: 22px;
+
+        border-top:
+            1px solid
+            #dbe3e9;
+
+        color:
+            #778895;
+
+        font-size: 9px;
+
+        line-height: 1.6;
+    }
+
+    .notice-footer strong {
+        color:
+            #516979;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media(max-width:700px) {
+
+        .notice-page {
+            padding:
+                20px
+                10px
+                50px;
+        }
+
+        .notice-document {
+            min-height: auto;
+
+            padding:
+                30px
+                22px;
+        }
+
+        .document-header {
+            flex-direction: column;
+
+            gap: 25px;
+        }
+
+        .notice-identification {
+            width: 100%;
+
+            text-align: left;
+        }
+
+        .notice-actions {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            width: 100%;
+        }
+
+        .recipient {
+            max-width: 100%;
+        }
+
+        .signature-card {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="notice-page">
+
+    <div class="notice-wrapper">
+
+
+        <!-- =====================================================
+             ACTIONS
+        ====================================================== -->
+
+        <div class="notice-actions">
+
+            <a
+                href="{% url 'creer_avis_client' %}"
+                class="action-btn action-new"
+            >
+                <i class="fa-solid fa-plus"></i>
+
+                Nouvel avis
+            </a>
+
+
+            <a
+                href="{% url 'telecharger_avis_pdf' avis.pk %}"
+                class="action-btn action-download"
+            >
+                <i class="fa-solid fa-file-pdf"></i>
+
+                Télécharger le PDF
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             DOCUMENT
+        ====================================================== -->
+
+        <article class="notice-document">
+
+
+            <!-- HEADER -->
+
+            <header class="document-header">
+
+
+                <div class="company">
+
+
+                    <div class="company-logo">
+
+                        <img
+                            src="{% static 'images/logoHexa.png' %}"
+                            alt="HexaQuébec"
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            HexaQuébec
+                        </h2>
+
+                        <p>
+                            2186, rue Roussel<br>
+                            Chicoutimi (Québec)<br>
+                            Canada
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="notice-identification">
+
+                    <strong>
+                        AVIS
+                    </strong>
+
+                    <span>
+                        Numéro d'avis<br>
+
+                        <b>
+                            {{ avis.numero_avis }}
+                        </b>
+                    </span>
+
+                    <span>
+                        Numéro de référence<br>
+
+                        <b>
+                            {{ avis.numero_reference }}
+                        </b>
+                    </span>
+
+                </div>
+
+
+            </header>
+
+
+            <!-- DATE -->
+
+            <div class="notice-date">
+
+                Chicoutimi,
+                le {{ avis.date_avis|date:"d F Y" }}
+
+            </div>
+
+
+            <!-- DESTINATAIRE -->
+
+            <div class="recipient">
+
+                <strong>
+                    {{ avis.nom_client }}
+                </strong>
+
+
+                {% if avis.entreprise_client %}
+
+                    <br>
+
+                    {{ avis.entreprise_client }}
+
+                {% endif %}
+
+
+                <br>
+
+                {{ avis.adresse_rue }}
+
+                <br>
+
+                {{ avis.ville }}
+
+
+                {% if avis.province_etat_region %}
+
+                    ,
+                    {{ avis.province_etat_region }}
+
+                {% endif %}
+
+
+                {% if avis.code_postal %}
+
+                    {{ avis.code_postal }}
+
+                {% endif %}
+
+
+                <br>
+
+                {{ avis.pays }}
+
+            </div>
+
+
+            <!-- OBJET -->
+
+            <div class="notice-title">
+
+                Objet :
+                {{ avis.titre }}
+
+            </div>
+
+
+            <!-- TEXTE -->
+
+            <div class="notice-text">
+
+                {{ avis.texte_avis }}
+
+            </div>
+
+
+            <!-- =====================================================
+                 SIGNATURE DESSINÉE
+            ====================================================== -->
+
+            <div class="signature-section">
+
+                <p class="signature-closing">
+                    Cordialement,
+                </p>
+
+
+                <div class="signature-card">
+
+
+                    <div class="signature-image-wrap">
+
+                        {% if avis.signature %}
+
+                            <img
+                                src="{{ avis.signature }}"
+                                alt="Signature"
+                                class="signature-image"
+                            >
+
+                        {% else %}
+
+                            <span class="signature-empty">
+                                Signature non disponible
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <strong class="signature-name">
+                        Diambere Kamara
+                    </strong>
+
+
+                    <span class="signature-role">
+                        Directeur technique
+                    </span>
+
+
+                    <span class="signature-company">
+                        HexaQuébec
+                    </span>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <footer class="notice-footer">
+
+                <strong>
+                    HexaQuébec
+                </strong>
+
+                <br>
+
+                2186, rue Roussel,
+                Chicoutimi (Québec), Canada
+
+                <br><br>
+
+                Avis :
+                {{ avis.numero_avis }}
+
+                &nbsp;•&nbsp;
+
+                Référence :
+                {{ avis.numero_reference }}
+
+            </footer>
+
+
+        </article>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

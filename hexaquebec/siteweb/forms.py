@@ -800,3 +800,170 @@ class AttestationBoutiqueForm(forms.ModelForm):
                 }
             ),
         }
+
+
+
+
+from django import forms
+
+from .models import AvisClient
+
+
+class AvisClientForm(forms.ModelForm):
+
+    class Meta:
+        model = AvisClient
+
+        fields = [
+            "nom_client",
+            "entreprise_client",
+            "adresse_rue",
+            "ville",
+            "province_etat_region",
+            "code_postal",
+            "pays",
+            "titre",
+            "texte_avis",
+            "date_avis",
+            "signature",
+        ]
+
+        widgets = {
+
+            "nom_client": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Nom complet du client",
+                    "autocomplete": "name",
+                }
+            ),
+
+            "entreprise_client": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Nom de l'entreprise (facultatif)",
+                }
+            ),
+
+            "adresse_rue": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Numéro et nom de rue",
+                    "autocomplete": "street-address",
+                }
+            ),
+
+            "ville": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ville",
+                    "autocomplete": "address-level2",
+                }
+            ),
+
+            "province_etat_region": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Province, État ou région",
+                    "autocomplete": "address-level1",
+                }
+            ),
+
+            "code_postal": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Code postal / ZIP",
+                    "autocomplete": "postal-code",
+                }
+            ),
+
+            "pays": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Pays",
+                    "autocomplete": "country-name",
+                }
+            ),
+
+            "titre": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Objet de l'avis",
+                }
+            ),
+
+            "texte_avis": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 10,
+                    "placeholder": (
+                        "Rédigez le contenu officiel "
+                        "de l'avis destiné au client..."
+                    ),
+                }
+            ),
+
+            "date_avis": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                },
+                format="%Y-%m-%d",
+            ),
+
+            "signature": forms.HiddenInput(
+                attrs={
+                    "id": "signatureData",
+                }
+            ),
+        }
+
+        labels = {
+            "nom_client": "Nom complet du client",
+            "entreprise_client": "Entreprise",
+            "adresse_rue": "Rue et numéro",
+            "ville": "Ville",
+            "province_etat_region": "Province / État / Région",
+            "code_postal": "Code postal / ZIP",
+            "pays": "Pays",
+            "titre": "Titre / Objet de l'avis",
+            "texte_avis": "Texte de l'avis",
+            "date_avis": "Date de l'avis",
+            "signature": "Signature",
+        }
+
+        help_texts = {
+            "pays": "Les adresses internationales sont acceptées.",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Pays par défaut
+        if not self.is_bound and not self.initial.get("pays"):
+            self.fields["pays"].initial = "Canada"
+
+        # Format HTML5 pour le champ date
+        self.fields["date_avis"].input_formats = [
+            "%Y-%m-%d",
+        ]
+
+        # La signature est obligatoire
+        self.fields["signature"].required = True
+
+
+    def clean_signature(self):
+
+        signature = self.cleaned_data.get("signature")
+
+        if not signature:
+            raise forms.ValidationError(
+                "Veuillez signer l'avis avant de le créer."
+            )
+
+        if not signature.startswith("data:image/png;base64,"):
+            raise forms.ValidationError(
+                "La signature enregistrée n'est pas valide."
+            )
+
+        return signature

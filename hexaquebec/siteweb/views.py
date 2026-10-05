@@ -8197,3 +8197,160 @@ HexaQuébec
         request,
         "siteweb/demande_accompagnement.html"
     )
+
+
+
+
+
+
+
+from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
+
+from django.template.loader import render_to_string
+
+from weasyprint import HTML
+
+from .forms import AvisClientForm
+from .models import AvisClient
+
+
+def creer_avis_client(request):
+
+    if request.method == "POST":
+
+        form = AvisClientForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            avis = form.save()
+
+            messages.success(
+                request,
+                "L'avis a été créé avec succès."
+            )
+
+            return redirect(
+                "detail_avis_client",
+                pk=avis.pk
+            )
+
+    else:
+
+        form = AvisClientForm()
+
+    return render(
+        request,
+        "siteweb/avis/creer_avis.html",
+        {
+            "form": form
+        }
+    )
+
+
+def detail_avis_client(request, pk):
+
+    avis = get_object_or_404(
+        AvisClient,
+        pk=pk
+    )
+
+    return render(
+        request,
+        "siteweb/avis/detail_avis.html",
+        {
+            "avis": avis
+        }
+    )
+
+
+def telecharger_avis_pdf(request, pk):
+
+    avis = get_object_or_404(
+        AvisClient,
+        pk=pk
+    )
+
+    html_string = render_to_string(
+        "siteweb/avis/avis_pdf.html",
+        {
+            "avis": avis,
+        }
+    )
+
+    pdf = HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri("/")
+    ).write_pdf()
+
+    response = HttpResponse(
+        pdf,
+        content_type="application/pdf"
+    )
+
+    filename = (
+        f"{avis.numero_avis}.pdf"
+    )
+
+    response[
+        "Content-Disposition"
+    ] = (
+        f'attachment; filename="{filename}"'
+    )
+
+    return response
+
+
+
+
+
+
+from django.db.models import Q
+from django.shortcuts import render
+
+from .models import AvisClient
+
+
+def liste_avis_clients(request):
+
+    query = request.GET.get("q", "").strip()
+
+    avis_list = AvisClient.objects.all().order_by("-date_creation")
+
+    if query:
+
+        avis_list = avis_list.filter(
+
+            Q(numero_avis__icontains=query)
+
+            | Q(numero_reference__icontains=query)
+
+            | Q(nom_client__icontains=query)
+
+            | Q(entreprise_client__icontains=query)
+
+            | Q(ville__icontains=query)
+
+            | Q(pays__icontains=query)
+
+            | Q(titre__icontains=query)
+
+        )
+
+    context = {
+        "avis_list": avis_list,
+        "query": query,
+    }
+
+    return render(
+        request,
+        "siteweb/avis/liste_avis.html",
+        context
+    )

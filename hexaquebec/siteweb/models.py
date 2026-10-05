@@ -1693,3 +1693,151 @@ class DemandeAccompagnement(models.Model):
             f"{self.nom_proprietaire} - "
             f"{self.nom_boutique}"
         )
+
+
+
+
+
+import uuid
+
+from django.db import models
+from django.utils import timezone
+
+
+class AvisClient(models.Model):
+
+    numero_avis = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+    )
+
+    numero_reference = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+    )
+
+    nom_client = models.CharField(
+        max_length=200
+    )
+
+    entreprise_client = models.CharField(
+        max_length=200,
+        blank=True
+    )
+
+    adresse_rue = models.CharField(
+        max_length=255
+    )
+
+    ville = models.CharField(
+        max_length=150
+    )
+
+    province_etat_region = models.CharField(
+        max_length=150,
+        blank=True
+    )
+
+    code_postal = models.CharField(
+        max_length=30,
+        blank=True
+    )
+
+    pays = models.CharField(
+        max_length=150
+    )
+
+    titre = models.CharField(
+        max_length=255
+    )
+
+    texte_avis = models.TextField()
+
+    date_avis = models.DateField(
+        default=timezone.now
+    )
+
+    # ==========================================
+    # SIGNATURE AUTOMATIQUE
+    # ==========================================
+
+    nom_signataire = models.CharField(
+        max_length=150,
+        default="Diambere Kamara"
+    )
+
+    fonction_signataire = models.CharField(
+        max_length=150,
+        default="Directeur technique"
+    )
+
+    signature = models.TextField(
+    blank=True,
+    help_text="Signature manuscrite enregistrée au format base64."
+    )
+
+    date_creation = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def save(self, *args, **kwargs):
+
+        if not self.numero_avis:
+
+            annee = timezone.now().year
+
+            dernier = (
+                AvisClient.objects
+                .filter(
+                    numero_avis__startswith=f"HQ-AVIS-{annee}-"
+                )
+                .order_by("-id")
+                .first()
+            )
+
+            numero = 1
+
+            if dernier:
+
+                try:
+
+                    numero = (
+                        int(
+                            dernier.numero_avis.split("-")[-1]
+                        )
+                        + 1
+                    )
+
+                except (ValueError, IndexError):
+
+                    numero = self.pk or 1
+
+
+            self.numero_avis = (
+                f"HQ-AVIS-{annee}-{numero:05d}"
+            )
+
+
+        if not self.numero_reference:
+
+            code = (
+                str(uuid.uuid4())
+                .upper()[:8]
+            )
+
+            self.numero_reference = (
+                f"HQ-REF-{code}"
+            )
+
+
+        super().save(*args, **kwargs)
+
+
+    def __str__(self):
+
+        return (
+            f"{self.numero_avis} - "
+            f"{self.nom_client}"
+        )
