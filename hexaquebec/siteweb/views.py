@@ -8414,3 +8414,763 @@ def liste_avis_clients(request):
         "siteweb/avis/liste_avis.html",
         context
     )
+
+
+
+
+
+import os
+import base64
+import uuid
+
+from io import BytesIO
+from collections import deque
+
+from PIL import Image
+
+from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.shortcuts import render
+
+from openai import OpenAI
+
+
+# ============================================================
+# SUPPRIMER AUTOMATIQUEMENT LE FOND DU LOGO
+# ============================================================
+
+def supprimer_fond_logo(image, tolerance=60):
+    """
+    Supprime uniquement la couleur de fond connectée
+    aux bords du fichier logo.
+
+    Cette méthode évite de supprimer le blanc qui pourrait
+    exister à l'intérieur du logo.
+    """
+
+    image = image.convert("RGBA")
+
+    largeur, hauteur = image.size
+    pixels = image.load()
+
+    if largeur <= 1 or hauteur <= 1:
+        return image
+
+    # --------------------------------------------------------
+    # Couleur moyenne des coins
+    # --------------------------------------------------------
+
+    coins = [
+        pixels[0, 0],
+        pixels[largeur - 1, 0],
+        pixels[0, hauteur - 1],
+        pixels[largeur - 1, hauteur - 1],
+    ]
+
+    fond_r = sum(pixel[0] for pixel in coins) // len(coins)
+    fond_g = sum(pixel[1] for pixel in coins) // len(coins)
+    fond_b = sum(pixel[2] for pixel in coins) // len(coins)
+
+    def ressemble_au_fond(pixel):
+        r, g, b, a = pixel
+
+        # pixel déjà transparent
+        if a == 0:
+            return True
+
+        distance = (
+            abs(r - fond_r)
+            + abs(g - fond_g)
+            + abs(b - fond_b)
+        )
+
+        return distance <= tolerance
+
+    # --------------------------------------------------------
+    # Flood fill depuis tous les bords
+    # --------------------------------------------------------
+
+    file_attente = deque()
+    visites = set()
+
+    for x in range(largeur):
+        file_attente.append((x, 0))
+        file_attente.append((x, hauteur - 1))
+
+    for y in range(hauteur):
+        file_attente.append((0, y))
+        file_attente.append((largeur - 1, y))
+
+    while file_attente:
+
+        x, y = file_attente.popleft()
+
+        if (x, y) in visites:
+            continue
+
+        visites.add((x, y))
+
+        pixel = pixels[x, y]
+
+        if not ressemble_au_fond(pixel):
+            continue
+
+        pixels[x, y] = (
+            pixel[0],
+            pixel[1],
+            pixel[2],
+            0,
+        )
+
+        if x > 0:
+            file_attente.append((x - 1, y))
+
+        if x < largeur - 1:
+            file_attente.append((x + 1, y))
+
+        if y > 0:
+            file_attente.append((x, y - 1))
+
+        if y < hauteur - 1:
+            file_attente.append((x, y + 1))
+
+    return image
+
+
+# ============================================================
+# RECADRER LES MARGES TRANSPARENTES
+# ============================================================
+
+def recadrer_logo(image):
+    """
+    Supprime automatiquement les marges transparentes
+    autour du véritable logo.
+    """
+
+    image = image.convert("RGBA")
+
+    alpha = image.getchannel("A")
+    bbox = alpha.getbbox()
+
+    if bbox:
+        return image.crop(bbox)
+
+    return image
+
+
+# ============================================================
+# PRÉPARER LE LOGO HEXAQUÉBEC
+# ============================================================
+
+def preparer_logo_hexaquebec(
+    logo_path,
+    largeur_voulue,
+):
+    """
+    Ouvre le logo, enlève son fond,
+    le recadre et le redimensionne.
+    """
+
+    logo = Image.open(
+        logo_path
+    ).convert("RGBA")
+
+    logo = supprimer_fond_logo(
+        logo,
+        tolerance=60,
+    )
+
+    logo = recadrer_logo(
+        logo
+    )
+
+    if logo.width <= 0:
+        raise ValueError(
+            "Le logo HexaQuébec est invalide."
+        )
+
+    ratio = (
+        largeur_voulue
+        /
+        logo.width
+    )
+
+    nouvelle_hauteur = max(
+        1,
+        int(
+            logo.height
+            *
+            ratio
+        )
+    )
+
+    logo = logo.resize(
+        (
+            largeur_voulue,
+            nouvelle_hauteur,
+        ),
+        Image.Resampling.LANCZOS,
+    )
+
+    return logo
+
+
+# ============================================================
+# AJOUTER LE LOGO SUR L'AFFICHE
+# ============================================================
+
+def ajouter_logo_hexaquebec(
+    affiche,
+    format_affiche="carre",
+):
+    """
+    Ajoute automatiquement le véritable logo HexaQuébec
+    sur l'affiche, sans fond blanc.
+    """
+
+    logo_path = finders.find(
+        "images/logoHexa.png"
+    )
+
+    if not logo_path:
+        raise FileNotFoundError(
+            "Logo HexaQuébec introuvable : "
+            "static/images/logoHexa.png"
+        )
+
+    largeur_affiche = affiche.width
+    hauteur_affiche = affiche.height
+
+    # --------------------------------------------------------
+    # Taille adaptée au format
+    # --------------------------------------------------------
+
+    tailles_logo = {
+        "carre": 0.23,
+        "portrait": 0.24,
+        "story": 0.25,
+        "paysage": 0.19,
+    }
+
+    ratio_logo = tailles_logo.get(
+        format_affiche,
+        0.22,
+    )
+
+    largeur_logo = int(
+        largeur_affiche
+        *
+        ratio_logo
+    )
+
+    logo = preparer_logo_hexaquebec(
+        logo_path,
+        largeur_logo,
+    )
+
+    # --------------------------------------------------------
+    # Marges
+    # --------------------------------------------------------
+
+    marge_x = int(
+        largeur_affiche
+        *
+        0.035
+    )
+
+    marge_y = int(
+        hauteur_affiche
+        *
+        0.03
+    )
+
+    # --------------------------------------------------------
+    # Collage direct avec transparence
+    # PAS de rectangle blanc
+    # --------------------------------------------------------
+
+    affiche.alpha_composite(
+        logo,
+        (
+            marge_x,
+            marge_y,
+        )
+    )
+
+    return affiche
+
+
+# ============================================================
+# VUE : CRÉER AFFICHE
+# ============================================================
+
+def creer_affiche(request):
+
+    context = {
+        "affiche_generee": False,
+        "image_generee_url": "",
+        "erreur_generation": "",
+
+        "type_affiche": "promotionnelle",
+        "format_affiche": "carre",
+
+        "titre": "",
+        "sous_titre": "",
+        "description": "",
+        "services": "",
+        "appel_action": "",
+        "contact": "",
+
+        "style": "hexaquebec",
+        "couleur": "hexaquebec",
+
+        "image_auto": True,
+        "identite_hexaquebec": True,
+    }
+
+    # ========================================================
+    # AFFICHAGE NORMAL DE LA PAGE
+    # ========================================================
+
+    if request.method != "POST":
+
+        return render(
+            request,
+            "creer_affiche.html",
+            context,
+        )
+
+    # ========================================================
+    # RÉCUPÉRATION FORMULAIRE
+    # ========================================================
+
+    type_affiche = request.POST.get(
+        "type_affiche",
+        "promotionnelle",
+    ).strip()
+
+    format_affiche = request.POST.get(
+        "format_affiche",
+        "carre",
+    ).strip()
+
+    titre = request.POST.get(
+        "titre",
+        "",
+    ).strip()
+
+    sous_titre = request.POST.get(
+        "sous_titre",
+        "",
+    ).strip()
+
+    description = request.POST.get(
+        "description",
+        "",
+    ).strip()
+
+    services = request.POST.get(
+        "services",
+        "",
+    ).strip()
+
+    appel_action = request.POST.get(
+        "appel_action",
+        "",
+    ).strip()
+
+    contact = request.POST.get(
+        "contact",
+        "",
+    ).strip()
+
+    style = request.POST.get(
+        "style",
+        "hexaquebec",
+    ).strip()
+
+    couleur = request.POST.get(
+        "couleur",
+        "hexaquebec",
+    ).strip()
+
+    image_auto = (
+        request.POST.get(
+            "image_auto"
+        )
+        ==
+        "1"
+    )
+
+    identite_hexaquebec = (
+        request.POST.get(
+            "identite_hexaquebec"
+        )
+        ==
+        "1"
+    )
+
+    # ========================================================
+    # RENVOYER LES VALEURS AU TEMPLATE
+    # ========================================================
+
+    context.update({
+        "type_affiche":
+            type_affiche,
+
+        "format_affiche":
+            format_affiche,
+
+        "titre":
+            titre,
+
+        "sous_titre":
+            sous_titre,
+
+        "description":
+            description,
+
+        "services":
+            services,
+
+        "appel_action":
+            appel_action,
+
+        "contact":
+            contact,
+
+        "style":
+            style,
+
+        "couleur":
+            couleur,
+
+        "image_auto":
+            image_auto,
+
+        "identite_hexaquebec":
+            identite_hexaquebec,
+    })
+
+    # ========================================================
+    # VALIDATION
+    # ========================================================
+
+    if not titre:
+
+        context[
+            "erreur_generation"
+        ] = (
+            "Veuillez saisir "
+            "le titre de l'affiche."
+        )
+
+        return render(
+            request,
+            "creer_affiche.html",
+            context,
+        )
+
+    if not description:
+
+        context[
+            "erreur_generation"
+        ] = (
+            "Veuillez saisir "
+            "le message de l'affiche."
+        )
+
+        return render(
+            request,
+            "creer_affiche.html",
+            context,
+        )
+
+    if not image_auto:
+
+        context[
+            "erreur_generation"
+        ] = (
+            "Activez l'option "
+            "« Générer automatiquement l'image »."
+        )
+
+        return render(
+            request,
+            "creer_affiche.html",
+            context,
+        )
+
+    # ========================================================
+    # DIMENSIONS
+    # ========================================================
+
+    tailles = {
+        "carre":
+            "1024x1024",
+
+        "portrait":
+            "1024x1536",
+
+        "story":
+            "1024x1536",
+
+        "paysage":
+            "1536x1024",
+    }
+
+    taille_image = tailles.get(
+        format_affiche,
+        "1024x1024",
+    )
+
+    # ========================================================
+    # PROMPT IMAGE
+    # ========================================================
+
+    prompt = f"""
+Créer le visuel de fond d'une affiche publicitaire
+très haut de gamme pour une entreprise numérique québécoise.
+
+Type :
+{type_affiche}
+
+Thème :
+{titre}
+
+Sous-titre :
+{sous_titre or "aucun"}
+
+Message :
+{description}
+
+Services :
+{services or "services numériques professionnels"}
+
+Style demandé :
+{style}
+
+Couleur :
+{couleur}
+
+Direction artistique :
+- publicité professionnelle moderne
+- agence numérique haut de gamme
+- bleu marine
+- bleu électrique
+- blanc
+- touches dorées discrètes
+- atmosphère technologique
+- environnement professionnel québécois
+- photographie réaliste ou composition premium
+- ordinateur, téléphone, application ou commerce numérique
+  seulement si cohérent avec le sujet
+- excellente lumière
+- composition élégante
+- grande qualité visuelle
+- rendu institutionnel moderne
+- rendu crédible pour une entreprise du Québec
+
+RÈGLES ABSOLUES :
+
+NE PAS créer de logo.
+NE PAS dessiner de symbole de marque.
+NE PAS écrire HexaQuébec.
+NE PAS écrire HEXAQUÉBEC.
+NE PAS inventer un logo HexaQuébec.
+NE PAS créer de faux nom d'entreprise.
+NE PAS créer de bloc blanc pour le logo.
+NE PAS ajouter de rectangle ou cadre réservé au logo.
+
+Le véritable logo HexaQuébec sera ajouté
+automatiquement après génération.
+
+Laisser seulement une zone visuelle calme
+dans le coin supérieur gauche.
+
+Cette zone doit conserver exactement
+le même fond naturel que le reste de l'affiche.
+
+Aucun carré blanc.
+Aucun panneau.
+Aucune carte.
+Aucun texte à cet endroit.
+
+Créer uniquement le visuel publicitaire.
+"""
+
+    try:
+
+        # ====================================================
+        # CLÉ API
+        # ====================================================
+
+        api_key = os.environ.get(
+            "OPENAI_API_KEY"
+        )
+
+        if not api_key:
+
+            raise ValueError(
+                "OPENAI_API_KEY "
+                "n'est pas configurée."
+            )
+
+        # ====================================================
+        # CLIENT OPENAI
+        # ====================================================
+
+        client = OpenAI(
+            api_key=api_key
+        )
+
+        # ====================================================
+        # GÉNÉRATION IMAGE
+        # ====================================================
+
+        resultat = client.images.generate(
+            model="gpt-image-2.5-sunburst",
+            prompt=prompt,
+            n=1,
+            size=taille_image,
+            quality="high",
+            output_format="png",
+        )
+
+        if (
+            not resultat.data
+            or
+            not resultat.data[0].b64_json
+        ):
+
+            raise ValueError(
+                "Aucune image n'a été "
+                "retournée par le générateur."
+            )
+
+        # ====================================================
+        # BASE64 -> IMAGE PIL
+        # ====================================================
+
+        image_base64 = (
+            resultat.data[0].b64_json
+        )
+
+        image_bytes = (
+            base64.b64decode(
+                image_base64
+            )
+        )
+
+        affiche = Image.open(
+            BytesIO(
+                image_bytes
+            )
+        ).convert(
+            "RGBA"
+        )
+
+        # ====================================================
+        # AJOUT DU VRAI LOGO
+        # ====================================================
+
+        if identite_hexaquebec:
+
+            affiche = ajouter_logo_hexaquebec(
+                affiche,
+                format_affiche,
+            )
+
+        # ====================================================
+        # DOSSIER MEDIA
+        # ====================================================
+
+        dossier_affiches = os.path.join(
+            settings.MEDIA_ROOT,
+            "affiches",
+        )
+
+        os.makedirs(
+            dossier_affiches,
+            exist_ok=True,
+        )
+
+        # ====================================================
+        # NOM UNIQUE
+        # ====================================================
+
+        nom_fichier = (
+            "affiche_"
+            +
+            uuid.uuid4().hex
+            +
+            ".png"
+        )
+
+        chemin_fichier = os.path.join(
+            dossier_affiches,
+            nom_fichier,
+        )
+
+        # ====================================================
+        # SAUVEGARDE
+        # ====================================================
+
+        affiche.save(
+            chemin_fichier,
+            format="PNG",
+            optimize=True,
+        )
+
+        # ====================================================
+        # URL
+        # ====================================================
+
+        media_url = (
+            settings.MEDIA_URL
+            or
+            "/media/"
+        )
+
+        if not media_url.endswith("/"):
+            media_url += "/"
+
+        image_url = (
+            media_url
+            +
+            "affiches/"
+            +
+            nom_fichier
+        )
+
+        context.update({
+            "affiche_generee":
+                True,
+
+            "image_generee_url":
+                image_url,
+
+            "erreur_generation":
+                "",
+        })
+
+    except Exception as erreur:
+
+        print(
+            "ERREUR CRÉATION AFFICHE :",
+            repr(erreur),
+        )
+
+        context[
+            "erreur_generation"
+        ] = (
+            "Impossible de générer "
+            "l'affiche. "
+            f"{str(erreur)}"
+        )
+
+    return render(
+        request,
+        "creer_affiche.html",
+        context,
+    )

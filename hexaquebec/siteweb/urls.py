@@ -311,7 +311,11 @@ path(
     views.liste_avis_clients,
     name="liste_avis_clients",
 ),
-
+path(
+        "creer-affiche/",
+        views.creer_affiche,
+        name="creer_affiche",
+    ),
 
 
 
