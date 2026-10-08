@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+@page {
+    size: A4;
+    margin: 13mm 15mm 13mm 15mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #243746;
+
+    font-size: 9.7pt;
+
+    line-height: 1.52;
+
+    background: #ffffff;
+}
+
+/* =========================================================
+   BARRE SUPÉRIEURE
+========================================================= */
+
+.top-accent {
+    height: 5px;
+
+    margin-bottom: 12px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #06263f,
+            #0a5f96,
+            #1288c4,
+            #c79a3a
+        );
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    display: table;
+
+    width: 100%;
+
+    padding-bottom: 12px;
+
+    border-bottom:
+        1px solid
+        #dce6ed;
+}
+
+.header-left,
+.header-right {
+    display: table-cell;
+
+    vertical-align: top;
+}
+
+.header-left {
+    width: 62%;
+}
+
+.header-right {
+    width: 38%;
+
+    text-align: right;
+}
+
+.logo {
+    width: 150px;
+    max-height: 75px;
+    object-fit: contain;
+}
+
+.company-subtitle {
+    margin-top: 4px;
+
+    color: #6f8190;
+
+    font-size: 7.5pt;
+}
+
+.company-slogan {
+    margin-top: 3px;
+
+    color: #0a5f96;
+
+    font-size: 7.8pt;
+
+    font-weight: bold;
+
+    font-style: italic;
+}
+
+/* =========================================================
+   RÉFÉRENCE
+========================================================= */
+
+.reference-box {
+    display: inline-block;
+
+    min-width: 170px;
+
+    padding: 9px 11px;
+
+    border:
+        1px solid
+        #d8e4eb;
+
+    border-radius: 9px;
+
+    background: #f7fbfd;
+
+    color: #607483;
+
+    font-size: 8pt;
+
+    line-height: 1.55;
+}
+
+.reference-label {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #8a9ba7;
+
+    font-size: 6.8pt;
+
+    font-weight: bold;
+
+    letter-spacing: .8px;
+
+    text-transform: uppercase;
+}
+
+.reference-number {
+    color: #0a5f96;
+
+    font-size: 9pt;
+
+    font-weight: bold;
+}
+
+/* =========================================================
+   TITRE
+========================================================= */
+
+.title {
+    text-align: center;
+
+    margin:
+        18px
+        0
+        18px;
+}
+
+.title-badge {
+    display: inline-block;
+
+    padding:
+        4px
+        9px;
+
+    border-radius: 20px;
+
+    background: #edf7fc;
+
+    color: #0a5f96;
+
+    font-size: 6.8pt;
+
+    font-weight: bold;
+
+    letter-spacing: 1.1px;
+
+    text-transform: uppercase;
+}
+
+.title h1 {
+    margin:
+        6px
+        0
+        5px;
+
+    color: #06263f;
+
+    font-size: 20pt;
+
+    letter-spacing: -.3px;
+}
+
+.title-line {
+    width: 55px;
+
+    height: 3px;
+
+    margin: 0 auto;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0a5f96,
+            #1288c4
+        );
+}
+
+/* =========================================================
+   DESTINATAIRE
+========================================================= */
+
+.recipient {
+    margin-bottom: 18px;
+
+    padding:
+        11px
+        13px;
+
+    border:
+        1px solid
+        #dce7ee;
+
+    border-left:
+        4px solid
+        #0a5f96;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbfd,
+            #ffffff
+        );
+}
+
+.recipient-label {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #0a5f96;
+
+    font-size: 6.7pt;
+
+    font-weight: bold;
+
+    letter-spacing: .9px;
+
+    text-transform: uppercase;
+}
+
+.recipient-name {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #06263f;
+
+    font-size: 10pt;
+
+    font-weight: bold;
+}
+
+.recipient-address {
+    color: #607483;
+
+    font-size: 8.3pt;
+
+    line-height: 1.45;
+}
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.body {
+    white-space: pre-line;
+
+    text-align: justify;
+
+    color: #243746;
+
+    font-size: 9.5pt;
+
+    line-height: 1.62;
+}
+
+/* =========================================================
+   SIGNATURE + TAMPON
+========================================================= */
+
+.footer-signature {
+    display: table;
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        #e1e9ee;
+
+    page-break-inside: avoid;
+}
+
+.signature-block,
+.stamp-block {
+    display: table-cell;
+
+    vertical-align: bottom;
+}
+
+.signature-block {
+    width: 63%;
+}
+
+.stamp-block {
+    width: 37%;
+
+    text-align: center;
+}
+
+.signature-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #8798a4;
+
+    font-size: 6.5pt;
+
+    font-weight: bold;
+
+    letter-spacing: .9px;
+
+    text-transform: uppercase;
+}
+
+.signature {
+    display: block;
+
+    max-width: 165px;
+
+    max-height: 58px;
+
+    object-fit: contain;
+
+    margin-bottom: 4px;
+}
+
+.signature-name {
+    color: #06263f;
+
+    font-size: 9pt;
+
+    font-weight: bold;
+}
+
+.signature-role {
+    margin-top: 2px;
+
+    color: #5e7280;
+
+    font-size: 7.5pt;
+
+    line-height: 1.45;
+}
+
+/* =========================================================
+   TAMPON NUMÉRIQUE BLEU
+========================================================= */
+
+.stamp {
+    position: relative;
+
+    display: inline-block;
+
+    width: 116px;
+
+    height: 116px;
+
+    padding-top: 31px;
+
+    border:
+        3px solid
+        #0a67a1;
+
+    border-radius: 50%;
+
+    color: #0a67a1;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .96
+        );
+
+    text-align: center;
+
+    text-transform: uppercase;
+
+    font-weight: bold;
+
+    transform:
+        rotate(-5deg);
+
+    box-shadow:
+        inset
+        0 0 0 3px
+        #ffffff,
+
+        inset
+        0 0 0 5px
+        #0a67a1;
+}
+
+.stamp::before {
+    content: "";
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+
+    border:
+        1px dashed
+        #0a67a1;
+
+    border-radius: 50%;
+}
+
+.stamp-brand {
+    position: relative;
+
+    z-index: 2;
+
+    display: block;
+
+    font-size: 8.5pt;
+
+    letter-spacing: .8px;
+}
+
+.stamp-official {
+    position: relative;
+
+    z-index: 2;
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 5.8pt;
+
+    letter-spacing: .7px;
+}
+
+.stamp-country {
+    position: relative;
+
+    z-index: 2;
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 5.3pt;
+}
+
+.stamp-ref {
+    position: relative;
+
+    z-index: 2;
+
+    display: inline-block;
+
+    margin-top: 4px;
+
+    padding:
+        2px
+        5px;
+
+    border-radius: 8px;
+
+    background: #0a67a1;
+
+    color: #ffffff;
+
+    font-size: 4.6pt;
+
+    letter-spacing: .25px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.bottom {
+    margin-top: 18px;
+
+    padding-top: 8px;
+
+    border-top:
+        1px solid
+        #dce5eb;
+
+    text-align: center;
+
+    color: #7f919e;
+
+    font-size: 6.5pt;
+
+    line-height: 1.45;
+}
+
+.bottom strong {
+    color: #0a5f96;
+}
+
+.bottom-slogan {
+    margin-top: 2px;
+
+    color: #0a5f96;
+
+    font-style: italic;
+
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="top-accent"></div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="header">
+
+    <div class="header-left">
+
+        {% if logo_data_uri %}
+
+            <img
+                src="{{ logo_data_uri }}"
+                class="logo"
+                alt="HexaQuébec"
+            >
+
+        {% endif %}
+
+
+        <div class="company-subtitle">
+
+            Solutions numériques • Québec • Canada
+
+        </div>
+
+
+        <div class="company-slogan">
+
+            L’innovation au cœur du numérique québécois
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="reference-box">
+
+            <span class="reference-label">
+                Référence du document
+            </span>
+
+            <span class="reference-number">
+                {{ lettre.numero_lettre }}
+            </span>
+
+            <br>
+
+            {{ lettre.date_lettre|date:"d/m/Y" }}
+
+            <br>
+
+            Québec, Canada
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TITRE
+===================================================== -->
+
+<div class="title">
+
+    <div class="title-badge">
+
+        HEXAQUÉBEC • DOCUMENT OFFICIEL
+
+    </div>
+
+    <h1>
+        LETTRE D’ACCEPTATION
+    </h1>
+
+    <div class="title-line"></div>
+
+</div>
+
+
+<!-- =====================================================
+     DESTINATAIRE
+===================================================== -->
+
+<div class="recipient">
+
+    <span class="recipient-label">
+        À l’attention de
+    </span>
+
+    <span class="recipient-name">
+        {{ lettre.nom_complet }}
+    </span>
+
+
+    <div class="recipient-address">
+
+        {{ lettre.adresse }}
+
+        {% if lettre.ville %}
+
+            <br>
+            {{ lettre.ville }}
+
+        {% endif %}
+
+
+        {% if lettre.province_region %}
+
+            ,
+            {{ lettre.province_region }}
+
+        {% endif %}
+
+
+        {% if lettre.code_postal %}
+
+            {{ lettre.code_postal }}
+
+        {% endif %}
+
+        <br>
+
+        {{ lettre.pays }}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CONTENU
+===================================================== -->
+
+<div class="body">
+{{ lettre.contenu_lettre }}
+</div>
+
+
+<!-- =====================================================
+     SIGNATURE + TAMPON
+===================================================== -->
+
+<div class="footer-signature">
+
+
+    <div class="signature-block">
+
+        <span class="signature-label">
+            Signature autorisée
+        </span>
+
+
+        {% if lettre.signature %}
+
+            <img
+                src="{{ lettre.signature }}"
+                class="signature"
+                alt="Signature"
+            >
+
+        {% endif %}
+
+
+        <div class="signature-name">
+
+            Diambere Kamara
+
+        </div>
+
+
+        <div class="signature-role">
+
+            Directeur technique
+
+            <br>
+
+            HexaQuébec
+
+            <br>
+
+            Québec, Canada
+
+        </div>
+
+    </div>
+
+
+    <div class="stamp-block">
+
+        <div class="stamp">
+
+            <span class="stamp-brand">
+                HEXAQUÉBEC
+            </span>
+
+            <span class="stamp-official">
+                DOCUMENT OFFICIEL
+            </span>
+
+            <span class="stamp-country">
+                QUÉBEC • CANADA
+            </span>
+
+            <span class="stamp-ref">
+                {{ lettre.numero_lettre }}
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<div class="bottom">
+
+    <strong>
+        HexaQuébec
+    </strong>
+
+    —
+    Développement web • Mobile • Intelligence artificielle
+    • Services numériques
+
+    <div class="bottom-slogan">
+
+        « L’innovation au cœur du numérique québécois »
+
+    </div>
+
+    Référence :
+    {{ lettre.numero_lettre }}
+
+</div>
+
+
+</body>
+
+</html>

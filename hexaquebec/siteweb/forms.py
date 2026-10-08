@@ -9,6 +9,7 @@ from .catalogue_applications import (
     obtenir_choix_applications,
     obtenir_choix_forfaits,
 )
+from .models import LettreAcceptation
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -964,6 +965,177 @@ class AvisClientForm(forms.ModelForm):
         if not signature.startswith("data:image/png;base64,"):
             raise forms.ValidationError(
                 "La signature enregistrée n'est pas valide."
+            )
+
+        return signature
+
+
+    
+
+
+
+from django import forms
+
+from .models import LettreAcceptation
+
+
+class LettreAcceptationForm(forms.ModelForm):
+
+    class Meta:
+
+        model = LettreAcceptation
+
+        fields = [
+            "type_personne",
+            "prenom",
+            "nom",
+            "fonction",
+            "etablissement_scolaire",
+            "adresse",
+            "ville",
+            "province_region",
+            "code_postal",
+            "pays",
+            "date_debut",
+            "date_lettre",
+            "signature",
+        ]
+
+        widgets = {
+
+            "type_personne": forms.Select(
+                attrs={
+                    "class": "form-control",
+                    "id": "id_type_personne",
+                }
+            ),
+
+            "prenom": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Prénom",
+                }
+            ),
+
+            "nom": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Nom",
+                }
+            ),
+
+            "fonction": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Fonction / poste",
+                }
+            ),
+
+            "etablissement_scolaire": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Établissement scolaire",
+                }
+            ),
+
+            "adresse": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Adresse",
+                }
+            ),
+
+            "ville": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Ville",
+                }
+            ),
+
+            "province_region": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Province / région",
+                }
+            ),
+
+            "code_postal": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Code postal",
+                }
+            ),
+
+            "pays": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Pays",
+                }
+            ),
+
+            "date_debut": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                }
+            ),
+
+            "date_lettre": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                }
+            ),
+
+            "signature": forms.HiddenInput(
+                attrs={
+                    "id": "signatureData",
+                }
+            ),
+        }
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        type_personne = cleaned_data.get(
+            "type_personne"
+        )
+
+        etablissement = cleaned_data.get(
+            "etablissement_scolaire"
+        )
+
+        if (
+            type_personne == "STAGE"
+            and not etablissement
+        ):
+
+            self.add_error(
+                "etablissement_scolaire",
+                "L’établissement scolaire est obligatoire pour un stagiaire."
+            )
+
+        return cleaned_data
+
+    def clean_signature(self):
+
+        signature = self.cleaned_data.get(
+            "signature"
+        )
+
+        if not signature:
+
+            raise forms.ValidationError(
+                "Veuillez dessiner la signature."
+            )
+
+        if not signature.startswith(
+            "data:image/png;base64,"
+        ):
+
+            raise forms.ValidationError(
+                "La signature est invalide."
             )
 
         return signature

@@ -1,0 +1,1931 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    :root {
+        --hq-navy: #07253d;
+        --hq-blue: #0a5f96;
+        --hq-blue-2: #1287c3;
+        --hq-gold: #c89c42;
+        --hq-gold-soft: #e1c27a;
+        --hq-bg: #f3f7fa;
+        --hq-border: #dce6ed;
+        --hq-text: #172b3a;
+        --hq-muted: #6f8190;
+        --hq-success: #16815b;
+        --hq-danger: #b42318;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .hq-letter-page {
+        min-height: 100vh;
+        padding: 42px 20px 70px;
+        background:
+            radial-gradient(
+                circle at 8% 12%,
+                rgba(18, 135, 195, .09),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 92% 5%,
+                rgba(200, 156, 66, .09),
+                transparent 23%
+            ),
+            linear-gradient(
+                180deg,
+                #f8fbfd 0%,
+                #eef4f8 100%
+            );
+    }
+
+    .hq-letter-container {
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+
+    .hq-letter-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        padding: 32px 34px;
+        margin-bottom: 24px;
+        background:
+            linear-gradient(
+                120deg,
+                #062238 0%,
+                #083e62 58%,
+                #0b6599 100%
+            );
+        box-shadow:
+            0 24px 60px
+            rgba(7, 37, 61, .18);
+        color: #fff;
+    }
+
+    .hq-letter-hero::before {
+        content: "";
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        right: -80px;
+        top: -115px;
+        border-radius: 50%;
+        background:
+            rgba(255, 255, 255, .06);
+    }
+
+    .hq-letter-hero::after {
+        content: "";
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        right: 120px;
+        bottom: -95px;
+        border-radius: 50%;
+        border:
+            1px solid
+            rgba(255, 255, 255, .15);
+    }
+
+    .hq-hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+    }
+
+    .hq-hero-left {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+    .hq-hero-logo-wrap {
+        flex: 0 0 auto;
+        width: 88px;
+        height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, .96);
+        box-shadow:
+            0 12px 30px
+            rgba(0, 0, 0, .16);
+        padding: 11px;
+    }
+
+    .hq-hero-logo {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .hq-hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #f1cf83;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+    }
+
+    .hq-letter-hero h1 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 42px);
+        line-height: 1.1;
+        letter-spacing: -.8px;
+        font-weight: 900;
+    }
+
+    .hq-letter-hero p {
+        max-width: 680px;
+        margin: 11px 0 0;
+        color: rgba(255, 255, 255, .78);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+
+    .hq-hero-badge {
+        min-width: 190px;
+        padding: 16px 18px;
+        border:
+            1px solid
+            rgba(255, 255, 255, .16);
+        border-radius: 18px;
+        background:
+            rgba(255, 255, 255, .07);
+        backdrop-filter: blur(8px);
+        text-align: center;
+    }
+
+    .hq-hero-badge i {
+        display: block;
+        margin-bottom: 8px;
+        color: #e9c874;
+        font-size: 24px;
+    }
+
+    .hq-hero-badge strong {
+        display: block;
+        font-size: 13px;
+        letter-spacing: .8px;
+    }
+
+    .hq-hero-badge span {
+        display: block;
+        margin-top: 3px;
+        color:
+            rgba(255, 255, 255, .68);
+        font-size: 11px;
+    }
+
+    /* =========================================
+       FORM CARD
+    ========================================= */
+
+    .hq-form-card {
+        overflow: hidden;
+        border:
+            1px solid
+            rgba(213, 225, 233, .85);
+        border-radius: 28px;
+        background: #fff;
+        box-shadow:
+            0 22px 55px
+            rgba(20, 55, 78, .10);
+    }
+
+    .hq-form-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px 30px;
+        border-bottom:
+            1px solid
+            #e9eff3;
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #fbfdff
+            );
+    }
+
+    .hq-form-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .hq-form-topbar-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        background:
+            linear-gradient(
+                135deg,
+                #0b5d91,
+                #0c80bd
+            );
+        color: #fff;
+        box-shadow:
+            0 8px 20px
+            rgba(11, 93, 145, .20);
+    }
+
+    .hq-form-topbar strong {
+        display: block;
+        color: var(--hq-navy);
+        font-size: 15px;
+    }
+
+    .hq-form-topbar small {
+        display: block;
+        margin-top: 2px;
+        color: var(--hq-muted);
+    }
+
+    .hq-security-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 13px;
+        border-radius: 999px;
+        background: #edf8f4;
+        color: var(--hq-success);
+        font-weight: 800;
+        font-size: 12px;
+    }
+
+    .hq-form-body {
+        padding: 32px;
+    }
+
+    /* =========================================
+       SECTIONS
+    ========================================= */
+
+    .hq-section {
+        margin-bottom: 28px;
+    }
+
+    .hq-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .hq-section-head {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 20px;
+    }
+
+    .hq-section-number {
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: #edf4f8;
+        color: var(--hq-blue);
+        font-weight: 900;
+    }
+
+    .hq-section-head h2 {
+        margin: 0;
+        color: var(--hq-navy);
+        font-size: 18px;
+        font-weight: 900;
+    }
+
+    .hq-section-head p {
+        margin: 3px 0 0;
+        color: var(--hq-muted);
+        font-size: 13px;
+    }
+
+    .hq-divider {
+        height: 1px;
+        margin: 28px 0;
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #dbe5ec 10%,
+                #dbe5ec 90%,
+                transparent
+            );
+    }
+
+    /* =========================================
+       GRID
+    ========================================= */
+
+    .hq-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .hq-field-full {
+        grid-column: 1 / -1;
+    }
+
+    .hq-field label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #17384e;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .hq-field label i {
+        width: 17px;
+        color: #0d6b9f;
+        text-align: center;
+    }
+
+    .hq-field .required {
+        color: #b42318;
+    }
+
+    .hq-field .optional {
+        color: #8a9aa7;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    /* =========================================
+       DJANGO INPUTS
+    ========================================= */
+
+    .hq-form-card input:not([type="hidden"]),
+    .hq-form-card select,
+    .hq-form-card textarea,
+    .hq-form-card .form-control {
+        width: 100%;
+        min-height: 52px;
+        padding: 13px 15px;
+        border: 1px solid #d7e2e9;
+        border-radius: 14px;
+        outline: none;
+        background: #fbfdfe;
+        color: #173042;
+        font-family: inherit;
+        font-size: 14px;
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background .2s ease,
+            transform .2s ease;
+    }
+
+    .hq-form-card select {
+        cursor: pointer;
+    }
+
+    .hq-form-card input:not([type="hidden"]):hover,
+    .hq-form-card select:hover,
+    .hq-form-card textarea:hover {
+        border-color: #b9cedb;
+        background: #fff;
+    }
+
+    .hq-form-card input:not([type="hidden"]):focus,
+    .hq-form-card select:focus,
+    .hq-form-card textarea:focus {
+        border-color: #1882b9;
+        background: #fff;
+        box-shadow:
+            0 0 0 4px
+            rgba(18, 135, 195, .10);
+    }
+
+    /* =========================================
+       STAGE BOX
+    ========================================= */
+
+    #schoolGroup {
+        transition:
+            opacity .2s ease,
+            transform .2s ease;
+    }
+
+    .hq-stage-note {
+        display: flex;
+        gap: 10px;
+        margin-top: 9px;
+        padding: 11px 13px;
+        border-radius: 12px;
+        background: #f5f9fc;
+        color: #658092;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .hq-stage-note i {
+        color: var(--hq-blue);
+        margin-top: 2px;
+    }
+
+    /* =========================================
+       SIGNATURE
+    ========================================= */
+
+    .hq-signature-panel {
+        overflow: hidden;
+        border:
+            1px solid
+            #d9e4eb;
+        border-radius: 20px;
+        background: #fbfdff;
+    }
+
+    .hq-signature-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 14px 17px;
+        border-bottom:
+            1px solid
+            #e7eef2;
+        background: #f7fafc;
+    }
+
+    .hq-signature-info span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #627786;
+        font-size: 12px;
+    }
+
+    .hq-signature-info i {
+        color: var(--hq-blue);
+    }
+
+    .hq-signature-status {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #fff4e7;
+        color: #a56b11;
+        font-size: 11px;
+        font-weight: 850;
+    }
+
+    .hq-signature-status.signed {
+        background: #eaf8f2;
+        color: #157252;
+    }
+
+    .hq-canvas-wrap {
+        position: relative;
+        padding: 12px;
+        background:
+            repeating-linear-gradient(
+                0deg,
+                #fff,
+                #fff 31px,
+                #f5f8fa 32px
+            );
+    }
+
+    #signatureCanvas {
+        display: block;
+        width: 100%;
+        height: 210px;
+        border-radius: 13px;
+        cursor: crosshair;
+        touch-action: none;
+    }
+
+    .hq-sign-line {
+        position: absolute;
+        left: 9%;
+        right: 9%;
+        bottom: 58px;
+        height: 1px;
+        background: #ccd7df;
+        pointer-events: none;
+    }
+
+    .hq-sign-hint {
+        position: absolute;
+        left: 9%;
+        bottom: 35px;
+        color: #9aa8b2;
+        font-size: 11px;
+        pointer-events: none;
+    }
+
+    .hq-signature-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 13px 16px;
+        border-top:
+            1px solid
+            #e6edf2;
+        background: #fff;
+    }
+
+    .hq-btn-clear {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 0;
+        border-radius: 11px;
+        padding: 10px 15px;
+        background: #edf2f5;
+        color: #425d70;
+        font-weight: 800;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .hq-btn-clear:hover {
+        background: #e2e9ee;
+        transform: translateY(-1px);
+    }
+
+    .hq-signature-actions small {
+        color: #8b9ba7;
+    }
+
+    /* =========================================
+       ERRORS
+    ========================================= */
+
+    .errorlist {
+        list-style: none;
+        margin: 7px 0 0;
+        padding: 0;
+    }
+
+    .errorlist li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--hq-danger);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .hq-form-errors {
+        margin-bottom: 22px;
+        padding: 15px 17px;
+        border:
+            1px solid
+            #f2c8c4;
+        border-radius: 14px;
+        background: #fff3f2;
+        color: #9f2c25;
+        font-size: 13px;
+    }
+
+    /* =========================================
+       FOOTER / BUTTON
+    ========================================= */
+
+    .hq-form-footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top:
+            1px solid
+            #e8eef2;
+    }
+
+    .hq-submit {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 11px;
+        border: 0;
+        border-radius: 16px;
+        background:
+            linear-gradient(
+                110deg,
+                #072a44,
+                #08689d 58%,
+                #0c86bd
+            );
+        color: #fff;
+        box-shadow:
+            0 15px 32px
+            rgba(8, 88, 137, .23);
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: .2px;
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+    .hq-submit::after {
+        content: "";
+        position: absolute;
+        width: 70px;
+        height: 180%;
+        left: -100px;
+        top: -40%;
+        transform: rotate(20deg);
+        background:
+            rgba(255, 255, 255, .15);
+        transition: left .45s ease;
+    }
+
+    .hq-submit:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 20px 38px
+            rgba(8, 88, 137, .30);
+    }
+
+    .hq-submit:hover::after {
+        left: 110%;
+    }
+
+    .hq-submit i {
+        font-size: 18px;
+    }
+
+    .hq-footer-note {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+        margin-top: 13px;
+        color: #83939f;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .hq-footer-note i {
+        color: var(--hq-success);
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+
+    @media (max-width: 850px) {
+
+        .hq-hero-content {
+            align-items: flex-start;
+        }
+
+        .hq-hero-badge {
+            display: none;
+        }
+
+        .hq-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hq-field-full {
+            grid-column: auto;
+        }
+    }
+
+    @media (max-width: 620px) {
+
+        .hq-letter-page {
+            padding: 20px 10px 45px;
+        }
+
+        .hq-letter-hero {
+            padding: 24px 20px;
+            border-radius: 22px;
+        }
+
+        .hq-hero-left {
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .hq-hero-logo-wrap {
+            width: 67px;
+            height: 67px;
+            border-radius: 17px;
+        }
+
+        .hq-letter-hero h1 {
+            font-size: 27px;
+        }
+
+        .hq-letter-hero p {
+            font-size: 13px;
+        }
+
+        .hq-form-card {
+            border-radius: 22px;
+        }
+
+        .hq-form-topbar {
+            padding: 16px 18px;
+        }
+
+        .hq-security-badge {
+            display: none;
+        }
+
+        .hq-form-body {
+            padding: 22px 17px;
+        }
+
+        .hq-section-head {
+            align-items: flex-start;
+        }
+
+        .hq-signature-info {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .hq-signature-actions {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+
+<div class="hq-letter-page">
+
+    <div class="hq-letter-container">
+
+        <!-- =========================================
+             EN-TÊTE HEXAQUÉBEC
+        ========================================== -->
+
+        <section class="hq-letter-hero">
+
+            <div class="hq-hero-content">
+
+                <div class="hq-hero-left">
+
+                    <div class="hq-hero-logo-wrap">
+
+                        <img
+                            src="{% static 'images/logoHexa.png' %}"
+                            alt="HexaQuébec"
+                            class="hq-hero-logo"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <div class="hq-hero-label">
+
+                            <i class="fa-solid fa-certificate"></i>
+
+                            Administration officielle
+                        </div>
+
+                        <h1>
+                            Lettre d’acceptation
+                        </h1>
+
+                        <p>
+                            Créez une lettre professionnelle pour
+                            l’acceptation d’un stagiaire ou d’un employé,
+                            avec référence unique, signature et tampon
+                            numérique HexaQuébec.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hq-hero-badge">
+
+                    <i class="fa-solid fa-file-shield"></i>
+
+                    <strong>
+                        HEXAQUÉBEC
+                    </strong>
+
+                    <span>
+                        Québec • Canada
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             FORMULAIRE
+        ========================================== -->
+
+        <form
+            method="post"
+            id="lettreForm"
+            class="hq-form-card"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="hq-form-topbar">
+
+                <div class="hq-form-topbar-left">
+
+                    <div class="hq-form-topbar-icon">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Nouvelle lettre officielle
+                        </strong>
+
+                        <small>
+                            Complétez les informations du bénéficiaire
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hq-security-badge">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    Document sécurisé
+                </div>
+
+            </div>
+
+
+            <div class="hq-form-body">
+
+                {% if form.non_field_errors %}
+
+                    <div class="hq-form-errors">
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =====================================
+                     SECTION 1
+                ====================================== -->
+
+                <section class="hq-section">
+
+                    <div class="hq-section-head">
+
+                        <div class="hq-section-number">
+                            01
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Type d’acceptation
+                            </h2>
+
+                            <p>
+                                Sélectionnez le statut de la personne.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hq-grid">
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-user-tag"></i>
+
+                                Type
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.type_personne }}
+
+                            {{ form.type_personne.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-briefcase"></i>
+
+                                Fonction / poste
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.fonction }}
+
+                            {{ form.fonction.errors }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <div class="hq-divider"></div>
+
+
+                <!-- =====================================
+                     SECTION 2
+                ====================================== -->
+
+                <section class="hq-section">
+
+                    <div class="hq-section-head">
+
+                        <div class="hq-section-number">
+                            02
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Identité du bénéficiaire
+                            </h2>
+
+                            <p>
+                                Informations qui apparaîtront sur la lettre.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hq-grid">
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-user"></i>
+
+                                Prénom
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.prenom }}
+
+                            {{ form.prenom.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-user"></i>
+
+                                Nom
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.nom }}
+
+                            {{ form.nom.errors }}
+
+                        </div>
+
+
+                        <div
+                            class="hq-field hq-field-full"
+                            id="schoolGroup"
+                        >
+
+                            <label>
+                                <i class="fa-solid fa-graduation-cap"></i>
+
+                                Établissement scolaire
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.etablissement_scolaire }}
+
+                            {{ form.etablissement_scolaire.errors }}
+
+                            <div class="hq-stage-note">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                <span>
+                                    Ce champ est demandé uniquement
+                                    lorsque la personne est acceptée
+                                    comme stagiaire.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <div class="hq-divider"></div>
+
+
+                <!-- =====================================
+                     SECTION 3
+                ====================================== -->
+
+                <section class="hq-section">
+
+                    <div class="hq-section-head">
+
+                        <div class="hq-section-number">
+                            03
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Coordonnées
+                            </h2>
+
+                            <p>
+                                Adresse officielle du bénéficiaire.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hq-grid">
+
+                        <div class="hq-field hq-field-full">
+
+                            <label>
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                Adresse
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.adresse }}
+
+                            {{ form.adresse.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-city"></i>
+
+                                Ville
+                                <span class="optional">
+                                    Optionnel
+                                </span>
+                            </label>
+
+                            {{ form.ville }}
+
+                            {{ form.ville.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-map"></i>
+
+                                Province / région
+                                <span class="optional">
+                                    Optionnel
+                                </span>
+                            </label>
+
+                            {{ form.province_region }}
+
+                            {{ form.province_region.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-envelopes-bulk"></i>
+
+                                Code postal
+                                <span class="optional">
+                                    Optionnel
+                                </span>
+                            </label>
+
+                            {{ form.code_postal }}
+
+                            {{ form.code_postal.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-earth-americas"></i>
+
+                                Pays
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.pays }}
+
+                            {{ form.pays.errors }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <div class="hq-divider"></div>
+
+
+                <!-- =====================================
+                     SECTION 4
+                ====================================== -->
+
+                <section class="hq-section">
+
+                    <div class="hq-section-head">
+
+                        <div class="hq-section-number">
+                            04
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Dates officielles
+                            </h2>
+
+                            <p>
+                                Définissez la prise de fonction et la date
+                                du document.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hq-grid">
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-calendar-check"></i>
+
+                                Date de début
+                                <span class="optional">
+                                    Optionnel
+                                </span>
+                            </label>
+
+                            {{ form.date_debut }}
+
+                            {{ form.date_debut.errors }}
+
+                        </div>
+
+
+                        <div class="hq-field">
+
+                            <label>
+                                <i class="fa-solid fa-calendar-day"></i>
+
+                                Date de la lettre
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.date_lettre }}
+
+                            {{ form.date_lettre.errors }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <div class="hq-divider"></div>
+
+
+                <!-- =====================================
+                     SECTION 5 : SIGNATURE
+                ====================================== -->
+
+                <section class="hq-section">
+
+                    <div class="hq-section-head">
+
+                        <div class="hq-section-number">
+                            05
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Signature du responsable
+                            </h2>
+
+                            <p>
+                                Dessinez la signature qui sera intégrée
+                                automatiquement sur la lettre.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hq-field hq-field-full">
+
+                        {{ form.signature }}
+
+
+                        <div class="hq-signature-panel">
+
+                            <div class="hq-signature-info">
+
+                                <span>
+
+                                    <i class="fa-solid fa-pen-nib"></i>
+
+                                    Signez avec la souris ou votre doigt.
+
+                                </span>
+
+
+                                <div
+                                    class="hq-signature-status"
+                                    id="signatureStatus"
+                                >
+                                    Signature requise
+                                </div>
+
+                            </div>
+
+
+                            <div class="hq-canvas-wrap">
+
+                                <canvas
+                                    id="signatureCanvas"
+                                ></canvas>
+
+                                <div class="hq-sign-line"></div>
+
+                                <div class="hq-sign-hint">
+                                    Signature du responsable
+                                </div>
+
+                            </div>
+
+
+                            <div class="hq-signature-actions">
+
+                                <button
+                                    type="button"
+                                    class="hq-btn-clear"
+                                    id="clearSignature"
+                                >
+
+                                    <i class="fa-solid fa-eraser"></i>
+
+                                    Effacer la signature
+
+                                </button>
+
+
+                                <small>
+                                    La signature sera enregistrée
+                                    avec la lettre.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        {{ form.signature.errors }}
+
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================
+                     SUBMIT
+                ====================================== -->
+
+                <div class="hq-form-footer">
+
+                    <button
+                        type="submit"
+                        class="hq-submit"
+                        id="submitLetter"
+                    >
+
+                        <i class="fa-solid fa-file-circle-check"></i>
+
+                        Générer la lettre officielle
+
+                    </button>
+
+
+                    <div class="hq-footer-note">
+
+                        <i class="fa-solid fa-shield-check"></i>
+
+                        Un numéro de référence HexaQuébec
+                        sera généré automatiquement.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        /* ==========================================
+           STAGE / EMPLOYÉ
+        ========================================== */
+
+        const typeSelect =
+            document.getElementById(
+                "id_type_personne"
+            );
+
+        const schoolGroup =
+            document.getElementById(
+                "schoolGroup"
+            );
+
+        const schoolInput =
+            document.getElementById(
+                "id_etablissement_scolaire"
+            );
+
+
+        function toggleSchool() {
+
+            if (
+                !typeSelect
+                ||
+                !schoolGroup
+            ) {
+                return;
+            }
+
+            const isStage =
+                typeSelect.value === "STAGE";
+
+
+            if (isStage) {
+
+                schoolGroup.style.display =
+                    "block";
+
+                schoolGroup.style.opacity =
+                    "1";
+
+                schoolGroup.style.transform =
+                    "translateY(0)";
+
+                if (schoolInput) {
+                    schoolInput.required = true;
+                }
+
+            } else {
+
+                schoolGroup.style.display =
+                    "none";
+
+                if (schoolInput) {
+
+                    schoolInput.required = false;
+
+                    schoolInput.value = "";
+                }
+            }
+        }
+
+
+        if (typeSelect) {
+
+            typeSelect.addEventListener(
+                "change",
+                toggleSchool
+            );
+
+            toggleSchool();
+        }
+
+
+        /* ==========================================
+           SIGNATURE
+        ========================================== */
+
+        const canvas =
+            document.getElementById(
+                "signatureCanvas"
+            );
+
+        const hidden =
+            document.getElementById(
+                "signatureData"
+            );
+
+        const clearButton =
+            document.getElementById(
+                "clearSignature"
+            );
+
+        const signatureStatus =
+            document.getElementById(
+                "signatureStatus"
+            );
+
+        const form =
+            document.getElementById(
+                "lettreForm"
+            );
+
+
+        if (!canvas || !hidden) {
+            return;
+        }
+
+
+        const ctx =
+            canvas.getContext("2d");
+
+
+        let drawing = false;
+
+        let hasSignature = false;
+
+        let lastX = 0;
+
+        let lastY = 0;
+
+
+        /* ==========================================
+           CANVAS RESPONSIVE
+        ========================================== */
+
+        function resizeCanvas() {
+
+            const ratio =
+                Math.max(
+                    window.devicePixelRatio || 1,
+                    1
+                );
+
+            const rect =
+                canvas.getBoundingClientRect();
+
+
+            const oldData =
+                hasSignature
+                ?
+                canvas.toDataURL("image/png")
+                :
+                null;
+
+
+            canvas.width =
+                Math.floor(
+                    rect.width * ratio
+                );
+
+            canvas.height =
+                Math.floor(
+                    rect.height * ratio
+                );
+
+
+            ctx.setTransform(
+                ratio,
+                0,
+                0,
+                ratio,
+                0,
+                0
+            );
+
+
+            ctx.lineWidth = 2.6;
+
+            ctx.lineCap = "round";
+
+            ctx.lineJoin = "round";
+
+            ctx.strokeStyle = "#082f4d";
+
+
+            if (
+                oldData
+                &&
+                hasSignature
+            ) {
+
+                const img =
+                    new Image();
+
+                img.onload =
+                    function () {
+
+                        ctx.drawImage(
+                            img,
+                            0,
+                            0,
+                            rect.width,
+                            rect.height
+                        );
+                    };
+
+                img.src = oldData;
+            }
+        }
+
+
+        resizeCanvas();
+
+
+        /* ==========================================
+           COORDONNÉES
+        ========================================== */
+
+        function getPosition(event) {
+
+            const rect =
+                canvas.getBoundingClientRect();
+
+            const point =
+                event.touches
+                    ?
+                    event.touches[0]
+                    :
+                    event;
+
+
+            return {
+
+                x:
+                    point.clientX
+                    -
+                    rect.left,
+
+                y:
+                    point.clientY
+                    -
+                    rect.top,
+            };
+        }
+
+
+        /* ==========================================
+           COMMENCER SIGNATURE
+        ========================================== */
+
+        function startDrawing(event) {
+
+            event.preventDefault();
+
+            drawing = true;
+
+            const pos =
+                getPosition(event);
+
+            lastX = pos.x;
+
+            lastY = pos.y;
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                lastX,
+                lastY
+            );
+        }
+
+
+        /* ==========================================
+           DESSINER
+        ========================================== */
+
+        function drawSignature(event) {
+
+            if (!drawing) {
+                return;
+            }
+
+            event.preventDefault();
+
+
+            const pos =
+                getPosition(event);
+
+
+            ctx.lineTo(
+                pos.x,
+                pos.y
+            );
+
+            ctx.stroke();
+
+
+            lastX = pos.x;
+
+            lastY = pos.y;
+
+
+            hasSignature = true;
+
+
+            updateSignatureStatus();
+        }
+
+
+        /* ==========================================
+           TERMINER
+        ========================================== */
+
+        function stopDrawing(event) {
+
+            if (!drawing) {
+                return;
+            }
+
+            if (event) {
+                event.preventDefault();
+            }
+
+            drawing = false;
+
+            ctx.closePath();
+
+
+            if (hasSignature) {
+
+                hidden.value =
+                    canvas.toDataURL(
+                        "image/png"
+                    );
+            }
+        }
+
+
+        /* ==========================================
+           STATUS
+        ========================================== */
+
+        function updateSignatureStatus() {
+
+            if (!signatureStatus) {
+                return;
+            }
+
+
+            if (hasSignature) {
+
+                signatureStatus.textContent =
+                    "Signature enregistrée";
+
+                signatureStatus.classList.add(
+                    "signed"
+                );
+
+            } else {
+
+                signatureStatus.textContent =
+                    "Signature requise";
+
+                signatureStatus.classList.remove(
+                    "signed"
+                );
+            }
+        }
+
+
+        /* ==========================================
+           SOURIS
+        ========================================== */
+
+        canvas.addEventListener(
+            "mousedown",
+            startDrawing
+        );
+
+        canvas.addEventListener(
+            "mousemove",
+            drawSignature
+        );
+
+        canvas.addEventListener(
+            "mouseup",
+            stopDrawing
+        );
+
+        canvas.addEventListener(
+            "mouseleave",
+            stopDrawing
+        );
+
+
+        /* ==========================================
+           MOBILE / TABLETTE
+        ========================================== */
+
+        canvas.addEventListener(
+            "touchstart",
+            startDrawing,
+            {
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "touchmove",
+            drawSignature,
+            {
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "touchend",
+            stopDrawing,
+            {
+                passive: false
+            }
+        );
+
+
+        /* ==========================================
+           EFFACER
+        ========================================== */
+
+        if (clearButton) {
+
+            clearButton.addEventListener(
+                "click",
+                function () {
+
+                    const rect =
+                        canvas.getBoundingClientRect();
+
+                    ctx.clearRect(
+                        0,
+                        0,
+                        rect.width,
+                        rect.height
+                    );
+
+                    hidden.value = "";
+
+                    hasSignature = false;
+
+                    updateSignatureStatus();
+                }
+            );
+        }
+
+
+        /* ==========================================
+           BLOQUER SI PAS SIGNÉ
+        ========================================== */
+
+        if (form) {
+
+            form.addEventListener(
+                "submit",
+                function (event) {
+
+                    if (!hasSignature) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Veuillez dessiner la signature du responsable avant de générer la lettre."
+                        );
+
+                        canvas.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        });
+
+                        return;
+                    }
+
+
+                    hidden.value =
+                        canvas.toDataURL(
+                            "image/png"
+                        );
+                }
+            );
+        }
+
+
+        /* ==========================================
+           RESIZE
+        ========================================== */
+
+        let resizeTimer;
+
+
+        window.addEventListener(
+            "resize",
+            function () {
+
+                clearTimeout(
+                    resizeTimer
+                );
+
+                resizeTimer =
+                    setTimeout(
+                        resizeCanvas,
+                        220
+                    );
+            }
+        );
+
+
+        updateSignatureStatus();
+    }
+);
+</script>
+
+{% endblock %}

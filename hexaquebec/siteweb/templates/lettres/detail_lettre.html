@@ -1,0 +1,1568 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+:root {
+    --hq-navy: #06263f;
+    --hq-blue: #0a5f96;
+    --hq-blue-light: #1288c4;
+    --hq-cyan: #2ca9d8;
+    --hq-gold: #c79a3a;
+    --hq-bg: #eef4f8;
+    --hq-text: #223746;
+    --hq-muted: #6f8190;
+    --hq-border: #dbe6ed;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page-letter {
+    min-height: 100vh;
+
+    padding:
+        45px
+        18px
+        65px;
+
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(18, 136, 196, .08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(199, 154, 58, .06),
+            transparent 24%
+        ),
+        linear-gradient(
+            180deg,
+            #f8fbfd 0%,
+            #edf3f7 100%
+        );
+}
+
+
+/* =========================================================
+   DOCUMENT
+========================================================= */
+
+.letter-document {
+    position: relative;
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    background: #ffffff;
+
+    padding:
+        0
+        58px
+        55px;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(8, 41, 67, .14);
+
+    overflow: hidden;
+}
+
+
+.letter-document::before {
+    content: "";
+
+    display: block;
+
+    height: 7px;
+
+    margin:
+        0
+        -58px
+        0;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--hq-navy),
+            var(--hq-blue),
+            var(--hq-blue-light),
+            var(--hq-gold)
+        );
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.letter-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 30px;
+
+    padding:
+        32px
+        0
+        24px;
+
+    border-bottom:
+        1px solid
+        var(--hq-border);
+}
+
+
+.logo-wrap {
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.letter-logo {
+    width: 190px;
+
+    max-height: 95px;
+
+    object-fit: contain;
+}
+
+
+.company-meta {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin-top: 3px;
+}
+
+
+.company-meta strong {
+    color: var(--hq-navy);
+
+    font-size: 13px;
+
+    letter-spacing: .4px;
+}
+
+
+.company-meta span {
+    color: var(--hq-muted);
+
+    font-size: 11px;
+}
+
+
+.company-slogan {
+    margin-top: 4px;
+
+    color: var(--hq-blue);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    font-style: italic;
+}
+
+
+/* =========================================================
+   RÉFÉRENCE
+========================================================= */
+
+.letter-ref {
+    min-width: 210px;
+
+    padding:
+        13px
+        15px;
+
+    border:
+        1px solid
+        #d9e5ec;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f9fcfe,
+            #f3f8fb
+        );
+
+    text-align: right;
+
+    color: #607484;
+
+    font-size: 12px;
+
+    line-height: 1.65;
+}
+
+
+.letter-ref .ref-label {
+    display: block;
+
+    color: #8da0ae;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.letter-ref strong {
+    color: var(--hq-blue);
+
+    font-size: 14px;
+
+    letter-spacing: .5px;
+}
+
+
+/* =========================================================
+   TITRE
+========================================================= */
+
+.official-title {
+    text-align: center;
+
+    margin:
+        34px
+        0
+        28px;
+}
+
+
+.official-title-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 9px;
+
+    padding:
+        7px
+        12px;
+
+    border-radius: 999px;
+
+    background:
+        #edf7fc;
+
+    color:
+        var(--hq-blue);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+
+.official-title h1 {
+    margin: 0;
+
+    color:
+        var(--hq-navy);
+
+    font-size:
+        clamp(
+            28px,
+            4vw,
+            38px
+        );
+
+    line-height: 1.1;
+
+    letter-spacing: -.7px;
+}
+
+
+.title-line {
+    width: 70px;
+
+    height: 4px;
+
+    margin:
+        13px
+        auto
+        0;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--hq-blue),
+            var(--hq-blue-light)
+        );
+}
+
+
+/* =========================================================
+   DESTINATAIRE
+========================================================= */
+
+.recipient {
+    position: relative;
+
+    margin-bottom: 30px;
+
+    padding:
+        20px
+        22px
+        20px
+        24px;
+
+    border:
+        1px solid
+        #dce8ef;
+
+    border-left:
+        5px solid
+        var(--hq-blue);
+
+    border-radius:
+        14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbfd,
+            #ffffff
+        );
+}
+
+
+.recipient::after {
+    content: "";
+
+    position: absolute;
+
+    right: 18px;
+
+    top: 18px;
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(18, 136, 196, .07);
+}
+
+
+.recipient-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--hq-blue);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+
+.recipient strong {
+    display: block;
+
+    color:
+        var(--hq-navy);
+
+    font-size: 17px;
+
+    margin-bottom: 7px;
+}
+
+
+.recipient-address {
+    color:
+        #607483;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   CORPS
+========================================================= */
+
+.letter-body {
+    white-space: pre-line;
+
+    color:
+        var(--hq-text);
+
+    font-size: 15.5px;
+
+    line-height: 1.9;
+
+    text-align: justify;
+}
+
+
+/* =========================================================
+   SIGNATURE + TAMPON
+========================================================= */
+
+.signature-area {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        210px;
+
+    gap: 35px;
+
+    align-items: end;
+
+    margin-top: 42px;
+
+    padding-top: 25px;
+
+    border-top:
+        1px solid
+        #e1e9ee;
+}
+
+
+.signature-block {
+    position: relative;
+}
+
+
+.signature-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color:
+        #8799a6;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+
+.signature-image {
+    display: block;
+
+    max-width: 220px;
+
+    max-height: 85px;
+
+    object-fit: contain;
+
+    margin-bottom: 8px;
+}
+
+
+.signature-name {
+    display: inline-block;
+
+    padding-top: 5px;
+
+    color:
+        var(--hq-navy);
+
+    font-size: 15px;
+
+    font-weight: 900;
+}
+
+
+.signature-role {
+    margin-top: 3px;
+
+    color:
+        #5f7381;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   TAMPON PROFESSIONNEL
+========================================================= */
+
+.stamp-wrap {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+.digital-stamp {
+    position: relative;
+
+    width: 155px;
+
+    height: 155px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        4px solid
+        #0b67a0;
+
+    border-radius: 50%;
+
+    color:
+        #0b67a0;
+
+    background:
+        rgba(255, 255, 255, .94);
+
+    transform:
+        rotate(-6deg);
+
+    box-shadow:
+        inset
+        0 0 0 4px
+        #ffffff,
+
+        inset
+        0 0 0 6px
+        #0b67a0,
+
+        0 8px 18px
+        rgba(11, 103, 160, .11);
+}
+
+
+.digital-stamp::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 14px;
+
+    border:
+        1.5px dashed
+        #0b67a0;
+
+    border-radius: 50%;
+}
+
+
+.digital-stamp::after {
+    content: "✦";
+
+    position: absolute;
+
+    bottom: 17px;
+
+    color:
+        #0b67a0;
+
+    font-size: 13px;
+}
+
+
+.stamp-content {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    text-align: center;
+
+    text-transform: uppercase;
+
+    font-weight: 900;
+
+    line-height: 1.15;
+}
+
+
+.stamp-brand {
+    display: block;
+
+    font-size: 15px;
+
+    letter-spacing: 1px;
+}
+
+
+.stamp-official {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 9px;
+
+    letter-spacing: 1.4px;
+}
+
+
+.stamp-country {
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 8px;
+
+    letter-spacing: 1px;
+}
+
+
+.stamp-code {
+    display: block;
+
+    margin-top: 5px;
+
+    padding:
+        4px
+        8px;
+
+    color: #ffffff;
+
+    background:
+        #0b67a0;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+
+    letter-spacing: .5px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.letter-footer {
+    margin-top: 30px;
+
+    padding-top: 16px;
+
+    border-top:
+        1px solid
+        #e4ebef;
+
+    text-align: center;
+
+    color:
+        #8a9ba6;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+.letter-footer strong {
+    color:
+        var(--hq-blue);
+}
+
+
+.letter-footer-slogan {
+    margin-top: 3px;
+
+    color:
+        var(--hq-blue);
+
+    font-style: italic;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+    max-width: 900px;
+
+    margin:
+        24px
+        auto
+        0;
+
+    display: flex;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+
+.action-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 48px;
+
+    padding:
+        12px
+        18px;
+
+    border-radius: 13px;
+
+    text-decoration: none;
+
+    font-weight: 850;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+
+.action-button-primary {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #072f4d,
+            #0b6fa8
+        );
+
+    box-shadow:
+        0 10px 22px
+        rgba(8, 78, 123, .18);
+}
+
+
+.action-button-primary:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+.action-button-image {
+    color: #ffffff;
+
+    border: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0a5f96,
+            #1288c4
+        );
+
+    box-shadow:
+        0 10px 22px
+        rgba(10, 95, 150, .20);
+
+    cursor: pointer;
+}
+
+
+.action-button-image:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 14px 28px
+        rgba(10, 95, 150, .28);
+}
+
+
+.action-button-image:disabled {
+    opacity: .7;
+
+    cursor: wait;
+
+    transform: none;
+}
+
+
+.action-button-secondary {
+    color:
+        #163b55;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d6e1e8;
+}
+
+
+.action-button-secondary:hover {
+    background:
+        #f8fbfd;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 760px) {
+
+    .page-letter {
+        padding:
+            20px
+            10px
+            45px;
+    }
+
+
+    .letter-document {
+        padding:
+            0
+            22px
+            35px;
+
+        border-radius: 15px;
+    }
+
+
+    .letter-document::before {
+        margin:
+            0
+            -22px;
+    }
+
+
+    .letter-top {
+        flex-direction: column;
+    }
+
+
+    .letter-ref {
+        width: 100%;
+
+        text-align: left;
+    }
+
+
+    .letter-logo {
+        width: 165px;
+    }
+
+
+    .signature-area {
+        grid-template-columns: 1fr;
+    }
+
+
+    .stamp-wrap {
+        justify-content: flex-start;
+
+        margin-top: 10px;
+    }
+
+
+    .actions {
+        flex-direction: column;
+    }
+
+
+    .action-button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   IMPRESSION
+========================================================= */
+
+@media print {
+
+    .actions {
+        display: none;
+    }
+
+
+    .page-letter {
+        padding: 0;
+
+        background: #ffffff;
+    }
+
+
+    .letter-document {
+        box-shadow: none;
+
+        max-width: none;
+
+        border-radius: 0;
+    }
+}
+
+</style>
+
+
+<div class="page-letter">
+
+
+    <!-- =====================================================
+         DOCUMENT
+    ====================================================== -->
+
+    <div
+        class="letter-document"
+        id="lettreDocument"
+    >
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="letter-top">
+
+
+            <div class="logo-wrap">
+
+                <img
+                    src="{% static 'images/logoHexa.png' %}"
+                    class="letter-logo"
+                    alt="HexaQuébec"
+                >
+
+
+                <div class="company-meta">
+
+                    <strong>
+                        Solutions numériques
+                    </strong>
+
+
+                    <span>
+                        Québec • Canada
+                    </span>
+
+
+                    <div class="company-slogan">
+                        L’innovation au cœur du numérique québécois
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="letter-ref">
+
+                <span class="ref-label">
+                    Référence du document
+                </span>
+
+
+                <strong>
+                    {{ lettre.numero_lettre }}
+                </strong>
+
+                <br>
+
+                {{ lettre.date_lettre|date:"d/m/Y" }}
+
+                <br>
+
+                Québec, Canada
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TITRE
+        ================================================== -->
+
+        <div class="official-title">
+
+            <div class="official-title-badge">
+
+                <i class="fa-solid fa-certificate"></i>
+
+                Document officiel HexaQuébec
+
+            </div>
+
+
+            <h1>
+                Lettre d’acceptation
+            </h1>
+
+
+            <div class="title-line"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             DESTINATAIRE
+        ================================================== -->
+
+        <div class="recipient">
+
+            <span class="recipient-label">
+                À l’attention de
+            </span>
+
+
+            <strong>
+                {{ lettre.nom_complet }}
+            </strong>
+
+
+            <div class="recipient-address">
+
+                {{ lettre.adresse }}
+
+
+                {% if lettre.ville %}
+
+                    <br>
+
+                    {{ lettre.ville }}
+
+                {% endif %}
+
+
+                {% if lettre.province_region %}
+
+                    ,
+                    {{ lettre.province_region }}
+
+                {% endif %}
+
+
+                {% if lettre.code_postal %}
+
+                    {{ lettre.code_postal }}
+
+                {% endif %}
+
+
+                <br>
+
+                {{ lettre.pays }}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CONTENU
+        ================================================== -->
+
+        <div class="letter-body">
+
+            {{ lettre.contenu_lettre }}
+
+        </div>
+
+
+        <!-- =================================================
+             SIGNATURE + TAMPON
+        ================================================== -->
+
+        <div class="signature-area">
+
+
+            <div class="signature-block">
+
+                <span class="signature-label">
+                    Signature autorisée
+                </span>
+
+
+                {% if lettre.signature %}
+
+                    <img
+                        src="{{ lettre.signature }}"
+                        class="signature-image"
+                        alt="Signature"
+                    >
+
+                {% endif %}
+
+
+                <div class="signature-name">
+
+                    Diambere Kamara
+
+                </div>
+
+
+                <div class="signature-role">
+
+                    Directeur technique
+
+                    <br>
+
+                    HexaQuébec
+
+                    <br>
+
+                    Québec, Canada
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 TAMPON
+            ============================================== -->
+
+            <div class="stamp-wrap">
+
+                <div class="digital-stamp">
+
+                    <div class="stamp-content">
+
+                        <span class="stamp-brand">
+                            HEXAQUÉBEC
+                        </span>
+
+
+                        <span class="stamp-official">
+                            Document officiel
+                        </span>
+
+
+                        <span class="stamp-country">
+                            Québec • Canada
+                        </span>
+
+
+                        <span class="stamp-code">
+                            {{ lettre.numero_lettre }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <div class="letter-footer">
+
+            <strong>
+                HexaQuébec
+            </strong>
+
+            —
+
+            Développement web • Mobile • Intelligence artificielle
+            • Services numériques
+
+            <div class="letter-footer-slogan">
+
+                « L’innovation au cœur du numérique québécois »
+
+            </div>
+
+            <br>
+
+            Ce document porte la référence officielle :
+
+            {{ lettre.numero_lettre }}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACTIONS
+    ====================================================== -->
+
+    <div class="actions">
+
+
+        <!-- PDF -->
+
+        <a
+            href="{% url 'lettre_pdf' lettre.pk %}"
+            class="
+                action-button
+                action-button-primary
+            "
+        >
+
+            <i class="fa-solid fa-file-pdf"></i>
+
+            Télécharger le PDF
+
+        </a>
+
+
+        <!-- IMAGE -->
+
+        <button
+            type="button"
+            class="
+                action-button
+                action-button-image
+            "
+            id="downloadLetterImage"
+            data-filename="Lettre-{{ lettre.numero_lettre }}"
+        >
+
+            <i class="fa-solid fa-image"></i>
+
+            Télécharger en image
+
+        </button>
+
+
+        <!-- NOUVELLE LETTRE -->
+
+        <a
+            href="{% url 'creer_lettres' %}"
+            class="
+                action-button
+                action-button-secondary
+            "
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Nouvelle lettre
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     HTML2CANVAS
+========================================================= -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const downloadButton =
+            document.getElementById(
+                "downloadLetterImage"
+            );
+
+
+        const documentElement =
+            document.getElementById(
+                "lettreDocument"
+            );
+
+
+        if (
+            !downloadButton
+            ||
+            !documentElement
+        ) {
+
+            return;
+        }
+
+
+        downloadButton.addEventListener(
+            "click",
+            async function () {
+
+                const originalHTML =
+                    downloadButton.innerHTML;
+
+
+                try {
+
+                    /* =========================================
+                       CHARGEMENT
+                    ========================================= */
+
+                    downloadButton.disabled =
+                        true;
+
+
+                    downloadButton.innerHTML = `
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Création de l’image...
+                    `;
+
+
+                    /* =========================================
+                       ATTENDRE LES IMAGES
+                    ========================================= */
+
+                    const images =
+                        documentElement.querySelectorAll(
+                            "img"
+                        );
+
+
+                    const imagePromises =
+                        Array.from(
+                            images
+                        ).map(
+                            function (
+                                img
+                            ) {
+
+                                if (
+                                    img.complete
+                                    &&
+                                    img.naturalWidth > 0
+                                ) {
+
+                                    return Promise.resolve();
+                                }
+
+
+                                return new Promise(
+                                    function (
+                                        resolve
+                                    ) {
+
+                                        img.addEventListener(
+                                            "load",
+                                            resolve,
+                                            {
+                                                once: true
+                                            }
+                                        );
+
+
+                                        img.addEventListener(
+                                            "error",
+                                            resolve,
+                                            {
+                                                once: true
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
+
+
+                    await Promise.all(
+                        imagePromises
+                    );
+
+
+                    /* =========================================
+                       ATTENDRE LES POLICES
+                    ========================================= */
+
+                    if (
+                        document.fonts
+                        &&
+                        document.fonts.ready
+                    ) {
+
+                        await document.fonts.ready;
+                    }
+
+
+                    /* =========================================
+                       CRÉER LE CANVAS
+                    ========================================= */
+
+                    const canvas =
+                        await html2canvas(
+                            documentElement,
+                            {
+
+                                scale: 3,
+
+                                backgroundColor:
+                                    "#ffffff",
+
+                                useCORS:
+                                    true,
+
+                                allowTaint:
+                                    false,
+
+                                logging:
+                                    false,
+
+                                imageTimeout:
+                                    15000,
+
+                                removeContainer:
+                                    true,
+
+                                scrollX:
+                                    0,
+
+                                scrollY:
+                                    -window.scrollY,
+
+                                windowWidth:
+                                    documentElement.scrollWidth,
+
+                                windowHeight:
+                                    documentElement.scrollHeight,
+                            }
+                        );
+
+
+                    /* =========================================
+                       CONVERTIR EN PNG
+                    ========================================= */
+
+                    const imageData =
+                        canvas.toDataURL(
+                            "image/png",
+                            1.0
+                        );
+
+
+                    /* =========================================
+                       NOM DU FICHIER
+                    ========================================= */
+
+                    const filename =
+                        downloadButton.dataset.filename
+                        ||
+                        "Lettre-HexaQuebec";
+
+
+                    /* =========================================
+                       LIEN DE TÉLÉCHARGEMENT
+                    ========================================= */
+
+                    const link =
+                        document.createElement(
+                            "a"
+                        );
+
+
+                    link.href =
+                        imageData;
+
+
+                    link.download =
+                        filename
+                        +
+                        ".png";
+
+
+                    document.body.appendChild(
+                        link
+                    );
+
+
+                    link.click();
+
+
+                    document.body.removeChild(
+                        link
+                    );
+
+
+                } catch (
+                    error
+                ) {
+
+                    console.error(
+                        "ERREUR TÉLÉCHARGEMENT IMAGE :",
+                        error
+                    );
+
+
+                    alert(
+                        "Impossible de créer l’image de la lettre."
+                    );
+
+
+                } finally {
+
+                    downloadButton.disabled =
+                        false;
+
+
+                    downloadButton.innerHTML =
+                        originalHTML;
+                }
+            }
+        );
+    }
+);
+
+</script>
+
+{% endblock %}

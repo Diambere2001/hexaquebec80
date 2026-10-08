@@ -2199,3 +2199,48 @@ class DemandeAccompagnementAdmin(admin.ModelAdmin):
     )
 
     list_per_page = 25
+
+
+
+
+
+
+from django.contrib import admin
+
+from .models import LettreAcceptation
+
+
+@admin.register(LettreAcceptation)
+class LettreAcceptationAdmin(
+    admin.ModelAdmin
+):
+
+    list_display = (
+        "numero_lettre",
+        "prenom",
+        "nom",
+        "type_personne",
+        "fonction",
+        "pays",
+        "date_lettre",
+    )
+
+    list_filter = (
+        "type_personne",
+        "pays",
+        "date_lettre",
+    )
+
+    search_fields = (
+        "numero_lettre",
+        "prenom",
+        "nom",
+        "fonction",
+        "etablissement_scolaire",
+    )
+
+    readonly_fields = (
+        "numero_lettre",
+        "contenu_lettre",
+        "date_creation",
+    )

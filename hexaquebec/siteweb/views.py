@@ -10685,3 +10685,337 @@ def creer_affiche(request):
         "creer_affiche.html",
         context,
     )
+
+
+
+
+
+
+
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
+
+from django.http import HttpResponse
+
+from django.contrib.staticfiles import finders
+
+import base64
+
+from weasyprint import HTML
+
+from .forms import LettreAcceptationForm
+from .models import LettreAcceptation
+
+import os
+import base64
+
+from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
+from django.http import HttpResponse
+
+from weasyprint import HTML
+
+from .forms import LettreAcceptationForm
+from .models import LettreAcceptation
+
+
+
+
+
+def creer_lettres(request):
+
+    if request.method == "POST":
+
+        form = LettreAcceptationForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            lettre = form.save(
+                commit=False
+            )
+
+            lettre.contenu_lettre = (
+                lettre.generer_contenu()
+            )
+
+            lettre.save()
+
+            return redirect(
+                "detail_lettre",
+                pk=lettre.pk,
+            )
+
+    else:
+
+        form = LettreAcceptationForm()
+
+    return render(
+        request,
+        "lettres/creer_lettres.html",
+        {
+            "form": form,
+        },
+    )
+
+
+def detail_lettre(
+    request,
+    pk,
+):
+
+    lettre = get_object_or_404(
+        LettreAcceptation,
+        pk=pk,
+    )
+
+    return render(
+        request,
+        "lettres/detail_lettre.html",
+        {
+            "lettre": lettre,
+        },
+    )
+
+
+def logo_hexa_base64():
+
+    logo_path = finders.find(
+        "images/logoHexa.png"
+    )
+
+    if not logo_path:
+
+        return ""
+
+    with open(
+        logo_path,
+        "rb",
+    ) as fichier:
+
+        encoded = base64.b64encode(
+            fichier.read()
+        ).decode(
+            "utf-8"
+        )
+
+    return (
+        "data:image/png;base64,"
+        +
+        encoded
+    )
+
+
+def lettre_pdf(
+    request,
+    pk,
+):
+
+    lettre = get_object_or_404(
+        LettreAcceptation,
+        pk=pk,
+    )
+
+    logo_data_uri = (
+        logo_hexa_base64()
+    )
+
+    html = render(
+        request,
+        "lettres/lettre_pdf.html",
+        {
+            "lettre":
+                lettre,
+
+            "logo_data_uri":
+                logo_data_uri,
+        },
+    ).content.decode(
+        "utf-8"
+    )
+
+    pdf = HTML(
+        string=html,
+        base_url=request.build_absolute_uri(
+            "/"
+        ),
+    ).write_pdf()
+
+    response = HttpResponse(
+        pdf,
+        content_type="application/pdf",
+    )
+
+    response[
+        "Content-Disposition"
+    ] = (
+        f'attachment; filename="'
+        f'{lettre.numero_lettre}.pdf"'
+    )
+
+    return response
+
+
+
+
+
+
+
+# ============================================================
+# CRÉER UNE LETTRE D'ACCEPTATION
+# ============================================================
+
+def creer_lettres(request):
+
+    if request.method == "POST":
+
+        form = LettreAcceptationForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            lettre = form.save(
+                commit=False
+            )
+
+            lettre.contenu_lettre = (
+                lettre.generer_contenu()
+            )
+
+            lettre.save()
+
+            return redirect(
+                "detail_lettre",
+                pk=lettre.pk,
+            )
+
+    else:
+
+        form = LettreAcceptationForm()
+
+    return render(
+        request,
+        "lettres/creer_lettres.html",
+        {
+            "form": form,
+        },
+    )
+
+
+# ============================================================
+# DÉTAIL DE LA LETTRE
+# ============================================================
+
+def detail_lettre(
+    request,
+    pk,
+):
+
+    lettre = get_object_or_404(
+        LettreAcceptation,
+        pk=pk,
+    )
+
+    return render(
+        request,
+        "lettres/detail_lettre.html",
+        {
+            "lettre": lettre,
+        },
+    )
+
+
+# ============================================================
+# LOGO HEXAQUÉBEC EN BASE64
+# ============================================================
+
+def logo_hexa_base64():
+
+    logo_path = finders.find(
+        "images/logoHexa.png"
+    )
+
+    if not logo_path:
+
+        return ""
+
+    with open(
+        logo_path,
+        "rb",
+    ) as fichier:
+
+        encoded = base64.b64encode(
+            fichier.read()
+        ).decode(
+            "utf-8"
+        )
+
+    return (
+        "data:image/png;base64,"
+        +
+        encoded
+    )
+
+
+# ============================================================
+# PDF DE LA LETTRE
+# ============================================================
+
+def lettre_pdf(
+    request,
+    pk,
+):
+
+    lettre = get_object_or_404(
+        LettreAcceptation,
+        pk=pk,
+    )
+
+    logo_data_uri = (
+        logo_hexa_base64()
+    )
+
+    html = render(
+        request,
+        "lettres/lettre_pdf.html",
+        {
+            "lettre":
+                lettre,
+
+            "logo_data_uri":
+                logo_data_uri,
+        },
+    ).content.decode(
+        "utf-8"
+    )
+
+    pdf = HTML(
+        string=html,
+        base_url=request.build_absolute_uri(
+            "/"
+        ),
+    ).write_pdf()
+
+    response = HttpResponse(
+        pdf,
+        content_type="application/pdf",
+    )
+
+    response[
+        "Content-Disposition"
+    ] = (
+        f'attachment; filename="'
+        f'{lettre.numero_lettre}.pdf"'
+    )
+
+    return response

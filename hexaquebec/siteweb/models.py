@@ -1841,3 +1841,308 @@ class AvisClient(models.Model):
             f"{self.numero_avis} - "
             f"{self.nom_client}"
         )
+
+
+
+
+
+
+
+import uuid
+
+from django.db import models
+from django.utils import timezone
+
+
+class LettreAcceptation(models.Model):
+
+    TYPE_PERSONNE_CHOICES = [
+        ("STAGE", "Stagiaire"),
+        ("EMPLOYE", "Employé"),
+    ]
+
+    numero_lettre = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+    )
+
+    type_personne = models.CharField(
+        max_length=20,
+        choices=TYPE_PERSONNE_CHOICES,
+    )
+
+    prenom = models.CharField(
+        max_length=150,
+    )
+
+    nom = models.CharField(
+        max_length=150,
+    )
+
+    fonction = models.CharField(
+        max_length=255,
+        verbose_name="Fonction / poste",
+    )
+
+    etablissement_scolaire = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Établissement scolaire",
+    )
+
+    adresse = models.CharField(
+        max_length=255,
+    )
+
+    ville = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    province_region = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name="Province / région",
+    )
+
+    code_postal = models.CharField(
+        max_length=30,
+        blank=True,
+    )
+
+    pays = models.CharField(
+        max_length=150,
+    )
+
+    date_debut = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Date de début",
+    )
+
+    date_lettre = models.DateField(
+        default=timezone.now,
+    )
+
+    contenu_lettre = models.TextField(
+        blank=True,
+    )
+
+    signature = models.TextField(
+        blank=True,
+    )
+
+    date_creation = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = [
+            "-date_creation"
+        ]
+
+    def __str__(self):
+
+        return (
+            f"{self.numero_lettre} - "
+            f"{self.prenom} {self.nom}"
+        )
+
+    @property
+    def nom_complet(self):
+
+        return (
+            f"{self.prenom} {self.nom}"
+        ).strip()
+
+    # ========================================================
+    # GÉNÉRER LE CONTENU AUTOMATIQUE
+    # ========================================================
+
+    def generer_contenu(self):
+
+        date_debut = ""
+
+        if self.date_debut:
+
+            date_debut = (
+                self.date_debut.strftime(
+                    "%d/%m/%Y"
+                )
+            )
+
+        # ====================================================
+        # LETTRE DE STAGE
+        # ====================================================
+
+        if self.type_personne == "STAGE":
+
+            etablissement = ""
+
+            if self.etablissement_scolaire:
+
+                etablissement = (
+                    f" dans le cadre de votre parcours "
+                    f"au sein de l’établissement "
+                    f"{self.etablissement_scolaire}"
+                )
+
+            debut = ""
+
+            if date_debut:
+
+                debut = (
+                    f" Votre stage pourra débuter "
+                    f"à compter du {date_debut}."
+                )
+
+            return (
+                f"Madame, Monsieur {self.nom_complet},\n\n"
+
+                f"Nous avons le plaisir de vous informer que "
+                f"votre candidature pour effectuer un stage en qualité de "
+                f"« {self.fonction} » au sein de HexaQuébec a été acceptée."
+                f"{etablissement}.\n\n"
+
+                f"Nous sommes heureux de vous accueillir au sein de notre "
+                f"entreprise et de vous permettre de développer vos "
+                f"compétences professionnelles dans un environnement "
+                f"orienté vers l’innovation, les technologies numériques "
+                f"et la transformation digitale."
+                f"{debut}\n\n"
+
+                f"Durant votre stage, vous serez appelé(e) à collaborer "
+                f"avec notre équipe, à participer aux activités liées à "
+                f"votre domaine et à respecter les règles, procédures et "
+                f"exigences professionnelles de HexaQuébec.\n\n"
+
+                f"Nous vous souhaitons la bienvenue chez HexaQuébec et "
+                f"beaucoup de réussite dans cette expérience professionnelle.\n\n"
+
+                f"Veuillez recevoir nos salutations distinguées."
+            )
+
+        # ====================================================
+        # LETTRE D'EMBAUCHE
+        # ====================================================
+
+        debut = ""
+
+        if date_debut:
+
+            debut = (
+                f" Votre prise de fonction est prévue "
+                f"à compter du {date_debut}."
+            )
+
+        return (
+            f"Madame, Monsieur {self.nom_complet},\n\n"
+
+            f"Nous avons le plaisir de vous informer que votre candidature "
+            f"au poste de « {self.fonction} » au sein de HexaQuébec "
+            f"a été acceptée."
+            f"{debut}\n\n"
+
+            f"Nous sommes heureux de vous souhaiter officiellement la "
+            f"bienvenue au sein de notre entreprise. Votre intégration "
+            f"s’inscrit dans notre volonté de renforcer notre équipe et "
+            f"de poursuivre le développement de nos services numériques "
+            f"au Québec et au Canada.\n\n"
+
+            f"Dans l’exercice de vos fonctions, vous serez appelé(e) à "
+            f"collaborer avec les différents membres de notre organisation "
+            f"et à contribuer activement aux projets et objectifs de "
+            f"HexaQuébec.\n\n"
+
+            f"Nous vous remercions pour la confiance accordée à notre "
+            f"entreprise et vous souhaitons beaucoup de succès dans vos "
+            f"nouvelles fonctions.\n\n"
+
+            f"Veuillez recevoir nos salutations distinguées."
+        )
+
+    # ========================================================
+    # GÉNÉRER UN NUMÉRO UNIQUE NON SÉQUENTIEL
+    # ========================================================
+
+    def generer_numero_lettre(self):
+
+        annee = (
+            self.date_lettre.year
+            if self.date_lettre
+            else timezone.now().year
+        )
+
+        if self.type_personne == "STAGE":
+
+            prefixe = "HQ-STG"
+
+        else:
+
+            prefixe = "HQ-EMP"
+
+        # ====================================================
+        # BOUCLE POUR GARANTIR L'UNICITÉ
+        # ====================================================
+
+        while True:
+
+            code_unique = (
+                uuid.uuid4()
+                .hex[:6]
+                .upper()
+            )
+
+            numero = (
+                f"{prefixe}-"
+                f"{annee}-"
+                f"{code_unique}"
+            )
+
+            existe = (
+                LettreAcceptation.objects
+                .filter(
+                    numero_lettre=numero
+                )
+                .exists()
+            )
+
+            if not existe:
+
+                return numero
+
+    # ========================================================
+    # SAVE
+    # ========================================================
+
+    def save(
+        self,
+        *args,
+        **kwargs,
+    ):
+
+        # ====================================================
+        # GÉNÉRER LE NUMÉRO AVANT LA SAUVEGARDE
+        # ====================================================
+
+        if not self.numero_lettre:
+
+            self.numero_lettre = (
+                self.generer_numero_lettre()
+            )
+
+        # ====================================================
+        # GÉNÉRER LE CONTENU AUTOMATIQUE
+        # ====================================================
+
+        if not self.contenu_lettre:
+
+            self.contenu_lettre = (
+                self.generer_contenu()
+            )
+
+        super().save(
+            *args,
+            **kwargs,
+        )

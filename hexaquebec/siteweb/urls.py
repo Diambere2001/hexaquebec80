@@ -318,6 +318,25 @@ path(
     ),
 
 
+    path(
+    "lettres/creer/",
+    views.creer_lettres,
+    name="creer_lettres",
+),
+
+path(
+    "lettres/<int:pk>/",
+    views.detail_lettre,
+    name="detail_lettre",
+),
+
+path(
+    "lettres/<int:pk>/pdf/",
+    views.lettre_pdf,
+    name="lettre_pdf",
+),
+
+
 
 
 
