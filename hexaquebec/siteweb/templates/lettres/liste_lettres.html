@@ -1,0 +1,1340 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+:root {
+    --hq-navy: #06263f;
+    --hq-blue: #0a5f96;
+    --hq-blue-light: #1288c4;
+    --hq-gold: #c79a3a;
+    --hq-bg: #eef4f8;
+    --hq-text: #243746;
+    --hq-muted: #6f8190;
+    --hq-border: #dbe6ed;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.letters-page {
+    min-height: 100vh;
+
+    padding:
+        42px
+        20px
+        70px;
+
+    background:
+        radial-gradient(
+            circle at 8% 8%,
+            rgba(18, 136, 196, .08),
+            transparent 28%
+        ),
+        linear-gradient(
+            180deg,
+            #f9fbfd 0%,
+            #edf3f7 100%
+        );
+}
+
+
+.letters-container {
+    max-width: 1180px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.letters-hero {
+    position: relative;
+
+    overflow: hidden;
+
+    padding:
+        28px
+        30px;
+
+    margin-bottom: 24px;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #06263f,
+            #084d78 55%,
+            #0a6da4
+        );
+
+    color: white;
+
+    box-shadow:
+        0 22px 55px
+        rgba(6, 38, 63, .17);
+}
+
+
+.letters-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+
+    height: 250px;
+
+    right: -70px;
+
+    top: -120px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, .05);
+}
+
+
+.letters-hero-content {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+.letters-brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+.letters-logo {
+    width: 80px;
+
+    height: 80px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 10px;
+
+    box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, .14);
+}
+
+
+.letters-logo img {
+    max-width: 100%;
+
+    max-height: 100%;
+
+    object-fit: contain;
+}
+
+
+.letters-hero small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #f0cc7a;
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+
+.letters-hero h1 {
+    margin: 0;
+
+    font-size: 34px;
+
+    font-weight: 900;
+}
+
+
+.letters-hero p {
+    margin:
+        7px
+        0
+        0;
+
+    color:
+        rgba(255, 255, 255, .75);
+
+    font-size: 13px;
+}
+
+
+.btn-create {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 48px;
+
+    padding:
+        13px
+        18px;
+
+    border-radius: 13px;
+
+    background: white;
+
+    color: var(--hq-navy);
+
+    text-decoration: none;
+
+    font-weight: 900;
+
+    box-shadow:
+        0 10px 24px
+        rgba(0, 0, 0, .12);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.btn-create:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(0, 0, 0, .16);
+}
+
+
+/* =========================================================
+   FILTRES
+========================================================= */
+
+.filters-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--hq-border);
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 25px
+        rgba(20, 55, 78, .07);
+}
+
+
+.search-wrap {
+    position: relative;
+
+    flex: 1;
+}
+
+
+.search-wrap i {
+    position: absolute;
+
+    left: 14px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: #8799a6;
+}
+
+
+.search-wrap input {
+    width: 100%;
+
+    min-height: 47px;
+
+    padding:
+        11px
+        15px
+        11px
+        42px;
+
+    border:
+        1px solid
+        #d9e4eb;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    background: #fbfdfe;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.search-wrap input:focus {
+    border-color:
+        var(--hq-blue);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(10, 95, 150, .08);
+}
+
+
+.filters-card select {
+    min-height: 47px;
+
+    padding:
+        10px
+        14px;
+
+    border:
+        1px solid
+        #d9e4eb;
+
+    border-radius: 12px;
+
+    background: white;
+
+    color: #243746;
+}
+
+
+.btn-filter {
+    min-height: 47px;
+
+    padding:
+        10px
+        17px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #083b5f,
+            #0a6da4
+        );
+
+    color: white;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.list-card {
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--hq-border);
+
+    border-radius: 22px;
+
+    background: white;
+
+    box-shadow:
+        0 14px 38px
+        rgba(14, 47, 70, .08);
+}
+
+
+.list-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding:
+        18px
+        22px;
+
+    border-bottom:
+        1px solid
+        #e8eef2;
+
+    background:
+        #fbfdfe;
+}
+
+
+.list-header strong {
+    color:
+        var(--hq-navy);
+
+    font-size: 15px;
+}
+
+
+.list-count {
+    padding:
+        6px
+        10px;
+
+    border-radius: 999px;
+
+    background: #edf7fc;
+
+    color:
+        var(--hq-blue);
+
+    font-size: 11px;
+
+    font-weight: 850;
+}
+
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+
+.letters-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+.letters-table th {
+    padding:
+        13px
+        16px;
+
+    background:
+        #f7fafc;
+
+    color:
+        #718391;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: .8px;
+
+    text-align: left;
+
+    text-transform: uppercase;
+}
+
+
+.letters-table td {
+    padding:
+        15px
+        16px;
+
+    border-top:
+        1px solid
+        #edf1f4;
+
+    color:
+        #334d5e;
+
+    font-size: 13px;
+
+    vertical-align: middle;
+}
+
+
+.letters-table tbody tr {
+    transition:
+        background .2s ease;
+}
+
+
+.letters-table tbody tr:hover {
+    background:
+        #f9fcfe;
+}
+
+
+.ref-code {
+    color:
+        var(--hq-blue);
+
+    font-size: 12px;
+
+    font-weight: 900;
+}
+
+
+.person-name {
+    color:
+        var(--hq-navy);
+
+    font-weight: 900;
+}
+
+
+.person-function {
+    margin-top: 3px;
+
+    color:
+        #8394a0;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.type-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        6px
+        10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+.type-stage {
+    background:
+        #edf6ff;
+
+    color:
+        #1269a0;
+}
+
+
+.type-employee {
+    background:
+        #edf8f2;
+
+    color:
+        #167151;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.row-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: nowrap;
+}
+
+
+.row-actions form {
+    margin: 0;
+
+    padding: 0;
+}
+
+
+.mini-btn {
+    width: 38px;
+
+    height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    text-decoration: none;
+
+    border: 0;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+
+.mini-btn-view {
+    background:
+        #edf7fc;
+
+    color:
+        #0a669c;
+}
+
+
+.mini-btn-view:hover {
+    background:
+        #dceff8;
+
+    box-shadow:
+        0 7px 15px
+        rgba(10, 102, 156, .15);
+}
+
+
+.mini-btn-pdf {
+    background:
+        #fff0ef;
+
+    color:
+        #b33830;
+}
+
+
+.mini-btn-pdf:hover {
+    background:
+        #ffe3e0;
+
+    box-shadow:
+        0 7px 15px
+        rgba(179, 56, 48, .14);
+}
+
+
+.mini-btn-delete {
+    background:
+        #fff1f2;
+
+    color:
+        #d3263e;
+}
+
+
+.mini-btn-delete:hover {
+    background:
+        #ffe0e4;
+
+    color:
+        #b7122a;
+
+    box-shadow:
+        0 7px 15px
+        rgba(211, 38, 62, .16);
+}
+
+
+.mini-btn:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   TOOLTIP
+========================================================= */
+
+.action-tooltip {
+    position: relative;
+}
+
+
+.action-tooltip::after {
+    content:
+        attr(data-label);
+
+    position: absolute;
+
+    bottom:
+        calc(100% + 8px);
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 7px;
+
+    background:
+        #06263f;
+
+    color:
+        white;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity .2s ease,
+        visibility .2s ease;
+
+    z-index: 30;
+}
+
+
+.action-tooltip:hover::after {
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-list {
+    padding:
+        60px
+        25px;
+
+    text-align: center;
+
+    color:
+        #80919d;
+}
+
+
+.empty-icon {
+    width: 70px;
+
+    height: 70px;
+
+    margin:
+        0
+        auto
+        15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background:
+        #edf5f9;
+
+    color:
+        #0a6599;
+
+    font-size: 26px;
+}
+
+
+.empty-list h3 {
+    margin:
+        0
+        0
+        6px;
+
+    color:
+        var(--hq-navy);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 800px) {
+
+    .letters-hero-content {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .btn-create {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+
+    .filters-card {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .filters-card select,
+    .btn-filter {
+        width: 100%;
+    }
+}
+
+
+@media(max-width: 600px) {
+
+    .letters-page {
+        padding:
+            20px
+            10px
+            45px;
+    }
+
+
+    .letters-hero {
+        padding:
+            22px
+            18px;
+
+        border-radius: 20px;
+    }
+
+
+    .letters-brand {
+        align-items: flex-start;
+    }
+
+
+    .letters-logo {
+        width: 62px;
+
+        height: 62px;
+    }
+
+
+    .letters-hero h1 {
+        font-size: 26px;
+    }
+}
+
+</style>
+
+
+<div class="letters-page">
+
+    <div class="letters-container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="letters-hero">
+
+            <div class="letters-hero-content">
+
+
+                <div class="letters-brand">
+
+                    <div class="letters-logo">
+
+                        <img
+                            src="{% static 'images/logoHexa.png' %}"
+                            alt="HexaQuébec"
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <small>
+                            HexaQuébec • Administration
+                        </small>
+
+
+                        <h1>
+                            Lettres d’acceptation
+                        </h1>
+
+
+                        <p>
+                            Gestion des lettres officielles
+                            de stage et d’embauche.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="{% url 'creer_lettres' %}"
+                    class="btn-create"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Nouvelle lettre
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FILTRES
+        ================================================== -->
+
+        <form
+            method="get"
+            class="filters-card"
+        >
+
+            <div class="search-wrap">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ recherche }}"
+                    placeholder="Rechercher par nom, référence, poste..."
+                >
+
+            </div>
+
+
+            <select name="type">
+
+                <option value="">
+                    Tous les types
+                </option>
+
+
+                <option
+                    value="STAGE"
+                    {% if type_personne == "STAGE" %}
+                        selected
+                    {% endif %}
+                >
+                    Stagiaires
+                </option>
+
+
+                <option
+                    value="EMPLOYE"
+                    {% if type_personne == "EMPLOYE" %}
+                        selected
+                    {% endif %}
+                >
+                    Employés
+                </option>
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="btn-filter"
+            >
+
+                <i class="fa-solid fa-filter"></i>
+
+                Filtrer
+
+            </button>
+
+        </form>
+
+
+        <!-- =================================================
+             LISTE
+        ================================================== -->
+
+        <div class="list-card">
+
+            <div class="list-header">
+
+                <strong>
+                    Documents créés
+                </strong>
+
+
+                <span class="list-count">
+
+                    {{ lettres|length }}
+
+                    document{{ lettres|length|pluralize }}
+
+                </span>
+
+            </div>
+
+
+            {% if lettres %}
+
+                <div class="table-scroll">
+
+                    <table class="letters-table">
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Référence
+                                </th>
+
+                                <th>
+                                    Bénéficiaire
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Établissement
+                                </th>
+
+                                <th>
+                                    Pays
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for lettre in lettres %}
+
+                                <tr>
+
+
+                                    <!-- RÉFÉRENCE -->
+
+                                    <td>
+
+                                        <span class="ref-code">
+
+                                            {{ lettre.numero_lettre }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- BÉNÉFICIAIRE -->
+
+                                    <td>
+
+                                        <div class="person-name">
+
+                                            {{ lettre.nom_complet }}
+
+                                        </div>
+
+
+                                        <div class="person-function">
+
+                                            {{ lettre.fonction }}
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- TYPE -->
+
+                                    <td>
+
+                                        {% if lettre.type_personne == "STAGE" %}
+
+                                            <span
+                                                class="
+                                                    type-badge
+                                                    type-stage
+                                                "
+                                            >
+
+                                                <i class="fa-solid fa-graduation-cap"></i>
+
+                                                Stagiaire
+
+                                            </span>
+
+                                        {% else %}
+
+                                            <span
+                                                class="
+                                                    type-badge
+                                                    type-employee
+                                                "
+                                            >
+
+                                                <i class="fa-solid fa-briefcase"></i>
+
+                                                Employé
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- ÉTABLISSEMENT -->
+
+                                    <td>
+
+                                        {% if lettre.etablissement_scolaire %}
+
+                                            {{ lettre.etablissement_scolaire }}
+
+                                        {% else %}
+
+                                            —
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- PAYS -->
+
+                                    <td>
+
+                                        {{ lettre.pays }}
+
+                                    </td>
+
+
+                                    <!-- DATE -->
+
+                                    <td>
+
+                                        {{ lettre.date_lettre|date:"d/m/Y" }}
+
+                                    </td>
+
+
+                                    <!-- ACTIONS -->
+
+                                    <td>
+
+                                        <div class="row-actions">
+
+
+                                            <!-- =========================
+                                                 VOIR
+                                            ========================== -->
+
+                                            <a
+                                                href="{% url 'detail_lettre' lettre.pk %}"
+                                                class="
+                                                    mini-btn
+                                                    mini-btn-view
+                                                    action-tooltip
+                                                "
+                                                data-label="Voir"
+                                                title="Voir la lettre"
+                                            >
+
+                                                <i class="fa-solid fa-eye"></i>
+
+                                            </a>
+
+
+                                            <!-- =========================
+                                                 PDF
+                                            ========================== -->
+
+                                            <a
+                                                href="{% url 'lettre_pdf' lettre.pk %}"
+                                                class="
+                                                    mini-btn
+                                                    mini-btn-pdf
+                                                    action-tooltip
+                                                "
+                                                data-label="PDF"
+                                                title="Télécharger le PDF"
+                                            >
+
+                                                <i class="fa-solid fa-file-pdf"></i>
+
+                                            </a>
+
+
+                                            <!-- =========================
+                                                 SUPPRIMER
+                                            ========================== -->
+
+                                            <form
+                                                method="post"
+                                                action="{% url 'supprimer_lettre' lettre.pk %}"
+                                                onsubmit="
+                                                    return confirm(
+                                                        'Voulez-vous vraiment supprimer cette lettre ? Cette action est définitive.'
+                                                    );
+                                                "
+                                            >
+
+                                                {% csrf_token %}
+
+
+                                                <button
+                                                    type="submit"
+                                                    class="
+                                                        mini-btn
+                                                        mini-btn-delete
+                                                        action-tooltip
+                                                    "
+                                                    data-label="Supprimer"
+                                                    title="Supprimer la lettre"
+                                                >
+
+                                                    <i class="fa-solid fa-trash-can"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <!-- =========================================
+                     AUCUNE LETTRE
+                ========================================== -->
+
+                <div class="empty-list">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-solid fa-file-circle-plus"></i>
+
+                    </div>
+
+
+                    <h3>
+                        Aucune lettre trouvée
+                    </h3>
+
+
+                    <p>
+                        Créez votre première lettre
+                        d’acceptation HexaQuébec.
+                    </p>
+
+
+                    <a
+                        href="{% url 'creer_lettres' %}"
+                        class="btn-create"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Créer une lettre
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

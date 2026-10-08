@@ -11019,3 +11019,95 @@ def lettre_pdf(
     )
 
     return response
+
+
+
+
+
+
+
+def liste_lettres(request):
+
+    lettres = LettreAcceptation.objects.all()
+
+    recherche = request.GET.get(
+        "q",
+        ""
+    ).strip()
+
+    type_personne = request.GET.get(
+        "type",
+        ""
+    ).strip()
+
+    if recherche:
+
+        lettres = lettres.filter(
+            models.Q(
+                numero_lettre__icontains=recherche
+            )
+            |
+            models.Q(
+                prenom__icontains=recherche
+            )
+            |
+            models.Q(
+                nom__icontains=recherche
+            )
+            |
+            models.Q(
+                fonction__icontains=recherche
+            )
+            |
+            models.Q(
+                etablissement_scolaire__icontains=recherche
+            )
+        )
+
+    if type_personne in [
+        "STAGE",
+        "EMPLOYE",
+    ]:
+
+        lettres = lettres.filter(
+            type_personne=type_personne
+        )
+
+    context = {
+        "lettres": lettres,
+        "recherche": recherche,
+        "type_personne": type_personne,
+    }
+
+    return render(
+        request,
+        "lettres/liste_lettres.html",
+        context,
+    )
+
+
+
+
+
+
+def supprimer_lettre(
+    request,
+    pk,
+):
+
+    lettre = get_object_or_404(
+        LettreAcceptation,
+        pk=pk,
+    )
+
+    if request.method == "POST":
+
+        lettre.delete()
+
+        return redirect(
+            "liste_lettres"
+        )
+
+    return redirect(
+        "liste_lettres"
+    )

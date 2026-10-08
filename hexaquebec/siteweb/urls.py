@@ -336,8 +336,16 @@ path(
     name="lettre_pdf",
 ),
 
-
-
+path(
+    "lettres/",
+    views.liste_lettres,
+    name="liste_lettres",
+),
+path(
+    "lettres/<int:pk>/supprimer/",
+    views.supprimer_lettre,
+    name="supprimer_lettre",
+),
 
 
 
