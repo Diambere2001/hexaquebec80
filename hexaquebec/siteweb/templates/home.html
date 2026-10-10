@@ -7085,35 +7085,37 @@ button:disabled{
 
 
 
-            <div class="hq-footer-col">
+           
+<div class="hq-footer-col">
 
+    <h4>
+        Accès
+    </h4>
 
-                <h4>
-                    Accès
-                </h4>
+    <a href="{% url 'client_login' %}">
+        <i class="fa-solid fa-user"></i>
+        Espace client
+    </a>
+<a href="{% url 'space_stagiare' %}">
+    <i class="fa-solid fa-user-graduate"></i>
+    Espace de travail stagiaire
+</a>
+    <a href="{% url 'conference' %}">
+        <i class="fa-solid fa-video"></i>
+        Conférence
+    </a>
 
+    <a href="{% url 'a_propos' %}">
+        <i class="fa-solid fa-circle-info"></i>
+        À propos
+    </a>
 
-                <a href="{% url 'client_login' %}">
-                    Espace client
-                </a>
+    <a href="{% url 'login_hexa' %}">
+        <i class="fa-solid fa-user-shield"></i>
+        Administration
+    </a>
 
-
-                <a href="{% url 'conference' %}">
-                    Conférence
-                </a>
-
-
-                <a href="{% url 'a_propos' %}">
-                    À propos
-                </a>
-
-
-                <a href="{% url 'login_hexa' %}">
-                    Administration
-                </a>
-
-
-            </div>
+</div>
 
 
         </div>

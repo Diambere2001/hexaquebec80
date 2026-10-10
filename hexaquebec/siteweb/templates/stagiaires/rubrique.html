@@ -1,0 +1,32 @@
+{% extends 'stagiaires/base.html' %}
+
+{% block title %}
+    {{ rubrique.titre }} — HexaQuébec
+{% endblock %}
+
+{% block content %}
+<article class="card">
+    <span class="badge">
+        {% if rubrique.domaine %}
+            {{ rubrique.get_domaine_display }}
+        {% else %}
+            Tous les stagiaires
+        {% endif %}
+    </span>
+
+    <h1 style="margin-top:20px">
+        {{ rubrique.titre }}
+    </h1>
+
+    <div class="text">
+        {{ rubrique.contenu|linebreaks }}
+    </div>
+</article>
+
+<a
+    class="button button-secondary"
+    href="{% url 'stagiaire_tableau' %}"
+>
+    Retour au tableau de bord
+</a>
+{% endblock %}

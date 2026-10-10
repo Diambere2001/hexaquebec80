@@ -1,0 +1,95 @@
+{% extends 'stagiaires/base.html' %}
+
+{% block title %}
+    Messagerie — HexaQuébec
+{% endblock %}
+
+{% block content %}
+<h1>Ma messagerie</h1>
+
+<p class="muted">
+    Échangez avec l’administration HexaQuébec
+    au sujet de votre stage.
+</p>
+
+<div class="card">
+    <h2>Conversation</h2>
+
+    {% for m in conversation %}
+        <article class="bubble {% if m.auteur_id == request.user.pk %}mine{% endif %}">
+            <div class="message-header">
+                <strong>
+                    {% if m.auteur_id == stagiaire.utilisateur_id %}
+                        Vous
+                    {% else %}
+                        Administration HexaQuébec
+                    {% endif %}
+                </strong>
+
+                <small class="muted">
+                    {{ m.cree|date:"d/m/Y à H:i" }}
+                </small>
+            </div>
+
+            <div class="text">
+                {{ m.texte|linebreaks }}
+            </div>
+
+            {% if m.auteur_id == stagiaire.utilisateur_id %}
+                <small class="muted">
+                    {% if m.lu_admin %}
+                        Marqué comme lu par l’administration
+                    {% else %}
+                        Envoyé
+                    {% endif %}
+                </small>
+            {% endif %}
+        </article>
+    {% empty %}
+        <p class="empty">
+            Aucun message pour le moment.
+            Vous pouvez commencer un échange.
+        </p>
+    {% endfor %}
+
+    <form
+        method="post"
+        action="{% url 'stagiaire_messages_lire' %}"
+    >
+        {% csrf_token %}
+
+        <button
+            class="button button-secondary"
+            type="submit"
+        >
+            Marquer les messages comme lus
+        </button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Écrire à l’administration</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <p>
+            <label for="{{ form.texte.id_for_label }}">
+                Votre message
+            </label>
+
+            {{ form.texte }}
+            {{ form.texte.errors }}
+        </p>
+
+        <button
+            class="button"
+            type="submit"
+        >
+            Envoyer le message
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -20,6 +20,18 @@ from .models import DocumentStagiaire
 
 import uuid
 
+from django.contrib import admin
+from django.core.exceptions import PermissionDenied
+
+from .models import (
+    Stagiaires,
+    Messages,
+    Rubrique,
+    Pointage,
+    Reunion,
+    Notification,
+)
+
 from django.contrib import admin, messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -2244,3 +2256,282 @@ class LettreAcceptationAdmin(
         "contenu_lettre",
         "date_creation",
     )
+
+
+
+
+
+
+
+@admin.register(Stagiaires)
+class StagiairesAdmin(admin.ModelAdmin):
+    list_display = (
+        "utilisateur",
+        "code",
+        "domaine",
+        "debut",
+        "fin",
+        "actif",
+    )
+
+    list_filter = (
+        "domaine",
+        "actif",
+    )
+
+    search_fields = (
+        "code",
+        "utilisateur__username",
+        "utilisateur__first_name",
+        "utilisateur__last_name",
+        "utilisateur__email",
+        "etablissement",
+    )
+
+    readonly_fields = ("code",)
+
+    list_select_related = ("utilisateur",)
+
+    fieldsets = (
+        (
+            "Identité et accès",
+            {
+                "fields": (
+                    "utilisateur",
+                    "code",
+                    "actif",
+                ),
+            },
+        ),
+        (
+            "Informations du stage",
+            {
+                "fields": (
+                    "domaine",
+                    "etablissement",
+                    "debut",
+                    "fin",
+                ),
+            },
+        ),
+    )
+
+
+@admin.register(Rubrique)
+class RubriqueStagiairesAdmin(admin.ModelAdmin):
+    list_display = (
+        "titre",
+        "domaine",
+        "ordre",
+        "publiee",
+    )
+
+    list_filter = (
+        "domaine",
+        "publiee",
+    )
+
+    search_fields = (
+        "titre",
+        "contenu",
+    )
+
+    prepopulated_fields = {
+        "slug": ("titre",),
+    }
+
+    ordering = (
+        "ordre",
+        "titre",
+    )
+
+
+@admin.register(Pointage)
+class PointageStagiairesAdmin(admin.ModelAdmin):
+    list_display = (
+        "stagiaire",
+        "entree",
+        "sortie",
+        "duree",
+    )
+
+    list_filter = (
+        "stagiaire__domaine",
+        "entree",
+    )
+
+    search_fields = (
+        "stagiaire__code",
+        "stagiaire__utilisateur__username",
+        "stagiaire__utilisateur__first_name",
+        "stagiaire__utilisateur__last_name",
+    )
+
+    readonly_fields = ("duree",)
+
+    autocomplete_fields = ("stagiaire",)
+
+    list_select_related = (
+        "stagiaire",
+        "stagiaire__utilisateur",
+    )
+
+    date_hierarchy = "entree"
+
+
+@admin.register(Messages)
+class MessagesStagiairesAdmin(admin.ModelAdmin):
+    list_display = (
+        "stagiaire",
+        "auteur",
+        "cree",
+        "lu_admin",
+        "lu_stagiaire",
+    )
+
+    list_filter = (
+        "lu_admin",
+        "lu_stagiaire",
+        "stagiaire__domaine",
+    )
+
+    search_fields = (
+        "stagiaire__code",
+        "stagiaire__utilisateur__username",
+        "texte",
+    )
+
+    readonly_fields = (
+        "auteur",
+        "cree",
+        "lu_stagiaire",
+    )
+
+    autocomplete_fields = ("stagiaire",)
+
+    list_select_related = (
+        "stagiaire",
+        "stagiaire__utilisateur",
+        "auteur",
+    )
+
+    ordering = ("-cree",)
+
+    actions = ["marquer_lus_admin"]
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            # Un message envoyé conserve son contenu et son auteur.
+            return (
+                "stagiaire",
+                "auteur",
+                "texte",
+                "cree",
+                "lu_stagiaire",
+            )
+
+        return self.readonly_fields
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            if not request.user.is_staff:
+                raise PermissionDenied
+
+            obj.auteur = request.user
+            obj.lu_admin = True
+
+        super().save_model(
+            request,
+            obj,
+            form,
+            change,
+        )
+
+    @admin.action(
+        description="Marquer les messages comme lus par l’administration",
+        permissions=["change"],
+    )
+    def marquer_lus_admin(self, request, queryset):
+        nombre = queryset.update(lu_admin=True)
+
+        self.message_user(
+            request,
+            f"{nombre} message(s) marqué(s) comme lu(s).",
+        )
+
+
+@admin.register(Reunion)
+class ReunionStagiairesAdmin(admin.ModelAdmin):
+    list_display = (
+        "titre",
+        "type",
+        "debut",
+        "domaine",
+        "annulee",
+    )
+
+    list_filter = (
+        "type",
+        "domaine",
+        "annulee",
+    )
+
+    search_fields = (
+        "titre",
+        "description",
+    )
+
+    date_hierarchy = "debut"
+
+    fieldsets = (
+        (
+            "Événement",
+            {
+                "fields": (
+                    "titre",
+                    "type",
+                    "description",
+                ),
+            },
+        ),
+        (
+            "Organisation",
+            {
+                "fields": (
+                    "debut",
+                    "lien",
+                    "domaine",
+                    "annulee",
+                ),
+            },
+        ),
+    )
+
+
+@admin.register(Notification)
+class NotificationStagiairesAdmin(admin.ModelAdmin):
+    list_display = (
+        "utilisateur",
+        "texte",
+        "cree",
+        "lue",
+    )
+
+    list_filter = ("lue",)
+
+    search_fields = (
+        "texte",
+        "utilisateur__username",
+    )
+
+    readonly_fields = (
+        "utilisateur",
+        "texte",
+        "cree",
+        "lue",
+    )
+
+    list_select_related = ("utilisateur",)
+
+    def has_add_permission(self, request):
+        return False

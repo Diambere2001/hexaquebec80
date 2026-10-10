@@ -1,0 +1,62 @@
+{% extends 'stagiaires/base.html' %}
+
+{% block title %}
+    Mes notifications — HexaQuébec
+{% endblock %}
+
+{% block content %}
+<h1>Mes notifications</h1>
+
+<p class="muted">
+    Retrouvez les notifications de vos échanges
+    et des événements organisés par HexaQuébec.
+</p>
+
+<div class="card">
+    <form
+        method="post"
+        action="{% url 'stagiaire_notifications_lire' %}"
+    >
+        {% csrf_token %}
+
+        <button
+            class="button"
+            type="submit"
+        >
+            Tout marquer comme lu
+        </button>
+    </form>
+</div>
+
+{% for n in notifications %}
+    <article class="card {% if not n.lue %}notification-new{% endif %}">
+        {% if not n.lue %}
+            <span class="badge">
+                Nouveau
+            </span>
+        {% else %}
+            <span class="badge badge-success">
+                Lu
+            </span>
+        {% endif %}
+
+        <p>
+            {{ n.texte }}
+        </p>
+
+        <small class="muted">
+            {{ n.cree|date:"d/m/Y à H:i" }}
+        </small>
+    </article>
+{% empty %}
+    <div class="card">
+        <p class="empty">
+            Vous n’avez aucune notification.
+        </p>
+    </div>
+{% endfor %}
+
+<p class="muted">
+    Affichage des 100 dernières notifications.
+</p>
+{% endblock %}

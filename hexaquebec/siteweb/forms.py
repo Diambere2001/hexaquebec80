@@ -1139,3 +1139,92 @@ class LettreAcceptationForm(forms.ModelForm):
             )
 
         return signature
+
+
+
+
+
+
+
+from django import forms
+
+from .models import Messages
+
+
+class MessagesForm(forms.ModelForm):
+    class Meta:
+        model = Messages
+        fields = ["texte"]
+
+        labels = {
+            "texte": "Votre message",
+        }
+
+        widgets = {
+            "texte": forms.Textarea(
+                attrs={
+                    "rows": 4,
+                    "maxlength": 5000,
+                    "placeholder": "Écrivez votre message…",
+                },
+            ),
+        }
+
+
+
+
+
+from django import forms
+
+from .models import Domaine, Messages
+
+
+class ConnexionForm(forms.Form):
+    code = forms.CharField(
+        label="Code stagiaire",
+        max_length=40,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Votre code HQ-…",
+                "autocomplete": "username",
+            }
+        ),
+    )
+
+    domaine = forms.ChoiceField(
+        label="Domaine du stage",
+        choices=Domaine.choices,
+    )
+
+    mot_de_passe = forms.CharField(
+        label="Mot de passe",
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Votre mot de passe",
+                "autocomplete": "current-password",
+            }
+        ),
+    )
+
+    def clean_code(self):
+        return self.cleaned_data["code"].strip().upper()
+
+
+class MessagesForm(forms.ModelForm):
+    class Meta:
+        model = Messages
+        fields = ["texte"]
+
+        labels = {
+            "texte": "Votre message",
+        }
+
+        widgets = {
+            "texte": forms.Textarea(
+                attrs={
+                    "rows": 4,
+                    "maxlength": 5000,
+                    "placeholder": "Écrivez votre message…",
+                }
+            ),
+        }

@@ -2146,3 +2146,310 @@ class LettreAcceptation(models.Model):
             *args,
             **kwargs,
         )
+
+
+
+
+
+
+
+
+import secrets
+
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import F, Q
+from django.utils import timezone
+
+
+def nouveau_code():
+    return "HQ-" + secrets.token_hex(6).upper()
+
+
+class Domaine(models.TextChoices):
+    WEB = "WEB", "Développement web"
+    MOBILE = "MOBILE", "Développement mobile"
+    IA = "IA", "Intelligence artificielle"
+    COMMERCE = "COMMERCE", "E-commerce"
+    MAINTENANCE = "MAINTENANCE", "Maintenance informatique"
+    VENTE = "VENTE", "Vente de services"
+    ADMINISTRATION = "ADMINISTRATION", "Administration"
+    MARKETING = "MARKETING", "Marketing et communication"
+
+
+class Stagiaires(models.Model):
+    utilisateur = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profil_espace_stagiaires",
+    )
+
+    code = models.CharField(
+        max_length=40,
+        unique=True,
+        default=nouveau_code,
+        editable=False,
+    )
+
+    domaine = models.CharField(
+        max_length=20,
+        choices=Domaine.choices,
+    )
+
+    etablissement = models.CharField(
+        max_length=200,
+        blank=True,
+    )
+
+    debut = models.DateField()
+    fin = models.DateField()
+    actif = models.BooleanField(default=True)
+
+    def clean(self):
+        super().clean()
+
+        if self.debut and self.fin and self.fin < self.debut:
+            raise ValidationError({
+                "fin": "La fin doit être postérieure au début."
+            })
+
+    def __str__(self):
+        nom = (
+            self.utilisateur.get_full_name()
+            or self.utilisateur.get_username()
+        )
+
+        return f"{nom} — {self.code}"
+
+    class Meta:
+        verbose_name = "profil de l’espace stagiaire"
+        verbose_name_plural = "profils de l’espace stagiaire"
+
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(fin__gte=F("debut")),
+                name="hq_espace_dates_stage_valides",
+            ),
+        ]
+
+
+class Rubrique(models.Model):
+    slug = models.SlugField(unique=True)
+
+    titre = models.CharField(max_length=180)
+
+    contenu = models.TextField(
+        help_text=(
+            "Texte simple : les balises HTML "
+            "sont affichées comme du texte."
+        ),
+    )
+
+    domaine = models.CharField(
+        max_length=20,
+        choices=Domaine.choices,
+        blank=True,
+        help_text="Vide = tous les stagiaires.",
+    )
+
+    ordre = models.PositiveIntegerField(default=0)
+    publiee = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.titre
+
+    class Meta:
+        ordering = ["ordre", "titre"]
+        verbose_name = "rubrique stagiaire"
+        verbose_name_plural = "rubriques stagiaires"
+
+
+class Pointage(models.Model):
+    stagiaire = models.ForeignKey(
+        Stagiaires,
+        on_delete=models.CASCADE,
+        related_name="pointages",
+    )
+
+    entree = models.DateTimeField(
+        default=timezone.now,
+    )
+
+    sortie = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    @property
+    def duree(self):
+        if not self.sortie:
+            return "En cours"
+
+        return str(
+            self.sortie - self.entree
+        ).split(".")[0]
+
+    def clean(self):
+        super().clean()
+
+        if (
+            self.sortie
+            and self.entree
+            and self.sortie < self.entree
+        ):
+            raise ValidationError({
+                "sortie": "La sortie doit suivre l’entrée."
+            })
+
+    def __str__(self):
+        return (
+            f"{self.stagiaire.code} — "
+            f"{self.entree:%d/%m/%Y %H:%M}"
+        )
+
+    class Meta:
+        ordering = ["-entree"]
+        verbose_name = "pointage stagiaire"
+        verbose_name_plural = "pointages stagiaires"
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["stagiaire"],
+                condition=Q(sortie__isnull=True),
+                name="hq_espace_un_pointage_ouvert",
+            ),
+            models.CheckConstraint(
+                condition=(
+                    Q(sortie__isnull=True)
+                    | Q(sortie__gte=F("entree"))
+                ),
+                name="hq_espace_pointage_dates_valides",
+            ),
+        ]
+
+
+class Messages(models.Model):
+    stagiaire = models.ForeignKey(
+        Stagiaires,
+        on_delete=models.CASCADE,
+        related_name="messages",
+    )
+
+    auteur = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="messages_espace_stagiaires_emis",
+    )
+
+    texte = models.TextField(
+        max_length=5000,
+    )
+
+    cree = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    lu_admin = models.BooleanField(
+        default=False,
+    )
+
+    lu_stagiaire = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        if self.cree:
+            return (
+                f"{self.stagiaire.code} — "
+                f"{self.cree:%Y-%m-%d %H:%M}"
+            )
+
+        return self.stagiaire.code
+
+    class Meta:
+        ordering = ["cree", "pk"]
+        verbose_name = "message de l’espace stagiaire"
+        verbose_name_plural = "messages de l’espace stagiaire"
+
+
+class Reunion(models.Model):
+    class Type(models.TextChoices):
+        REUNION = "REUNION", "Réunion"
+        CONFERENCE = "CONFERENCE", "Conférence"
+
+    titre = models.CharField(
+        max_length=180,
+    )
+
+    type = models.CharField(
+        max_length=12,
+        choices=Type.choices,
+        default=Type.REUNION,
+    )
+
+    description = models.TextField(
+        blank=True,
+    )
+
+    debut = models.DateTimeField()
+
+    lien = models.URLField(
+        blank=True,
+        help_text="Lien HTTPS vers la visioconférence.",
+    )
+
+    domaine = models.CharField(
+        max_length=20,
+        choices=Domaine.choices,
+        blank=True,
+        help_text="Vide = tous les domaines.",
+    )
+
+    annulee = models.BooleanField(
+        default=False,
+    )
+
+    def clean(self):
+        super().clean()
+
+        if self.lien and not self.lien.startswith("https://"):
+            raise ValidationError({
+                "lien": "Utilisez un lien HTTPS."
+            })
+
+    def __str__(self):
+        return self.titre
+
+    class Meta:
+        ordering = ["debut"]
+        verbose_name = "réunion ou conférence stagiaire"
+        verbose_name_plural = "réunions et conférences stagiaires"
+
+
+class Notification(models.Model):
+    utilisateur = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="notifications_espace_stagiaires",
+    )
+
+    texte = models.CharField(
+        max_length=250,
+    )
+
+    cree = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    lue = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        return self.texte
+
+    class Meta:
+        ordering = ["-cree", "-pk"]
+        verbose_name = "notification stagiaire"
+        verbose_name_plural = "notifications stagiaires"

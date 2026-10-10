@@ -11111,3 +11111,451 @@ def supprimer_lettre(
     return redirect(
         "liste_lettres"
     )
+
+
+
+
+
+
+
+
+
+from functools import wraps
+
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
+from django.db import transaction
+from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
+from django.utils import timezone
+from django.views.decorators.http import (
+    require_GET,
+    require_POST,
+    require_http_methods,
+)
+
+from .forms import ConnexionForm, MessagesForm
+
+from .models import (
+    Stagiaires,
+    Messages,
+    Rubrique,
+    Pointage,
+    Reunion,
+    Notification,
+)
+
+
+def acces_stagiaire(view):
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect("space_stagiare")
+
+        profil = (
+            Stagiaires.objects
+            .select_related("utilisateur")
+            .filter(
+                utilisateur=request.user,
+                actif=True,
+                utilisateur__is_active=True,
+            )
+            .first()
+        )
+
+        if profil is None:
+            messages.error(
+                request,
+                "Votre accès stagiaire est indisponible. "
+                "Contactez l’administration HexaQuébec.",
+            )
+
+            return redirect("space_stagiare")
+
+        request.stagiaire = profil
+
+        return view(request, *args, **kwargs)
+
+    return wrapper
+
+
+def contexte_stagiaire(request):
+    rubriques = (
+        Rubrique.objects
+        .filter(publiee=True)
+        .filter(
+            Q(domaine="")
+            | Q(domaine=request.stagiaire.domaine)
+        )
+    )
+
+    non_lues = Notification.objects.filter(
+        utilisateur=request.user,
+        lue=False,
+    ).count()
+
+    return {
+        "stagiaire": request.stagiaire,
+        "rubriques": rubriques,
+        "non_lues": non_lues,
+    }
+
+
+@require_http_methods(["GET", "POST"])
+def space_stagiare(request):
+    if request.user.is_authenticated:
+        profil_existe = Stagiaires.objects.filter(
+            utilisateur=request.user,
+            actif=True,
+            utilisateur__is_active=True,
+        ).exists()
+
+        if profil_existe:
+            return redirect("stagiaire_tableau")
+
+    form = ConnexionForm(
+        request.POST if request.method == "POST" else None
+    )
+
+    if request.method == "POST" and form.is_valid():
+        code = form.cleaned_data["code"].strip().upper()
+        domaine = form.cleaned_data["domaine"]
+        mot_de_passe = form.cleaned_data["mot_de_passe"]
+
+        cle_cache = "hq-stage-auth:" + code
+        essais = cache.get(cle_cache, 0)
+
+        if essais >= 10:
+            form.add_error(
+                None,
+                "Trop de tentatives de connexion. "
+                "Réessayez dans 15 minutes.",
+            )
+
+        else:
+            profil = (
+                Stagiaires.objects
+                .select_related("utilisateur")
+                .filter(
+                    code=code,
+                    domaine=domaine,
+                    actif=True,
+                    utilisateur__is_active=True,
+                )
+                .first()
+            )
+
+            identifiant = (
+                profil.utilisateur.get_username()
+                if profil is not None
+                else "__hq_inexistant__"
+            )
+
+            utilisateur = authenticate(
+                request,
+                username=identifiant,
+                password=mot_de_passe,
+            )
+
+            if (
+                profil is not None
+                and utilisateur is not None
+                and utilisateur.pk == profil.utilisateur_id
+            ):
+                cache.delete(cle_cache)
+
+                login(request, utilisateur)
+
+                messages.success(
+                    request,
+                    "Bienvenue dans votre espace stagiaire.",
+                )
+
+                return redirect("stagiaire_tableau")
+
+            cache.set(
+                cle_cache,
+                essais + 1,
+                timeout=900,
+            )
+
+            form.add_error(
+                None,
+                "Code, domaine ou mot de passe incorrect.",
+            )
+
+    return render(
+        request,
+        "stagiaires/connexion.html",
+        {
+            "form": form,
+        },
+    )
+
+
+@require_GET
+@acces_stagiaire
+def tableau(request):
+    contexte = contexte_stagiaire(request)
+
+    contexte["pointage"] = Pointage.objects.filter(
+        stagiaire=request.stagiaire,
+        sortie__isnull=True,
+    ).first()
+
+    contexte["reunions"] = (
+        Reunion.objects
+        .filter(
+            annulee=False,
+            debut__gte=timezone.now(),
+        )
+        .filter(
+            Q(domaine="")
+            | Q(domaine=request.stagiaire.domaine)
+        )
+        .order_by("debut")[:5]
+    )
+
+    return render(
+        request,
+        "stagiaires/tableau.html",
+        contexte,
+    )
+
+
+@require_GET
+@acces_stagiaire
+def rubrique(request, slug):
+    contexte = contexte_stagiaire(request)
+
+    contexte["rubrique"] = get_object_or_404(
+        contexte["rubriques"],
+        slug=slug,
+    )
+
+    return render(
+        request,
+        "stagiaires/rubrique.html",
+        contexte,
+    )
+
+
+@require_POST
+@acces_stagiaire
+def pointer(request):
+    action = request.POST.get("action")
+
+    with transaction.atomic():
+        profil = (
+            Stagiaires.objects
+            .select_for_update()
+            .get(pk=request.stagiaire.pk)
+        )
+
+        if not profil.actif:
+            messages.error(
+                request,
+                "Votre accès stagiaire a été désactivé.",
+            )
+
+            return redirect("space_stagiare")
+
+        ouvert = Pointage.objects.filter(
+            stagiaire=profil,
+            sortie__isnull=True,
+        ).first()
+
+        if action == "entree":
+            if ouvert is not None:
+                messages.warning(
+                    request,
+                    "Votre entrée est déjà enregistrée.",
+                )
+
+            else:
+                Pointage.objects.create(
+                    stagiaire=profil,
+                )
+
+                messages.success(
+                    request,
+                    "Votre entrée a été enregistrée.",
+                )
+
+        elif action == "sortie":
+            if ouvert is None:
+                messages.warning(
+                    request,
+                    "Aucune entrée en cours. "
+                    "Pointez d’abord votre entrée.",
+                )
+
+            else:
+                ouvert.sortie = timezone.now()
+                ouvert.save(update_fields=["sortie"])
+
+                messages.success(
+                    request,
+                    "Votre sortie a été enregistrée.",
+                )
+
+        else:
+            messages.error(
+                request,
+                "Action de pointage invalide.",
+            )
+
+    return redirect("stagiaire_pointages")
+
+
+@require_GET
+@acces_stagiaire
+def pointages(request):
+    contexte = contexte_stagiaire(request)
+
+    contexte["pointages"] = (
+        Pointage.objects
+        .filter(stagiaire=request.stagiaire)
+        .order_by("-entree")[:100]
+    )
+
+    contexte["ouvert"] = Pointage.objects.filter(
+        stagiaire=request.stagiaire,
+        sortie__isnull=True,
+    ).exists()
+
+    return render(
+        request,
+        "stagiaires/pointages.html",
+        contexte,
+    )
+
+
+@require_http_methods(["GET", "POST"])
+@acces_stagiaire
+def messagerie(request):
+    form = MessagesForm(
+        request.POST if request.method == "POST" else None
+    )
+
+    if request.method == "POST" and form.is_valid():
+        message = form.save(commit=False)
+
+        # Le destinataire et l’auteur sont fixés côté serveur.
+        message.stagiaire = request.stagiaire
+        message.auteur = request.user
+        message.lu_stagiaire = True
+        message.lu_admin = False
+
+        message.save()
+
+        messages.success(
+            request,
+            "Votre message a été envoyé à l’administration.",
+        )
+
+        return redirect("stagiaire_messages")
+
+    contexte = contexte_stagiaire(request)
+
+    contexte["form"] = form
+
+    contexte["conversation"] = (
+        Messages.objects
+        .filter(stagiaire=request.stagiaire)
+        .select_related("auteur")
+        .order_by("cree", "pk")
+    )
+
+    return render(
+        request,
+        "stagiaires/messages.html",
+        contexte,
+    )
+
+
+@require_POST
+@acces_stagiaire
+def lire_messages(request):
+    Messages.objects.filter(
+        stagiaire=request.stagiaire,
+        lu_stagiaire=False,
+    ).update(lu_stagiaire=True)
+
+    return redirect("stagiaire_messages")
+
+
+@require_GET
+@acces_stagiaire
+def reunions(request):
+    contexte = contexte_stagiaire(request)
+
+    contexte["reunions"] = (
+        Reunion.objects
+        .filter(
+            Q(domaine="")
+            | Q(domaine=request.stagiaire.domaine)
+        )
+        .order_by("-debut")
+    )
+
+    return render(
+        request,
+        "stagiaires/reunions.html",
+        contexte,
+    )
+
+
+@require_GET
+@acces_stagiaire
+def notifications(request):
+    contexte = contexte_stagiaire(request)
+
+    contexte["notifications"] = (
+        Notification.objects
+        .filter(utilisateur=request.user)
+        .order_by("-cree", "-pk")[:100]
+    )
+
+    return render(
+        request,
+        "stagiaires/notifications.html",
+        contexte,
+    )
+
+
+@require_POST
+@acces_stagiaire
+def lire_notifications(request):
+    Notification.objects.filter(
+        utilisateur=request.user,
+        lue=False,
+    ).update(lue=True)
+
+    return redirect("stagiaire_notifications")
+
+
+@require_GET
+@acces_stagiaire
+def compteur_notifications(request):
+    nombre = Notification.objects.filter(
+        utilisateur=request.user,
+        lue=False,
+    ).count()
+
+    return JsonResponse({
+        "non_lues": nombre,
+    })
+
+
+@require_POST
+def deconnexion(request):
+    logout(request)
+
+    return redirect("space_stagiare")

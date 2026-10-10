@@ -1,0 +1,312 @@
+{% extends 'stagiaires/base.html' %}
+
+{% block title %}
+    Mon pointage — HexaQuébec
+{% endblock %}
+
+{% block content %}
+<style>
+    .pointage-header {
+        margin-bottom: 25px;
+    }
+
+    .pointage-header h1 {
+        margin-bottom: 10px;
+    }
+
+    .pointage-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .pointage-grid .card {
+        margin-bottom: 0;
+    }
+
+    .presence-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 14px;
+        border-radius: 30px;
+        background: #eff3f8;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .presence-indicator.active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .presence-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #94a3b8;
+        flex-shrink: 0;
+    }
+
+    .presence-indicator.active .presence-dot {
+        background: #16a34a;
+    }
+
+    .pointage-action {
+        margin-top: 20px;
+    }
+
+    .pointage-action .button {
+        width: 100%;
+        min-height: 50px;
+    }
+
+    .pointage-instructions {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+    }
+
+    .pointage-instructions li {
+        margin-bottom: 10px;
+    }
+
+    .history-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .history-heading h2 {
+        margin: 0;
+    }
+
+    .pointage-empty {
+        padding: 35px 15px;
+        text-align: center;
+        white-space: normal;
+    }
+
+    .pointage-empty strong {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .pointage-note {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .pointage-help {
+        padding: 18px 20px;
+        background: #eaf2ff;
+        border: 1px solid #d5e4fb;
+        border-radius: 12px;
+    }
+
+    .pointage-help p {
+        margin: 0;
+    }
+
+    @media (max-width: 650px) {
+        .pointage-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="pointage-header">
+    <h1>Mon pointage</h1>
+
+    <p class="muted">
+        Enregistrez votre entrée au début de chaque session
+        de travail et votre sortie lorsque vous terminez.
+    </p>
+</div>
+
+<div class="pointage-grid">
+    <section class="card" aria-labelledby="presence-title">
+        <h2 id="presence-title">
+            Ma présence
+        </h2>
+
+        {% if ouvert %}
+            <div class="presence-indicator active">
+                <span class="presence-dot" aria-hidden="true"></span>
+                Session de travail en cours
+            </div>
+
+            <p class="muted">
+                Votre entrée est enregistrée.
+                Pointez votre sortie à la fin de votre session.
+            </p>
+        {% else %}
+            <div class="presence-indicator">
+                <span class="presence-dot" aria-hidden="true"></span>
+                Aucune session en cours
+            </div>
+
+            <p class="muted">
+                Lorsque vous commencez votre travail,
+                cliquez sur « Pointer mon entrée ».
+            </p>
+        {% endif %}
+
+        <form
+            class="pointage-action"
+            method="post"
+            action="{% url 'stagiaire_pointer' %}"
+        >
+            {% csrf_token %}
+
+            {% if ouvert %}
+                <button
+                    class="button button-danger"
+                    type="submit"
+                    name="action"
+                    value="sortie"
+                >
+                    Pointer ma sortie
+                </button>
+            {% else %}
+                <button
+                    class="button"
+                    type="submit"
+                    name="action"
+                    value="entree"
+                >
+                    Pointer mon entrée
+                </button>
+            {% endif %}
+        </form>
+
+        <p class="pointage-note">
+            L’heure est enregistrée automatiquement
+            par le serveur lors du pointage.
+        </p>
+    </section>
+
+    <section class="card" aria-labelledby="instructions-title">
+        <h2 id="instructions-title">
+            Consignes de pointage
+        </h2>
+
+        <ol class="pointage-instructions">
+            <li>
+                Pointez votre entrée lorsque vous commencez
+                votre session de travail.
+            </li>
+
+            <li>
+                Pointez votre sortie lorsque vous terminez
+                cette session.
+            </li>
+
+            <li>
+                Suivez les consignes de votre responsable
+                pour les pauses et les horaires.
+            </li>
+
+            <li>
+                En cas d’oubli ou d’erreur, contactez
+                l’administration pour demander une correction.
+            </li>
+        </ol>
+    </section>
+</div>
+
+<section class="card" aria-labelledby="history-title">
+    <div class="history-heading">
+        <h2 id="history-title">
+            Historique de mes sessions
+        </h2>
+
+        <span class="badge">
+            100 dernières sessions au maximum
+        </span>
+    </div>
+
+    <div class="scroll">
+        <table aria-labelledby="history-title">
+            <thead>
+                <tr>
+                    <th scope="col">Entrée</th>
+                    <th scope="col">Sortie</th>
+                    <th scope="col">Durée</th>
+                    <th scope="col">Statut</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in pointages %}
+                    <tr>
+                        <td>
+                            {{ p.entree|date:"d/m/Y à H:i" }}
+                        </td>
+
+                        <td>
+                            {% if p.sortie %}
+                                {{ p.sortie|date:"d/m/Y à H:i" }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ p.duree }}
+                        </td>
+
+                        <td>
+                            {% if p.sortie %}
+                                <span class="badge">
+                                    Terminée
+                                </span>
+                            {% else %}
+                                <span class="badge badge-success">
+                                    En cours
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="pointage-empty">
+                            <strong>
+                                Aucun pointage enregistré
+                            </strong>
+
+                            <span class="muted">
+                                Votre première session apparaîtra ici
+                                après avoir pointé votre entrée.
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <p class="pointage-note">
+        Les heures sont affichées dans le fuseau horaire
+        configuré pour le site.
+        L’administration conserve l’historique complet.
+    </p>
+</section>
+
+<div class="pointage-help">
+    <p>
+        <strong>Un oubli ou une erreur de pointage ?</strong>
+        <br>
+        <a href="{% url 'stagiaire_messages' %}">
+            Écrire à l’administration
+        </a>
+        en précisant la date et les horaires concernés.
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'stagiaires/base.html' %}
+
+{% block title %}
+    Mon pointage — HexaQuébec
+{% endblock %}
+
+{% block content %}
+<h1>Mon pointage</h1>
+
+<p class="muted">
+    Enregistrez chaque entrée et sortie de votre session
+    de travail.
+</p>
+
+<div class="card">
+    {% if ouvert %}
+        <p>
+            <span class="badge badge-success">
+                Session de travail en cours
+            </span>
+        </p>
+    {% else %}
+        <p class="muted">
+            Aucune session de travail en cours.
+        </p>
+    {% endif %}
+
+    <form
+        method="post"
+        action="{% url 'stagiaire_pointer' %}"
+    >
+        {% csrf_token %}
+
+        {% if ouvert %}
+            <button
+                class="button button-danger"
+                type="submit"
+                name="action"
+                value="sortie"
+            >
+                Pointer ma sortie
+            </button>
+        {% else %}
+            <button
+                class="button"
+                type="submit"
+                name="action"
+                value="entree"
+            >
+                Pointer mon entrée
+            </button>
+        {% endif %}
+    </form>
+
+    <p class="muted" style="margin-top:18px">
+        Les heures sont affichées dans le fuseau horaire
+        configuré pour le site.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Historique de mes sessions</h2>
+
+    <div class="scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Entrée</th>
+                    <th>Sortie</th>
+                    <th>Durée</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in pointages %}
+                    <tr>
+                        <td>
+                            {{ p.entree|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td>
+                            {% if p.sortie %}
+                                {{ p.sortie|date:"d/m/Y H:i" }}
+                            {% else %}
+                                <span class="badge badge-success">
+                                    En cours
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ p.duree }}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            Aucun pointage enregistré.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <p class="muted">
+        Affichage des 100 dernières sessions.
+        L’administration conserve l’historique complet.
+    </p>
+</div>
+{% endblock %}

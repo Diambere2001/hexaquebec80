@@ -347,6 +347,78 @@ path(
     name="supprimer_lettre",
 ),
 
+path(
+        "espace-stagiaire/",
+        views.space_stagiare,
+        name="space_stagiare",
+    ),
+
+    path(
+        "espace-stagiaire/tableau/",
+        views.tableau,
+        name="stagiaire_tableau",
+    ),
+
+    path(
+        "espace-stagiaire/rubriques/<slug:slug>/",
+        views.rubrique,
+        name="stagiaire_rubrique",
+    ),
+
+    path(
+        "espace-stagiaire/pointages/",
+        views.pointages,
+        name="stagiaire_pointages",
+    ),
+
+    path(
+        "espace-stagiaire/pointer/",
+        views.pointer,
+        name="stagiaire_pointer",
+    ),
+
+    path(
+        "espace-stagiaire/messages/",
+        views.messagerie,
+        name="stagiaire_messages",
+    ),
+
+    path(
+        "espace-stagiaire/messages/lire/",
+        views.lire_messages,
+        name="stagiaire_messages_lire",
+    ),
+
+    path(
+        "espace-stagiaire/reunions/",
+        views.reunions,
+        name="stagiaire_reunions",
+    ),
+
+    path(
+        "espace-stagiaire/notifications/",
+        views.notifications,
+        name="stagiaire_notifications",
+    ),
+
+    path(
+        "espace-stagiaire/notifications/lire/",
+        views.lire_notifications,
+        name="stagiaire_notifications_lire",
+    ),
+
+    path(
+        "espace-stagiaire/notifications/compteur/",
+        views.compteur_notifications,
+        name="stagiaire_notifications_compteur",
+    ),
+
+    path(
+        "espace-stagiaire/deconnexion/",
+        views.deconnexion,
+        name="stagiaire_deconnexion",
+    ),
+
 
 
 ]

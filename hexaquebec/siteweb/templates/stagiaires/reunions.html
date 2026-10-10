@@ -1,0 +1,82 @@
+{% extends 'stagiaires/base.html' %}
+
+{% block title %}
+    Réunions et conférences — HexaQuébec
+{% endblock %}
+
+{% block content %}
+<h1>Réunions et conférences</h1>
+
+<p class="muted">
+    Retrouvez les événements organisés par l’administration
+    pour votre domaine ou pour tous les stagiaires.
+</p>
+
+{% for r in reunions %}
+    <article class="card">
+        <span class="badge">
+            {{ r.get_type_display }}
+        </span>
+
+        {% if r.annulee %}
+            <span class="badge badge-danger">
+                Annulé
+            </span>
+        {% endif %}
+
+        <h2 style="margin-top:18px">
+            {{ r.titre }}
+        </h2>
+
+        <p>
+            <strong>Date et heure :</strong>
+            {{ r.debut|date:"d/m/Y à H:i" }}
+        </p>
+
+        <p class="muted">
+            <strong>Public concerné :</strong>
+
+            {% if r.domaine %}
+                {{ r.get_domaine_display }}
+            {% else %}
+                Tous les stagiaires
+            {% endif %}
+        </p>
+
+        {% if r.description %}
+            <div class="text">
+                {{ r.description|linebreaks }}
+            </div>
+        {% endif %}
+
+        {% if r.annulee %}
+            <p class="muted">
+                Cet événement a été annulé
+                par l’administration.
+            </p>
+
+        {% elif r.lien %}
+            <a
+                class="button"
+                href="{{ r.lien }}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Rejoindre l’événement
+            </a>
+
+        {% else %}
+            <p class="muted">
+                Le lien de participation sera communiqué
+                par l’administration.
+            </p>
+        {% endif %}
+    </article>
+{% empty %}
+    <div class="card">
+        <p class="empty">
+            Aucun événement disponible pour le moment.
+        </p>
+    </div>
+{% endfor %}
+{% endblock %}
