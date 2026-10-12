@@ -24,7 +24,9 @@
             --radius: 20px;
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
@@ -78,7 +80,7 @@
             z-index: 100;
             padding: 12px 18px;
             border-radius: 10px;
-            background: white;
+            background: #ffffff;
             color: var(--primary);
         }
 
@@ -92,21 +94,21 @@
         }
 
         .topbar-inner {
-            max-width: 1320px;
-            margin: auto;
-            padding: 22px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 24px;
+            max-width: 1320px;
+            margin: auto;
+            padding: 22px 28px;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 13px;
-            color: var(--ink);
             min-width: 0;
+            color: var(--ink);
         }
 
         .brand:hover {
@@ -118,10 +120,10 @@
             place-items: center;
             width: 48px;
             height: 48px;
-            flex-shrink: 0;
+            flex: 0 0 48px;
             border-radius: 15px;
             background: linear-gradient(135deg, #185adb, #123b8e);
-            color: white;
+            color: #ffffff;
             font-size: 17px;
             font-weight: 800;
             box-shadow: 0 6px 16px #185adb26;
@@ -148,24 +150,25 @@
             border-radius: 12px;
             background: #f8faff;
             font-size: 13px;
+            overflow-wrap: anywhere;
         }
 
         .account-dot {
             width: 8px;
             height: 8px;
-            flex-shrink: 0;
+            flex: 0 0 8px;
             border-radius: 50%;
             background: #168453;
         }
 
         .layout {
-            max-width: 1320px;
-            margin: auto;
             display: grid;
             grid-template-columns: 235px minmax(0, 1fr);
-            gap: 28px;
-            padding: 30px 28px 50px;
             align-items: start;
+            gap: 28px;
+            max-width: 1320px;
+            margin: auto;
+            padding: 30px 28px 50px;
         }
 
         .sidebar {
@@ -197,9 +200,7 @@
             color: #475772;
             font-size: 14px;
             font-weight: 600;
-            transition:
-                color .18s ease,
-                background .18s ease;
+            transition: color .18s ease, background .18s ease;
         }
 
         .nav-link:hover {
@@ -217,8 +218,10 @@
             display: grid;
             place-items: center;
             width: 25px;
-            flex-shrink: 0;
+            height: 25px;
+            flex: 0 0 25px;
             font-size: 18px;
+            line-height: 1;
         }
 
         .sidebar-note {
@@ -349,7 +352,8 @@
 
         .number,
         .stat-number,
-        .count {
+        .count,
+        .tile-number {
             display: block;
             margin: 14px 0;
             color: var(--primary);
@@ -357,6 +361,14 @@
             line-height: 1.1;
             font-weight: 800;
             letter-spacing: -1px;
+        }
+
+        .tile-link {
+            display: block;
+            margin-top: 16px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .button,
@@ -376,9 +388,7 @@
             line-height: 1.4;
             text-align: center;
             cursor: pointer;
-            transition:
-                background .18s ease,
-                box-shadow .18s ease;
+            transition: background .18s ease, box-shadow .18s ease;
         }
 
         .button:hover,
@@ -448,7 +458,7 @@
             font-weight: 650;
         }
 
-        input:not([type="checkbox"]):not([type="radio"]),
+        input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
         select,
         textarea {
             width: 100%;
@@ -665,6 +675,97 @@
             text-align: center;
         }
 
+        /* Heure de référence au Québec */
+
+        .hq-quebec-clock {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 24px;
+            padding: 22px 24px;
+            border: 1px solid #cfddf5;
+            border-radius: 18px;
+            background: linear-gradient(120deg, #ffffff, #eef4ff);
+            color: var(--ink);
+            box-shadow: 0 8px 24px #172b4d0d;
+        }
+
+        .hq-clock-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            flex: 1 1 260px;
+        }
+
+        .hq-clock-icon {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            border-radius: 14px;
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 5px 14px #185adb20;
+        }
+
+        .hq-clock-icon svg {
+            display: block;
+            width: 24px;
+            height: 24px;
+        }
+
+        .hq-clock-heading strong {
+            display: block;
+            color: var(--ink);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .hq-clock-heading p {
+            max-width: 430px;
+            margin: 5px 0 0;
+            color: #52667e;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .hq-clock-display {
+            flex: 0 1 auto;
+            text-align: right;
+        }
+
+        .hq-clock-label {
+            display: block;
+            margin-bottom: 3px;
+            color: #62718a;
+            font-size: 10px;
+            font-weight: 750;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hq-clock-time {
+            display: block;
+            color: var(--primary);
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .hq-clock-date {
+            display: block;
+            margin-top: 4px;
+            color: #52667e;
+            font-size: 12px;
+        }
+
         @keyframes enter {
             from {
                 opacity: 0;
@@ -727,6 +828,24 @@
             }
         }
 
+        @media (max-width: 600px) {
+            .hq-quebec-clock {
+                padding: 18px;
+            }
+
+            .hq-clock-display {
+                width: 100%;
+                flex-basis: 100%;
+                padding-top: 14px;
+                border-top: 1px solid #dce5f3;
+                text-align: left;
+            }
+
+            .hq-clock-time {
+                font-size: 30px;
+            }
+        }
+
         @media (max-width: 480px) {
             .topbar-inner {
                 flex-wrap: wrap;
@@ -784,9 +903,7 @@
                 href="{% url 'space_stagiaire_admin' %}"
                 aria-label="HexaQuébec — Administration stagiaires"
             >
-                <span class="brand-symbol" aria-hidden="true">
-                    HQ
-                </span>
+                <span class="brand-symbol" aria-hidden="true">HQ</span>
 
                 <span>
                     <strong>HexaQuébec</strong>
@@ -828,7 +945,9 @@
                     <a
                         class="nav-link {% if section == 'stagiaires' %}active{% endif %}"
                         href="{% url 'stagiaires_admin_liste' 'stagiaires' %}"
-                        {% if section == 'stagiaires' %}aria-current="page"{% endif %}
+                        {% if section == 'stagiaires' %}
+                            aria-current="page"
+                        {% endif %}
                     >
                         <span class="nav-icon" aria-hidden="true">◎</span>
                         Stagiaires
@@ -839,7 +958,9 @@
                     <a
                         class="nav-link {% if section == 'rubriques' %}active{% endif %}"
                         href="{% url 'stagiaires_admin_liste' 'rubriques' %}"
-                        {% if section == 'rubriques' %}aria-current="page"{% endif %}
+                        {% if section == 'rubriques' %}
+                            aria-current="page"
+                        {% endif %}
                     >
                         <span class="nav-icon" aria-hidden="true">▤</span>
                         Rubriques
@@ -850,7 +971,9 @@
                     <a
                         class="nav-link {% if section == 'pointages' %}active{% endif %}"
                         href="{% url 'stagiaires_admin_liste' 'pointages' %}"
-                        {% if section == 'pointages' %}aria-current="page"{% endif %}
+                        {% if section == 'pointages' %}
+                            aria-current="page"
+                        {% endif %}
                     >
                         <span class="nav-icon" aria-hidden="true">◷</span>
                         Pointages
@@ -871,7 +994,9 @@
                     <a
                         class="nav-link {% if section == 'reunions' %}active{% endif %}"
                         href="{% url 'stagiaires_admin_liste' 'reunions' %}"
-                        {% if section == 'reunions' %}aria-current="page"{% endif %}
+                        {% if section == 'reunions' %}
+                            aria-current="page"
+                        {% endif %}
                     >
                         <span class="nav-icon" aria-hidden="true">▣</span>
                         Réunions
@@ -882,7 +1007,9 @@
                     <a
                         class="nav-link {% if section == 'notifications' %}active{% endif %}"
                         href="{% url 'stagiaires_admin_liste' 'notifications' %}"
-                        {% if section == 'notifications' %}aria-current="page"{% endif %}
+                        {% if section == 'notifications' %}
+                            aria-current="page"
+                        {% endif %}
                     >
                         <span class="nav-icon" aria-hidden="true">◇</span>
                         Notifications
@@ -906,6 +1033,57 @@
                 HEXAQUÉBEC / ADMINISTRATION STAGIAIRES
             </p>
 
+            <!-- Horloge commune : heure du Québec -->
+
+            <section
+                class="hq-quebec-clock"
+                aria-label="Heure de référence HexaQuébec"
+            >
+                <div class="hq-clock-heading">
+                    <span class="hq-clock-icon" aria-hidden="true">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 7v5l3 2"/>
+                        </svg>
+                    </span>
+
+                    <div>
+                        <strong>Heure du Québec · Montréal, Canada</strong>
+
+                        <p>
+                            Pour les stagiaires au Canada et à l’étranger,
+                            nos horaires de travail et nos rendez-vous
+                            sont indiqués à l’heure du Québec.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="hq-clock-display">
+                    <span class="hq-clock-label">
+                        Heure de référence HexaQuébec
+                    </span>
+
+                    <time class="hq-clock-time" id="hq-quebec-time">
+                        --:--:--
+                    </time>
+
+                    <span class="hq-clock-date" id="hq-quebec-date">
+                        Montréal · Québec
+                    </span>
+
+                    <noscript>
+                        Activez JavaScript pour afficher l’horloge.
+                    </noscript>
+                </div>
+            </section>
+
             {% if messages %}
                 <div class="alerts" aria-live="polite">
                     {% for message in messages %}
@@ -923,6 +1101,1202 @@
             </footer>
         </main>
     </div>
+
+    <script>
+        (() => {
+            const timeElement = document.getElementById("hq-quebec-time");
+            const dateElement = document.getElementById("hq-quebec-date");
+
+            if (!timeElement || !dateElement) return;
+
+            // Montréal suit le même fuseau horaire que Toronto.
+            // L’heure d’été et l’heure d’hiver sont gérées automatiquement.
+            const timeFormatter = new Intl.DateTimeFormat("fr-CA", {
+                timeZone: "America/Toronto",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hourCycle: "h23"
+            });
+
+            const dateFormatter = new Intl.DateTimeFormat("fr-CA", {
+                timeZone: "America/Toronto",
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+            function updateQuebecClock() {
+                const now = new Date();
+
+                timeElement.textContent = timeFormatter.format(now);
+                timeElement.dateTime = now.toISOString();
+                dateElement.textContent = dateFormatter.format(now);
+            }
+
+            updateQuebecClock();
+
+            window.setInterval(updateQuebecClock, 1000);
+
+            document.addEventListener("visibilitychange", () => {
+                if (!document.hidden) {
+                    updateQuebecClock();
+                }
+            });
+        })();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}
+            {{ titre|default:"Administration stagiaires" }} — HexaQuébec
+        {% endblock %}
+    </title>
+
+    <style>
+        :root {
+            --primary: #185adb;
+            --primary-dark: #1247b0;
+            --ink: #172b4d;
+            --muted: #62718a;
+            --border: #e2e8f2;
+            --surface: #ffffff;
+            --background: #f4f7fc;
+            --success: #157347;
+            --danger: #b42318;
+            --radius: 20px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(
+                    ellipse at top right,
+                    #e5edff 0,
+                    transparent 45%
+                ),
+                var(--background);
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button,
+        a,
+        input,
+        select,
+        textarea {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :focus-visible {
+            outline: 3px solid #79a9ff;
+            outline-offset: 4px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            z-index: 100;
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .skip-link:focus {
+            top: 12px;
+        }
+
+        .topbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            max-width: 1320px;
+            margin: auto;
+            padding: 22px 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            color: var(--ink);
+        }
+
+        .brand:hover {
+            text-decoration: none;
+        }
+
+        .brand-symbol {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #185adb, #123b8e);
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 800;
+            box-shadow: 0 6px 16px #185adb26;
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 21px;
+            letter-spacing: -.6px;
+        }
+
+        .brand small {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .account {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #f8faff;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .account-dot {
+            width: 8px;
+            height: 8px;
+            flex: 0 0 8px;
+            border-radius: 50%;
+            background: #168453;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 235px minmax(0, 1fr);
+            align-items: start;
+            gap: 28px;
+            max-width: 1320px;
+            margin: auto;
+            padding: 30px 28px 50px;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 24px;
+            padding: 18px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: 0 8px 24px #172b4d05;
+        }
+
+        .menu-label {
+            margin: 4px 12px 15px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 12px;
+            margin: 4px 0;
+            border-radius: 11px;
+            color: #475772;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color .18s ease, background .18s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: #f1f5ff;
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            color: #174eb7;
+            background: #eaf1ff;
+        }
+
+        .nav-icon {
+            display: grid;
+            place-items: center;
+            width: 25px;
+            height: 25px;
+            flex: 0 0 25px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .sidebar-note {
+            margin: 20px 10px 4px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .main {
+            min-width: 0;
+            animation: enter .4s ease both;
+        }
+
+        .page-label {
+            margin: 0 0 16px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .4px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--ink);
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(25px, 3vw, 35px);
+            letter-spacing: -1px;
+        }
+
+        h2 {
+            margin: 0 0 12px;
+            font-size: 21px;
+            letter-spacing: -.4px;
+        }
+
+        h3 {
+            margin: 0 0 10px;
+            font-size: 17px;
+        }
+
+        p {
+            margin: 0 0 14px;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .panel,
+        .card {
+            padding: 28px;
+            margin-bottom: 22px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: 0 8px 28px #172b4d05;
+        }
+
+        .heading,
+        .section-head,
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .heading {
+            margin-bottom: 22px;
+        }
+
+        .heading > div {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .heading p:last-child {
+            margin-bottom: 0;
+        }
+
+        .grid,
+        .cards,
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .grid .card,
+        .cards .card,
+        .stats-grid .card {
+            margin-bottom: 0;
+        }
+
+        .grid > a,
+        .cards > a,
+        .stat-card {
+            display: block;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: #ffffff;
+            color: var(--ink);
+            box-shadow: 0 8px 28px #172b4d05;
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .grid > a:hover,
+        .cards > a:hover,
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #b7cefc;
+            box-shadow: 0 12px 30px #185adb12;
+            text-decoration: none;
+        }
+
+        .number,
+        .stat-number,
+        .count,
+        .tile-number {
+            display: block;
+            margin: 14px 0;
+            color: var(--primary);
+            font-size: 36px;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .tile-link {
+            display: block;
+            margin-top: 16px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .button,
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 10px 17px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 650;
+            line-height: 1.4;
+            text-align: center;
+            cursor: pointer;
+            transition: background .18s ease, box-shadow .18s ease;
+        }
+
+        .button:hover,
+        .btn:hover {
+            color: #ffffff;
+            background: var(--primary-dark);
+            text-decoration: none;
+            box-shadow: 0 5px 14px #185adb20;
+        }
+
+        .button-secondary,
+        .btn-secondary {
+            border-color: var(--border);
+            background: #ffffff;
+            color: var(--ink);
+        }
+
+        .button-secondary:hover,
+        .btn-secondary:hover {
+            background: #eef3fc;
+            color: var(--ink);
+        }
+
+        .button-danger,
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .button-danger:hover,
+        .btn-danger:hover {
+            background: #912018;
+        }
+
+        .button-small,
+        .btn-sm {
+            min-height: 35px;
+            padding: 7px 11px;
+            font-size: 12px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background: #eaf1ff;
+            color: #174eb7;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-success {
+            background: #e8f7ee;
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: #fff0ed;
+            color: var(--danger);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+        select,
+        textarea {
+            width: 100%;
+            min-width: 0;
+            padding: 12px 14px;
+            border: 1px solid #cfd8e6;
+            border-radius: 10px;
+            background: #ffffff;
+            color: var(--ink);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            vertical-align: middle;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .field,
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .helptext,
+        .help-text {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .helptext ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .errorlist {
+            margin: 8px 0;
+            padding-left: 20px;
+            color: var(--danger);
+            font-size: 13px;
+        }
+
+        .search-form,
+        .search {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .search-form input,
+        .search input {
+            flex: 1 1 220px;
+        }
+
+        .scroll,
+        .table-wrap,
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            font-size: 13px;
+        }
+
+        th {
+            padding: 15px;
+            background: #f5f8fd;
+            color: #5b6b84;
+            font-size: 11px;
+            font-weight: 750;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 15px;
+            border-top: 1px solid var(--border);
+            vertical-align: top;
+            overflow-wrap: anywhere;
+        }
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+
+        td .button,
+        td .btn {
+            margin: 0 5px 5px 0;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .empty {
+            padding: 35px 20px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .alerts {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border: 1px solid #c9dbfb;
+            border-radius: 12px;
+            background: #edf4ff;
+            color: #174eb7;
+            overflow-wrap: anywhere;
+        }
+
+        .alert.success {
+            border-color: #bee2cb;
+            background: #edf9f1;
+            color: #16633d;
+        }
+
+        .alert.error {
+            border-color: #f1c7c2;
+            background: #fff2f0;
+            color: var(--danger);
+        }
+
+        .alert.warning {
+            border-color: #ead7a8;
+            background: #fff8e8;
+            color: #795410;
+        }
+
+        .conversation {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .bubble {
+            max-width: 85%;
+            margin-bottom: 16px;
+            padding: 18px 20px;
+            border: 1px solid var(--border);
+            border-radius: 16px 16px 16px 4px;
+            background: #f5f8fd;
+            overflow-wrap: anywhere;
+        }
+
+        .bubble.mine,
+        .bubble.admin {
+            margin-left: auto;
+            border-color: #cfddfb;
+            border-radius: 16px 16px 4px 16px;
+            background: #edf3ff;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .text {
+            overflow-wrap: anywhere;
+        }
+
+        .text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .footer {
+            padding: 15px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Heure de référence au Québec */
+
+        .hq-quebec-clock {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 24px;
+            padding: 22px 24px;
+            border: 1px solid #cfddf5;
+            border-radius: 18px;
+            background: linear-gradient(120deg, #ffffff, #eef4ff);
+            color: var(--ink);
+            box-shadow: 0 8px 24px #172b4d0d;
+        }
+
+        .hq-clock-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            flex: 1 1 260px;
+        }
+
+        .hq-clock-icon {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            border-radius: 14px;
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 5px 14px #185adb20;
+        }
+
+        .hq-clock-icon svg {
+            display: block;
+            width: 24px;
+            height: 24px;
+        }
+
+        .hq-clock-heading strong {
+            display: block;
+            color: var(--ink);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .hq-clock-heading p {
+            max-width: 430px;
+            margin: 5px 0 0;
+            color: #52667e;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .hq-clock-display {
+            flex: 0 1 auto;
+            text-align: right;
+        }
+
+        .hq-clock-label {
+            display: block;
+            margin-bottom: 3px;
+            color: #62718a;
+            font-size: 10px;
+            font-weight: 750;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hq-clock-time {
+            display: block;
+            color: var(--primary);
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .hq-clock-date {
+            display: block;
+            margin-top: 4px;
+            color: #52667e;
+            font-size: 12px;
+        }
+
+        @keyframes enter {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1050px) {
+            .grid,
+            .cards,
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .layout {
+                grid-template-columns: 210px minmax(0, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 780px) {
+            .layout {
+                grid-template-columns: 1fr;
+                padding: 20px 16px 35px;
+            }
+
+            .sidebar {
+                position: static;
+                padding: 12px;
+            }
+
+            .sidebar nav {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+            }
+
+            .nav-link {
+                flex-shrink: 0;
+                white-space: nowrap;
+            }
+
+            .menu-label,
+            .sidebar-note {
+                display: none;
+            }
+
+            .topbar-inner {
+                padding: 18px 16px;
+            }
+
+            .panel,
+            .card {
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hq-quebec-clock {
+                padding: 18px;
+            }
+
+            .hq-clock-display {
+                width: 100%;
+                flex-basis: 100%;
+                padding-top: 14px;
+                border-top: 1px solid #dce5f3;
+                text-align: left;
+            }
+
+            .hq-clock-time {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-inner {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .grid,
+            .cards,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .heading {
+                align-items: stretch;
+            }
+
+            .heading > .button,
+            .heading > .btn {
+                width: 100%;
+            }
+
+            .panel,
+            .card {
+                padding: 18px;
+                border-radius: 16px;
+            }
+
+            .bubble {
+                max-width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">
+        Aller au contenu
+    </a>
+
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a
+                class="brand"
+                href="{% url 'space_stagiaire_admin' %}"
+                aria-label="HexaQuébec — Administration stagiaires"
+            >
+                <span class="brand-symbol" aria-hidden="true">HQ</span>
+
+                <span>
+                    <strong>HexaQuébec</strong>
+                    <small>Administration · Espace stagiaires</small>
+                </span>
+            </a>
+
+            <div class="account">
+                <span class="account-dot" aria-hidden="true"></span>
+
+                <span>
+                    {% if request.user.get_full_name %}
+                        {{ request.user.get_full_name }}
+                    {% else %}
+                        Administration HexaQuébec
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <p class="menu-label">Gestion des stagiaires</p>
+
+            <nav aria-label="Administration des stagiaires">
+                <a
+                    class="nav-link {% if request.resolver_match.url_name == 'space_stagiaire_admin' %}active{% endif %}"
+                    href="{% url 'space_stagiaire_admin' %}"
+                    {% if request.resolver_match.url_name == 'space_stagiaire_admin' %}
+                        aria-current="page"
+                    {% endif %}
+                >
+                    <span class="nav-icon" aria-hidden="true">▦</span>
+                    Tableau de bord
+                </a>
+
+                {% if perms.siteweb.view_stagiaires %}
+                    <a
+                        class="nav-link {% if section == 'stagiaires' %}active{% endif %}"
+                        href="{% url 'stagiaires_admin_liste' 'stagiaires' %}"
+                        {% if section == 'stagiaires' %}
+                            aria-current="page"
+                        {% endif %}
+                    >
+                        <span class="nav-icon" aria-hidden="true">◎</span>
+                        Stagiaires
+                    </a>
+                {% endif %}
+
+                {% if perms.siteweb.view_rubrique %}
+                    <a
+                        class="nav-link {% if section == 'rubriques' %}active{% endif %}"
+                        href="{% url 'stagiaires_admin_liste' 'rubriques' %}"
+                        {% if section == 'rubriques' %}
+                            aria-current="page"
+                        {% endif %}
+                    >
+                        <span class="nav-icon" aria-hidden="true">▤</span>
+                        Rubriques
+                    </a>
+                {% endif %}
+
+                {% if perms.siteweb.view_pointage %}
+                    <a
+                        class="nav-link {% if section == 'pointages' %}active{% endif %}"
+                        href="{% url 'stagiaires_admin_liste' 'pointages' %}"
+                        {% if section == 'pointages' %}
+                            aria-current="page"
+                        {% endif %}
+                    >
+                        <span class="nav-icon" aria-hidden="true">◷</span>
+                        Pointages
+                    </a>
+                {% endif %}
+
+                {% if perms.siteweb.view_messages %}
+                    <a
+                        class="nav-link {% if section == 'messages' or request.resolver_match.url_name == 'stagiaires_admin_conversation' %}active{% endif %}"
+                        href="{% url 'stagiaires_admin_liste' 'messages' %}"
+                    >
+                        <span class="nav-icon" aria-hidden="true">✉</span>
+                        Messages
+                    </a>
+                {% endif %}
+
+                {% if perms.siteweb.view_reunion %}
+                    <a
+                        class="nav-link {% if section == 'reunions' %}active{% endif %}"
+                        href="{% url 'stagiaires_admin_liste' 'reunions' %}"
+                        {% if section == 'reunions' %}
+                            aria-current="page"
+                        {% endif %}
+                    >
+                        <span class="nav-icon" aria-hidden="true">▣</span>
+                        Réunions
+                    </a>
+                {% endif %}
+
+                {% if perms.siteweb.view_notification %}
+                    <a
+                        class="nav-link {% if section == 'notifications' %}active{% endif %}"
+                        href="{% url 'stagiaires_admin_liste' 'notifications' %}"
+                        {% if section == 'notifications' %}
+                            aria-current="page"
+                        {% endif %}
+                    >
+                        <span class="nav-icon" aria-hidden="true">◇</span>
+                        Notifications
+                    </a>
+                {% endif %}
+
+                <a class="nav-link" href="/hexa/dashboard/">
+                    <span class="nav-icon" aria-hidden="true">←</span>
+                    Dashboard principal
+                </a>
+            </nav>
+
+            <p class="sidebar-note">
+                HexaQuébec<br>
+                L’innovation au cœur du numérique québécois.
+            </p>
+        </aside>
+
+        <main class="main" id="main-content">
+            <p class="page-label">
+                HEXAQUÉBEC / ADMINISTRATION STAGIAIRES
+            </p>
+
+            <!-- Horloge commune : heure du Québec -->
+
+            <section
+                class="hq-quebec-clock"
+                aria-label="Heure de référence HexaQuébec"
+            >
+                <div class="hq-clock-heading">
+                    <span class="hq-clock-icon" aria-hidden="true">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 7v5l3 2"/>
+                        </svg>
+                    </span>
+
+                    <div>
+                        <strong>Heure du Québec · Montréal, Canada</strong>
+
+                        <p>
+                            Pour les stagiaires au Canada et à l’étranger,
+                            nos horaires de travail et nos rendez-vous
+                            sont indiqués à l’heure du Québec.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="hq-clock-display">
+                    <span class="hq-clock-label">
+                        Heure de référence HexaQuébec
+                    </span>
+
+                    <time class="hq-clock-time" id="hq-quebec-time">
+                        --:--:--
+                    </time>
+
+                    <span class="hq-clock-date" id="hq-quebec-date">
+                        Montréal · Québec
+                    </span>
+
+                    <noscript>
+                        Activez JavaScript pour afficher l’horloge.
+                    </noscript>
+                </div>
+            </section>
+
+            {% if messages %}
+                <div class="alerts" aria-live="polite">
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+
+            <footer class="footer">
+                © {% now "Y" %} HexaQuébec · Espace d’administration
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        (() => {
+            const timeElement = document.getElementById("hq-quebec-time");
+            const dateElement = document.getElementById("hq-quebec-date");
+
+            if (!timeElement || !dateElement) return;
+
+            // Montréal suit le même fuseau horaire que Toronto.
+            // L’heure d’été et l’heure d’hiver sont gérées automatiquement.
+            const timeFormatter = new Intl.DateTimeFormat("fr-CA", {
+                timeZone: "America/Toronto",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hourCycle: "h23"
+            });
+
+            const dateFormatter = new Intl.DateTimeFormat("fr-CA", {
+                timeZone: "America/Toronto",
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+            function updateQuebecClock() {
+                const now = new Date();
+
+                timeElement.textContent = timeFormatter.format(now);
+                timeElement.dateTime = now.toISOString();
+                dateElement.textContent = dateFormatter.format(now);
+            }
+
+            updateQuebecClock();
+
+            window.setInterval(updateQuebecClock, 1000);
+
+            document.addEventListener("visibilitychange", () => {
+                if (!document.hidden) {
+                    updateQuebecClock();
+                }
+            });
+        })();
+    </script>
 
     {% block extra_js %}{% endblock %}
 </body>
