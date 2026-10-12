@@ -1,82 +1,661 @@
 {% extends 'stagiaires/base.html' %}
 
-{% block title %}
-    Réunions et conférences — HexaQuébec
-{% endblock %}
+{% block title %}Réunions et conférences — HexaQuébec{% endblock %}
 
 {% block content %}
-<h1>Réunions et conférences</h1>
+<style>
+    .meetings-page {
+        width: 100%;
+        min-width: 0;
+        color: #172e49;
+        font-family: "Segoe UI", Arial, sans-serif;
+        line-height: 1.7;
+    }
 
-<p class="muted">
-    Retrouvez les événements organisés par l’administration
-    pour votre domaine ou pour tous les stagiaires.
-</p>
+    .meetings-page,
+    .meetings-page * {
+        box-sizing: border-box;
+    }
 
-{% for r in reunions %}
-    <article class="card">
-        <span class="badge">
-            {{ r.get_type_display }}
+    .meetings-page h1,
+    .meetings-page h2,
+    .meetings-page p {
+        margin: 0;
+    }
+
+    .meetings-page .meetings-header {
+        padding: clamp(24px, 4vw, 36px);
+        margin-bottom: 22px;
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+    }
+
+    .meetings-page .meetings-eyebrow {
+        display: block;
+        margin-bottom: 10px;
+        color: #175cd3;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .meetings-page h1 {
+        margin-bottom: 12px;
+        color: #172e49;
+        font-size: clamp(27px, 3vw, 36px);
+        line-height: 1.2;
+        letter-spacing: -.035em;
+        text-shadow: none;
+    }
+
+    .meetings-page .meetings-intro {
+        max-width: 650px;
+        color: #50647d;
+        font-size: 15px;
+        text-shadow: none;
+    }
+
+    .meetings-page .meetings-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 22px;
+        color: #175cd3;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .meetings-page .meetings-back:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .meetings-page .meetings-list {
+        display: grid;
+        gap: 24px;
+    }
+
+    /* Carte de l’événement */
+
+    .meetings-page .meeting-card {
+        overflow: hidden;
+        min-width: 0;
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+        animation: meeting-enter .45s ease both;
+    }
+
+    .meetings-page .meeting-card.is-cancelled {
+        border-color: #e9caca;
+    }
+
+    .meetings-page .meeting-brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 23px 28px;
+        border-bottom: 1px solid #e3ebf5;
+        background: #f8faff;
+    }
+
+    .meetings-page .meeting-identity {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+    }
+
+    .meetings-page .meeting-logo {
+        display: block;
+        width: 70px;
+        height: 70px;
+        flex: 0 0 70px;
+        padding: 7px;
+        border: 1px solid #e0e8f2;
+        border-radius: 15px;
+        background: #fff;
+        object-fit: contain;
+    }
+
+    .meetings-page .meeting-brand-name {
+        display: block;
+        color: #172e49;
+        font-size: 21px;
+        font-weight: 800;
+        line-height: 1.3;
+    }
+
+    .meetings-page .meeting-slogan {
+        display: block;
+        margin-top: 5px;
+        color: #52667e;
+        font-size: 11px;
+    }
+
+    .meetings-page .meeting-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .meetings-page .meeting-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 11px;
+        border-radius: 999px;
+        background: #edf4ff;
+        color: #2054a2;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .meetings-page .meeting-tag-cancelled {
+        background: #fff0f0;
+        color: #a63030;
+    }
+
+    /* Date et informations */
+
+    .meetings-page .meeting-information {
+        display: grid;
+        grid-template-columns: 76px minmax(0, 1fr);
+        align-items: start;
+        gap: 22px;
+        padding: 28px;
+    }
+
+    .meetings-page .meeting-date {
+        overflow: hidden;
+        border: 1px solid #d8e5fa;
+        border-radius: 14px;
+        background: #f5f9ff;
+        text-align: center;
+    }
+
+    .meetings-page .meeting-month {
+        display: block;
+        padding: 7px 5px;
+        background: #e7efff;
+        color: #2457a5;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .meetings-page .meeting-day {
+        display: block;
+        padding-top: 8px;
+        color: #172e49;
+        font-size: 31px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .meetings-page .meeting-year {
+        display: block;
+        padding: 4px 5px 11px;
+        color: #52667e;
+        font-size: 11px;
+    }
+
+    .meetings-page .meeting-body {
+        min-width: 0;
+    }
+
+    .meetings-page .meeting-title {
+        margin-bottom: 18px;
+        color: #172e49;
+        font-size: clamp(22px, 2.5vw, 28px);
+        line-height: 1.35;
+        letter-spacing: -.025em;
+        overflow-wrap: anywhere;
+        text-shadow: none;
+    }
+
+    .meetings-page .meeting-details {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin: 0;
+        padding-top: 16px;
+        border-top: 1px solid #e6edf5;
+    }
+
+    .meetings-page .meeting-details dt {
+        margin-bottom: 5px;
+        color: #52667e;
+        font-size: 11px;
+        font-weight: 750;
+        text-transform: uppercase;
+    }
+
+    .meetings-page .meeting-details dd {
+        margin: 0;
+        color: #172e49;
+        font-size: 14px;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+    }
+
+    .meetings-page .meeting-description {
+        padding: 0 28px 22px;
+        color: #3e5570;
+        font-size: 15px;
+        line-height: 1.85;
+        overflow-wrap: anywhere;
+    }
+
+    .meetings-page .meeting-description p + p {
+        margin-top: 14px;
+    }
+
+    /* Accès à la salle vidéo */
+
+    .meetings-page .meeting-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 22px 28px;
+        border-top: 1px solid #e6edf5;
+        background: #fbfcfe;
+    }
+
+    .meetings-page .meeting-access {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .meetings-page .meeting-camera {
+        display: grid;
+        place-items: center;
+        width: 43px;
+        height: 43px;
+        flex: 0 0 43px;
+        border: 1px solid #dce7fa;
+        border-radius: 12px;
+        background: #edf4ff;
+        color: #175cd3;
+    }
+
+    .meetings-page .meeting-camera svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .meetings-page .meeting-access strong {
+        display: block;
+        color: #172e49;
+        font-size: 14px;
+    }
+
+    .meetings-page .meeting-access p {
+        margin-top: 3px;
+        color: #52667e;
+        font-size: 12px;
+    }
+
+    .meetings-page .meeting-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 46px;
+        padding: 12px 18px;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        background: #175cd3;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 750;
+        text-align: center;
+        text-decoration: none;
+        transition: background .2s ease;
+    }
+
+    .meetings-page .meeting-button:hover {
+        background: #124cae;
+        color: #fff;
+    }
+
+    .meetings-page .meeting-button-secondary {
+        border-color: #d7e4f7;
+        background: #edf4ff;
+        color: #1751aa;
+    }
+
+    .meetings-page .meeting-button-secondary:hover {
+        background: #deebff;
+        color: #12458e;
+    }
+
+    .meetings-page .meeting-info-cancelled {
+        width: 100%;
+        padding: 13px 15px;
+        border: 1px solid #efd5d5;
+        border-radius: 11px;
+        background: #fff4f4;
+        color: #9e3838;
+        font-size: 13px;
+    }
+
+    .meetings-page .meetings-empty {
+        padding: 45px 25px;
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        text-align: center;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+    }
+
+    .meetings-page .meetings-empty h2 {
+        margin-bottom: 10px;
+        color: #172e49;
+        font-size: 21px;
+    }
+
+    .meetings-page .meetings-empty p {
+        max-width: 460px;
+        margin: 0 auto;
+        color: #52667e;
+        font-size: 14px;
+    }
+
+    .meetings-page .meetings-help {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 22px;
+        padding: 23px;
+        border: 1px solid #d7e4f7;
+        border-radius: 18px;
+        background: #eef5ff;
+    }
+
+    .meetings-page .meetings-help strong {
+        color: #172e49;
+        font-size: 15px;
+    }
+
+    .meetings-page .meetings-help p {
+        margin-top: 5px;
+        color: #50647d;
+        font-size: 13px;
+    }
+
+    .meetings-page a:focus-visible {
+        outline: 3px solid #84adff;
+        outline-offset: 4px;
+    }
+
+    @keyframes meeting-enter {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .meetings-page .meeting-brand,
+        .meetings-page .meeting-information,
+        .meetings-page .meeting-footer {
+            padding: 21px;
+        }
+
+        .meetings-page .meeting-information {
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .meetings-page .meeting-date {
+            width: 76px;
+        }
+
+        .meetings-page .meeting-details {
+            grid-template-columns: 1fr;
+        }
+
+        .meetings-page .meeting-description {
+            padding: 0 21px 21px;
+        }
+
+        .meetings-page .meeting-logo {
+            width: 56px;
+            height: 56px;
+            flex-basis: 56px;
+        }
+
+        .meetings-page .meeting-brand-name {
+            font-size: 19px;
+        }
+
+        .meetings-page .meeting-button {
+            width: 100%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .meetings-page * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+
+<div class="meetings-page">
+    <header class="meetings-header">
+        <span class="meetings-eyebrow">
+            HexaQuébec · Espace de travail stagiaire
         </span>
 
-        {% if r.annulee %}
-            <span class="badge badge-danger">
-                Annulé
-            </span>
-        {% endif %}
+        <h1>Réunions et conférences</h1>
 
-        <h2 style="margin-top:18px">
-            {{ r.titre }}
-        </h2>
-
-        <p>
-            <strong>Date et heure :</strong>
-            {{ r.debut|date:"d/m/Y à H:i" }}
+        <p class="meetings-intro">
+            Retrouvez les événements organisés pour votre stage
+            et accédez à leur salle vidéo depuis votre espace HexaQuébec.
         </p>
 
-        <p class="muted">
-            <strong>Public concerné :</strong>
+        <a
+            class="meetings-back"
+            href="{% url 'stagiaire_tableau' %}"
+        >
+            <span aria-hidden="true">←</span>
+            Retour au tableau de bord
+        </a>
+    </header>
 
-            {% if r.domaine %}
-                {{ r.get_domaine_display }}
-            {% else %}
-                Tous les stagiaires
-            {% endif %}
-        </p>
-
-        {% if r.description %}
-            <div class="text">
-                {{ r.description|linebreaks }}
-            </div>
-        {% endif %}
-
-        {% if r.annulee %}
-            <p class="muted">
-                Cet événement a été annulé
-                par l’administration.
-            </p>
-
-        {% elif r.lien %}
-            <a
-                class="button"
-                href="{{ r.lien }}"
-                target="_blank"
-                rel="noopener noreferrer"
+    <div class="meetings-list">
+        {% for r in reunions %}
+            <article
+                class="meeting-card {% if r.annulee %}is-cancelled{% endif %}"
+                aria-labelledby="meeting-title-{{ r.pk }}"
             >
-                Rejoindre l’événement
-            </a>
+                <header class="meeting-brand">
+                    <div class="meeting-identity">
+                        {% if r.logo %}
+                            <img
+                                class="meeting-logo"
+                                src="{{ r.logo.url }}"
+                                alt="Logo HexaQuébec"
+                                width="70"
+                                height="70"
+                                loading="lazy"
+                            >
+                        {% endif %}
 
-        {% else %}
-            <p class="muted">
-                Le lien de participation sera communiqué
-                par l’administration.
-            </p>
-        {% endif %}
-    </article>
-{% empty %}
-    <div class="card">
-        <p class="empty">
-            Aucun événement disponible pour le moment.
-        </p>
+                        <div>
+                            <strong class="meeting-brand-name">
+                                HexaQuébec
+                            </strong>
+
+                            <span class="meeting-slogan">
+                                L’innovation au cœur du numérique québécois
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="meeting-tags">
+                        <span class="meeting-tag">
+                            {{ r.get_type_display }}
+                        </span>
+
+                        {% if r.annulee %}
+                            <span class="meeting-tag meeting-tag-cancelled">
+                                Annulé
+                            </span>
+                        {% endif %}
+                    </div>
+                </header>
+
+                <div class="meeting-information">
+                    <div class="meeting-date" aria-hidden="true">
+                        <span class="meeting-month">
+                            {{ r.debut|date:"M" }}
+                        </span>
+
+                        <span class="meeting-day">
+                            {{ r.debut|date:"d" }}
+                        </span>
+
+                        <span class="meeting-year">
+                            {{ r.debut|date:"Y" }}
+                        </span>
+                    </div>
+
+                    <div class="meeting-body">
+                        <h2
+                            class="meeting-title"
+                            id="meeting-title-{{ r.pk }}"
+                        >
+                            {{ r.titre }}
+                        </h2>
+
+                        <dl class="meeting-details">
+                            <div>
+                                <dt>Date et heure</dt>
+
+                                <dd>
+                                    <time datetime="{{ r.debut|date:'c' }}">
+                                        {{ r.debut|date:"d/m/Y à H:i" }}
+                                    </time>
+                                </dd>
+                            </div>
+
+                            <div>
+                                <dt>Public concerné</dt>
+
+                                <dd>
+                                    {% if r.domaine %}
+                                        {{ r.get_domaine_display }}
+                                    {% else %}
+                                        Tous les stagiaires
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                {% if r.description %}
+                    <div class="meeting-description">
+                        {{ r.description|linebreaks }}
+                    </div>
+                {% endif %}
+
+                <footer class="meeting-footer">
+                    {% if r.annulee %}
+                        <p class="meeting-info-cancelled">
+                            Cet événement a été annulé
+                            par l’administration.
+                        </p>
+                    {% else %}
+                        <div class="meeting-access">
+                            <span class="meeting-camera" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <rect
+                                        x="3"
+                                        y="6"
+                                        width="12"
+                                        height="12"
+                                        rx="3"
+                                    />
+                                    <path d="m15 10 6-3v10l-6-3"/>
+                                </svg>
+                            </span>
+
+                            <div>
+                                <strong>Salle vidéo HexaQuébec</strong>
+                                <p>
+                                    Caméra, microphone et échanges en direct.
+                                </p>
+                            </div>
+                        </div>
+
+                        <a
+                            class="meeting-button"
+                            href="{% url 'stagiaire_reunion_salle' r.pk %}"
+                        >
+                            {% if r.type == "CONFERENCE" %}
+                                Rejoindre la conférence
+                            {% else %}
+                                Rejoindre la réunion
+                            {% endif %}
+
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    {% endif %}
+                </footer>
+            </article>
+        {% empty %}
+            <section class="meetings-empty">
+                <h2>Aucun événement disponible</h2>
+
+                <p>
+                    Les réunions et conférences organisées
+                    pour votre stage seront affichées ici.
+                </p>
+            </section>
+        {% endfor %}
     </div>
-{% endfor %}
+
+    <aside class="meetings-help">
+        <div>
+            <strong>Une question sur un événement ?</strong>
+
+            <p>
+                Contactez l’administration pour obtenir
+                une précision sur le programme ou la participation.
+            </p>
+        </div>
+
+        <a
+            class="meeting-button meeting-button-secondary"
+            href="{% url 'stagiaire_messages' %}"
+        >
+            Poser une question
+        </a>
+    </aside>
+</div>
 {% endblock %}

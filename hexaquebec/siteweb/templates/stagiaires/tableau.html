@@ -1,25 +1,28 @@
 {% extends 'stagiaires/base.html' %}
 
-{% block title %}
-    Mon espace de travail — HexaQuébec
-{% endblock %}
+{% block title %}Mon espace de travail — HexaQuébec{% endblock %}
 
 {% block content %}
 <style>
-    .hq-dashboard {
-        --hq-blue: #175cd3;
-        --hq-navy: #102541;
-        --hq-text: #172b46;
-        --hq-muted: #697b91;
-        --hq-border: #e3eaf3;
-        color: var(--hq-text);
-        max-width: 1250px;
-        margin: 0 auto;
+    main.main {
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
     }
 
-    .hq-dashboard *,
-    .hq-dashboard *::before,
-    .hq-dashboard *::after {
+    .hq-dashboard {
+        --ink: #142d49;
+        --muted: #52667e;
+        --blue: #175cd3;
+        color: var(--ink);
+        font-family: "Segoe UI", Arial, sans-serif;
+        line-height: 1.6;
+    }
+
+    .hq-dashboard,
+    .hq-dashboard * {
         box-sizing: border-box;
     }
 
@@ -30,252 +33,228 @@
         margin: 0;
     }
 
-    .hq-dashboard a {
-        text-decoration: none;
-    }
-
-    .hq-dashboard svg {
-        width: 22px;
-        height: 22px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1.7;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        flex-shrink: 0;
-    }
-
-    .hq-dashboard .hq-symbols {
-        position: absolute;
-        width: 0;
-        height: 0;
-        overflow: hidden;
+    .hq-dashboard a:focus-visible,
+    .hq-dashboard button:focus-visible {
+        outline: 3px solid #84adff;
+        outline-offset: 4px;
     }
 
     .hq-hero {
         position: relative;
         overflow: hidden;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 30px;
-        padding: 36px;
         margin-bottom: 24px;
+        padding: clamp(26px, 4vw, 44px);
+        border: 1px solid rgba(255, 255, 255, .2);
+        border-radius: 24px;
         background: linear-gradient(
             120deg,
-            #102541 0%,
-            #153962 65%,
-            #17529b 100%
+            rgba(13, 38, 71, .96),
+            rgba(25, 75, 125, .88)
         );
-        color: white;
-        border-radius: 24px;
-        box-shadow: 0 14px 35px rgba(16, 37, 65, .12);
+        box-shadow: 0 16px 40px rgba(10, 31, 57, .16);
+        animation: hq-appear .45s ease both;
     }
 
     .hq-hero::after {
         content: "";
         position: absolute;
-        right: -70px;
-        top: -130px;
-        width: 360px;
-        height: 360px;
-        border: 55px solid rgba(255, 255, 255, .04);
+        top: -110px;
+        right: -95px;
+        width: 260px;
+        height: 260px;
+        border: 45px solid rgba(255, 255, 255, .055);
         border-radius: 50%;
         pointer-events: none;
     }
 
-    .hq-hero-content,
-    .hq-hero-action {
+    .hq-hero > * {
         position: relative;
         z-index: 1;
-        min-width: 0;
     }
 
     .hq-eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 15px;
+        display: block;
+        margin-bottom: 9px;
+        color: var(--blue);
         font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 1.6px;
+        font-weight: 800;
+        letter-spacing: .13em;
         text-transform: uppercase;
-        color: #c5d9f8;
     }
 
-    .hq-eyebrow::before {
-        content: "";
-        width: 23px;
-        height: 3px;
-        background: #ef646b;
-        border-radius: 3px;
+    .hq-hero .hq-eyebrow {
+        color: #c6dcff;
+    }
+
+    .hq-dashboard .hq-welcome {
+        margin-bottom: 15px;
+        color: #deebfa;
+        font-size: 17px;
+        overflow-wrap: anywhere;
+    }
+
+    .hq-welcome strong {
+        color: #fff;
+        font-weight: 800;
     }
 
     .hq-hero h1 {
-        font-size: clamp(25px, 3vw, 36px);
-        line-height: 1.2;
-        letter-spacing: -.8px;
-        color: white;
+        margin-bottom: 13px;
+        color: #fff;
+        font-size: clamp(28px, 3.4vw, 40px);
+        font-weight: 750;
+        line-height: 1.15;
+        letter-spacing: -.035em;
     }
 
-    .hq-hero p {
-        max-width: 590px;
-        margin-top: 14px;
-        color: #d1dff1;
-        font-size: 14px;
-        line-height: 1.8;
+    .hq-hero-description {
+        max-width: 670px;
+        color: #deebfa;
+        font-size: 15px;
     }
 
-    .hq-hero-name {
-        color: white;
-        font-weight: 700;
+    .hq-hero-bottom {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, .16);
     }
 
-    .hq-hero .hq-btn {
-        color: white;
-        background: rgba(255, 255, 255, .1);
-        border-color: rgba(255, 255, 255, .22);
-    }
-
-    .hq-hero .hq-btn:hover {
-        background: rgba(255, 255, 255, .18);
-    }
-
-    .hq-btn {
+    .hq-hero-tag {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 9px;
-        min-height: 44px;
-        padding: 11px 16px;
-        border: 1px solid transparent;
-        border-radius: 11px;
-        background: var(--hq-blue);
-        color: white;
-        font: inherit;
-        font-size: 13px;
-        font-weight: 700;
-        line-height: 1.4;
-        cursor: pointer;
-        transition: background .2s, border-color .2s;
+        padding: 6px 12px;
+        border: 1px solid rgba(255, 255, 255, .2);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .08);
+        color: #eaf2ff;
+        font-size: 12px;
     }
 
-    .hq-btn:hover {
-        background: #1049ac;
-    }
-
-    .hq-btn svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    .hq-btn-danger {
-        background: #b42335;
-    }
-
-    .hq-btn-danger:hover {
-        background: #921c2b;
-    }
-
-    .hq-btn-light {
-        background: #f3f7fd;
-        color: var(--hq-blue);
-        border-color: #dfE9f8;
-    }
-
-    .hq-btn-light:hover {
-        background: #e8f0fc;
-    }
-
-    .hq-overview {
+    .hq-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
         gap: 22px;
-        margin-bottom: 32px;
+        margin-bottom: 22px;
     }
 
     .hq-panel {
         min-width: 0;
-        padding: 25px;
-        background: white;
-        border: 1px solid var(--hq-border);
-        border-radius: 18px;
-        box-shadow: 0 4px 16px rgba(16, 37, 65, .025);
-    }
-
-    .hq-panel-heading {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 22px;
-    }
-
-    .hq-icon-box {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 43px;
-        height: 43px;
-        flex-shrink: 0;
-        background: #edf4ff;
-        color: var(--hq-blue);
-        border-radius: 12px;
+        padding: clamp(22px, 3vw, 28px);
+        border: 1px solid rgba(255, 255, 255, .75);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, .96);
+        box-shadow: 0 10px 30px rgba(16, 42, 71, .09);
+        animation: hq-appear .5s ease both;
     }
 
     .hq-panel h2 {
-        font-size: 17px;
+        color: var(--ink);
+        font-size: 21px;
+        font-weight: 750;
+        line-height: 1.3;
+        letter-spacing: -.025em;
+    }
+
+    .hq-panel h3 {
+        color: var(--ink);
         line-height: 1.4;
-        letter-spacing: -.25px;
     }
 
-    .hq-small {
-        margin-top: 3px !important;
-        color: var(--hq-muted);
-        font-size: 12px;
+    .hq-muted {
+        color: var(--muted);
+        font-size: 14px;
     }
 
-    .hq-domain {
+    .hq-section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 22px;
+    }
+
+    .hq-section-head p {
+        margin-top: 8px;
+    }
+
+    .hq-tag {
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        padding: 6px 11px;
-        margin-bottom: 19px;
+        padding: 5px 10px;
         border: 1px solid #dce8fb;
-        background: #f2f7ff;
-        color: #1954ab;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 700;
-        overflow-wrap: anywhere;
+        border-radius: 999px;
+        background: #edf4ff;
+        color: #2457a5;
+        font-size: 11px;
+        font-weight: 750;
+        line-height: 1.5;
+    }
+
+    .hq-tag-green {
+        border-color: #cdebdc;
+        background: #edf9f2;
+        color: #127650;
+    }
+
+    .hq-tag-gray {
+        border-color: #e1e7ef;
+        background: #f3f6fa;
+        color: #596b81;
+    }
+
+    .hq-tag-red {
+        border-color: #f3d5d5;
+        background: #fff1f1;
+        color: #a63030;
+    }
+
+    .hq-dot {
+        width: 7px;
+        height: 7px;
+        flex: 0 0 7px;
+        border-radius: 50%;
+        background: currentColor;
     }
 
     .hq-stage-details {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-        margin: 0;
+        gap: 15px;
+        margin: 22px 0 0;
     }
 
-    .hq-stage-details dt {
-        margin-bottom: 5px;
-        color: var(--hq-muted);
+    .hq-stage-detail {
+        padding: 16px;
+        border: 1px solid #e4ebf4;
+        border-radius: 13px;
+        background: #f8fafd;
+    }
+
+    .hq-stage-detail dt {
+        margin-bottom: 6px;
+        color: var(--muted);
         font-size: 11px;
-        font-weight: 700;
-        letter-spacing: .6px;
+        font-weight: 750;
+        letter-spacing: .05em;
         text-transform: uppercase;
     }
 
-    .hq-stage-details dd {
+    .hq-stage-detail dd {
         margin: 0;
-        font-size: 14px;
+        color: var(--ink);
+        font-size: 15px;
         font-weight: 700;
         overflow-wrap: anywhere;
     }
 
-    .hq-stage-school {
+    .hq-stage-detail-wide {
         grid-column: 1 / -1;
-        padding-top: 16px;
-        border-top: 1px solid var(--hq-border);
     }
 
     .hq-presence {
@@ -283,463 +262,404 @@
         flex-direction: column;
     }
 
-    .hq-status {
+    .hq-presence-status {
+        align-self: flex-start;
+        margin: 20px 0 15px;
+        padding: 9px 13px;
+        font-size: 12px;
+    }
+
+    .hq-presence-form {
+        margin-top: auto;
+        padding-top: 25px;
+    }
+
+    .hq-btn {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        align-self: flex-start;
-        padding: 6px 11px;
-        background: #f1f4f8;
-        color: #56687e;
-        border-radius: 30px;
-        font-size: 12px;
+        justify-content: center;
+        gap: 10px;
+        min-height: 47px;
+        padding: 12px 18px;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        background: var(--blue);
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
         font-weight: 700;
+        line-height: 1.4;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s ease, box-shadow .2s ease;
     }
 
-    .hq-status::before {
-        content: "";
-        width: 7px;
-        height: 7px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        background: #8b9aab;
+    .hq-btn:hover {
+        background: #124cae;
+        color: #fff;
+        box-shadow: 0 5px 14px rgba(23, 92, 211, .18);
     }
 
-    .hq-status-active {
-        background: #ecfdf3;
-        color: #167344;
-    }
-
-    .hq-status-active::before {
-        background: #23a565;
-    }
-
-    .hq-presence-description {
-        margin: 14px 0 20px !important;
-        color: var(--hq-muted);
-        font-size: 13px;
-        line-height: 1.7;
-    }
-
-    .hq-presence form {
-        margin-top: auto;
-    }
-
-    .hq-presence .hq-btn {
+    .hq-btn-full {
         width: 100%;
     }
 
-    .hq-section-heading {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-bottom: 18px;
+    .hq-btn-exit {
+        background: #b93838;
     }
 
-    .hq-section-heading h2 {
-        font-size: 21px;
-        letter-spacing: -.5px;
-        line-height: 1.4;
+    .hq-btn-exit:hover {
+        background: #9e2929;
     }
 
-    .hq-section-heading p {
-        margin-top: 5px;
-        color: var(--hq-muted);
+    .hq-btn-secondary {
+        border-color: #dbe5f0;
+        background: #f4f7fb;
+        color: var(--ink);
+    }
+
+    .hq-btn-secondary:hover {
+        background: #e9eff8;
+        color: var(--ink);
+    }
+
+    .hq-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 17px;
+        color: var(--blue);
         font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
     }
 
-    .hq-section-label {
-        padding: 5px 10px;
-        border: 1px solid var(--hq-border);
-        border-radius: 8px;
-        color: var(--hq-muted);
-        font-size: 11px;
-        font-weight: 700;
-        background: white;
+    .hq-link:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
     }
 
     .hq-resources {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
-        margin-bottom: 32px;
+        margin-bottom: 22px;
     }
 
-    .hq-resource {
-        min-width: 0;
+    .hq-resource-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .hq-resource-card {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        padding: 23px;
-        background: white;
-        border: 1px solid var(--hq-border);
-        border-radius: 17px;
-        transition: border-color .2s, box-shadow .2s;
+        min-width: 0;
+        padding: 22px;
+        border: 1px solid #dde7f3;
+        border-radius: 16px;
+        background: #fff;
+        transition: border-color .2s ease, box-shadow .2s ease;
     }
 
-    .hq-resource:hover {
-        border-color: #b3cdf3;
-        box-shadow: 0 9px 25px rgba(23, 92, 211, .06);
+    .hq-resource-card:hover {
+        border-color: #b8d0f5;
+        box-shadow: 0 8px 22px rgba(23, 92, 211, .08);
     }
 
     .hq-resource-top {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 12px;
-        width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
 
-    .hq-resource .hq-icon-box {
-        width: 40px;
-        height: 40px;
+    .hq-icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        border: 1px solid #dce8fb;
+        border-radius: 12px;
+        background: #eef4ff;
+        color: var(--blue);
     }
 
-    .hq-resource-type {
-        color: var(--hq-muted);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: .6px;
-        text-transform: uppercase;
+    .hq-icon svg {
+        width: 22px;
+        height: 22px;
     }
 
-    .hq-resource h3 {
-        margin-bottom: 9px;
-        font-size: 16px;
-        line-height: 1.5;
+    .hq-resource-card h3 {
+        margin-bottom: 10px;
+        font-size: 17px;
         overflow-wrap: anywhere;
     }
 
-    .hq-resource p {
-        margin-bottom: 22px;
-        color: var(--hq-muted);
-        font-size: 12px;
-        line-height: 1.8;
+    .hq-resource-card p {
+        margin-bottom: 21px;
+        color: var(--muted);
+        font-size: 13px;
         overflow-wrap: anywhere;
     }
 
     .hq-resource-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
         margin-top: auto;
-        color: var(--hq-blue);
-        font-size: 12px;
-        font-weight: 700;
-        padding: 5px 0;
+        padding-top: 15px;
+        border-top: 1px solid #edf1f7;
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 750;
+        text-decoration: none;
     }
 
-    .hq-resource-link svg {
-        width: 16px;
-        height: 16px;
-    }
-
-    .hq-bottom {
-        display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-        gap: 22px;
+    .hq-resource-link:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
     }
 
     .hq-event {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-        padding: 17px 0;
-        border-top: 1px solid var(--hq-border);
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr);
+        align-items: start;
+        gap: 14px;
+        padding: 18px 0;
+        border-bottom: 1px solid #e8eef6;
+    }
+
+    .hq-event:first-child {
+        padding-top: 0;
+    }
+
+    .hq-event:last-child {
+        border-bottom: 0;
     }
 
     .hq-event-date {
-        width: 51px;
-        flex-shrink: 0;
-        padding: 7px 5px;
-        background: #f2f6fc;
-        border: 1px solid #e5edf8;
-        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #dce7f6;
+        border-radius: 11px;
+        background: #f5f8ff;
         text-align: center;
     }
 
-    .hq-event-date strong {
+    .hq-event-day {
         display: block;
-        font-size: 20px;
+        padding-top: 7px;
+        color: var(--ink);
+        font-size: 23px;
+        font-weight: 800;
         line-height: 1.2;
-        color: var(--hq-blue);
     }
 
-    .hq-event-date span {
+    .hq-event-month {
         display: block;
-        margin-top: 3px;
+        padding: 3px 4px 8px;
+        color: var(--blue);
         font-size: 10px;
-        color: var(--hq-muted);
+        font-weight: 800;
         text-transform: uppercase;
     }
 
-    .hq-event-info {
-        min-width: 0;
+    .hq-event-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 8px;
     }
 
-    .hq-event-info h3 {
-        margin: 3px 0 5px;
+    .hq-event h3 {
+        margin-bottom: 5px;
         font-size: 14px;
         overflow-wrap: anywhere;
     }
 
-    .hq-event-type {
-        color: var(--hq-blue);
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .5px;
-    }
-
-    .hq-event-info p {
+    .hq-event time {
+        color: var(--muted);
         font-size: 12px;
-        color: var(--hq-muted);
     }
 
-    .hq-events-footer {
-        padding-top: 15px;
-        border-top: 1px solid var(--hq-border);
-    }
-
-    .hq-empty {
-        padding: 20px;
-        border: 1px dashed #cfdbea;
-        border-radius: 12px;
-        background: #f9fbfe;
-        color: var(--hq-muted);
-        font-size: 13px;
-        line-height: 1.8;
-    }
-
-    .hq-resources > .hq-empty {
-        grid-column: 1 / -1;
-    }
-
-    .hq-support {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        background: linear-gradient(145deg, #f0f6ff, #ffffff);
-        border-color: #d9e6f9;
-    }
-
-    .hq-support .hq-icon-box {
-        width: 52px;
-        height: 52px;
-        background: white;
-        border: 1px solid #dce7f8;
+    .hq-contact .hq-icon {
         margin-bottom: 20px;
     }
 
-    .hq-support h2 {
-        margin-bottom: 12px;
-        font-size: 21px;
+    .hq-contact p {
+        margin: 13px 0 24px;
     }
 
-    .hq-support p {
-        color: var(--hq-muted);
-        font-size: 13px;
-        line-height: 1.9;
-        margin-bottom: 24px;
-    }
-
-    .hq-support .hq-btn {
-        margin-top: auto;
-    }
-
-    .hq-notification-note {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 18px;
-        color: var(--hq-muted);
+    .hq-contact-note {
+        margin-top: 19px;
+        padding-top: 17px;
+        border-top: 1px solid #e8eef6;
+        color: var(--muted);
         font-size: 12px;
     }
 
-    .hq-notification-note svg {
-        width: 16px;
-        height: 16px;
+    .hq-notifications {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
     }
 
-    @media (max-width: 1150px) {
-        .hq-resources {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+    .hq-notifications h2 {
+        font-size: 17px;
+    }
+
+    .hq-notifications p {
+        margin-top: 6px;
+    }
+
+    .hq-empty {
+        grid-column: 1 / -1;
+        padding: 30px 15px;
+        text-align: center;
+    }
+
+    .hq-empty h3 {
+        margin-bottom: 9px;
+        font-size: 16px;
+    }
+
+    .hq-empty p {
+        max-width: 460px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    @keyframes hq-appear {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
         }
 
-        .hq-hero {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 900px) {
+        .hq-grid {
             grid-template-columns: 1fr;
-            gap: 23px;
         }
     }
 
-    @media (max-width: 680px) {
+    @media (max-width: 600px) {
+        .hq-resource-grid,
+        .hq-stage-details {
+            grid-template-columns: 1fr;
+        }
+
+        .hq-stage-detail-wide {
+            grid-column: auto;
+        }
+
         .hq-hero {
-            padding: 26px 22px;
             border-radius: 18px;
         }
 
-        .hq-overview,
-        .hq-bottom,
-        .hq-resources {
-            grid-template-columns: 1fr;
-        }
-
-        .hq-panel,
-        .hq-resource {
-            padding: 22px;
-        }
-
-        .hq-hero-action .hq-btn {
+        .hq-notifications .hq-btn {
             width: 100%;
         }
+    }
 
-        .hq-overview,
-        .hq-resources {
-            margin-bottom: 26px;
+    @media (prefers-reduced-motion: reduce) {
+        .hq-dashboard *,
+        .hq-dashboard *::after {
+            animation: none !important;
+            transition: none !important;
         }
     }
 </style>
 
 <div class="hq-dashboard">
+    <header class="hq-hero">
+        <span class="hq-eyebrow">
+            HexaQuébec · Espace de travail stagiaire
+        </span>
 
-    <!-- Icônes intégrées : aucune bibliothèque externe nécessaire. -->
-    <svg
-        class="hq-symbols"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        focusable="false"
-    >
-        <symbol id="hq-icon-stage" viewBox="0 0 24 24">
-            <rect x="3" y="7" width="18" height="14" rx="2"/>
-            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            <path d="M3 12a22 22 0 0 0 18 0"/>
-            <path d="M10 13h4"/>
-        </symbol>
+        <!-- Identité du profil stagiaire, sans nom d’utilisateur -->
+        <p class="hq-welcome">
+            Bienvenue{% if stagiaire.prenom or stagiaire.nom %},
+                <strong>{{ stagiaire.prenom }} {{ stagiaire.nom }}</strong>{% endif %} !
+        </p>
 
-        <symbol id="hq-icon-clock" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 7v5l3 2"/>
-        </symbol>
+        <h1>Mon espace de travail</h1>
 
-        <symbol id="hq-icon-book" viewBox="0 0 24 24">
-            <path d="M12 5v15"/>
-            <path d="M12 5C8 3 5 3 2 4v15c3-1 6-1 10 1"/>
-            <path d="M12 5c4-2 7-2 10-1v15c-3-1-6-1-10 1"/>
-        </symbol>
+        <p class="hq-hero-description">
+            Retrouvez vos consignes, organisez vos sessions de travail
+            et échangez avec votre responsable tout au long de votre stage.
+        </p>
 
-        <symbol id="hq-icon-message" viewBox="0 0 24 24">
-            <path d="M21 11a8 8 0 0 1-8 8H7l-5 3 2-6a8 8 0 0 1-1-5 8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/>
-            <path d="M8 9h8M8 13h5"/>
-        </symbol>
-
-        <symbol id="hq-icon-calendar" viewBox="0 0 24 24">
-            <rect x="3" y="5" width="18" height="16" rx="2"/>
-            <path d="M16 3v4M8 3v4M3 11h18"/>
-            <path d="M8 15h2M14 15h2"/>
-        </symbol>
-
-        <symbol id="hq-icon-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M13 6l6 6-6 6"/>
-        </symbol>
-
-        <symbol id="hq-icon-bell" viewBox="0 0 24 24">
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
-            <path d="M10 21h4"/>
-        </symbol>
-
-        <symbol id="hq-icon-building" viewBox="0 0 24 24">
-            <rect x="5" y="3" width="14" height="18" rx="2"/>
-            <path d="M9 7h1M14 7h1M9 11h1M14 11h1"/>
-            <path d="M10 21v-5h4v5"/>
-        </symbol>
-
-        <symbol id="hq-icon-check" viewBox="0 0 24 24">
-            <path d="m5 12 4 4L19 6"/>
-        </symbol>
-    </svg>
-
-    <!-- Accueil -->
-    <section class="hq-hero" aria-labelledby="hq-dashboard-title">
-        <div class="hq-hero-content">
-            <div class="hq-eyebrow">
-                HexaQuébec · Espace stagiaire
-            </div>
-
-            <h1 id="hq-dashboard-title">
-                Mon espace de travail
-            </h1>
-
-            <p>
-                Bienvenue,
-                <span class="hq-hero-name">
-                    {{ stagiaire.utilisateur.get_full_name|default:stagiaire.utilisateur.get_username }}.
-                </span>
-                Retrouvez vos ressources, suivez votre présence
-                et échangez avec votre responsable.
-            </p>
-        </div>
-
-        <div class="hq-hero-action">
-            <a
-                class="hq-btn"
-                href="{% url 'stagiaire_notifications' %}"
-            >
-                <svg aria-hidden="true">
-                    <use href="#hq-icon-bell"></use>
-                </svg>
-
-                {% if non_lues %}
-                    Notifications · {{ non_lues }}
-                {% else %}
-                    Mes notifications
-                {% endif %}
-            </a>
-        </div>
-    </section>
-
-    <!-- Informations et pointage -->
-    <div class="hq-overview">
-
-        <section class="hq-panel" aria-labelledby="hq-stage-title">
-            <div class="hq-panel-heading">
-                <span class="hq-icon-box">
-                    <svg aria-hidden="true">
-                        <use href="#hq-icon-stage"></use>
-                    </svg>
-                </span>
-
-                <div>
-                    <h2 id="hq-stage-title">
-                        Mon stage
-                    </h2>
-
-                    <p class="hq-small">
-                        Informations de votre parcours
-                    </p>
-                </div>
-            </div>
-
-            <div class="hq-domain">
+        <div class="hq-hero-bottom">
+            <span class="hq-hero-tag">
                 {{ stagiaire.get_domaine_display }}
+            </span>
+
+            <span class="hq-hero-tag">
+                L’innovation au cœur du numérique québécois
+            </span>
+        </div>
+    </header>
+
+    <div class="hq-grid">
+        <section class="hq-panel" aria-labelledby="stage-title">
+            <div class="hq-section-head">
+                <div>
+                    <span class="hq-eyebrow">Mon parcours</span>
+                    <h2 id="stage-title">Informations de mon stage</h2>
+                </div>
+
+                {% if stagiaire.actif %}
+                    <span class="hq-tag hq-tag-green">
+                        <span class="hq-dot" aria-hidden="true"></span>
+                        Profil actif
+                    </span>
+                {% else %}
+                    <span class="hq-tag hq-tag-gray">
+                        Profil inactif
+                    </span>
+                {% endif %}
             </div>
+
+            <p class="hq-muted">
+                Les informations de votre stage enregistrées
+                par l’administration.
+            </p>
 
             <dl class="hq-stage-details">
-                <div>
+                {% if stagiaire.prenom or stagiaire.nom %}
+                    <div class="hq-stage-detail hq-stage-detail-wide">
+                        <dt>Nom complet</dt>
+                        <dd>{{ stagiaire.prenom }} {{ stagiaire.nom }}</dd>
+                    </div>
+                {% endif %}
+
+                <div class="hq-stage-detail">
                     <dt>Date de début</dt>
                     <dd>{{ stagiaire.debut|date:"d/m/Y" }}</dd>
                 </div>
 
-                <div>
+                <div class="hq-stage-detail">
                     <dt>Date de fin</dt>
                     <dd>{{ stagiaire.fin|date:"d/m/Y" }}</dd>
                 </div>
 
+                <div class="hq-stage-detail hq-stage-detail-wide">
+                    <dt>Domaine du stage</dt>
+                    <dd>{{ stagiaire.get_domaine_display }}</dd>
+                </div>
+
                 {% if stagiaire.etablissement %}
-                    <div class="hq-stage-school">
-                        <dt>Établissement scolaire</dt>
+                    <div class="hq-stage-detail hq-stage-detail-wide">
+                        <dt>Établissement</dt>
                         <dd>{{ stagiaire.etablissement }}</dd>
                     </div>
                 {% endif %}
@@ -748,51 +668,36 @@
 
         <section
             class="hq-panel hq-presence"
-            aria-labelledby="hq-presence-title"
+            aria-labelledby="presence-title"
         >
-            <div class="hq-panel-heading">
-                <span class="hq-icon-box">
-                    <svg aria-hidden="true">
-                        <use href="#hq-icon-clock"></use>
-                    </svg>
-                </span>
-
-                <div>
-                    <h2 id="hq-presence-title">
-                        Mon pointage
-                    </h2>
-
-                    <p class="hq-small">
-                        Enregistrez votre session de travail
-                    </p>
-                </div>
-            </div>
+            <span class="hq-eyebrow">Organisation quotidienne</span>
+            <h2 id="presence-title">Mon pointage</h2>
 
             {% if pointage %}
-                <span class="hq-status hq-status-active">
-                    Session en cours
+                <span class="hq-tag hq-tag-green hq-presence-status">
+                    <span class="hq-dot" aria-hidden="true"></span>
+                    Session de travail en cours
                 </span>
 
-                <p class="hq-presence-description">
+                <p class="hq-muted">
                     Entrée enregistrée le
-                    <strong>
-                        {{ pointage.entree|date:"d/m/Y à H:i" }}.
-                    </strong>
-                    Pointez votre sortie lorsque vous terminez.
+                    <strong>{{ pointage.entree|date:"d/m/Y à H:i" }}</strong>.
+                    Pointez votre sortie à la fin de votre session.
                 </p>
             {% else %}
-                <span class="hq-status">
+                <span class="hq-tag hq-tag-gray hq-presence-status">
+                    <span class="hq-dot" aria-hidden="true"></span>
                     Aucune session en cours
                 </span>
 
-                <p class="hq-presence-description">
-                    Vous commencez votre travail ?
-                    Enregistrez votre entrée pour ouvrir
-                    une nouvelle session.
+                <p class="hq-muted">
+                    Commencez votre session en enregistrant votre entrée.
+                    L’heure sera enregistrée automatiquement.
                 </p>
             {% endif %}
 
             <form
+                class="hq-presence-form"
                 method="post"
                 action="{% url 'stagiaire_pointer' %}"
             >
@@ -800,211 +705,228 @@
 
                 {% if pointage %}
                     <button
-                        class="hq-btn hq-btn-danger"
+                        class="hq-btn hq-btn-exit hq-btn-full"
                         type="submit"
                         name="action"
                         value="sortie"
                     >
-                        <svg aria-hidden="true">
-                            <use href="#hq-icon-check"></use>
-                        </svg>
                         Pointer ma sortie
+                        <span aria-hidden="true">→</span>
                     </button>
                 {% else %}
                     <button
-                        class="hq-btn"
+                        class="hq-btn hq-btn-full"
                         type="submit"
                         name="action"
                         value="entree"
                     >
-                        <svg aria-hidden="true">
-                            <use href="#hq-icon-clock"></use>
-                        </svg>
                         Pointer mon entrée
+                        <span aria-hidden="true">→</span>
                     </button>
                 {% endif %}
             </form>
+
+            <a class="hq-link" href="{% url 'stagiaire_pointages' %}">
+                Consulter mon historique de présence
+                <span aria-hidden="true">→</span>
+            </a>
         </section>
     </div>
 
-    <!-- Rubriques -->
-    <section aria-labelledby="hq-resources-title">
-        <div class="hq-section-heading">
+    <section
+        class="hq-panel hq-resources"
+        aria-labelledby="resources-title"
+    >
+        <div class="hq-section-head">
             <div>
-                <h2 id="hq-resources-title">
-                    Mes ressources
-                </h2>
+                <span class="hq-eyebrow">Informations et consignes</span>
+                <h2 id="resources-title">Mes rubriques et ressources</h2>
 
-                <p>
-                    Les informations et consignes utiles
-                    à votre stage.
+                <p class="hq-muted">
+                    Présentation de HexaQuébec, règles de stage
+                    et ressources publiées pour votre domaine.
                 </p>
             </div>
-
-            <span class="hq-section-label">
-                Votre espace de formation
-            </span>
         </div>
 
-        <div class="hq-resources">
+        <div class="hq-resource-grid">
             {% for r in rubriques %}
-                <article class="hq-resource">
+                <article class="hq-resource-card">
                     <div class="hq-resource-top">
-                        <span class="hq-icon-box">
-                            <svg aria-hidden="true">
-                                {% if r.slug == 'presentation-hexaquebec' %}
-                                    <use href="#hq-icon-building"></use>
-                                {% elif r.slug == 'fin-stage' %}
-                                    <use href="#hq-icon-check"></use>
-                                {% else %}
-                                    <use href="#hq-icon-book"></use>
-                                {% endif %}
+                        <span class="hq-icon" aria-hidden="true">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1"/>
+                                <path d="M12 6c3-2 6-2 9-1v14c-3-1-6-1-9 1"/>
+                                <path d="M12 6v14"/>
                             </svg>
                         </span>
 
-                        <span class="hq-resource-type">
+                        <span class="hq-tag">
                             {% if r.domaine %}
-                                Mon domaine
+                                {{ r.get_domaine_display }}
                             {% else %}
-                                Tous les stagiaires
+                                Informations communes
                             {% endif %}
                         </span>
                     </div>
 
                     <h3>{{ r.titre }}</h3>
-
-                    <p>
-                        {{ r.contenu|truncatechars:135 }}
-                    </p>
+                    <p>{{ r.contenu|truncatechars:150 }}</p>
 
                     <a
                         class="hq-resource-link"
                         href="{% url 'stagiaire_rubrique' r.slug %}"
-                        aria-label="Consulter : {{ r.titre }}"
                     >
-                        Consulter la page
-
-                        <svg aria-hidden="true">
-                            <use href="#hq-icon-arrow"></use>
-                        </svg>
+                        Consulter la rubrique
+                        <span aria-hidden="true">→</span>
                     </a>
                 </article>
             {% empty %}
                 <div class="hq-empty">
-                    Vos ressources seront disponibles
-                    dès leur publication par l’administration.
+                    <h3>Vos ressources seront disponibles ici</h3>
+
+                    <p>
+                        L’administration prépare les rubriques
+                        et les consignes pour votre stage.
+                    </p>
                 </div>
             {% endfor %}
         </div>
     </section>
 
-    <!-- Événements et contact -->
-    <div class="hq-bottom">
-
-        <section class="hq-panel" aria-labelledby="hq-events-title">
-            <div class="hq-panel-heading">
-                <span class="hq-icon-box">
-                    <svg aria-hidden="true">
-                        <use href="#hq-icon-calendar"></use>
-                    </svg>
-                </span>
-
+    <div class="hq-grid">
+        <section class="hq-panel" aria-labelledby="events-title">
+            <div class="hq-section-head">
                 <div>
-                    <h2 id="hq-events-title">
-                        Prochains événements
-                    </h2>
+                    <span class="hq-eyebrow">Rencontres et échanges</span>
+                    <h2 id="events-title">Prochains événements</h2>
 
-                    <p class="hq-small">
-                        Réunions et conférences à venir
+                    <p class="hq-muted">
+                        Vos prochains rendez-vous avec l’équipe HexaQuébec.
                     </p>
                 </div>
             </div>
 
-            {% for r in reunions %}
-                <article class="hq-event">
-                    <div class="hq-event-date" aria-hidden="true">
-                        <strong>
-                            {{ r.debut|date:"d" }}
-                        </strong>
+            <div>
+                {% for r in reunions %}
+                    <article class="hq-event">
+                        <div class="hq-event-date" aria-hidden="true">
+                            <span class="hq-event-day">
+                                {{ r.debut|date:"d" }}
+                            </span>
 
-                        <span>
-                            {{ r.debut|date:"M" }}
-                        </span>
-                    </div>
+                            <span class="hq-event-month">
+                                {{ r.debut|date:"M" }}
+                            </span>
+                        </div>
 
-                    <div class="hq-event-info">
-                        <span class="hq-event-type">
-                            {{ r.get_type_display }}
-                        </span>
+                        <div>
+                            <div class="hq-event-tags">
+                                <span class="hq-tag">
+                                    {{ r.get_type_display }}
+                                </span>
 
-                        <h3>{{ r.titre }}</h3>
+                                {% if r.annulee %}
+                                    <span class="hq-tag hq-tag-red">
+                                        Annulé
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <h3>{{ r.titre }}</h3>
+
+                            <time datetime="{{ r.debut|date:'c' }}">
+                                {{ r.debut|date:"d/m/Y à H:i" }}
+                            </time>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="hq-empty">
+                        <h3>Aucun événement à venir</h3>
 
                         <p>
-                            {{ r.debut|date:"d/m/Y à H:i" }}
+                            Les prochaines réunions et conférences
+                            seront affichées ici.
                         </p>
                     </div>
-                </article>
-            {% empty %}
-                <div class="hq-empty" style="margin-bottom:18px">
-                    Aucun événement prévu pour le moment.
-                    Les prochaines réunions apparaîtront ici.
-                </div>
-            {% endfor %}
-
-            <div class="hq-events-footer">
-                <a
-                    class="hq-resource-link"
-                    href="{% url 'stagiaire_reunions' %}"
-                >
-                    Voir les réunions et conférences
-
-                    <svg aria-hidden="true">
-                        <use href="#hq-icon-arrow"></use>
-                    </svg>
-                </a>
+                {% endfor %}
             </div>
+
+            <a class="hq-link" href="{% url 'stagiaire_reunions' %}">
+                Voir les réunions et conférences
+                <span aria-hidden="true">→</span>
+            </a>
         </section>
 
-        <section
-            class="hq-panel hq-support"
-            aria-labelledby="hq-support-title"
+        <aside
+            class="hq-panel hq-contact"
+            aria-labelledby="contact-title"
         >
-            <span class="hq-icon-box">
-                <svg aria-hidden="true">
-                    <use href="#hq-icon-message"></use>
+            <div class="hq-icon" aria-hidden="true">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M21 15a3 3 0 0 1-3 3H8l-5 3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/>
+                    <path d="M8 8h8M8 12h5"/>
                 </svg>
-            </span>
+            </div>
 
-            <h2 id="hq-support-title">
-                Besoin d’un accompagnement ?
-            </h2>
+            <span class="hq-eyebrow">Votre accompagnement</span>
+            <h2 id="contact-title">Une question sur votre stage ?</h2>
 
-            <p>
-                Une question, une difficulté ou une précision
-                sur vos missions ? Votre responsable
-                vous accompagne tout au long de votre stage.
+            <p class="hq-muted">
+                Une consigne à préciser, une difficulté dans votre travail
+                ou une information à transmettre ?
+                Écrivez à l’administration depuis votre messagerie.
             </p>
 
             <a
-                class="hq-btn"
+                class="hq-btn hq-btn-full"
                 href="{% url 'stagiaire_messages' %}"
             >
-                Écrire à l’administration
-
-                <svg aria-hidden="true">
-                    <use href="#hq-icon-arrow"></use>
-                </svg>
+                Ouvrir ma messagerie
+                <span aria-hidden="true">→</span>
             </a>
 
-            <div class="hq-notification-note">
-                <svg aria-hidden="true">
-                    <use href="#hq-icon-bell"></use>
-                </svg>
-
-                Réponses disponibles dans votre messagerie
+            <div class="hq-contact-note">
+                Pour faciliter votre suivi, précisez le sujet
+                et les détails utiles dans votre message.
             </div>
-        </section>
+        </aside>
     </div>
 
+    <section
+        class="hq-panel hq-notifications"
+        aria-labelledby="notifications-title"
+    >
+        <div>
+            <h2 id="notifications-title">Mes notifications</h2>
+
+            <p class="hq-muted">
+                Retrouvez les informations liées à vos échanges
+                et aux événements de votre stage.
+            </p>
+        </div>
+
+        <a
+            class="hq-btn hq-btn-secondary"
+            href="{% url 'stagiaire_notifications' %}"
+        >
+            Consulter mes notifications
+            <span aria-hidden="true">→</span>
+        </a>
+    </section>
 </div>
 {% endblock %}

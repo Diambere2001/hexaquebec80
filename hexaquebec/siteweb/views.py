@@ -11298,14 +11298,18 @@ def space_stagiare(request):
         },
     )
 
-
 @require_GET
 @acces_stagiaire
 def tableau(request):
     contexte = contexte_stagiaire(request)
+    stagiaire = request.stagiaire
+
+    contexte["nom_complet"] = (
+        f"{stagiaire.prenom} {stagiaire.nom}".strip()
+    )
 
     contexte["pointage"] = Pointage.objects.filter(
-        stagiaire=request.stagiaire,
+        stagiaire=stagiaire,
         sortie__isnull=True,
     ).first()
 
@@ -11317,7 +11321,7 @@ def tableau(request):
         )
         .filter(
             Q(domaine="")
-            | Q(domaine=request.stagiaire.domaine)
+            | Q(domaine=stagiaire.domaine)
         )
         .order_by("debut")[:5]
     )
@@ -11327,7 +11331,6 @@ def tableau(request):
         "stagiaires/tableau.html",
         contexte,
     )
-
 
 @require_GET
 @acces_stagiaire
@@ -11491,6 +11494,8 @@ def lire_messages(request):
     return redirect("stagiaire_messages")
 
 
+
+
 @require_GET
 @acces_stagiaire
 def reunions(request):
@@ -11510,6 +11515,9 @@ def reunions(request):
         "stagiaires/reunions.html",
         contexte,
     )
+
+
+
 
 
 @require_GET
@@ -11559,3 +11567,1124 @@ def deconnexion(request):
     logout(request)
 
     return redirect("space_stagiare")
+
+
+
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import (
+    ImproperlyConfigured,
+    PermissionDenied,
+)
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_GET
+
+from .models import Reunion, Stagiaires
+
+
+@never_cache
+@require_GET
+@login_required(login_url="space_stagiare")
+def reunion_salle(request, pk):
+    reunion = get_object_or_404(Reunion, pk=pk)
+
+    if reunion.annulee:
+        raise PermissionDenied(
+            "Cet événement a été annulé."
+        )
+
+    administrateur = (
+        request.user.is_staff
+        and request.user.has_perm("siteweb.change_reunion")
+    )
+
+    stagiaire = None
+
+    if administrateur:
+        nom_participant = (
+            request.user.get_full_name().strip()
+            or "Administration HexaQuébec"
+        )
+
+    else:
+        stagiaire = get_object_or_404(
+            Stagiaires.objects.select_related("utilisateur"),
+            utilisateur=request.user,
+            actif=True,
+            utilisateur__is_active=True,
+        )
+
+        if (
+            reunion.domaine
+            and reunion.domaine != stagiaire.domaine
+        ):
+            raise PermissionDenied(
+                "Cet événement ne concerne pas votre domaine."
+            )
+
+        nom_participant = (
+            f"{stagiaire.prenom} {stagiaire.nom}".strip()
+            or "Stagiaire HexaQuébec"
+        )
+
+    # Une seule valeur utilisée pour le jeton et pour le lecteur.
+    salle = reunion.salle_nom.lower()
+
+    if not salle:
+        return HttpResponse(
+            "Cet événement ne possède pas d’identifiant de salle.",
+            status=503,
+            content_type="text/plain; charset=utf-8",
+        )
+
+    try:
+        configuration = generer_acces_video_stagiaire(
+            salle=salle,
+            nom=nom_participant,
+            utilisateur_id=f"hq-{request.user.pk}",
+            moderateur=administrateur,
+        )
+
+    except ImproperlyConfigured as erreur:
+        # Ces messages ne contiennent aucune clé ni aucun jeton.
+        message = (
+            str(erreur)
+            if administrateur
+            else "La salle vidéo est temporairement indisponible. "
+                 "Contactez l’administration."
+        )
+
+        return HttpResponse(
+            message,
+            status=503,
+            content_type="text/plain; charset=utf-8",
+        )
+
+    return render(
+        request,
+        "stagiaires/reunion_salle.html",
+        {
+            "reunion": reunion,
+            "stagiaire": stagiaire,
+            "administrateur": administrateur,
+            "nom_participant": nom_participant,
+            "configuration_video": configuration,
+        },
+    )
+
+
+import time
+
+
+from cryptography.hazmat.primitives import serialization
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+
+
+def generer_acces_video_stagiaire(
+    *,
+    salle,
+    nom,
+    utilisateur_id,
+    moderateur,
+):
+    app_id = str(
+        getattr(settings, "JITSI_JAAS_APP_ID", "") or ""
+    ).strip()
+
+    kid = str(
+        getattr(settings, "JITSI_JAAS_KID", "") or ""
+    ).strip()
+
+    cle_privee = getattr(
+        settings,
+        "JITSI_JAAS_PRIVATE_KEY",
+        "",
+    )
+
+    if not app_id.startswith("vpaas-magic-cookie-"):
+        raise ImproperlyConfigured(
+            "JITSI_JAAS_APP_ID est absent ou incorrect."
+        )
+
+    if not kid.startswith(app_id + "/"):
+        raise ImproperlyConfigured(
+            "JITSI_JAAS_KID doit contenir le même App ID "
+            "suivi de / et de l’identifiant de la clé."
+        )
+
+    if not cle_privee:
+        raise ImproperlyConfigured(
+            "JITSI_JAAS_PRIVATE_KEY est absent."
+        )
+
+    if isinstance(cle_privee, str):
+        cle_privee = (
+            cle_privee
+            .replace("\\n", "\n")
+            .strip()
+            .encode("utf-8")
+        )
+
+    try:
+        cle = serialization.load_pem_private_key(
+            cle_privee,
+            password=None,
+        )
+    except (ValueError, TypeError):
+        raise ImproperlyConfigured(
+            "La clé privée JaaS est illisible. "
+            "Copiez le fichier PEM complet, "
+            "avec son en-tête et sa fin."
+        ) from None
+
+    maintenant = int(time.time())
+
+    payload = {
+        "aud": "jitsi",
+        "iss": "chat",
+        "sub": app_id,
+        "room": salle,
+        "iat": maintenant,
+        "nbf": maintenant - 30,
+        "exp": maintenant + 7200,
+        "context": {
+            "user": {
+                "id": str(utilisateur_id),
+                "name": nom,
+                "email": "",
+                "moderator": "true" if moderateur else "false",
+            },
+            "features": {
+                "livestreaming": False,
+                "recording": False,
+                "transcription": False,
+                "outbound-call": False,
+            },
+            "room": {
+                "regex": False,
+            },
+        },
+    }
+
+    try:
+        jeton = jwt.encode(
+            payload,
+            cle,
+            algorithm="RS256",
+            headers={
+                "kid": kid,
+                "typ": "JWT",
+            },
+        )
+    except (TypeError, ValueError, jwt.PyJWTError):
+        raise ImproperlyConfigured(
+            "Impossible de signer le jeton JaaS en RS256. "
+            "Vérifiez que la clé téléchargée est une clé privée RSA."
+        ) from None
+
+    return {
+        "appId": app_id,
+        "roomName": f"{app_id}/{salle}",
+        "jwt": jeton,
+    }
+
+
+
+
+# ==========================================================
+# ADMINISTRATION PERSONNALISÉE DE L’ESPACE STAGIAIRES
+# Formulaires et vues : aucun forms_stagiaires_admin.py requis
+# ==========================================================
+
+from functools import wraps
+
+from django import forms
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
+from django.db import transaction
+from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_GET, require_http_methods
+
+from .models import (
+    Stagiaires,
+    Messages,
+    Pointage,
+    Rubrique,
+    Reunion,
+    Notification,
+)
+
+
+# ==========================================================
+# FORMULAIRES
+# ==========================================================
+
+class CompteStagiaireAdminForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = get_user_model()
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+        )
+
+        labels = {
+            "username": "Identifiant de connexion",
+            "first_name": "Prénom",
+            "last_name": "Nom",
+            "email": "Adresse courriel",
+        }
+
+
+class StagiaireGestionForm(forms.ModelForm):
+    class Meta:
+        model = Stagiaires
+
+        fields = (
+            "nom",
+            "prenom",
+            "utilisateur",
+            "domaine",
+            "etablissement",
+            "debut",
+            "fin",
+            "actif",
+        )
+
+        labels = {
+            "nom": "Nom",
+            "prenom": "Prénom",
+            "utilisateur": "Compte utilisateur",
+            "domaine": "Domaine du stage",
+            "etablissement": "Établissement",
+            "debut": "Début du stage",
+            "fin": "Fin du stage",
+            "actif": "Profil actif",
+        }
+
+        widgets = {
+            "debut": forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={"type": "date"},
+            ),
+            "fin": forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={"type": "date"},
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["nom"].required = True
+        self.fields["prenom"].required = True
+
+        self.fields["debut"].input_formats = ["%Y-%m-%d"]
+        self.fields["fin"].input_formats = ["%Y-%m-%d"]
+
+
+class RubriqueGestionForm(forms.ModelForm):
+    class Meta:
+        model = Rubrique
+
+        fields = (
+            "titre",
+            "slug",
+            "contenu",
+            "domaine",
+            "ordre",
+            "publiee",
+        )
+
+        widgets = {
+            "contenu": forms.Textarea(attrs={"rows": 12}),
+        }
+
+
+class PointageGestionForm(forms.ModelForm):
+    class Meta:
+        model = Pointage
+
+        fields = (
+            "stagiaire",
+            "entree",
+            "sortie",
+        )
+
+        widgets = {
+            "entree": forms.DateTimeInput(
+                format="%Y-%m-%dT%H:%M:%S",
+                attrs={
+                    "type": "datetime-local",
+                    "step": "1",
+                },
+            ),
+            "sortie": forms.DateTimeInput(
+                format="%Y-%m-%dT%H:%M:%S",
+                attrs={
+                    "type": "datetime-local",
+                    "step": "1",
+                },
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        formats = [
+            "%Y-%m-%dT%H:%M",
+            "%Y-%m-%dT%H:%M:%S",
+        ]
+
+        self.fields["entree"].input_formats = formats
+        self.fields["sortie"].input_formats = formats
+
+
+class ReunionGestionForm(forms.ModelForm):
+    class Meta:
+        model = Reunion
+
+        # La salle vidéo est générée automatiquement.
+        # Aucun lien de visioconférence à saisir.
+        fields = (
+            "titre",
+            "type",
+            "description",
+            "logo",
+            "debut",
+            "domaine",
+            "annulee",
+        )
+
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 6}),
+            "debut": forms.DateTimeInput(
+                format="%Y-%m-%dT%H:%M:%S",
+                attrs={
+                    "type": "datetime-local",
+                    "step": "1",
+                },
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["debut"].input_formats = [
+            "%Y-%m-%dT%H:%M",
+            "%Y-%m-%dT%H:%M:%S",
+        ]
+
+
+class NotificationGestionForm(forms.ModelForm):
+    class Meta:
+        model = Notification
+
+        fields = (
+            "utilisateur",
+            "texte",
+            "lue",
+        )
+
+        widgets = {
+            "texte": forms.Textarea(
+                attrs={
+                    "rows": 4,
+                    "maxlength": 250,
+                }
+            ),
+        }
+
+
+class ReponseStagiaireAdminForm(forms.Form):
+    texte = forms.CharField(
+        label="Votre réponse",
+        max_length=5000,
+        strip=True,
+        widget=forms.Textarea(
+            attrs={
+                "rows": 5,
+                "placeholder": "Écrivez votre réponse au stagiaire…",
+                "maxlength": 5000,
+            }
+        ),
+    )
+
+
+# ==========================================================
+# CONTRÔLE DES ACCÈS
+# ==========================================================
+
+def acces_gestion_stagiaires(vue):
+    @wraps(vue)
+    @login_required(login_url="space_stagiare")
+    def controle(request, *args, **kwargs):
+        if not request.user.is_active or not request.user.is_staff:
+            raise PermissionDenied(
+                "Cet espace est réservé à l’administration."
+            )
+
+        return vue(request, *args, **kwargs)
+
+    return controle
+
+
+def permission_gestion(modele, action):
+    return (
+        f"{modele._meta.app_label}."
+        f"{action}_{modele._meta.model_name}"
+    )
+
+
+def peut_gestion(request, modele, action):
+    return request.user.has_perm(
+        permission_gestion(modele, action)
+    )
+
+
+def verifier_gestion(request, modele, action):
+    if not peut_gestion(request, modele, action):
+        raise PermissionDenied(
+            "Vous ne disposez pas de la permission nécessaire."
+        )
+
+
+def nom_stagiaire_admin(stagiaire):
+    nom = f"{stagiaire.prenom} {stagiaire.nom}".strip()
+    return nom or "Identité à renseigner"
+
+
+def date_gestion(valeur):
+    if not valeur:
+        return "—"
+
+    if timezone.is_aware(valeur):
+        valeur = timezone.localtime(valeur)
+
+    return valeur.strftime("%d/%m/%Y à %H:%M")
+
+
+# ==========================================================
+# CONFIGURATION DES SECTIONS
+# ==========================================================
+
+SECTIONS_STAGIAIRES_ADMIN = {
+    "stagiaires": {
+        "modele": Stagiaires,
+        "formulaire": StagiaireGestionForm,
+        "titre": "Stagiaires",
+        "description": "Profils, domaines et périodes de stage.",
+        "colonnes": [
+            "Nom complet",
+            "Code",
+            "Domaine",
+            "Début",
+            "Fin",
+            "Statut",
+        ],
+        "recherche": [
+            "nom",
+            "prenom",
+            "code",
+            "etablissement",
+            "utilisateur__email",
+        ],
+        "ordre": ["nom", "prenom", "pk"],
+        "relations": ["utilisateur"],
+    },
+    "rubriques": {
+        "modele": Rubrique,
+        "formulaire": RubriqueGestionForm,
+        "titre": "Rubriques",
+        "description": "Présentation HexaQuébec et consignes de travail.",
+        "colonnes": [
+            "Titre",
+            "Identifiant",
+            "Domaine",
+            "Ordre",
+            "Publication",
+        ],
+        "recherche": ["titre", "slug", "contenu"],
+        "ordre": ["ordre", "titre", "pk"],
+        "relations": [],
+    },
+    "pointages": {
+        "modele": Pointage,
+        "formulaire": PointageGestionForm,
+        "titre": "Pointages",
+        "description": "Présences et historique des sessions.",
+        "colonnes": [
+            "Stagiaire",
+            "Entrée",
+            "Sortie",
+            "Durée",
+            "Statut",
+        ],
+        "recherche": [
+            "stagiaire__nom",
+            "stagiaire__prenom",
+            "stagiaire__code",
+        ],
+        "ordre": ["-entree", "-pk"],
+        "relations": ["stagiaire"],
+    },
+    "messages": {
+        "modele": Messages,
+        "formulaire": None,
+        "titre": "Messages",
+        "description": "Conversations avec les stagiaires.",
+        "colonnes": [
+            "Stagiaire",
+            "Auteur",
+            "Message",
+            "Date",
+            "Lecture administration",
+        ],
+        "recherche": [
+            "texte",
+            "stagiaire__nom",
+            "stagiaire__prenom",
+            "stagiaire__code",
+        ],
+        "ordre": ["-cree", "-pk"],
+        "relations": ["stagiaire", "auteur"],
+    },
+    "reunions": {
+        "modele": Reunion,
+        "formulaire": ReunionGestionForm,
+        "titre": "Réunions et conférences",
+        "description": "Événements et salles de visioconférence.",
+        "colonnes": [
+            "Titre",
+            "Type",
+            "Date",
+            "Domaine",
+            "Statut",
+        ],
+        "recherche": ["titre", "description"],
+        "ordre": ["-debut", "-pk"],
+        "relations": [],
+    },
+    "notifications": {
+        "modele": Notification,
+        "formulaire": NotificationGestionForm,
+        "titre": "Notifications",
+        "description": "Informations adressées aux utilisateurs.",
+        "colonnes": [
+            "Destinataire",
+            "Notification",
+            "Date",
+            "Statut",
+        ],
+        "recherche": [
+            "texte",
+            "utilisateur__first_name",
+            "utilisateur__last_name",
+            "utilisateur__email",
+        ],
+        "ordre": ["-cree", "-pk"],
+        "relations": ["utilisateur"],
+    },
+}
+
+
+def configuration_section_stagiaires(section):
+    configuration = SECTIONS_STAGIAIRES_ADMIN.get(section)
+
+    if configuration is None:
+        raise Http404("Cette section n’existe pas.")
+
+    return configuration
+
+
+# ==========================================================
+# TABLEAU DE BORD ADMINISTRATION
+# ==========================================================
+
+@never_cache
+@require_GET
+@acces_gestion_stagiaires
+def space_stagiaire_admin(request):
+    verifier_gestion(request, Stagiaires, "view")
+
+    cartes = []
+
+    for section, configuration in SECTIONS_STAGIAIRES_ADMIN.items():
+        modele = configuration["modele"]
+
+        if peut_gestion(request, modele, "view"):
+            cartes.append({
+                "titre": configuration["titre"],
+                "description": configuration["description"],
+                "nombre": modele.objects.count(),
+                "url": reverse(
+                    "stagiaires_admin_liste",
+                    kwargs={"section": section},
+                ),
+            })
+
+    contexte = {
+        "titre": "Administration de l’espace stagiaires",
+        "cartes": cartes,
+        "peut_creer_compte": (
+            peut_gestion(request, get_user_model(), "add")
+            and peut_gestion(request, Stagiaires, "add")
+        ),
+        "peut_voir_messages": peut_gestion(
+            request, Messages, "view"
+        ),
+    }
+
+    if contexte["peut_voir_messages"]:
+        from django.db.models import F
+
+        contexte["messages_non_lus"] = Messages.objects.filter(
+            lu_admin=False,
+            auteur_id=F("stagiaire__utilisateur_id"),
+        ).count()
+
+    return render(
+        request,
+        "stagiaires_admin/tableau.html",
+        contexte,
+    )
+
+
+# ==========================================================
+# LISTES
+# ==========================================================
+
+def cellules_gestion_stagiaires(section, objet):
+    if section == "stagiaires":
+        return [
+            nom_stagiaire_admin(objet),
+            objet.code,
+            objet.get_domaine_display(),
+            objet.debut.strftime("%d/%m/%Y"),
+            objet.fin.strftime("%d/%m/%Y"),
+            "Actif" if objet.actif else "Inactif",
+        ]
+
+    if section == "rubriques":
+        return [
+            objet.titre,
+            objet.slug,
+            (
+                objet.get_domaine_display()
+                if objet.domaine
+                else "Tous les stagiaires"
+            ),
+            objet.ordre,
+            "Publiée" if objet.publiee else "Non publiée",
+        ]
+
+    if section == "pointages":
+        return [
+            nom_stagiaire_admin(objet.stagiaire),
+            date_gestion(objet.entree),
+            date_gestion(objet.sortie),
+            objet.duree,
+            "Terminée" if objet.sortie else "En cours",
+        ]
+
+    if section == "messages":
+        auteur_stagiaire = (
+            objet.auteur_id == objet.stagiaire.utilisateur_id
+        )
+
+        return [
+            nom_stagiaire_admin(objet.stagiaire),
+            "Stagiaire" if auteur_stagiaire else "Administration",
+            objet.texte[:120] + (
+                "…" if len(objet.texte) > 120 else ""
+            ),
+            date_gestion(objet.cree),
+            (
+                "Lu" if objet.lu_admin else "Non lu"
+            ) if auteur_stagiaire else "Réponse administration",
+        ]
+
+    if section == "reunions":
+        return [
+            objet.titre,
+            objet.get_type_display(),
+            date_gestion(objet.debut),
+            (
+                objet.get_domaine_display()
+                if objet.domaine
+                else "Tous les stagiaires"
+            ),
+            "Annulé" if objet.annulee else "Programmé",
+        ]
+
+    if section == "notifications":
+        destinataire = (
+            objet.utilisateur.get_full_name().strip()
+            or "Compte sans nom renseigné"
+        )
+
+        return [
+            destinataire,
+            objet.texte,
+            date_gestion(objet.cree),
+            "Lue" if objet.lue else "Non lue",
+        ]
+
+    return []
+
+
+@never_cache
+@require_GET
+@acces_gestion_stagiaires
+def stagiaires_admin_liste(request, section):
+    configuration = configuration_section_stagiaires(section)
+    modele = configuration["modele"]
+
+    verifier_gestion(request, modele, "view")
+
+    objets = modele.objects.all()
+
+    if configuration["relations"]:
+        objets = objets.select_related(
+            *configuration["relations"]
+        )
+
+    recherche = request.GET.get("q", "").strip()
+
+    if recherche:
+        condition = Q()
+
+        for champ in configuration["recherche"]:
+            condition |= Q(
+                **{f"{champ}__icontains": recherche}
+            )
+
+        objets = objets.filter(condition)
+
+    objets = objets.order_by(*configuration["ordre"])
+
+    page = Paginator(objets, 25).get_page(
+        request.GET.get("page")
+    )
+
+    lignes = []
+
+    for objet in page:
+        actions = []
+
+        if (
+            configuration["formulaire"] is not None
+            and peut_gestion(request, modele, "change")
+        ):
+            actions.append({
+                "label": "Modifier",
+                "url": reverse(
+                    "stagiaires_admin_modifier",
+                    kwargs={
+                        "section": section,
+                        "pk": objet.pk,
+                    },
+                ),
+            })
+
+        if (
+            section in ("stagiaires", "messages")
+            and peut_gestion(request, Messages, "view")
+        ):
+            profil_pk = (
+                objet.pk
+                if section == "stagiaires"
+                else objet.stagiaire_id
+            )
+
+            actions.append({
+                "label": "Conversation",
+                "url": reverse(
+                    "stagiaires_admin_conversation",
+                    kwargs={"pk": profil_pk},
+                ),
+            })
+
+        if (
+            section == "reunions"
+            and not objet.annulee
+            and peut_gestion(request, Reunion, "change")
+        ):
+            actions.append({
+                "label": "Ouvrir la salle",
+                "url": reverse(
+                    "reunion_salle",
+                    kwargs={"pk": objet.pk},
+                ),
+            })
+
+        lignes.append({
+            "cellules": cellules_gestion_stagiaires(
+                section, objet
+            ),
+            "actions": actions,
+        })
+
+    return render(
+        request,
+        "stagiaires_admin/liste.html",
+        {
+            "titre": configuration["titre"],
+            "section": section,
+            "colonnes": configuration["colonnes"],
+            "lignes": lignes,
+            "page": page,
+            "recherche": recherche,
+            "peut_ajouter": (
+                configuration["formulaire"] is not None
+                and peut_gestion(request, modele, "add")
+            ),
+        },
+    )
+
+
+# ==========================================================
+# AJOUT ET MODIFICATION
+# ==========================================================
+
+@never_cache
+@require_http_methods(["GET", "POST"])
+@acces_gestion_stagiaires
+def stagiaires_admin_formulaire(request, section, pk=None):
+    configuration = configuration_section_stagiaires(section)
+
+    modele = configuration["modele"]
+    formulaire = configuration["formulaire"]
+
+    if formulaire is None:
+        raise Http404(
+            "Utilisez la conversation pour répondre aux messages."
+        )
+
+    modification = pk is not None
+
+    verifier_gestion(
+        request,
+        modele,
+        "change" if modification else "add",
+    )
+
+    instance = (
+        get_object_or_404(modele, pk=pk)
+        if modification
+        else None
+    )
+
+    form = formulaire(
+        data=request.POST if request.method == "POST" else None,
+        files=request.FILES if request.method == "POST" else None,
+        instance=instance,
+    )
+
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            form.save()
+
+        messages.success(
+            request,
+            (
+                "Les modifications ont été enregistrées."
+                if modification
+                else "L’élément a été créé."
+            ),
+        )
+
+        return redirect(
+            "stagiaires_admin_liste",
+            section=section,
+        )
+
+    return render(
+        request,
+        "stagiaires_admin/formulaire.html",
+        {
+            "titre": (
+                f"Modifier — {configuration['titre']}"
+                if modification
+                else f"Ajouter — {configuration['titre']}"
+            ),
+            "section": section,
+            "form": form,
+            "objet": instance,
+            "code_stagiaire": (
+                instance.code
+                if section == "stagiaires" and instance
+                else ""
+            ),
+            "retour": reverse(
+                "stagiaires_admin_liste",
+                kwargs={"section": section},
+            ),
+        },
+    )
+
+
+# ==========================================================
+# CRÉATION DU COMPTE UTILISATEUR
+# ==========================================================
+
+@never_cache
+@require_http_methods(["GET", "POST"])
+@acces_gestion_stagiaires
+def stagiaires_admin_compte(request):
+    verifier_gestion(request, get_user_model(), "add")
+    verifier_gestion(request, Stagiaires, "add")
+
+    form = CompteStagiaireAdminForm(
+        request.POST if request.method == "POST" else None
+    )
+
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            utilisateur = form.save()
+
+        messages.success(
+            request,
+            (
+                f"Le compte « {utilisateur.get_username()} » "
+                "a été créé. Ajoutez maintenant son profil "
+                "stagiaire et sélectionnez ce compte."
+            ),
+        )
+
+        return redirect(
+            "stagiaires_admin_ajouter",
+            section="stagiaires",
+        )
+
+    return render(
+        request,
+        "stagiaires_admin/formulaire.html",
+        {
+            "titre": "Créer un compte stagiaire",
+            "section": "compte",
+            "form": form,
+            "retour": reverse("space_stagiaire_admin"),
+        },
+    )
+
+
+# ==========================================================
+# CONVERSATION AVEC UN STAGIAIRE
+# ==========================================================
+
+@never_cache
+@require_http_methods(["GET", "POST"])
+@acces_gestion_stagiaires
+def stagiaires_admin_conversation(request, pk):
+    verifier_gestion(request, Messages, "view")
+
+    profil = get_object_or_404(
+        Stagiaires.objects.select_related("utilisateur"),
+        pk=pk,
+    )
+
+    peut_repondre = peut_gestion(request, Messages, "add")
+    peut_marquer_lu = peut_gestion(request, Messages, "change")
+
+    form = ReponseStagiaireAdminForm()
+
+    if request.method == "POST":
+        action = request.POST.get("action", "repondre")
+
+        if action == "lire":
+            verifier_gestion(request, Messages, "change")
+
+            Messages.objects.filter(
+                stagiaire=profil,
+                auteur_id=profil.utilisateur_id,
+                lu_admin=False,
+            ).update(lu_admin=True)
+
+            messages.success(
+                request,
+                "Les messages du stagiaire ont été marqués comme lus.",
+            )
+
+            return redirect(
+                "stagiaires_admin_conversation",
+                pk=profil.pk,
+            )
+
+        elif action == "repondre":
+            verifier_gestion(request, Messages, "add")
+
+            form = ReponseStagiaireAdminForm(request.POST)
+
+            if form.is_valid():
+                with transaction.atomic():
+                    Messages.objects.create(
+                        stagiaire=profil,
+                        auteur=request.user,
+                        texte=form.cleaned_data["texte"],
+                        lu_admin=True,
+                        lu_stagiaire=False,
+                    )
+
+                    Notification.objects.create(
+                        utilisateur=profil.utilisateur,
+                        texte=(
+                            "L’administration HexaQuébec "
+                            "vous a envoyé un nouveau message."
+                        ),
+                    )
+
+                messages.success(
+                    request,
+                    "Votre réponse a été envoyée.",
+                )
+
+                return redirect(
+                    "stagiaires_admin_conversation",
+                    pk=profil.pk,
+                )
+
+        else:
+            raise Http404("Action inconnue.")
+
+    # Sélection des 100 messages les plus récents,
+    # puis affichage dans l’ordre chronologique.
+    conversation = list(
+        Messages.objects
+        .filter(stagiaire=profil)
+        .select_related("auteur")
+        .order_by("-cree", "-pk")[:100]
+    )
+
+    conversation.reverse()
+
+    return render(
+        request,
+        "stagiaires_admin/conversation.html",
+        {
+            "titre": (
+                f"Conversation — {nom_stagiaire_admin(profil)}"
+            ),
+            "profil": profil,
+            "nom_complet": nom_stagiaire_admin(profil),
+            "conversation": conversation,
+            "form": form,
+            "peut_repondre": peut_repondre,
+            "peut_marquer_lu": peut_marquer_lu,
+        },
+    )

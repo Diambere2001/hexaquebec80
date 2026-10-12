@@ -1,0 +1,575 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ reunion.titre }} — HexaQuébec</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        body {
+            margin: 0;
+            background: #eef3f9;
+            color: #172e49;
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        .topbar {
+            border-bottom: 1px solid #244669;
+            background: #102b49;
+            color: #fff;
+        }
+
+        .topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            max-width: 1500px;
+            margin: auto;
+            padding: 18px 26px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-logo {
+            width: 55px;
+            height: 55px;
+            flex: 0 0 55px;
+            padding: 5px;
+            border-radius: 12px;
+            background: #fff;
+            object-fit: contain;
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 23px;
+            line-height: 1.3;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 4px;
+            color: #d5e3f3;
+            font-size: 11px;
+        }
+
+        .return-link {
+            padding: 9px 13px;
+            border: 1px solid #54708e;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        .return-link:hover {
+            background: #244669;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 25px auto;
+            padding: 0 26px;
+        }
+
+        .information {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 26px;
+            margin-bottom: 20px;
+            border: 1px solid #dfe7f2;
+            border-radius: 19px;
+            background: #fff;
+            box-shadow: 0 8px 25px rgba(20, 45, 73, .06);
+        }
+
+        .information-text {
+            min-width: 0;
+            flex: 1 1 400px;
+        }
+
+        .event-type {
+            display: inline-block;
+            padding: 4px 11px;
+            margin-bottom: 12px;
+            border-radius: 999px;
+            background: #eaf2ff;
+            color: #1751aa;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(24px, 3vw, 34px);
+            line-height: 1.3;
+            letter-spacing: -.03em;
+            overflow-wrap: anywhere;
+        }
+
+        .event-date {
+            margin: 0;
+            color: #52667e;
+            font-size: 14px;
+        }
+
+        .description {
+            margin-top: 15px;
+            color: #334b65;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .description p {
+            margin: 0 0 10px;
+        }
+
+        .participant {
+            margin-top: 16px;
+            color: #52667e;
+            font-size: 13px;
+        }
+
+        .participant strong {
+            color: #172e49;
+        }
+
+        .role {
+            display: inline-block;
+            padding: 3px 8px;
+            margin-left: 5px;
+            border-radius: 7px;
+            background: #edf5ff;
+            color: #2457a5;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .join-button {
+            min-height: 48px;
+            padding: 13px 22px;
+            border: 0;
+            border-radius: 11px;
+            background: #175cd3;
+            color: #fff;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        .join-button:hover {
+            background: #124cae;
+        }
+
+        .join-button:disabled {
+            background: #e0e8f3;
+            color: #52667e;
+            cursor: default;
+        }
+
+        .video-frame {
+            overflow: hidden;
+            border: 1px solid #d5e0ee;
+            border-radius: 18px;
+            background: #102541;
+        }
+
+        #video-container {
+            width: 100%;
+            height: 700px;
+            height: clamp(440px, 78vh, 950px);
+        }
+
+        #video-container iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .status {
+            padding: 15px 19px;
+            margin-top: 17px;
+            border: 1px solid #dfe7f2;
+            border-radius: 12px;
+            background: #fff;
+            color: #435d7b;
+            font-size: 13px;
+        }
+
+        .status.is-error {
+            border-color: #efcaca;
+            background: #fff3f3;
+            color: #9e3030;
+        }
+
+        .footer {
+            padding: 22px;
+            color: #52667e;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #84adff;
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .topbar-inner {
+                padding: 16px;
+            }
+
+            .container {
+                margin-top: 18px;
+                padding: 0 12px;
+            }
+
+            .information {
+                padding: 21px;
+            }
+
+            .join-button {
+                width: 100%;
+            }
+
+            .brand strong {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                {% if reunion.logo %}
+                    <img
+                        class="brand-logo"
+                        src="{{ reunion.logo.url }}"
+                        alt="Logo HexaQuébec"
+                        width="55"
+                        height="55"
+                    >
+                {% else %}
+                    <img
+                        class="brand-logo"
+                        src="{% static 'images/logoHexa.png' %}"
+                        alt="Logo HexaQuébec"
+                        width="55"
+                        height="55"
+                    >
+                {% endif %}
+
+                <div>
+                    <strong>HexaQuébec</strong>
+
+                    <small>
+                        L’innovation au cœur du numérique québécois
+                    </small>
+                </div>
+            </div>
+
+            {% if administrateur %}
+                <a
+                    class="return-link"
+                    href="{% url 'admin:siteweb_reunion_changelist' %}"
+                >
+                    ← Retour à l’administration
+                </a>
+            {% else %}
+                <a
+                    class="return-link"
+                    href="{% url 'stagiaire_reunions' %}"
+                >
+                    ← Retour aux événements
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="information" aria-labelledby="event-title">
+            <div class="information-text">
+                <span class="event-type">
+                    {{ reunion.get_type_display }}
+                </span>
+
+                <h1 id="event-title">{{ reunion.titre }}</h1>
+
+                <p class="event-date">
+                    Prévue le
+                    <time datetime="{{ reunion.debut|date:'c' }}">
+                        {{ reunion.debut|date:"d/m/Y à H:i" }}
+                    </time>
+                </p>
+
+                {% if reunion.description %}
+                    <div class="description">
+                        {{ reunion.description|linebreaks }}
+                    </div>
+                {% endif %}
+
+                <div class="participant">
+                    Vous participez sous le nom :
+                    <strong>{{ nom_participant }}</strong>
+
+                    <span class="role">
+                        {% if administrateur %}
+                            Modérateur
+                        {% else %}
+                            Stagiaire
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <button
+                class="join-button"
+                id="join-button"
+                type="button"
+                aria-controls="video-frame"
+                disabled
+            >
+                Entrer dans la salle vidéo
+            </button>
+        </section>
+
+        <section
+            class="video-frame"
+            id="video-frame"
+            aria-label="Visioconférence HexaQuébec"
+            hidden
+        >
+            <div id="video-container"></div>
+        </section>
+
+        <p
+            class="status"
+            id="video-status"
+            role="status"
+            aria-live="polite"
+        >
+            Cliquez sur le bouton pour entrer, puis autorisez
+            la caméra et le microphone lorsque le navigateur le demande.
+        </p>
+
+        <noscript>
+            <p class="status is-error">
+                Activez JavaScript pour utiliser la visioconférence.
+            </p>
+        </noscript>
+    </main>
+
+    <footer class="footer">
+        © {% now "Y" %} HexaQuébec · Réunions et conférences
+    </footer>
+
+    {{ configuration_video|json_script:"configuration-video" }}
+
+    <script>
+        (() => {
+            const configElement = document.getElementById(
+                "configuration-video"
+            );
+
+            const button = document.getElementById("join-button");
+            const frame = document.getElementById("video-frame");
+            const container = document.getElementById("video-container");
+            const status = document.getElementById("video-status");
+
+            if (!configElement || !button || !frame || !container || !status) {
+                return;
+            }
+
+            let config;
+
+            try {
+                config = JSON.parse(configElement.textContent);
+
+                if (
+                    !config ||
+                    typeof config.appId !== "string" ||
+                    typeof config.roomName !== "string" ||
+                    typeof config.jwt !== "string" ||
+                    !config.appId.trim() ||
+                    !config.jwt.trim() ||
+                    !config.roomName.startsWith(config.appId + "/") ||
+                    config.roomName.length <= config.appId.length + 1
+                ) {
+                    throw new Error("Configuration invalide");
+                }
+            } catch {
+                status.classList.add("is-error");
+                status.textContent =
+                    "La configuration vidéo est incomplète. " +
+                    "Contactez l’administration.";
+                return;
+            }
+
+            button.disabled = false;
+
+            let api = null;
+            let loading = false;
+
+            function chargerJaaS() {
+                return new Promise((resolve, reject) => {
+                    if (window.JitsiMeetExternalAPI) {
+                        resolve();
+                        return;
+                    }
+
+                    const script = document.createElement("script");
+                    let termine = false;
+
+                    script.src =
+                        "https://8x8.vc/" +
+                        encodeURIComponent(config.appId) +
+                        "/external_api.js";
+
+                    script.async = true;
+
+                    const timeout = setTimeout(() => {
+                        if (termine) return;
+
+                        termine = true;
+                        script.remove();
+
+                        reject(new Error("Délai de chargement dépassé"));
+                    }, 15000);
+
+                    script.onload = () => {
+                        if (termine) return;
+
+                        termine = true;
+                        clearTimeout(timeout);
+
+                        if (window.JitsiMeetExternalAPI) {
+                            resolve();
+                        } else {
+                            script.remove();
+                            reject(new Error("API indisponible"));
+                        }
+                    };
+
+                    script.onerror = () => {
+                        if (termine) return;
+
+                        termine = true;
+                        clearTimeout(timeout);
+                        script.remove();
+
+                        reject(new Error("Chargement impossible"));
+                    };
+
+                    document.head.appendChild(script);
+                });
+            }
+
+            function fermerSalle() {
+                const ancienneApi = api;
+                api = null;
+
+                if (ancienneApi) {
+                    ancienneApi.dispose();
+                }
+
+                container.replaceChildren();
+                frame.hidden = true;
+            }
+
+            button.addEventListener("click", async () => {
+                if (api || loading) return;
+
+                loading = true;
+                button.disabled = true;
+                button.textContent = "Connexion…";
+
+                status.classList.remove("is-error");
+                status.textContent = "Chargement de votre salle vidéo…";
+
+                try {
+                    await chargerJaaS();
+
+                    frame.hidden = false;
+
+                    api = new window.JitsiMeetExternalAPI("8x8.vc", {
+                        roomName: config.roomName,
+                        jwt: config.jwt,
+                        parentNode: container,
+                        width: "100%",
+                        height: "100%",
+                        lang: "fr",
+                        configOverwrite: {
+                            startWithAudioMuted: true,
+                            startWithVideoMuted: true
+                        }
+                    });
+
+                    button.textContent = "Salle chargée";
+
+                    status.textContent =
+                        "Vérifiez votre caméra et votre microphone, " +
+                        "puis rejoignez la réunion.";
+
+                    api.addListener("videoConferenceJoined", () => {
+                        button.textContent = "Réunion en cours";
+
+                        status.textContent =
+                            "Vous avez rejoint la réunion HexaQuébec.";
+                    });
+
+                    api.addListener("readyToClose", () => {
+                        fermerSalle();
+
+                        button.disabled = false;
+                        button.textContent = "Rejoindre à nouveau";
+
+                        status.textContent =
+                            "Vous avez quitté la salle. Actualisez la page " +
+                            "si votre accès a expiré.";
+                    });
+                } catch {
+                    fermerSalle();
+
+                    button.disabled = false;
+                    button.textContent = "Réessayer";
+
+                    status.classList.add("is-error");
+                    status.textContent =
+                        "Impossible de charger la salle vidéo. " +
+                        "Vérifiez votre connexion et réessayez.";
+                } finally {
+                    loading = false;
+                }
+            });
+
+            window.addEventListener("pagehide", fermerSalle);
+        })();
+    </script>
+</body>
+</html>

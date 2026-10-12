@@ -1,62 +1,419 @@
 {% extends 'stagiaires/base.html' %}
 
-{% block title %}
-    Mes notifications — HexaQuébec
-{% endblock %}
+{% block title %}Mes notifications — HexaQuébec{% endblock %}
 
 {% block content %}
-<h1>Mes notifications</h1>
+<style>
+    .notifications-page {
+        color: #172e49;
+        font-family: "Segoe UI", Arial, sans-serif;
+        line-height: 1.65;
+    }
 
-<p class="muted">
-    Retrouvez les notifications de vos échanges
-    et des événements organisés par HexaQuébec.
-</p>
+    .notifications-page,
+    .notifications-page * {
+        box-sizing: border-box;
+    }
 
-<div class="card">
-    <form
-        method="post"
-        action="{% url 'stagiaire_notifications_lire' %}"
-    >
-        {% csrf_token %}
+    .notifications-page h1,
+    .notifications-page h2,
+    .notifications-page h3,
+    .notifications-page p {
+        margin: 0;
+    }
 
-        <button
-            class="button"
-            type="submit"
+    .notifications-page .notifications-header {
+        padding: clamp(24px, 4vw, 36px);
+        margin-bottom: 22px;
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+    }
+
+    .notifications-page .notifications-eyebrow {
+        display: block;
+        margin-bottom: 10px;
+        color: #175cd3;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .notifications-page h1 {
+        margin-bottom: 12px;
+        color: #172e49;
+        font-size: clamp(27px, 3vw, 36px);
+        line-height: 1.2;
+        letter-spacing: -.035em;
+        text-shadow: none;
+    }
+
+    .notifications-page .notifications-intro {
+        max-width: 650px;
+        color: #50647d;
+        font-size: 15px;
+        text-shadow: none;
+    }
+
+    .notifications-page .notifications-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 22px;
+        color: #175cd3;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .notifications-page .notifications-back:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .notifications-page .notifications-panel {
+        padding: clamp(20px, 3vw, 28px);
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+    }
+
+    .notifications-page .notifications-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 25px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid #e6edf5;
+    }
+
+    .notifications-page h2 {
+        margin-bottom: 6px;
+        color: #172e49;
+        font-size: 21px;
+        line-height: 1.35;
+        text-shadow: none;
+    }
+
+    .notifications-page .notifications-caption {
+        color: #50647d;
+        font-size: 13px;
+    }
+
+    .notifications-page .notifications-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 45px;
+        padding: 12px 17px;
+        border: 1px solid #d7e4f7;
+        border-radius: 11px;
+        background: #edf4ff;
+        color: #1751aa;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 750;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s ease;
+    }
+
+    .notifications-page .notifications-button:hover {
+        background: #deebff;
+        color: #12458e;
+    }
+
+    .notifications-page .notifications-list {
+        display: grid;
+        gap: 14px;
+    }
+
+    .notifications-page .notification-item {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        align-items: start;
+        gap: 16px;
+        padding: 21px;
+        border: 1px solid #e0e8f2;
+        border-radius: 15px;
+        background: #fff;
+    }
+
+    .notifications-page .notification-item.is-unread {
+        border-color: #c6dafa;
+        border-left: 4px solid #175cd3;
+        background: #f5f9ff;
+    }
+
+    .notifications-page .notification-icon {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        background: #eef2f7;
+        color: #5c718b;
+    }
+
+    .notifications-page .is-unread .notification-icon {
+        background: #e2edff;
+        color: #175cd3;
+    }
+
+    .notifications-page .notification-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .notifications-page .notification-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .notifications-page .notification-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #e3edff;
+        color: #174f9e;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .notifications-page .notification-status.is-read {
+        background: #edf1f6;
+        color: #52667e;
+    }
+
+    .notifications-page .notification-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .notifications-page .notification-meta time {
+        color: #52667e;
+        font-size: 12px;
+    }
+
+    .notifications-page .notification-text {
+        color: #172e49;
+        font-size: 15px;
+        line-height: 1.8;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    .notifications-page .notifications-empty {
+        padding: 40px 15px;
+        text-align: center;
+    }
+
+    .notifications-page .notifications-empty h3 {
+        margin-bottom: 10px;
+        color: #172e49;
+        font-size: 18px;
+    }
+
+    .notifications-page .notifications-empty p {
+        max-width: 440px;
+        margin: 0 auto;
+        color: #52667e;
+        font-size: 14px;
+    }
+
+    .notifications-page .notifications-limit {
+        margin-top: 23px;
+        padding-top: 17px;
+        border-top: 1px solid #e6edf5;
+        color: #52667e;
+        font-size: 12px;
+    }
+
+    .notifications-page .notifications-help {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 22px;
+        padding: 23px;
+        border: 1px solid #d7e4f7;
+        border-radius: 18px;
+        background: #eef5ff;
+    }
+
+    .notifications-page .notifications-help strong {
+        color: #172e49;
+        font-size: 15px;
+    }
+
+    .notifications-page .notifications-help p {
+        margin-top: 5px;
+        color: #50647d;
+        font-size: 13px;
+    }
+
+    @media (max-width: 560px) {
+        .notifications-page .notifications-toolbar form,
+        .notifications-page .notifications-button {
+            width: 100%;
+        }
+
+        .notifications-page .notification-item {
+            grid-template-columns: 1fr;
+            padding: 18px;
+            gap: 12px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .notifications-page * {
+            transition: none !important;
+        }
+    }
+</style>
+
+<div class="notifications-page">
+    <header class="notifications-header">
+        <span class="notifications-eyebrow">
+            HexaQuébec · Espace de travail stagiaire
+        </span>
+
+        <h1>Mes notifications</h1>
+
+        <p class="notifications-intro">
+            Retrouvez les informations liées à vos échanges
+            et aux événements organisés pour votre stage.
+        </p>
+
+        <a
+            class="notifications-back"
+            href="{% url 'stagiaire_tableau' %}"
         >
-            Tout marquer comme lu
-        </button>
-    </form>
+            <span aria-hidden="true">←</span>
+            Retour au tableau de bord
+        </a>
+    </header>
+
+    <section
+        class="notifications-panel"
+        aria-labelledby="notifications-list-title"
+    >
+        <div class="notifications-toolbar">
+            <div>
+                <h2 id="notifications-list-title">
+                    Dernières notifications
+                </h2>
+
+                <p class="notifications-caption">
+                    Les notifications non lues sont signalées en bleu.
+                </p>
+            </div>
+
+            <form
+                method="post"
+                action="{% url 'stagiaire_notifications_lire' %}"
+            >
+                {% csrf_token %}
+
+                <button class="notifications-button" type="submit">
+                    Tout marquer comme lu
+                </button>
+            </form>
+        </div>
+
+        <div class="notifications-list">
+            {% for n in notifications %}
+                <article
+                    class="notification-item {% if not n.lue %}is-unread{% endif %}"
+                    aria-label="Notification {% if n.lue %}lue{% else %}non lue{% endif %}"
+                >
+                    <div class="notification-icon" aria-hidden="true">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                            <path d="M10 21h4"/>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="notification-meta">
+                            {% if not n.lue %}
+                                <span class="notification-status">
+                                    <span
+                                        class="notification-dot"
+                                        aria-hidden="true"
+                                    ></span>
+                                    Nouveau
+                                </span>
+                            {% else %}
+                                <span class="notification-status is-read">
+                                    Lu
+                                </span>
+                            {% endif %}
+
+                            <time datetime="{{ n.cree|date:'c' }}">
+                                {{ n.cree|date:"d/m/Y à H:i" }}
+                            </time>
+                        </div>
+
+                        <p class="notification-text">{{ n.texte }}</p>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="notifications-empty">
+                    <h3>Aucune notification pour le moment</h3>
+
+                    <p>
+                        Vos notifications apparaîtront ici au fil
+                        de vos échanges et des événements de votre stage.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <p class="notifications-limit">
+            Affichage des 100 dernières notifications.
+            Le bouton marque toutes vos notifications comme lues.
+        </p>
+    </section>
+
+    <aside class="notifications-help">
+        <div>
+            <strong>Besoin d’une précision ?</strong>
+
+            <p>
+                Contactez l’administration au sujet d’une information
+                concernant votre stage.
+            </p>
+        </div>
+
+        <a
+            class="notifications-button"
+            href="{% url 'stagiaire_messages' %}"
+        >
+            Ouvrir la messagerie
+        </a>
+    </aside>
 </div>
-
-{% for n in notifications %}
-    <article class="card {% if not n.lue %}notification-new{% endif %}">
-        {% if not n.lue %}
-            <span class="badge">
-                Nouveau
-            </span>
-        {% else %}
-            <span class="badge badge-success">
-                Lu
-            </span>
-        {% endif %}
-
-        <p>
-            {{ n.texte }}
-        </p>
-
-        <small class="muted">
-            {{ n.cree|date:"d/m/Y à H:i" }}
-        </small>
-    </article>
-{% empty %}
-    <div class="card">
-        <p class="empty">
-            Vous n’avez aucune notification.
-        </p>
-    </div>
-{% endfor %}
-
-<p class="muted">
-    Affichage des 100 dernières notifications.
-</p>
 {% endblock %}

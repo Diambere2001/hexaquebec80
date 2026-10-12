@@ -208,7 +208,6 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 
 
-
 # ==========================================================
 # JITSI JAAS
 # ==========================================================
@@ -217,49 +216,42 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv(BASE_DIR / ".env")
-
+load_dotenv(
+    BASE_DIR / ".env",
+    override=DEBUG and not bool(os.getenv("RENDER")),
+)
 
 JITSI_JAAS_APP_ID = os.getenv(
-    "JITSI_JAAS_APP_ID",
-    ""
-)
+    "JITSI_JAAS_APP_ID", ""
+).strip()
 
 JITSI_JAAS_KID = os.getenv(
-    "JITSI_JAAS_KID",
-    ""
-)
+    "JITSI_JAAS_KID", ""
+).strip()
 
+# Lire la clé depuis .env ou les variables Render.
+JITSI_JAAS_PRIVATE_KEY = os.getenv(
+    "JITSI_JAAS_PRIVATE_KEY", ""
+).replace("\\n", "\n").strip()
+
+# Sinon, lire le fichier de clé privée.
 JITSI_JAAS_PRIVATE_KEY_FILE = os.getenv(
     "JITSI_JAAS_PRIVATE_KEY_FILE",
-    "/etc/secrets/jaas_private_key.pk"
-)
+    "/etc/secrets/jaas_private_key.pk",
+).strip()
 
+if not JITSI_JAAS_PRIVATE_KEY and JITSI_JAAS_PRIVATE_KEY_FILE:
+    private_key_path = Path(JITSI_JAAS_PRIVATE_KEY_FILE)
 
-# Valeur finale de la clé privée
-JITSI_JAAS_PRIVATE_KEY = ""
+    if not private_key_path.is_absolute():
+        private_key_path = BASE_DIR / private_key_path
 
+    if private_key_path.is_file():
+        JITSI_JAAS_PRIVATE_KEY = (
+            private_key_path
+            .read_text(encoding="utf-8")
+            .strip()
+        )
 
-private_key_path = Path(
-    JITSI_JAAS_PRIVATE_KEY_FILE
-)
-
-# Pour ton ordinateur local
-if not private_key_path.is_absolute():
-    private_key_path = BASE_DIR / private_key_path
-
-
-# Lecture de la clé privée
-if private_key_path.exists():
-
-    JITSI_JAAS_PRIVATE_KEY = (
-        private_key_path
-        .read_text(encoding="utf-8")
-        .strip()
-    )
-
-else:
-    print(
-        "ERREUR JITSI : fichier de clé privée introuvable :",
-        private_key_path
-    )
+# Moteur JaaS utilisé par la salle vidéo.
+JITSI_DOMAIN = "8x8.vc"

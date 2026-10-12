@@ -1,32 +1,731 @@
 {% extends 'stagiaires/base.html' %}
 
-{% block title %}
-    {{ rubrique.titre }} — HexaQuébec
-{% endblock %}
+{% block title %}{{ rubrique.titre }} — HexaQuébec{% endblock %}
 
 {% block content %}
-<article class="card">
-    <span class="badge">
-        {% if rubrique.domaine %}
-            {{ rubrique.get_domaine_display }}
-        {% else %}
-            Tous les stagiaires
-        {% endif %}
-    </span>
+<style>
+    .rubrique-page {
+        color: #172e49;
+        font-family: "Segoe UI", Arial, sans-serif;
+        line-height: 1.7;
+    }
 
-    <h1 style="margin-top:20px">
-        {{ rubrique.titre }}
-    </h1>
+    .rubrique-page,
+    .rubrique-page * {
+        box-sizing: border-box;
+    }
 
-    <div class="text">
-        {{ rubrique.contenu|linebreaks }}
-    </div>
-</article>
+    .rubrique-page h1,
+    .rubrique-page h2,
+    .rubrique-page h3,
+    .rubrique-page p {
+        margin: 0;
+    }
 
-<a
-    class="button button-secondary"
-    href="{% url 'stagiaire_tableau' %}"
->
-    Retour au tableau de bord
-</a>
+    .rubrique-page [hidden] {
+        display: none !important;
+    }
+
+    /* Présentation de la rubrique */
+
+    .rubrique-page .rubrique-header {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 22px;
+        padding: clamp(25px, 4vw, 38px);
+        border: 1px solid #e0e8f2;
+        border-top: 4px solid #175cd3;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+        animation: rubrique-entree .45s ease both;
+    }
+
+    .rubrique-page .rubrique-eyebrow {
+        display: block;
+        margin-bottom: 10px;
+        color: #175cd3;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .rubrique-page h1 {
+        max-width: 850px;
+        margin-bottom: 14px;
+        color: #172e49;
+        font-size: clamp(28px, 3.5vw, 40px);
+        line-height: 1.2;
+        letter-spacing: -.035em;
+        overflow-wrap: anywhere;
+        text-shadow: none;
+    }
+
+    .rubrique-page .rubrique-intro {
+        max-width: 650px;
+        color: #50647d;
+        font-size: 15px;
+        text-shadow: none;
+    }
+
+    .rubrique-page .rubrique-header-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e6edf5;
+    }
+
+    .rubrique-page .rubrique-back {
+        color: #175cd3;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .rubrique-page .rubrique-back:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .rubrique-page .rubrique-badge {
+        display: inline-flex;
+        padding: 5px 12px;
+        border: 1px solid #dbe7fa;
+        border-radius: 999px;
+        background: #edf4ff;
+        color: #2054a2;
+        font-size: 11px;
+        font-weight: 750;
+    }
+
+    /* Contenu */
+
+    .rubrique-page .rubrique-panel {
+        overflow: hidden;
+        border: 1px solid #e0e8f2;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+        animation: rubrique-entree .55s ease both;
+    }
+
+    .rubrique-page .rubrique-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 23px 28px;
+        border-bottom: 1px solid #e3ebf5;
+        background: #f8faff;
+    }
+
+    .rubrique-page .rubrique-toolbar h2 {
+        color: #172e49;
+        font-size: 20px;
+        line-height: 1.4;
+        text-shadow: none;
+    }
+
+    .rubrique-page .rubrique-toolbar p {
+        margin-top: 5px;
+        color: #52667e;
+        font-size: 12px;
+    }
+
+    .rubrique-page .rubrique-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 44px;
+        padding: 11px 17px;
+        border: 1px solid #175cd3;
+        border-radius: 11px;
+        background: #175cd3;
+        color: #fff;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 750;
+        line-height: 1.4;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s ease;
+    }
+
+    .rubrique-page .rubrique-button:hover {
+        background: #124cae;
+        color: #fff;
+    }
+
+    .rubrique-page .rubrique-button-secondary {
+        border-color: #d7e4f7;
+        background: #edf4ff;
+        color: #1751aa;
+    }
+
+    .rubrique-page .rubrique-button-secondary:hover {
+        background: #deebff;
+        color: #12458e;
+    }
+
+    .rubrique-page .rubrique-button:disabled {
+        border-color: #e0e6ef;
+        background: #f1f4f8;
+        color: #65768c;
+        cursor: default;
+    }
+
+    .rubrique-page .rubrique-lecture {
+        padding: clamp(24px, 4vw, 42px);
+    }
+
+    .rubrique-page .rubrique-texte {
+        max-width: 76ch;
+        margin: 0 auto;
+        color: #263f5d;
+        font-size: 16px;
+        line-height: 1.95;
+        overflow-wrap: anywhere;
+    }
+
+    .rubrique-page .rubrique-texte p {
+        margin-bottom: 25px;
+    }
+
+    .rubrique-page .rubrique-texte p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Mode présentation */
+
+    .rubrique-page .presentation {
+        background: #f2f6fc;
+    }
+
+    .rubrique-page .presentation-stage {
+        padding: clamp(16px, 3vw, 28px);
+    }
+
+    .rubrique-page .presentation-slide {
+        position: relative;
+        min-height: 360px;
+        padding: clamp(26px, 5vw, 52px);
+        border: 1px solid #dce6f3;
+        border-radius: 17px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(24, 55, 91, .07);
+    }
+
+    .rubrique-page .slide-label {
+        margin-bottom: 12px;
+        color: #175cd3;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .rubrique-page .slide-title {
+        margin-bottom: 24px;
+        padding-bottom: 19px;
+        border-bottom: 2px solid #e8eff9;
+        color: #172e49;
+        font-size: clamp(20px, 2.6vw, 28px);
+        line-height: 1.35;
+        letter-spacing: -.025em;
+        overflow-wrap: anywhere;
+    }
+
+    .rubrique-page .slide-text {
+        max-width: 70ch;
+        color: #263f5d;
+        font-size: clamp(16px, 1.7vw, 20px);
+        line-height: 1.85;
+        overflow-wrap: anywhere;
+    }
+
+    .rubrique-page .slide-text p + p {
+        margin-top: 22px;
+    }
+
+    .rubrique-page .presentation-slide.is-entering {
+        animation: slide-entree .4s ease both;
+    }
+
+    .rubrique-page .presentation-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        padding: 0 28px 24px;
+    }
+
+    .rubrique-page .presentation-position {
+        color: #435d7b;
+        font-size: 13px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .rubrique-page .presentation-progress {
+        display: block;
+        width: 100%;
+        height: 5px;
+        border: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        background: #dfe8f5;
+        accent-color: #175cd3;
+    }
+
+    .rubrique-page .presentation-progress::-webkit-progress-bar {
+        background: #dfe8f5;
+    }
+
+    .rubrique-page .presentation-progress::-webkit-progress-value {
+        background: #175cd3;
+    }
+
+    .rubrique-page .presentation-progress::-moz-progress-bar {
+        background: #175cd3;
+    }
+
+    .rubrique-page .presentation-hint {
+        padding: 0 24px 18px;
+        color: #52667e;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    /* Accompagnement */
+
+    .rubrique-page .rubrique-help {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 22px;
+        padding: 23px;
+        border: 1px solid #d7e4f7;
+        border-radius: 18px;
+        background: #eef5ff;
+    }
+
+    .rubrique-page .rubrique-help strong {
+        color: #172e49;
+        font-size: 15px;
+    }
+
+    .rubrique-page .rubrique-help p {
+        max-width: 600px;
+        margin-top: 5px;
+        color: #50647d;
+        font-size: 13px;
+    }
+
+    .rubrique-page .rubrique-empty {
+        padding: 35px 15px;
+        text-align: center;
+    }
+
+    .rubrique-page .rubrique-empty h3 {
+        margin-bottom: 10px;
+        color: #172e49;
+        font-size: 18px;
+    }
+
+    .rubrique-page .rubrique-empty p {
+        color: #52667e;
+        font-size: 14px;
+    }
+
+    .rubrique-page a:focus-visible,
+    .rubrique-page button:focus-visible,
+    .rubrique-page .presentation:focus-visible {
+        outline: 3px solid #84adff;
+        outline-offset: 4px;
+    }
+
+    @keyframes rubrique-entree {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slide-entree {
+        from {
+            opacity: 0;
+            transform: translateX(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .rubrique-page .rubrique-toolbar {
+            padding: 21px;
+        }
+
+        .rubrique-page .rubrique-toolbar .rubrique-button,
+        .rubrique-page .rubrique-help .rubrique-button {
+            width: 100%;
+        }
+
+        .rubrique-page .presentation-slide {
+            min-height: 280px;
+        }
+
+        .rubrique-page .presentation-controls {
+            padding: 0 16px 20px;
+            gap: 10px;
+        }
+
+        .rubrique-page .presentation-controls .rubrique-button {
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+
+        .rubrique-page .presentation-position {
+            font-size: 12px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .rubrique-page * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+
+    @media print {
+        .rubrique-page .presentation,
+        .rubrique-page .rubrique-help,
+        .rubrique-page .rubrique-back,
+        .rubrique-page #presentation-toggle {
+            display: none !important;
+        }
+
+        .rubrique-page #rubrique-lecture {
+            display: block !important;
+        }
+
+        .rubrique-page .rubrique-header,
+        .rubrique-page .rubrique-panel {
+            border: 0;
+            box-shadow: none;
+            animation: none;
+        }
+
+        .rubrique-page .rubrique-lecture {
+            padding: 20px 0;
+        }
+    }
+</style>
+
+<div class="rubrique-page" id="rubrique-page">
+    <header class="rubrique-header">
+        <span class="rubrique-eyebrow">
+            HexaQuébec · Espace de travail stagiaire
+        </span>
+
+        <h1>{{ rubrique.titre }}</h1>
+
+        <p class="rubrique-intro">
+            Consultez les informations et les consignes
+            mises à votre disposition pour votre stage.
+        </p>
+
+        <div class="rubrique-header-bottom">
+            <a
+                class="rubrique-back"
+                href="{% url 'stagiaire_tableau' %}"
+            >
+                ← Retour au tableau de bord
+            </a>
+
+            <span class="rubrique-badge">
+                {% if rubrique.domaine %}
+                    {{ rubrique.get_domaine_display }}
+                {% else %}
+                    Tous les stagiaires
+                {% endif %}
+            </span>
+        </div>
+    </header>
+
+    <article
+        class="rubrique-panel"
+        aria-labelledby="rubrique-content-title"
+    >
+        <div class="rubrique-toolbar">
+            <div>
+                <h2 id="rubrique-content-title">
+                    Contenu de la rubrique
+                </h2>
+
+                <p>
+                    Prenez le temps de lire les informations
+                    et de noter vos questions.
+                </p>
+            </div>
+
+            <button
+                class="rubrique-button"
+                id="presentation-toggle"
+                type="button"
+                aria-controls="rubrique-lecture rubrique-presentation"
+                aria-pressed="false"
+                hidden
+            >
+                Mode présentation
+            </button>
+        </div>
+
+        <!-- Tout le contenu reste accessible sans JavaScript -->
+        <div class="rubrique-lecture" id="rubrique-lecture">
+            {% if rubrique.contenu %}
+                <div class="rubrique-texte" id="rubrique-texte">
+                    {{ rubrique.contenu|linebreaks }}
+                </div>
+            {% else %}
+                <div class="rubrique-empty">
+                    <h3>Contenu disponible prochainement</h3>
+
+                    <p>
+                        L’administration prépare les informations
+                        de cette rubrique.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Diapositives créées à partir du contenu existant -->
+        <div
+            class="presentation"
+            id="rubrique-presentation"
+            role="region"
+            aria-label="Présentation de la rubrique"
+            tabindex="0"
+            hidden
+        >
+            <div class="presentation-stage" id="presentation-stage"></div>
+
+            <div class="presentation-controls">
+                <button
+                    class="rubrique-button rubrique-button-secondary"
+                    id="slide-previous"
+                    type="button"
+                >
+                    ← Précédent
+                </button>
+
+                <span
+                    class="presentation-position"
+                    id="slide-position"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                ></span>
+
+                <button
+                    class="rubrique-button"
+                    id="slide-next"
+                    type="button"
+                >
+                    Suivant →
+                </button>
+            </div>
+
+            <p class="presentation-hint">
+                Utilisez les boutons ou les flèches du clavier
+                lorsque la présentation est sélectionnée.
+            </p>
+
+            <progress
+                class="presentation-progress"
+                id="slide-progress"
+                aria-label="Progression dans la présentation"
+                value="1"
+                max="1"
+            ></progress>
+        </div>
+    </article>
+
+    <aside class="rubrique-help">
+        <div>
+            <strong>Une information à préciser ?</strong>
+
+            <p>
+                Mentionnez le titre « {{ rubrique.titre }} »
+                dans votre message pour faciliter la réponse
+                de l’administration.
+            </p>
+        </div>
+
+        <a
+            class="rubrique-button rubrique-button-secondary"
+            href="{% url 'stagiaire_messages' %}"
+        >
+            Poser une question
+        </a>
+    </aside>
+</div>
+
+<script>
+    (() => {
+        const page = document.getElementById("rubrique-page");
+        const texte = document.getElementById("rubrique-texte");
+        const lecture = document.getElementById("rubrique-lecture");
+        const presentation = document.getElementById(
+            "rubrique-presentation"
+        );
+        const toggle = document.getElementById("presentation-toggle");
+        const stage = document.getElementById("presentation-stage");
+        const previous = document.getElementById("slide-previous");
+        const next = document.getElementById("slide-next");
+        const position = document.getElementById("slide-position");
+        const progress = document.getElementById("slide-progress");
+
+        if (!page || !texte || !presentation || !toggle) return;
+
+        const paragraphes = Array.from(texte.children).filter(
+            element => element.textContent.trim().length > 0
+        );
+
+        if (!paragraphes.length) return;
+
+        const titre = page.querySelector("h1").textContent.trim();
+        const slides = [];
+
+        // Chaque paragraphe devient une diapositive.
+        // Le texte est conservé intégralement.
+        paragraphes.forEach((paragraphe, index) => {
+            const slide = document.createElement("section");
+            slide.className = "presentation-slide";
+            slide.hidden = true;
+
+            const label = document.createElement("div");
+            label.className = "slide-label";
+            label.textContent = "HexaQuébec · Présentation";
+
+            const heading = document.createElement("h3");
+            heading.className = "slide-title";
+            heading.id = `rubrique-slide-title-${index}`;
+            heading.textContent = titre;
+
+            slide.setAttribute("aria-labelledby", heading.id);
+
+            const contenu = document.createElement("div");
+            contenu.className = "slide-text";
+            contenu.appendChild(paragraphe.cloneNode(true));
+
+            slide.append(label, heading, contenu);
+            stage.appendChild(slide);
+            slides.push(slide);
+        });
+
+        let current = 0;
+        let presentationActive = false;
+
+        progress.max = slides.length;
+        toggle.hidden = false;
+
+        function afficherSlide(index) {
+            current = Math.max(0, Math.min(index, slides.length - 1));
+
+            slides.forEach((slide, i) => {
+                slide.hidden = i !== current;
+                slide.classList.remove("is-entering");
+            });
+
+            const active = slides[current];
+
+            // Redémarre l’animation lors d’un changement de diapositive.
+            void active.offsetWidth;
+            active.classList.add("is-entering");
+
+            position.textContent = `${current + 1} / ${slides.length}`;
+            progress.value = current + 1;
+
+            previous.disabled = current === 0;
+            next.disabled = current === slides.length - 1;
+        }
+
+        toggle.addEventListener("click", () => {
+            presentationActive = !presentationActive;
+
+            lecture.hidden = presentationActive;
+            presentation.hidden = !presentationActive;
+
+            toggle.setAttribute(
+                "aria-pressed",
+                String(presentationActive)
+            );
+
+            toggle.textContent = presentationActive
+                ? "Revenir à la lecture"
+                : "Mode présentation";
+
+            if (presentationActive) {
+                afficherSlide(current);
+                presentation.focus({ preventScroll: true });
+            }
+        });
+
+        previous.addEventListener("click", () => {
+            afficherSlide(current - 1);
+
+            if (previous.disabled) {
+                presentation.focus({ preventScroll: true });
+            }
+        });
+
+        next.addEventListener("click", () => {
+            afficherSlide(current + 1);
+
+            if (next.disabled) {
+                presentation.focus({ preventScroll: true });
+            }
+        });
+
+        presentation.addEventListener("keydown", event => {
+            if (!presentationActive) return;
+
+            if (event.key === "ArrowRight") {
+                event.preventDefault();
+                afficherSlide(current + 1);
+                presentation.focus({ preventScroll: true });
+            }
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                afficherSlide(current - 1);
+                presentation.focus({ preventScroll: true });
+            }
+
+            if (event.key === "Escape") {
+                toggle.click();
+                toggle.focus({ preventScroll: true });
+            }
+        });
+    })();
+</script>
 {% endblock %}

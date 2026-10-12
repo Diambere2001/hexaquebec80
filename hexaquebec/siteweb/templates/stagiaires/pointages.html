@@ -1,312 +1,769 @@
 {% extends 'stagiaires/base.html' %}
 
-{% block title %}
-    Mon pointage — HexaQuébec
-{% endblock %}
+{% block title %}Mon pointage — HexaQuébec{% endblock %}
 
 {% block content %}
 <style>
-    .pointage-header {
-        margin-bottom: 25px;
+    .pointages-page {
+        width: 100%;
+        min-width: 0;
+        color: #172e49;
+        font-family: "Segoe UI", Arial, sans-serif;
+        line-height: 1.65;
     }
 
-    .pointage-header h1 {
+    .pointages-page,
+    .pointages-page * {
+        box-sizing: border-box;
+    }
+
+    .pointages-page h1,
+    .pointages-page h2,
+    .pointages-page h3,
+    .pointages-page p {
+        margin: 0;
+    }
+
+    .pointages-page svg {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* En-tête lisible sur le fond du campus */
+
+    .pointages-page .pointages-header {
+        padding: clamp(24px, 4vw, 36px);
+        margin-bottom: 22px;
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+    }
+
+    .pointages-page .pointages-eyebrow {
+        display: block;
         margin-bottom: 10px;
+        color: #175cd3;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
     }
 
-    .pointage-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 20px;
-        margin-bottom: 25px;
+    .pointages-page h1 {
+        margin-bottom: 12px;
+        color: #172e49;
+        font-size: clamp(27px, 3vw, 36px);
+        line-height: 1.2;
+        letter-spacing: -.035em;
+        text-shadow: none;
     }
 
-    .pointage-grid .card {
-        margin-bottom: 0;
+    .pointages-page .pointages-intro {
+        max-width: 650px;
+        color: #50647d;
+        font-size: 15px;
+        text-shadow: none;
     }
 
-    .presence-indicator {
+    .pointages-page .pointages-back {
         display: inline-flex;
         align-items: center;
-        gap: 9px;
-        padding: 8px 14px;
-        border-radius: 30px;
-        background: #eff3f8;
-        color: #475569;
+        gap: 8px;
+        margin-top: 22px;
+        color: #175cd3;
         font-size: 13px;
         font-weight: 700;
+        text-decoration: none;
     }
 
-    .presence-indicator.active {
-        background: #dcfce7;
-        color: #166534;
+    .pointages-page .pointages-back:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
     }
 
-    .presence-dot {
-        width: 9px;
-        height: 9px;
+    /* Présence et consignes */
+
+    .pointages-page .pointages-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        margin-bottom: 22px;
+    }
+
+    .pointages-page .pointages-panel {
+        min-width: 0;
+        padding: clamp(22px, 3vw, 28px);
+        border: 1px solid #e2eaf4;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(8, 26, 47, .12);
+    }
+
+    .pointages-page h2 {
+        color: #172e49;
+        font-size: 21px;
+        line-height: 1.35;
+        letter-spacing: -.02em;
+        text-shadow: none;
+    }
+
+    .pointages-page .presence-panel {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pointages-page .presence-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 22px;
+    }
+
+    .pointages-page .presence-icon {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        border: 1px solid #d9e5f8;
+        border-radius: 14px;
+        background: #edf4ff;
+        color: #175cd3;
+    }
+
+    .pointages-page .presence-heading .pointages-eyebrow {
+        margin-bottom: 4px;
+    }
+
+    .pointages-page .presence-status {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 9px;
+        padding: 9px 13px;
+        border: 1px solid #dce4ee;
+        border-radius: 11px;
+        background: #f3f6fa;
+        color: #52667e;
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .pointages-page .presence-status.is-active {
+        border-color: #c8e8d8;
+        background: #edf9f2;
+        color: #127650;
+    }
+
+    .pointages-page .status-dot {
+        width: 7px;
+        height: 7px;
+        flex: 0 0 7px;
         border-radius: 50%;
-        background: #94a3b8;
-        flex-shrink: 0;
+        background: currentColor;
     }
 
-    .presence-indicator.active .presence-dot {
-        background: #16a34a;
+    .pointages-page .presence-description {
+        margin-top: 17px;
+        color: #50647d;
+        font-size: 14px;
+        line-height: 1.8;
     }
 
-    .pointage-action {
-        margin-top: 20px;
+    .pointages-page .presence-action {
+        margin-top: auto;
+        padding-top: 26px;
     }
 
-    .pointage-action .button {
+    .pointages-page .pointages-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 48px;
+        padding: 12px 18px;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        background: #175cd3;
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 750;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s ease;
+    }
+
+    .pointages-page .pointages-button:hover {
+        background: #124cae;
+        color: #fff;
+    }
+
+    .pointages-page .presence-action .pointages-button {
         width: 100%;
-        min-height: 50px;
     }
 
-    .pointage-instructions {
-        margin: 0;
-        padding-left: 20px;
-        color: var(--muted);
+    .pointages-page .pointages-button-exit {
+        background: #b93838;
     }
 
-    .pointage-instructions li {
-        margin-bottom: 10px;
+    .pointages-page .pointages-button-exit:hover {
+        background: #9e2929;
     }
 
-    .history-heading {
+    .pointages-page .pointages-button-secondary {
+        border-color: #d7e4f7;
+        background: #edf4ff;
+        color: #1751aa;
+    }
+
+    .pointages-page .pointages-button-secondary:hover {
+        background: #deebff;
+        color: #12458e;
+    }
+
+    .pointages-page .pointages-note {
+        margin-top: 17px;
+        color: #52667e;
+        font-size: 12px;
+        line-height: 1.75;
+    }
+
+    .pointages-page .pointages-steps {
+        display: grid;
+        gap: 20px;
+        margin: 24px 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: pointage-step;
+    }
+
+    .pointages-page .pointages-steps li {
+        display: grid;
+        grid-template-columns: 31px minmax(0, 1fr);
+        align-items: start;
+        gap: 12px;
+        counter-increment: pointage-step;
+    }
+
+    .pointages-page .pointages-steps li::before {
+        content: counter(pointage-step);
+        display: grid;
+        place-items: center;
+        width: 31px;
+        height: 31px;
+        border: 1px solid #d8e5fa;
+        border-radius: 10px;
+        background: #edf4ff;
+        color: #175cd3;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .pointages-page .pointages-steps strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #172e49;
+        font-size: 13px;
+    }
+
+    .pointages-page .pointages-steps p {
+        color: #50647d;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    /* Historique */
+
+    .pointages-page .history-heading {
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 17px;
+        margin-bottom: 23px;
     }
 
-    .history-heading h2 {
+    .pointages-page .history-heading p {
+        margin-top: 8px;
+        color: #50647d;
+        font-size: 14px;
+    }
+
+    .pointages-page .history-limit {
+        padding: 6px 11px;
+        border: 1px solid #dfe7f1;
+        border-radius: 999px;
+        background: #f3f6fa;
+        color: #52667e;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .pointages-page .history-scroll {
+        max-width: 100%;
+        overflow-x: auto;
+        border: 1px solid #e0e8f2;
+        border-radius: 14px;
+        background: #fff;
+    }
+
+    .pointages-page .history-table {
+        width: 100%;
         margin: 0;
+        border-collapse: collapse;
+        color: #172e49;
+        font-size: 14px;
+        text-align: left;
     }
 
-    .pointage-empty {
-        padding: 35px 15px;
-        text-align: center;
+    .pointages-page .history-table th {
+        padding: 15px 18px;
+        border: 0;
+        border-bottom: 1px solid #e0e8f2;
+        background: #f3f7fc;
+        color: #435d7b;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .pointages-page .history-table td {
+        padding: 17px 18px;
+        border: 0;
+        border-bottom: 1px solid #e9eef5;
+        background: transparent;
+        color: #172e49;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .pointages-page .history-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .pointages-page .history-table tbody tr:hover {
+        background: #f8fbff;
+    }
+
+    .pointages-page .session-date {
+        display: block;
+        color: #172e49;
+        font-weight: 700;
+    }
+
+    .pointages-page .session-time {
+        display: block;
+        margin-top: 4px;
+        color: #52667e;
+        font-size: 12px;
+    }
+
+    .pointages-page .session-duration {
+        font-weight: 750;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pointages-page .session-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: #eef2f7;
+        color: #52667e;
+        font-size: 11px;
+        font-weight: 750;
+    }
+
+    .pointages-page .session-status.is-active {
+        background: #e8f7ef;
+        color: #127650;
+    }
+
+    .pointages-page .history-table .history-empty-cell {
         white-space: normal;
     }
 
-    .pointage-empty strong {
-        display: block;
-        margin-bottom: 8px;
+    .pointages-page .history-empty {
+        padding: 30px 15px;
+        text-align: center;
     }
 
-    .pointage-note {
-        margin: 18px 0 0;
-        color: var(--muted);
+    .pointages-page .history-empty h3 {
+        margin-bottom: 10px;
+        color: #172e49;
+        font-size: 18px;
+    }
+
+    .pointages-page .history-empty p {
+        max-width: 430px;
+        margin: 0 auto;
+        color: #52667e;
+        font-size: 14px;
+    }
+
+    /* Assistance */
+
+    .pointages-page .pointages-help {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 22px;
+        padding: 23px;
+        border: 1px solid #d7e4f7;
+        border-radius: 18px;
+        background: #eef5ff;
+    }
+
+    .pointages-page .pointages-help strong {
+        color: #172e49;
+        font-size: 15px;
+    }
+
+    .pointages-page .pointages-help p {
+        margin-top: 5px;
+        color: #50647d;
         font-size: 13px;
     }
 
-    .pointage-help {
-        padding: 18px 20px;
-        background: #eaf2ff;
-        border: 1px solid #d5e4fb;
-        border-radius: 12px;
+    .pointages-page a:focus-visible,
+    .pointages-page button:focus-visible,
+    .pointages-page .history-scroll:focus-visible {
+        outline: 3px solid #84adff;
+        outline-offset: 4px;
     }
 
-    .pointage-help p {
-        margin: 0;
-    }
-
-    @media (max-width: 650px) {
-        .pointage-grid {
+    @media (max-width: 800px) {
+        .pointages-page .pointages-grid {
             grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 560px) {
+        .pointages-page .pointages-help .pointages-button {
+            width: 100%;
+        }
+
+        .pointages-page .history-table th,
+        .pointages-page .history-table td {
+            padding: 14px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .pointages-page * {
+            transition: none !important;
         }
     }
 </style>
 
-<div class="pointage-header">
-    <h1>Mon pointage</h1>
+<div class="pointages-page">
+    <header class="pointages-header">
+        <span class="pointages-eyebrow">
+            HexaQuébec · Espace de travail stagiaire
+        </span>
 
-    <p class="muted">
-        Enregistrez votre entrée au début de chaque session
-        de travail et votre sortie lorsque vous terminez.
-    </p>
-</div>
+        <h1>Mon pointage</h1>
 
-<div class="pointage-grid">
-    <section class="card" aria-labelledby="presence-title">
-        <h2 id="presence-title">
-            Ma présence
-        </h2>
+        <p class="pointages-intro">
+            Enregistrez votre entrée et votre sortie à chaque session
+            de travail, puis consultez votre historique de présence.
+        </p>
 
-        {% if ouvert %}
-            <div class="presence-indicator active">
-                <span class="presence-dot" aria-hidden="true"></span>
-                Session de travail en cours
-            </div>
-
-            <p class="muted">
-                Votre entrée est enregistrée.
-                Pointez votre sortie à la fin de votre session.
-            </p>
-        {% else %}
-            <div class="presence-indicator">
-                <span class="presence-dot" aria-hidden="true"></span>
-                Aucune session en cours
-            </div>
-
-            <p class="muted">
-                Lorsque vous commencez votre travail,
-                cliquez sur « Pointer mon entrée ».
-            </p>
-        {% endif %}
-
-        <form
-            class="pointage-action"
-            method="post"
-            action="{% url 'stagiaire_pointer' %}"
+        <a
+            class="pointages-back"
+            href="{% url 'stagiaire_tableau' %}"
         >
-            {% csrf_token %}
+            <span aria-hidden="true">←</span>
+            Retour au tableau de bord
+        </a>
+    </header>
+
+    <div class="pointages-grid">
+        <section
+            class="pointages-panel presence-panel"
+            aria-labelledby="presence-title"
+        >
+            <div class="presence-heading">
+                <div class="presence-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7v5l3 2"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <span class="pointages-eyebrow">
+                        Votre session
+                    </span>
+
+                    <h2 id="presence-title">Ma présence</h2>
+                </div>
+            </div>
 
             {% if ouvert %}
-                <button
-                    class="button button-danger"
-                    type="submit"
-                    name="action"
-                    value="sortie"
-                >
-                    Pointer ma sortie
-                </button>
-            {% else %}
-                <button
-                    class="button"
-                    type="submit"
-                    name="action"
-                    value="entree"
-                >
-                    Pointer mon entrée
-                </button>
-            {% endif %}
-        </form>
+                <span class="presence-status is-active">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    Session de travail en cours
+                </span>
 
-        <p class="pointage-note">
-            L’heure est enregistrée automatiquement
-            par le serveur lors du pointage.
+                <p class="presence-description">
+                    Votre entrée est enregistrée.
+                    Pointez votre sortie lorsque vous terminez
+                    cette session de travail.
+                </p>
+            {% else %}
+                <span class="presence-status">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    Aucune session en cours
+                </span>
+
+                <p class="presence-description">
+                    Lorsque vous commencez votre travail,
+                    cliquez sur « Pointer mon entrée »
+                    pour enregistrer le début de votre session.
+                </p>
+            {% endif %}
+
+            <form
+                class="presence-action"
+                method="post"
+                action="{% url 'stagiaire_pointer' %}"
+            >
+                {% csrf_token %}
+
+                {% if ouvert %}
+                    <button
+                        class="pointages-button pointages-button-exit"
+                        type="submit"
+                        name="action"
+                        value="sortie"
+                    >
+                        Pointer ma sortie
+                        <span aria-hidden="true">→</span>
+                    </button>
+                {% else %}
+                    <button
+                        class="pointages-button"
+                        type="submit"
+                        name="action"
+                        value="entree"
+                    >
+                        Pointer mon entrée
+                        <span aria-hidden="true">→</span>
+                    </button>
+                {% endif %}
+            </form>
+
+            <p class="pointages-note">
+                L’heure est enregistrée automatiquement
+                par le serveur au moment du pointage.
+            </p>
+        </section>
+
+        <section
+            class="pointages-panel"
+            aria-labelledby="instructions-title"
+        >
+            <span class="pointages-eyebrow">Les bons réflexes</span>
+
+            <h2 id="instructions-title">Consignes de pointage</h2>
+
+            <ol class="pointages-steps">
+                <li>
+                    <div>
+                        <strong>Au début de votre session</strong>
+                        <p>
+                            Pointez votre entrée lorsque vous commencez
+                            votre travail.
+                        </p>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <strong>À la fin de votre session</strong>
+                        <p>
+                            Pointez votre sortie lorsque vous terminez
+                            votre travail.
+                        </p>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <strong>Pour les pauses et les horaires</strong>
+                        <p>
+                            Suivez les consignes communiquées
+                            par votre responsable.
+                        </p>
+                    </div>
+                </li>
+
+                <li>
+                    <div>
+                        <strong>En cas d’oubli ou d’erreur</strong>
+                        <p>
+                            Contactez l’administration pour demander
+                            une correction de votre pointage.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+    </div>
+
+    <section
+        class="pointages-panel"
+        aria-labelledby="history-title"
+    >
+        <div class="history-heading">
+            <div>
+                <span class="pointages-eyebrow">
+                    Suivi de présence
+                </span>
+
+                <h2 id="history-title">Historique de mes sessions</h2>
+
+                <p>
+                    Retrouvez vos entrées, vos sorties
+                    et les durées enregistrées.
+                </p>
+            </div>
+
+            <span class="history-limit">
+                100 dernières sessions maximum
+            </span>
+        </div>
+
+        <div
+            class="history-scroll"
+            role="region"
+            aria-label="Historique des pointages, défilement horizontal si nécessaire"
+            tabindex="0"
+        >
+            <table
+                class="history-table"
+                aria-labelledby="history-title"
+            >
+                <thead>
+                    <tr>
+                        <th scope="col">Entrée</th>
+                        <th scope="col">Sortie</th>
+                        <th scope="col">Durée</th>
+                        <th scope="col">Statut</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for p in pointages %}
+                        <tr>
+                            <td>
+                                <time datetime="{{ p.entree|date:'c' }}">
+                                    <span class="session-date">
+                                        {{ p.entree|date:"d/m/Y" }}
+                                    </span>
+
+                                    <span class="session-time">
+                                        {{ p.entree|date:"H:i" }}
+                                    </span>
+                                </time>
+                            </td>
+
+                            <td>
+                                {% if p.sortie %}
+                                    <time datetime="{{ p.sortie|date:'c' }}">
+                                        <span class="session-date">
+                                            {{ p.sortie|date:"d/m/Y" }}
+                                        </span>
+
+                                        <span class="session-time">
+                                            {{ p.sortie|date:"H:i" }}
+                                        </span>
+                                    </time>
+                                {% else %}
+                                    <span class="session-time">
+                                        Non enregistrée
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td class="session-duration">
+                                {{ p.duree }}
+                            </td>
+
+                            <td>
+                                {% if p.sortie %}
+                                    <span class="session-status">
+                                        Terminée
+                                    </span>
+                                {% else %}
+                                    <span class="session-status is-active">
+                                        <span
+                                            class="status-dot"
+                                            aria-hidden="true"
+                                        ></span>
+                                        En cours
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="history-empty-cell">
+                                <div class="history-empty">
+                                    <h3>Aucun pointage enregistré</h3>
+
+                                    <p>
+                                        Votre première session apparaîtra
+                                        ici après avoir pointé votre entrée.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <p class="pointages-note">
+            Les heures sont affichées dans le fuseau horaire configuré
+            pour le site. L’administration conserve l’historique complet.
         </p>
     </section>
 
-    <section class="card" aria-labelledby="instructions-title">
-        <h2 id="instructions-title">
-            Consignes de pointage
-        </h2>
+    <aside
+        class="pointages-help"
+        aria-label="Demander une correction de pointage"
+    >
+        <div>
+            <strong>Un oubli ou une erreur de pointage ?</strong>
 
-        <ol class="pointage-instructions">
-            <li>
-                Pointez votre entrée lorsque vous commencez
-                votre session de travail.
-            </li>
+            <p>
+                Précisez la date et les horaires concernés
+                dans votre demande de correction.
+            </p>
+        </div>
 
-            <li>
-                Pointez votre sortie lorsque vous terminez
-                cette session.
-            </li>
-
-            <li>
-                Suivez les consignes de votre responsable
-                pour les pauses et les horaires.
-            </li>
-
-            <li>
-                En cas d’oubli ou d’erreur, contactez
-                l’administration pour demander une correction.
-            </li>
-        </ol>
-    </section>
-</div>
-
-<section class="card" aria-labelledby="history-title">
-    <div class="history-heading">
-        <h2 id="history-title">
-            Historique de mes sessions
-        </h2>
-
-        <span class="badge">
-            100 dernières sessions au maximum
-        </span>
-    </div>
-
-    <div class="scroll">
-        <table aria-labelledby="history-title">
-            <thead>
-                <tr>
-                    <th scope="col">Entrée</th>
-                    <th scope="col">Sortie</th>
-                    <th scope="col">Durée</th>
-                    <th scope="col">Statut</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for p in pointages %}
-                    <tr>
-                        <td>
-                            {{ p.entree|date:"d/m/Y à H:i" }}
-                        </td>
-
-                        <td>
-                            {% if p.sortie %}
-                                {{ p.sortie|date:"d/m/Y à H:i" }}
-                            {% else %}
-                                —
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            {{ p.duree }}
-                        </td>
-
-                        <td>
-                            {% if p.sortie %}
-                                <span class="badge">
-                                    Terminée
-                                </span>
-                            {% else %}
-                                <span class="badge badge-success">
-                                    En cours
-                                </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4" class="pointage-empty">
-                            <strong>
-                                Aucun pointage enregistré
-                            </strong>
-
-                            <span class="muted">
-                                Votre première session apparaîtra ici
-                                après avoir pointé votre entrée.
-                            </span>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <p class="pointage-note">
-        Les heures sont affichées dans le fuseau horaire
-        configuré pour le site.
-        L’administration conserve l’historique complet.
-    </p>
-</section>
-
-<div class="pointage-help">
-    <p>
-        <strong>Un oubli ou une erreur de pointage ?</strong>
-        <br>
-        <a href="{% url 'stagiaire_messages' %}">
+        <a
+            class="pointages-button pointages-button-secondary"
+            href="{% url 'stagiaire_messages' %}"
+        >
             Écrire à l’administration
         </a>
-        en précisant la date et les horaires concernés.
-    </p>
+    </aside>
 </div>
 {% endblock %}

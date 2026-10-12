@@ -2262,10 +2262,11 @@ class LettreAcceptationAdmin(
 
 
 
-
 @admin.register(Stagiaires)
 class StagiairesAdmin(admin.ModelAdmin):
     list_display = (
+        "nom",
+        "prenom",
         "utilisateur",
         "code",
         "domaine",
@@ -2274,12 +2275,20 @@ class StagiairesAdmin(admin.ModelAdmin):
         "actif",
     )
 
+    list_display_links = (
+        "nom",
+        "prenom",
+        "utilisateur",
+    )
+
     list_filter = (
         "domaine",
         "actif",
     )
 
     search_fields = (
+        "nom",
+        "prenom",
         "code",
         "utilisateur__username",
         "utilisateur__first_name",
@@ -2292,11 +2301,17 @@ class StagiairesAdmin(admin.ModelAdmin):
 
     list_select_related = ("utilisateur",)
 
+    ordering = (
+        "nom",
+        "prenom",
+    )
+
     fieldsets = (
         (
-            "Identité et accès",
+            "Identité du stagiaire",
             {
                 "fields": (
+                    ("nom", "prenom"),
                     "utilisateur",
                     "code",
                     "actif",
@@ -2309,13 +2324,11 @@ class StagiairesAdmin(admin.ModelAdmin):
                 "fields": (
                     "domaine",
                     "etablissement",
-                    "debut",
-                    "fin",
+                    ("debut", "fin"),
                 ),
             },
         ),
     )
-
 
 @admin.register(Rubrique)
 class RubriqueStagiairesAdmin(admin.ModelAdmin):
@@ -2460,6 +2473,12 @@ class MessagesStagiairesAdmin(admin.ModelAdmin):
         )
 
 
+
+
+from django.urls import reverse
+from django.utils.html import format_html
+
+
 @admin.register(Reunion)
 class ReunionStagiairesAdmin(admin.ModelAdmin):
     list_display = (
@@ -2468,6 +2487,7 @@ class ReunionStagiairesAdmin(admin.ModelAdmin):
         "debut",
         "domaine",
         "annulee",
+        "ouvrir_salle",
     )
 
     list_filter = (
@@ -2482,6 +2502,9 @@ class ReunionStagiairesAdmin(admin.ModelAdmin):
     )
 
     date_hierarchy = "debut"
+    ordering = ("-debut",)
+
+    readonly_fields = ("ouvrir_salle",)
 
     fieldsets = (
         (
@@ -2491,6 +2514,7 @@ class ReunionStagiairesAdmin(admin.ModelAdmin):
                     "titre",
                     "type",
                     "description",
+                    "logo",
                 ),
             },
         ),
@@ -2499,15 +2523,44 @@ class ReunionStagiairesAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "debut",
-                    "lien",
                     "domaine",
                     "annulee",
                 ),
             },
         ),
+        (
+            "Salle vidéo HexaQuébec",
+            {
+                "fields": ("ouvrir_salle",),
+                "description": (
+                    "Enregistrez l’événement pour disposer "
+                    "automatiquement de sa salle vidéo."
+                ),
+            },
+        ),
     )
 
+    @admin.display(description="Salle vidéo")
+    def ouvrir_salle(self, obj):
+        if not obj or not obj.pk:
+            return "Disponible après l’enregistrement."
 
+        if obj.annulee:
+            return "Événement annulé."
+
+        adresse = reverse(
+            "stagiaire_reunion_salle",
+            kwargs={"pk": obj.pk},
+        )
+
+        return format_html(
+            '<a href="{}" target="_blank" '
+            'rel="noopener noreferrer">Ouvrir la salle vidéo ↗</a>',
+            adresse,
+        )
+
+
+    
 @admin.register(Notification)
 class NotificationStagiairesAdmin(admin.ModelAdmin):
     list_display = (

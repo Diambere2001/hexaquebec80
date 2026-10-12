@@ -420,6 +420,46 @@ path(
     ),
 
 
+    path(
+    "stagiaires/reunions/<int:pk>/salle/",
+    views.reunion_salle,
+    name="stagiaire_reunion_salle",
+    ),
+    path(
+    "administration/espace-stagiaires/",
+    views.space_stagiaire_admin,
+    name="space_stagiaire_admin",
+),
+
+path(
+    "administration/espace-stagiaires/compte/creer/",
+    views.stagiaires_admin_compte,
+    name="stagiaires_admin_compte",
+),
+
+path(
+    "administration/espace-stagiaires/conversation/<int:pk>/",
+    views.stagiaires_admin_conversation,
+    name="stagiaires_admin_conversation",
+),
+
+path(
+    "administration/espace-stagiaires/gestion/<slug:section>/",
+    views.stagiaires_admin_liste,
+    name="stagiaires_admin_liste",
+),
+
+path(
+    "administration/espace-stagiaires/gestion/<slug:section>/ajouter/",
+    views.stagiaires_admin_formulaire,
+    name="stagiaires_admin_ajouter",
+),
+
+path(
+    "administration/espace-stagiaires/gestion/<slug:section>/<int:pk>/modifier/",
+    views.stagiaires_admin_formulaire,
+    name="stagiaires_admin_modifier",
+),
 
 ]
 

@@ -1,39 +1,71 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>
-        {% block title %}Espace stagiaire — HexaQuébec{% endblock %}
-    </title>
+    <title>{% block title %}Espace stagiaire — HexaQuébec{% endblock %}</title>
 
     <style>
         :root {
-            --primary: #1456b8;
-            --primary-dark: #103f85;
-            --dark: #10223a;
-            --muted: #64748b;
-            --background: #f3f6fb;
-            --border: #e0e7f1;
-            --white: #ffffff;
+            --primary: #175cd3;
+            --primary-dark: #124cae;
+            --dark: #142d49;
+            --muted: #52667e;
+            --border: #e0e8f2;
+            --white: #fff;
+            color-scheme: light;
         }
 
         * {
             box-sizing: border-box;
         }
 
+        html {
+            min-height: 100%;
+        }
+
         body {
+            position: relative;
+            isolation: isolate;
+            min-height: 100vh;
             margin: 0;
-            background: var(--background);
+            background: #19344f;
             color: var(--dark);
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
             font-size: 15px;
             line-height: 1.65;
         }
 
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                url("{% static 'images/campus-quebec.png' %}")
+                center / cover no-repeat;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(
+                125deg,
+                rgba(8, 25, 44, .65),
+                rgba(16, 41, 68, .30) 55%,
+                rgba(8, 25, 44, .53)
+            );
+            pointer-events: none;
+        }
+
         a {
             color: var(--primary);
+            text-underline-offset: 4px;
         }
 
         button,
@@ -44,107 +76,362 @@
         }
 
         button,
-        a,
-        input,
-        select,
-        textarea {
+        a {
             -webkit-tap-highlight-color: transparent;
         }
 
         :focus-visible {
-            outline: 3px solid #60a5fa;
-            outline-offset: 3px;
+            outline: 3px solid #84adff;
+            outline-offset: 4px;
         }
 
+        [hidden] {
+            display: none !important;
+        }
+
+        .skip-link {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--dark);
+            transform: translateY(-160%);
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* En-tête */
+
         .header {
-            background: var(--dark);
-            color: var(--white);
-            padding: 20px 5%;
+            border-bottom: 1px solid rgba(255, 255, 255, .16);
+            background: rgba(10, 28, 49, .90);
+            color: #fff;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 24px;
+            max-width: 1540px;
+            margin: 0 auto;
+            padding: 20px 28px;
         }
 
         .brand {
-            color: var(--white);
+            display: inline-flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            color: #fff;
             text-decoration: none;
-            font-size: 27px;
+        }
+
+        .brand-symbol {
+            display: grid;
+            place-items: center;
+            width: 47px;
+            height: 47px;
+            flex: 0 0 47px;
+            border: 1px solid rgba(255, 255, 255, .22);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, .08);
+            color: #dceaff;
+        }
+
+        .brand-symbol .icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .brand-name {
+            display: block;
+            color: #fff;
+            font-size: 25px;
             font-weight: 800;
-            line-height: 1.3;
+            line-height: 1.2;
+            letter-spacing: -.6px;
         }
 
         .brand small {
             display: block;
             margin-top: 5px;
-            color: #c3d2e8;
-            font-size: 12px;
-            font-weight: 400;
+            color: #c7d8ec;
+            font-size: 11px;
+            line-height: 1.5;
         }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-label {
+            padding: 7px 12px;
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 999px;
+            color: #d8e6f7;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .logout {
+            margin: 0;
+        }
+
+        .logout-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, .22);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, .08);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, .17);
+        }
+
+        .logout-button .icon {
+            width: 17px;
+            height: 17px;
+            flex-basis: 17px;
+        }
+
+        /* Structure */
 
         .layout {
             display: grid;
-            grid-template-columns: 275px minmax(0, 1fr);
-            max-width: 1600px;
-            margin: auto;
+            grid-template-columns: 260px minmax(0, 1fr);
+            align-items: start;
+            gap: 28px;
+            max-width: 1540px;
+            margin: 30px auto;
+            padding: 0 28px;
         }
 
+        .main {
+            min-width: 0;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            animation: pageEntrance .4s ease both;
+        }
+
+        /* Navigation */
+
         .sidebar {
-            min-height: calc(100vh - 100px);
-            padding: 25px 18px;
-            background: var(--white);
-            border-right: 1px solid var(--border);
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, .75);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, .96);
+            box-shadow: 0 14px 38px rgba(8, 26, 47, .13);
+            scrollbar-width: thin;
         }
 
         .profile {
-            padding: 15px;
-            margin-bottom: 20px;
-            background: #f0f5fc;
-            border-radius: 14px;
+            padding: 18px 15px;
+            margin-bottom: 22px;
+            border: 1px solid #dce7f8;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #edf4ff, #f8fbff);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 12px;
+        }
+
+        .profile-avatar {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 13px;
+            background: #175cd3;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
         }
 
         .profile-name {
             display: block;
+            color: var(--dark);
+            font-size: 13px;
+            line-height: 1.45;
             overflow-wrap: anywhere;
         }
 
-        .profile p {
-            margin: 8px 0 0;
-            font-size: 13px;
+        .profile-caption {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .profile-domain {
+            margin: 0 0 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .profile-code {
+            display: inline-block;
+            padding: 4px 9px;
+            border: 1px solid #d5e2f6;
+            border-radius: 8px;
+            background: #fff;
+            color: #2457a5;
+            font-size: 10px;
+            font-weight: 750;
+            overflow-wrap: anywhere;
+        }
+
+        .navigation-label {
+            margin: 0 10px 10px;
+            color: #718198;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .11em;
+            text-transform: uppercase;
         }
 
         .navigation a {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 11px 13px;
+            gap: 11px;
+            min-height: 45px;
+            padding: 11px 12px;
             margin-bottom: 5px;
-            border-radius: 10px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            color: #425872;
+            font-size: 12px;
+            font-weight: 650;
+            line-height: 1.5;
             text-decoration: none;
-            color: #334155;
-            transition: background .2s, color .2s;
+            transition: background .2s ease, color .2s ease;
         }
 
         .navigation a:hover {
+            background: #f0f5fc;
+            color: var(--primary);
+        }
+
+        .navigation a.active {
+            border-color: #d3e2fa;
             background: #eaf2ff;
             color: var(--primary);
         }
 
-        .main {
+        .nav-text {
             min-width: 0;
-            padding: 35px;
+            flex: 1;
+            overflow-wrap: anywhere;
         }
 
+        .nav-resource-icon {
+            width: 17px;
+            height: 17px;
+            flex-basis: 17px;
+        }
+
+        .navigation-divider {
+            height: 1px;
+            margin: 17px 10px;
+            background: #e3eaf4;
+        }
+
+        .notification-counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 25px;
+            min-height: 23px;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: #e8eff9;
+            color: #455b77;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .notification-counter.has-unread {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .sidebar-help {
+            margin-top: 20px;
+            padding: 15px 12px 2px;
+            border-top: 1px solid #e3eaf4;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .sidebar-help strong {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .sidebar-help a {
+            font-weight: 650;
+        }
+
+        /* Styles compatibles avec les pages existantes */
+
         h1 {
-            margin-top: 0;
-            font-size: 30px;
-            line-height: 1.3;
+            margin: 0 0 14px;
+            font-size: clamp(26px, 3vw, 34px);
+            line-height: 1.25;
+            letter-spacing: -.03em;
         }
 
         h2 {
-            margin-top: 0;
+            margin: 0 0 14px;
             font-size: 21px;
+            line-height: 1.4;
+            letter-spacing: -.02em;
+        }
+
+        h3 {
             line-height: 1.4;
         }
 
@@ -156,46 +443,63 @@
             color: var(--muted);
         }
 
+        .main > h1,
+        .main > h2,
+        .pointage-header h1 {
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+        }
+
+        .main > p.muted,
+        .pointage-header > p {
+            color: #edf3fc;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, .4);
+        }
+
         .card {
-            padding: 25px;
+            padding: 26px;
             margin-bottom: 22px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 17px;
-            box-shadow: 0 5px 20px rgba(16, 34, 58, .04);
+            border: 1px solid rgba(255, 255, 255, .8);
+            border-radius: 19px;
+            background: rgba(255, 255, 255, .96);
+            color: var(--dark);
+            box-shadow: 0 10px 30px rgba(8, 26, 47, .10);
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(
                 auto-fit,
-                minmax(230px, 1fr)
+                minmax(min(100%, 240px), 1fr)
             );
             gap: 20px;
         }
 
         .grid .card {
+            min-width: 0;
             margin-bottom: 0;
         }
 
         .badge {
-            display: inline-block;
-            padding: 4px 11px;
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 999px;
             background: #eaf2ff;
             color: var(--primary);
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 11px;
+            font-weight: 750;
+            line-height: 1.5;
         }
 
         .badge-success {
-            background: #dcfce7;
-            color: #166534;
+            background: #e5f6ed;
+            color: #16734f;
         }
 
         .badge-danger {
-            background: #fee2e2;
-            color: #991b1b;
+            background: #fff0f0;
+            color: #a52f2f;
         }
 
         .button {
@@ -203,35 +507,43 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            min-height: 46px;
             padding: 12px 18px;
+            border: 1px solid transparent;
+            border-radius: 11px;
             background: var(--primary);
-            color: var(--white);
-            border: 0;
-            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
             text-decoration: none;
-            font-weight: 600;
             cursor: pointer;
-            transition: background .2s;
+            transition: background .2s ease;
         }
 
         .button:hover {
             background: var(--primary-dark);
+            color: #fff;
         }
 
         .button-secondary {
-            background: #334155;
+            border-color: #dbe5f0;
+            background: #f1f5fa;
+            color: var(--dark);
         }
 
         .button-secondary:hover {
-            background: #1e293b;
+            background: #e4ecf7;
+            color: var(--dark);
         }
 
         .button-danger {
-            background: #b91c1c;
+            background: #b93838;
         }
 
         .button-danger:hover {
-            background: #991b1b;
+            background: #9e2929;
         }
 
         .button-full {
@@ -245,27 +557,49 @@
         label {
             display: block;
             margin-bottom: 7px;
-            font-weight: 600;
+            color: var(--dark);
+            font-size: 13px;
+            font-weight: 700;
         }
 
         input,
         select,
         textarea {
+            max-width: 100%;
+            border: 1px solid #c5d2e3;
+            border-radius: 11px;
+            background: #fff;
+            color: var(--dark);
+        }
+
+        input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+        select,
+        textarea {
             width: 100%;
             padding: 12px 14px;
-            background: var(--white);
-            color: var(--dark);
-            border: 1px solid #bfccdf;
-            border-radius: 10px;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            accent-color: var(--primary);
         }
 
         textarea {
+            min-height: 130px;
             resize: vertical;
         }
 
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #699ce9;
+        }
+
         .errorlist {
+            margin: 8px 0;
             padding-left: 20px;
-            color: #b91c1c;
+            color: #ad3030;
+            font-size: 12px;
         }
 
         .helptext {
@@ -276,29 +610,37 @@
         }
 
         .alert {
-            padding: 14px 18px;
+            padding: 15px 18px;
             margin-bottom: 18px;
-            background: #eaf2ff;
+            border: 1px solid #d4e3fa;
             border-left: 4px solid var(--primary);
-            border-radius: 8px;
+            border-radius: 12px;
+            background: #edf4ff;
+            color: var(--dark);
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(8, 26, 47, .05);
         }
 
         .alert.success {
-            background: #ecfdf5;
-            border-color: #16a34a;
+            border-color: #cee9dc;
+            border-left-color: #168458;
+            background: #eefaf3;
         }
 
         .alert.error {
-            background: #fef2f2;
-            border-color: #dc2626;
+            border-color: #efd3d3;
+            border-left-color: #c13939;
+            background: #fff3f3;
         }
 
         .alert.warning {
-            background: #fffbeb;
-            border-color: #d97706;
+            border-color: #efdfb8;
+            border-left-color: #ba7b17;
+            background: #fff9eb;
         }
 
         .scroll {
+            max-width: 100%;
             overflow-x: auto;
         }
 
@@ -309,32 +651,36 @@
 
         th,
         td {
-            padding: 13px;
+            padding: 14px;
             border-bottom: 1px solid var(--border);
             text-align: left;
             white-space: nowrap;
         }
 
         th {
-            background: #f7f9fc;
-            font-size: 13px;
+            background: #f5f8fc;
+            color: #52667e;
+            font-size: 12px;
         }
 
         .text {
             overflow-wrap: anywhere;
+            line-height: 1.85;
         }
 
         .bubble {
-            padding: 18px;
-            margin-bottom: 15px;
-            background: #f1f5f9;
-            border-left: 4px solid #94a3b8;
-            border-radius: 12px;
+            padding: 19px;
+            margin-bottom: 16px;
+            border: 1px solid #e1e8f1;
+            border-left: 3px solid #9baec5;
+            border-radius: 14px;
+            background: #f5f8fb;
         }
 
         .bubble.mine {
-            background: #edf4ff;
+            border-color: #d9e6fa;
             border-left-color: var(--primary);
+            background: #edf4ff;
         }
 
         .bubble p:last-child {
@@ -343,9 +689,10 @@
 
         .message-header {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
+            flex-wrap: wrap;
             gap: 8px;
+            margin-bottom: 10px;
         }
 
         .notification-new {
@@ -355,189 +702,503 @@
         .empty {
             padding: 20px 0;
             color: var(--muted);
+            text-align: center;
         }
 
+        /* Page de connexion */
+
         .auth {
-            max-width: 520px;
+            width: 100%;
+            max-width: 1100px;
             margin: 55px auto;
-            padding: 0 18px;
+            padding: 0 24px;
+            animation: pageEntrance .4s ease both;
         }
 
         .auth .card {
-            padding: 32px;
+            max-width: 520px;
+            margin: 0 auto;
+            padding: clamp(24px, 4vw, 36px);
+            box-shadow: 0 20px 55px rgba(4, 18, 35, .20);
         }
 
         .auth h1 {
-            margin-top: 15px;
-        }
-
-        .logout {
-            margin: 0;
+            margin-top: 18px;
         }
 
         .footer {
-            padding: 22px;
-            color: var(--muted);
+            max-width: 1484px;
+            margin: 0 auto;
+            padding: 8px 24px 28px;
+            color: #edf3fc;
+            font-size: 11px;
             text-align: center;
-            font-size: 12px;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, .5);
         }
 
-        @media (max-width: 900px) {
+        .footer span {
+            display: block;
+            margin-top: 3px;
+            color: #d7e4f3;
+        }
+
+        @keyframes pageEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 960px) {
             .layout {
                 grid-template-columns: 1fr;
+                gap: 22px;
+                margin-top: 22px;
+                padding: 0 20px;
             }
 
             .sidebar {
-                min-height: auto;
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
+                position: static;
+                max-height: none;
+            }
+
+            .profile {
+                margin-bottom: 16px;
             }
 
             .navigation {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 5px;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px;
             }
 
             .navigation a {
-                margin-bottom: 0;
-                padding: 8px 10px;
-                font-size: 13px;
+                margin: 0;
+                background: #f7f9fc;
             }
 
-            .main {
-                padding: 22px 18px;
+            .navigation-divider {
+                grid-column: 1 / -1;
+                margin: 9px 3px;
             }
 
-            .header {
-                padding: 18px;
+            .sidebar-help {
+                margin-top: 15px;
+                padding-top: 12px;
             }
 
-            .brand {
-                font-size: 23px;
-            }
-
-            .brand small {
-                max-width: 220px;
-                font-size: 10px;
-            }
-
-            h1 {
-                font-size: 25px;
+            .header-label {
+                display: none;
             }
         }
 
-        @media (max-width: 480px) {
-            .header {
+        @media (max-width: 560px) {
+            .header-inner {
                 gap: 12px;
+                padding: 16px;
             }
 
-            .logout .button {
-                padding: 9px 11px;
-                font-size: 12px;
+            .brand {
+                gap: 9px;
             }
 
-            .card,
-            .auth .card {
-                padding: 20px;
+            .brand-symbol {
+                width: 38px;
+                height: 38px;
+                flex-basis: 38px;
+                border-radius: 12px;
+            }
+
+            .brand-symbol .icon {
+                width: 23px;
+                height: 23px;
+            }
+
+            .brand-name {
+                font-size: 20px;
+            }
+
+            .brand small {
+                max-width: 175px;
+                font-size: 9px;
+            }
+
+            .logout-button {
+                padding: 9px 10px;
+                font-size: 10px;
+            }
+
+            .logout-button .icon {
+                display: none;
+            }
+
+            .layout {
+                margin-top: 16px;
+                padding: 0 12px;
+                gap: 18px;
+            }
+
+            .sidebar {
+                padding: 13px;
+                border-radius: 17px;
+            }
+
+            .navigation a {
+                gap: 8px;
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+
+            .navigation .icon {
+                width: 17px;
+                height: 17px;
+                flex-basis: 17px;
+            }
+
+            .card {
+                padding: 21px;
+                border-radius: 16px;
             }
 
             .auth {
                 margin-top: 30px;
+                padding: 0 15px;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+
+            body::before,
+            body::after,
+            .header,
+            .sidebar,
+            .footer,
+            .skip-link {
+                display: none;
+            }
+
+            .layout {
+                display: block;
+                margin: 0;
+                padding: 0;
+            }
+
+            .main,
+            .card {
+                background: #fff;
+                border: 0;
+                box-shadow: none;
+                animation: none;
+            }
+
+            .main > h1,
+            .main > h2,
+            .main > p.muted {
+                color: #000;
+                text-shadow: none;
+            }
+        }
+
+        body::before {
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+main.main {
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
     </style>
+
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
+    <a class="skip-link" href="#main-content">
+        Aller au contenu
+    </a>
+
+    <!-- Icônes intégrées : aucune bibliothèque externe nécessaire -->
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="0"
+        height="0"
+        aria-hidden="true"
+        style="position:absolute;overflow:hidden"
+    >
+        <symbol id="icon-graduate" viewBox="0 0 24 24">
+            <path d="m2 9 10-5 10 5-10 5-10-5Z"/>
+            <path d="M6 11v6c3 3 9 3 12 0v-6"/>
+            <path d="M22 9v7"/>
+        </symbol>
+
+        <symbol id="icon-dashboard" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="2"/>
+            <rect x="14" y="3" width="7" height="7" rx="2"/>
+            <rect x="3" y="14" width="7" height="7" rx="2"/>
+            <rect x="14" y="14" width="7" height="7" rx="2"/>
+        </symbol>
+
+        <symbol id="icon-book" viewBox="0 0 24 24">
+            <path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1"/>
+            <path d="M12 6c3-2 6-2 9-1v14c-3-1-6-1-9 1"/>
+            <path d="M12 6v14"/>
+        </symbol>
+
+        <symbol id="icon-clock" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+        </symbol>
+
+        <symbol id="icon-message" viewBox="0 0 24 24">
+            <path d="M21 15a3 3 0 0 1-3 3H8l-5 3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/>
+            <path d="M8 8h8M8 12h5"/>
+        </symbol>
+
+        <symbol id="icon-calendar" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="16" rx="3"/>
+            <path d="M7 3v4M17 3v4M3 11h18M8 15h2M14 15h2"/>
+        </symbol>
+
+        <symbol id="icon-bell" viewBox="0 0 24 24">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+            <path d="M10 21h4"/>
+        </symbol>
+
+        <symbol id="icon-logout" viewBox="0 0 24 24">
+            <path d="M9 5H5v14h4M13 8l4 4-4 4M8 12h13"/>
+        </symbol>
+    </svg>
+
     <header class="header">
-        <a class="brand" href="{% url 'space_stagiare' %}">
-            HexaQuébec
-            <small>
-                L’innovation au cœur du numérique québécois
-            </small>
-        </a>
-
-        {% if stagiaire %}
-            <form
-                class="logout"
-                method="post"
-                action="{% url 'stagiaire_deconnexion' %}"
+        <div class="header-inner">
+            <a
+                class="brand"
+                href="{% if stagiaire %}{% url 'stagiaire_tableau' %}{% else %}{% url 'space_stagiare' %}{% endif %}"
             >
-                {% csrf_token %}
+                <span class="brand-symbol" aria-hidden="true">
+                    <svg class="icon">
+                        <use href="#icon-graduate"></use>
+                    </svg>
+                </span>
 
-                <button
-                    class="button button-secondary"
-                    type="submit"
-                >
-                    Déconnexion
-                </button>
-            </form>
-        {% endif %}
+                <span>
+                    <span class="brand-name">HexaQuébec</span>
+
+                    <small>
+                        L’innovation au cœur du numérique québécois
+                    </small>
+                </span>
+            </a>
+
+            <div class="header-actions">
+                <span class="header-label">
+                    Espace de travail stagiaire
+                </span>
+
+                {% if stagiaire %}
+                    <form
+                        class="logout"
+                        method="post"
+                        action="{% url 'stagiaire_deconnexion' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button class="logout-button" type="submit">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-logout"></use>
+                            </svg>
+
+                            Déconnexion
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
     </header>
 
     {% if stagiaire %}
         <div class="layout">
-            <aside class="sidebar">
+            <aside class="sidebar" aria-label="Mon espace stagiaire">
                 <div class="profile">
-                    <strong class="profile-name">
-                        {{ stagiaire.utilisateur.get_full_name|default:stagiaire.utilisateur.get_username }}
-                    </strong>
+                    <div class="profile-top">
+                        <div class="profile-avatar" aria-hidden="true">
+                            {{ stagiaire.utilisateur.first_name|default:stagiaire.utilisateur.get_username|slice:":1"|upper }}
+                        </div>
 
-                    <p class="muted">
+                        <div>
+                            <strong class="profile-name">
+                                {{ stagiaire.utilisateur.get_full_name|default:stagiaire.utilisateur.get_username }}
+                            </strong>
+
+                            <span class="profile-caption">
+                                Compte stagiaire
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="profile-domain">
                         {{ stagiaire.get_domaine_display }}
                     </p>
 
-                    <p>
-                        <span class="badge">
-                            {{ stagiaire.code }}
-                        </span>
-                    </p>
+                    <span class="profile-code">
+                        {{ stagiaire.code }}
+                    </span>
                 </div>
 
-                <nav
-                    class="navigation"
-                    aria-label="Navigation de l’espace stagiaire"
-                >
-                    <a href="{% url 'stagiaire_tableau' %}">
-                        Tableau de bord
-                    </a>
+                <p class="navigation-label">Mon espace</p>
 
-                    {% for r in rubriques %}
-                        <a href="{% url 'stagiaire_rubrique' r.slug %}">
-                            {{ r.titre }}
+                {% with page=request.resolver_match.url_name %}
+                    <nav
+                        class="navigation"
+                        aria-label="Navigation de l’espace stagiaire"
+                    >
+                        <a
+                            href="{% url 'stagiaire_tableau' %}"
+                            {% if page == 'stagiaire_tableau' %}
+                                class="active"
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-dashboard"></use>
+                            </svg>
+
+                            <span class="nav-text">Tableau de bord</span>
                         </a>
-                    {% endfor %}
 
-                    <a href="{% url 'stagiaire_pointages' %}">
-                        Pointage
-                    </a>
+                        {% for r in rubriques %}
+                            <a
+                                href="{% url 'stagiaire_rubrique' r.slug %}"
+                                {% if page == 'stagiaire_rubrique' and rubrique.slug == r.slug %}
+                                    class="active"
+                                    aria-current="page"
+                                {% endif %}
+                            >
+                                <svg
+                                    class="icon nav-resource-icon"
+                                    aria-hidden="true"
+                                >
+                                    <use href="#icon-book"></use>
+                                </svg>
+
+                                <span class="nav-text">{{ r.titre }}</span>
+                            </a>
+                        {% endfor %}
+
+                        <div
+                            class="navigation-divider"
+                            aria-hidden="true"
+                        ></div>
+
+                        <a
+                            href="{% url 'stagiaire_pointages' %}"
+                            {% if page == 'stagiaire_pointages' %}
+                                class="active"
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-clock"></use>
+                            </svg>
+
+                            <span class="nav-text">Mon pointage</span>
+                        </a>
+
+                        <a
+                            href="{% url 'stagiaire_messages' %}"
+                            {% if page == 'stagiaire_messages' %}
+                                class="active"
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-message"></use>
+                            </svg>
+
+                            <span class="nav-text">Messagerie</span>
+                        </a>
+
+                        <a
+                            href="{% url 'stagiaire_reunions' %}"
+                            {% if page == 'stagiaire_reunions' %}
+                                class="active"
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-calendar"></use>
+                            </svg>
+
+                            <span class="nav-text">
+                                Réunions et conférences
+                            </span>
+                        </a>
+
+                        <a
+                            href="{% url 'stagiaire_notifications' %}"
+                            {% if page == 'stagiaire_notifications' %}
+                                class="active"
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-bell"></use>
+                            </svg>
+
+                            <span class="nav-text">Notifications</span>
+
+                            <span
+                                class="notification-counter {% if non_lues %}has-unread{% endif %}"
+                                id="notification-count"
+                                aria-live="polite"
+                                aria-atomic="true"
+                                aria-label="{{ non_lues|default:0 }} notifications non lues"
+                            >{{ non_lues|default:0 }}</span>
+                        </a>
+                    </nav>
+                {% endwith %}
+
+                <div class="sidebar-help">
+                    <strong>Besoin d’une précision ?</strong>
 
                     <a href="{% url 'stagiaire_messages' %}">
-                        Messagerie
+                        Contacter l’administration →
                     </a>
-
-                    <a href="{% url 'stagiaire_reunions' %}">
-                        Réunions et conférences
-                    </a>
-
-                    <a href="{% url 'stagiaire_notifications' %}">
-                        Notifications
-
-                        <span
-                            class="badge"
-                            id="notification-count"
-                            aria-live="polite"
-                        >{{ non_lues }}</span>
-                    </a>
-                </nav>
+                </div>
             </aside>
 
-            <main class="main">
+            <main class="main" id="main-content" tabindex="-1">
                 {% for message in messages %}
                     <div
                         class="alert {{ message.tags }}"
-                        role="status"
+                        {% if message.level >= 40 %}
+                            role="alert"
+                        {% else %}
+                            role="status"
+                        {% endif %}
                     >
                         {{ message }}
                     </div>
@@ -547,11 +1208,15 @@
             </main>
         </div>
     {% else %}
-        <main class="auth">
+        <main class="auth" id="main-content" tabindex="-1">
             {% for message in messages %}
                 <div
                     class="alert {{ message.tags }}"
-                    role="status"
+                    {% if message.level >= 40 %}
+                        role="alert"
+                    {% else %}
+                        role="status"
+                    {% endif %}
                 >
                     {{ message }}
                 </div>
@@ -562,54 +1227,103 @@
     {% endif %}
 
     <footer class="footer">
-        HexaQuébec · Espace de travail stagiaire
+        © {% now "Y" %} HexaQuébec · Espace de travail stagiaire
+
+        <span>
+            L’innovation au cœur du numérique québécois
+        </span>
     </footer>
 
     {% if stagiaire %}
         <script>
-            async function actualiserNotifications() {
-                if (document.hidden) {
-                    return;
-                }
+            (() => {
+                const compteur = document.getElementById(
+                    "notification-count"
+                );
 
-                try {
-                    const response = await fetch(
-                        "{% url 'stagiaire_notifications_compteur' %}",
-                        {
-                            credentials: "same-origin",
-                            headers: {
-                                Accept: "application/json"
+                if (!compteur) return;
+
+                let enCours = false;
+
+                async function actualiserNotifications() {
+                    if (document.hidden || enCours) return;
+
+                    enCours = true;
+
+                    const controleur = new AbortController();
+                    const delai = setTimeout(
+                        () => controleur.abort(),
+                        10000
+                    );
+
+                    try {
+                        const response = await fetch(
+                            "{% url 'stagiaire_notifications_compteur' %}",
+                            {
+                                credentials: "same-origin",
+                                cache: "no-store",
+                                signal: controleur.signal,
+                                headers: {
+                                    Accept: "application/json"
+                                }
                             }
+                        );
+
+                        const contentType =
+                            response.headers.get("content-type") || "";
+
+                        if (
+                            !response.ok ||
+                            !contentType.includes("application/json")
+                        ) {
+                            return;
                         }
-                    );
 
-                    const contentType = (
-                        response.headers.get("content-type") || ""
-                    );
+                        const data = await response.json();
 
-                    if (
-                        !response.ok ||
-                        !contentType.includes("application/json")
-                    ) {
-                        return;
+                        if (
+                            Number.isInteger(data.non_lues) &&
+                            data.non_lues >= 0
+                        ) {
+                            const valeur = String(data.non_lues);
+
+                            if (compteur.textContent.trim() !== valeur) {
+                                compteur.textContent = valeur;
+
+                                compteur.setAttribute(
+                                    "aria-label",
+                                    `${valeur} notifications non lues`
+                                );
+                            }
+
+                            compteur.classList.toggle(
+                                "has-unread",
+                                data.non_lues > 0
+                            );
+                        }
+                    } catch {
+                        // Nouvelle tentative au prochain intervalle.
+                    } finally {
+                        clearTimeout(delai);
+                        enCours = false;
                     }
-
-                    const data = await response.json();
-
-                    const compteur = document.getElementById(
-                        "notification-count"
-                    );
-
-                    if (compteur) {
-                        compteur.textContent = data.non_lues;
-                    }
-                } catch (error) {
-                    // Réessayer lors de la prochaine actualisation.
                 }
-            }
 
-            setInterval(actualiserNotifications, 30000);
+                actualiserNotifications();
+                setInterval(actualiserNotifications, 30000);
+
+                document.addEventListener(
+                    "visibilitychange",
+                    () => {
+                        if (!document.hidden) {
+                            actualiserNotifications();
+                        }
+                    }
+                );
+            })();
         </script>
     {% endif %}
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

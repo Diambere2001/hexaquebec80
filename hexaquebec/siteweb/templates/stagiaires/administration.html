@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Administration des stagiaires — HexaQuébec</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f5fa;
+            color: #172e49;
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        a {
+            color: #175cd3;
+            text-underline-offset: 4px;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 3px solid #84adff;
+            outline-offset: 4px;
+        }
+
+        .header {
+            background: #102b49;
+            color: #fff;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            max-width: 1400px;
+            margin: auto;
+            padding: 22px 26px;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 3px;
+            color: #cbdcf0;
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        .header-link {
+            padding: 9px 14px;
+            border: 1px solid #55708e;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .header-link:hover {
+            background: #244669;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 28px auto;
+            padding: 0 26px;
+        }
+
+        .intro {
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            display: block;
+            margin-bottom: 8px;
+            color: #175cd3;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(27px, 3vw, 36px);
+            line-height: 1.25;
+            letter-spacing: -.03em;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        p {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .muted {
+            color: #52667e;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat {
+            padding: 22px;
+            border: 1px solid #dfe7f2;
+            border-radius: 17px;
+            background: #fff;
+        }
+
+        .stat-label {
+            color: #52667e;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .stat-number {
+            display: block;
+            margin-top: 7px;
+            color: #172e49;
+            font-size: 33px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .stat-blue .stat-number {
+            color: #175cd3;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .tool {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 23px;
+            border: 1px solid #dfe7f2;
+            border-radius: 17px;
+            background: #fff;
+            color: #172e49;
+            text-decoration: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .tool:hover {
+            border-color: #a9c5f0;
+            box-shadow: 0 8px 22px rgba(23, 92, 211, .08);
+        }
+
+        .tool strong {
+            font-size: 16px;
+        }
+
+        .tool p {
+            color: #52667e;
+            font-size: 13px;
+        }
+
+        .tool-action {
+            margin-top: auto;
+            padding-top: 6px;
+            color: #175cd3;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .panel {
+            margin-bottom: 24px;
+            padding: 26px;
+            border: 1px solid #dfe7f2;
+            border-radius: 19px;
+            background: #fff;
+            box-shadow: 0 8px 25px rgba(20, 45, 73, .04);
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .panel-heading p {
+            margin-top: 5px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 43px;
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            background: #175cd3;
+            color: #fff;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #124cae;
+        }
+
+        .search {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .search input {
+            min-width: 0;
+            flex: 1 1 240px;
+            padding: 12px 14px;
+            border: 1px solid #c8d5e6;
+            border-radius: 10px;
+            color: #172e49;
+            font: inherit;
+            font-size: 14px;
+        }
+
+        .search-reset {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            border: 1px solid #e0e8f2;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e0e8f2;
+            background: #f4f7fb;
+            color: #52667e;
+            font-size: 11px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e9eef5;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .name {
+            display: block;
+            font-weight: 750;
+        }
+
+        .school {
+            display: block;
+            margin-top: 4px;
+            color: #52667e;
+            font-size: 11px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: #edf2f8;
+            color: #52667e;
+            font-size: 11px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .badge-active {
+            background: #e8f7ef;
+            color: #127650;
+        }
+
+        .row-link {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .empty {
+            padding: 25px;
+            color: #52667e;
+            text-align: center;
+        }
+
+        .event {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 18px 0;
+            border-bottom: 1px solid #e6edf5;
+        }
+
+        .event:last-child {
+            border-bottom: 0;
+        }
+
+        .event strong {
+            display: block;
+        }
+
+        .event p {
+            margin-top: 4px;
+            color: #52667e;
+            font-size: 13px;
+        }
+
+        .footer {
+            padding: 10px 20px 25px;
+            color: #52667e;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 900px) {
+            .tools {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .container {
+                padding: 0 12px;
+            }
+
+            .header-inner {
+                padding: 18px;
+            }
+
+            .tools,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tool {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="brand">
+                HexaQuébec
+                <small>Administration de l’espace stagiaire</small>
+            </div>
+
+            <a class="header-link" href="{% url 'admin:index' %}">
+                ← Administration générale
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <header class="intro">
+            <span class="eyebrow">Gestion et accompagnement</span>
+            <h1>Espace stagiaire — Administration</h1>
+
+            <p class="muted">
+                Gérez les profils, les ressources et les échanges
+                pour accompagner vos stagiaires.
+            </p>
+        </header>
+
+        <section class="stats" aria-label="Statistiques des stagiaires">
+            <div class="stat">
+                <span class="stat-label">Profils stagiaires</span>
+                <strong class="stat-number">{{ total_stagiaires }}</strong>
+            </div>
+
+            <div class="stat stat-blue">
+                <span class="stat-label">Accès actifs</span>
+                <strong class="stat-number">{{ stagiaires_actifs }}</strong>
+            </div>
+
+            {% if peut_voir_messages %}
+                <div class="stat stat-blue">
+                    <span class="stat-label">
+                        Messages des stagiaires non lus
+                    </span>
+                    <strong class="stat-number">
+                        {{ messages_non_lus }}
+                    </strong>
+                </div>
+            {% endif %}
+
+            {% if peut_voir_pointages %}
+                <div class="stat">
+                    <span class="stat-label">Sessions de travail ouvertes</span>
+                    <strong class="stat-number">
+                        {{ sessions_ouvertes }}
+                    </strong>
+                </div>
+            {% endif %}
+        </section>
+
+        <nav class="tools" aria-label="Gestion de l’espace stagiaire">
+            <a
+                class="tool"
+                href="{% url 'admin:siteweb_stagiaires_changelist' %}"
+            >
+                <strong>Profils stagiaires</strong>
+                <p>
+                    Identité, code d’accès, domaine et dates du stage.
+                </p>
+                <span class="tool-action">Gérer les profils →</span>
+            </a>
+
+            {% if peut_voir_rubriques %}
+                <a
+                    class="tool"
+                    href="{% url 'admin:siteweb_rubrique_changelist' %}"
+                >
+                    <strong>Rubriques et consignes</strong>
+                    <p>
+                        Présentation de HexaQuébec, règles et ressources.
+                    </p>
+                    <span class="tool-action">Gérer les rubriques →</span>
+                </a>
+            {% endif %}
+
+            {% if peut_voir_messages %}
+                <a
+                    class="tool"
+                    href="{% url 'admin:siteweb_messages_changelist' %}"
+                >
+                    <strong>Messagerie</strong>
+                    <p>
+                        Consultez et gérez les échanges avec les stagiaires.
+                    </p>
+                    <span class="tool-action">Gérer les messages →</span>
+                </a>
+            {% endif %}
+
+            {% if peut_voir_pointages %}
+                <a
+                    class="tool"
+                    href="{% url 'admin:siteweb_pointage_changelist' %}"
+                >
+                    <strong>Pointages</strong>
+                    <p>
+                        Entrées, sorties et historique des sessions.
+                    </p>
+                    <span class="tool-action">Consulter les pointages →</span>
+                </a>
+            {% endif %}
+
+            {% if peut_voir_reunions %}
+                <a
+                    class="tool"
+                    href="{% url 'admin:siteweb_reunion_changelist' %}"
+                >
+                    <strong>Réunions et conférences</strong>
+                    <p>
+                        Organisez les événements et ouvrez leurs salles vidéo.
+                    </p>
+                    <span class="tool-action">Gérer les événements →</span>
+                </a>
+            {% endif %}
+
+            {% if peut_voir_notifications %}
+                <a
+                    class="tool"
+                    href="{% url 'admin:siteweb_notification_changelist' %}"
+                >
+                    <strong>Notifications</strong>
+                    <p>
+                        Consultez les informations adressées aux utilisateurs.
+                    </p>
+                    <span class="tool-action">Gérer les notifications →</span>
+                </a>
+            {% endif %}
+        </nav>
+
+        <section class="panel" aria-labelledby="stagiaires-title">
+            <div class="panel-heading">
+                <div>
+                    <h2 id="stagiaires-title">Les stagiaires</h2>
+                    <p class="muted">Affichage de 50 profils maximum.</p>
+                </div>
+
+                {% if peut_ajouter_stagiaire %}
+                    <a
+                        class="button"
+                        href="{% url 'admin:siteweb_stagiaires_add' %}"
+                    >
+                        + Ajouter un stagiaire
+                    </a>
+                {% endif %}
+            </div>
+
+            <form class="search" method="get">
+                <label class="visually-hidden" for="search-stagiaires">
+                    Rechercher un stagiaire
+                </label>
+
+                <input
+                    id="search-stagiaires"
+                    type="search"
+                    name="q"
+                    value="{{ recherche }}"
+                    placeholder="Nom, prénom, code ou établissement…"
+                >
+
+                <button class="button" type="submit">Rechercher</button>
+
+                {% if recherche %}
+                    <a
+                        class="search-reset"
+                        href="{% url 'space_stagiaire_admin' %}"
+                    >
+                        Réinitialiser
+                    </a>
+                {% endif %}
+            </form>
+
+            <div class="table-scroll">
+                <table aria-labelledby="stagiaires-title">
+                    <thead>
+                        <tr>
+                            <th scope="col">Stagiaire</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Domaine</th>
+                            <th scope="col">Dates du stage</th>
+                            <th scope="col">Accès</th>
+                            {% if peut_modifier_stagiaire %}
+                                <th scope="col">Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for s in stagiaires %}
+                            <tr>
+                                <td>
+                                    <strong class="name">
+                                        {% if s.prenom or s.nom %}
+                                            {{ s.prenom }} {{ s.nom }}
+                                        {% else %}
+                                            Identité à renseigner
+                                        {% endif %}
+                                    </strong>
+
+                                    {% if s.etablissement %}
+                                        <span class="school">
+                                            {{ s.etablissement }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ s.code }}</td>
+                                <td>{{ s.get_domaine_display }}</td>
+
+                                <td>
+                                    {{ s.debut|date:"d/m/Y" }}
+                                    → {{ s.fin|date:"d/m/Y" }}
+                                </td>
+
+                                <td>
+                                    {% if s.actif and s.utilisateur.is_active %}
+                                        <span class="badge badge-active">
+                                            Actif
+                                        </span>
+                                    {% else %}
+                                        <span class="badge">Inactif</span>
+                                    {% endif %}
+                                </td>
+
+                                {% if peut_modifier_stagiaire %}
+                                    <td>
+                                        <a
+                                            class="row-link"
+                                            href="{% url 'admin:siteweb_stagiaires_change' s.pk %}"
+                                        >
+                                            Modifier →
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td
+                                    colspan="{% if peut_modifier_stagiaire %}6{% else %}5{% endif %}"
+                                    class="empty"
+                                >
+                                    Aucun stagiaire trouvé.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        {% if peut_voir_reunions %}
+            <section class="panel" aria-labelledby="events-title">
+                <div class="panel-heading">
+                    <div>
+                        <h2 id="events-title">Prochains événements</h2>
+                        <p class="muted">
+                            Les cinq prochains rendez-vous non annulés.
+                        </p>
+                    </div>
+
+                    <a href="{% url 'admin:siteweb_reunion_changelist' %}">
+                        Gérer les événements →
+                    </a>
+                </div>
+
+                {% for r in prochaines_reunions %}
+                    <article class="event">
+                        <div>
+                            <span class="badge">
+                                {{ r.get_type_display }}
+                            </span>
+
+                            <strong>{{ r.titre }}</strong>
+
+                            <p>
+                                {{ r.debut|date:"d/m/Y à H:i" }}
+                                ·
+                                {% if r.domaine %}
+                                    {{ r.get_domaine_display }}
+                                {% else %}
+                                    Tous les stagiaires
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        {% if perms.siteweb.change_reunion %}
+                            <a
+                                class="button"
+                                href="{% url 'stagiaire_reunion_salle' r.pk %}"
+                            >
+                                Ouvrir la salle vidéo →
+                            </a>
+                        {% endif %}
+                    </article>
+                {% empty %}
+                    <p class="empty">Aucun événement à venir.</p>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        © {% now "Y" %} HexaQuébec · Administration des stagiaires
+    </footer>
+</body>
+</html>

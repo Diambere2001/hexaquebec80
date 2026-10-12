@@ -1,0 +1,106 @@
+{% extends 'stagiaires_admin/base.html' %}
+
+{% block content %}
+<section class="panel">
+    <div class="heading">
+        <div>
+            <h1>{{ titre }}</h1>
+            <p class="muted">{{ description }}</p>
+        </div>
+
+        {% if peut_ajouter %}
+            <a
+                class="button"
+                href="{% url 'stagiaires_admin_ajouter' section %}"
+            >
+                + Ajouter
+            </a>
+        {% endif %}
+    </div>
+
+    <form class="search" method="get">
+        <input
+            type="search"
+            name="q"
+            value="{{ recherche }}"
+            placeholder="Rechercher…"
+            aria-label="Rechercher dans {{ titre }}"
+        >
+
+        <button class="button" type="submit">
+            Rechercher
+        </button>
+
+        {% if recherche %}
+            <a href="{% url 'stagiaires_admin_liste' section %}">
+                Réinitialiser
+            </a>
+        {% endif %}
+    </form>
+
+    <div class="scroll">
+        <table aria-label="{{ titre }}">
+            <thead>
+                <tr>
+                    {% for colonne in colonnes %}
+                        <th scope="col">{{ colonne }}</th>
+                    {% endfor %}
+
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for ligne in lignes %}
+                    <tr>
+                        {% for cellule in ligne.cellules %}
+                            <td>{{ cellule }}</td>
+                        {% endfor %}
+
+                        <td>
+                            <div class="row-actions">
+                                {% for action in ligne.actions %}
+                                    <a href="{{ action.url }}">
+                                        {{ action.texte }} →
+                                    </a>
+                                {% empty %}
+                                    —
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="{{ colonnes|length|add:'1' }}">
+                            Aucun résultat.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="pagination" aria-label="Pagination">
+        <div>
+            {% if page.has_previous %}
+                <a href="?q={{ recherche|urlencode }}&page={{ page.previous_page_number }}">
+                    ← Précédent
+                </a>
+            {% endif %}
+        </div>
+
+        <span>
+            Page {{ page.number }} sur {{ page.paginator.num_pages }}
+            · {{ page.paginator.count }} résultat{{ page.paginator.count|pluralize }}
+        </span>
+
+        <div>
+            {% if page.has_next %}
+                <a href="?q={{ recherche|urlencode }}&page={{ page.next_page_number }}">
+                    Suivant →
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+</section>
+{% endblock %}

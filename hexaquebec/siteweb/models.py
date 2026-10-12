@@ -2177,12 +2177,25 @@ class Domaine(models.TextChoices):
     ADMINISTRATION = "ADMINISTRATION", "Administration"
     MARKETING = "MARKETING", "Marketing et communication"
 
-
 class Stagiaires(models.Model):
     utilisateur = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="profil_espace_stagiaires",
+    )
+
+    nom = models.CharField(
+        "Nom",
+        max_length=150,
+        blank=True,
+        default="",
+    )
+
+    prenom = models.CharField(
+        "Prénom",
+        max_length=150,
+        blank=True,
+        default="",
     )
 
     code = models.CharField(
@@ -2206,21 +2219,26 @@ class Stagiaires(models.Model):
     fin = models.DateField()
     actif = models.BooleanField(default=True)
 
+    @property
+    def nom_complet(self):
+        identite = f"{self.prenom} {self.nom}".strip()
+
+        return (
+            identite
+            or self.utilisateur.get_full_name()
+            or self.utilisateur.get_username()
+        )
+
     def clean(self):
         super().clean()
 
         if self.debut and self.fin and self.fin < self.debut:
             raise ValidationError({
-                "fin": "La fin doit être postérieure au début."
+                "fin": "La fin ne peut pas être antérieure au début."
             })
 
     def __str__(self):
-        nom = (
-            self.utilisateur.get_full_name()
-            or self.utilisateur.get_username()
-        )
-
-        return f"{nom} — {self.code}"
+        return f"{self.nom_complet} — {self.code}"
 
     class Meta:
         verbose_name = "profil de l’espace stagiaire"
@@ -2232,7 +2250,6 @@ class Stagiaires(models.Model):
                 name="hq_espace_dates_stage_valides",
             ),
         ]
-
 
 class Rubrique(models.Model):
     slug = models.SlugField(unique=True)
@@ -2373,14 +2390,23 @@ class Messages(models.Model):
         verbose_name_plural = "messages de l’espace stagiaire"
 
 
+
+
+
+
+from django.core.validators import FileExtensionValidator
+
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.utils.crypto import salted_hmac
+
+
 class Reunion(models.Model):
     class Type(models.TextChoices):
         REUNION = "REUNION", "Réunion"
         CONFERENCE = "CONFERENCE", "Conférence"
 
-    titre = models.CharField(
-        max_length=180,
-    )
+    titre = models.CharField(max_length=180)
 
     type = models.CharField(
         max_length=12,
@@ -2388,16 +2414,20 @@ class Reunion(models.Model):
         default=Type.REUNION,
     )
 
-    description = models.TextField(
+    description = models.TextField(blank=True)
+
+    logo = models.ImageField(
+        "Logo HexaQuébec",
+        upload_to="reunions/logos/",
         blank=True,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["png", "jpg", "jpeg", "webp"]
+            )
+        ],
     )
 
     debut = models.DateTimeField()
-
-    lien = models.URLField(
-        blank=True,
-        help_text="Lien HTTPS vers la visioconférence.",
-    )
 
     domaine = models.CharField(
         max_length=20,
@@ -2406,17 +2436,20 @@ class Reunion(models.Model):
         help_text="Vide = tous les domaines.",
     )
 
-    annulee = models.BooleanField(
-        default=False,
-    )
+    annulee = models.BooleanField(default=False)
 
-    def clean(self):
-        super().clean()
+    @property
+    def salle_nom(self):
+        if not self.pk:
+            return ""
 
-        if self.lien and not self.lien.startswith("https://"):
-            raise ValidationError({
-                "lien": "Utilisez un lien HTTPS."
-            })
+        identifiant = salted_hmac(
+            "hexaquebec.reunion.salle",
+            str(self.pk),
+            algorithm="sha256",
+        ).hexdigest()
+
+        return f"HexaQuebec-{identifiant}"
 
     def __str__(self):
         return self.titre
@@ -2425,6 +2458,7 @@ class Reunion(models.Model):
         ordering = ["debut"]
         verbose_name = "réunion ou conférence stagiaire"
         verbose_name_plural = "réunions et conférences stagiaires"
+
 
 
 class Notification(models.Model):

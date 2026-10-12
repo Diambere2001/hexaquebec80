@@ -1,0 +1,37 @@
+{% extends 'stagiaires_admin/base.html' %}
+
+{% block content %}
+<section class="panel">
+    <div class="heading">
+        <div>
+            <h1>Espace stagiaire — Administration</h1>
+
+            <p class="muted">
+                Gérez les profils, les consignes et les échanges
+                depuis votre interface HexaQuébec.
+            </p>
+        </div>
+
+        {% if peut_creer_compte %}
+            <a class="button" href="{% url 'stagiaires_admin_compte' %}">
+                + Créer un compte
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<div class="grid">
+    {% for carte in cartes %}
+        <a class="tile" href="{{ carte.url }}">
+            <span class="tile-number">{{ carte.nombre }}</span>
+            <strong>{{ carte.titre }}</strong>
+            <p>{{ carte.description }}</p>
+            <span class="tile-link">Ouvrir la gestion →</span>
+        </a>
+    {% empty %}
+        <div class="panel">
+            Aucune section accessible avec vos permissions actuelles.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

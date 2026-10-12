@@ -1,0 +1,98 @@
+{% extends 'stagiaires_admin/base.html' %}
+
+{% block content %}
+<section class="panel">
+    <div class="heading">
+        <div>
+            <h1>{{ titre }}</h1>
+
+            <p class="muted">
+                {{ profil.code }} · {{ profil.get_domaine_display }}
+            </p>
+        </div>
+
+        <a
+            class="button button-secondary"
+            href="{% url 'stagiaires_admin_liste' 'messages' %}"
+        >
+            ← Retour aux messages
+        </a>
+    </div>
+
+    {% if peut_marquer_lu %}
+        <form method="post" style="margin-bottom:24px">
+            {% csrf_token %}
+
+            <button
+                class="button button-secondary"
+                type="submit"
+                name="action"
+                value="lire"
+            >
+                Marquer les messages du stagiaire comme lus
+            </button>
+        </form>
+    {% endif %}
+
+    {% for m in conversation %}
+        <article class="message {% if m.auteur_id != profil.utilisateur_id %}admin{% endif %}">
+            <strong>
+                {% if m.auteur_id == profil.utilisateur_id %}
+                    {{ profil.prenom }} {{ profil.nom }}
+                {% else %}
+                    Administration HexaQuébec
+                {% endif %}
+            </strong>
+
+            <div>{{ m.texte|linebreaks }}</div>
+
+            <small>
+                {{ m.cree|date:"d/m/Y à H:i" }}
+
+                {% if m.auteur_id != profil.utilisateur_id %}
+                    ·
+                    {% if m.lu_stagiaire %}
+                        Marqué comme lu par le stagiaire
+                    {% else %}
+                        Envoyé
+                    {% endif %}
+                {% endif %}
+            </small>
+        </article>
+    {% empty %}
+        <p class="muted">Aucun message dans cette conversation.</p>
+    {% endfor %}
+
+    <p class="muted">Affichage des 100 derniers messages.</p>
+</section>
+
+{% if peut_repondre %}
+    <section class="panel">
+        <h2>Répondre au stagiaire</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="field">
+                <label for="{{ form.texte.id_for_label }}">
+                    {{ form.texte.label }}
+                </label>
+
+                {{ form.texte }}
+                {{ form.texte.errors }}
+            </div>
+
+            <button
+                class="button"
+                type="submit"
+                name="action"
+                value="repondre"
+            >
+                Envoyer la réponse
+            </button>
+        </form>
+    </section>
+{% endif %}
+{% endblock %}
