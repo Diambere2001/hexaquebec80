@@ -6969,186 +6969,605 @@ button:disabled{
 </main>
 
 
-
 <!-- =====================================================
-     FOOTER
+     FOOTER — HEXAQUÉBEC
 ===================================================== -->
 
+<style>
+    .hq-footer {
+        padding: 60px 0 0;
+        background: #0b192c;
+        color: #c4d0e1;
+        border-top: 1px solid #ffffff12;
+    }
+
+    .hq-footer .hq-container {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+    }
+
+    .hq-footer-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+        gap: 36px;
+    }
+
+    .hq-footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .hq-footer-logo img {
+        display: block;
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        flex: 0 0 52px;
+    }
+
+    .hq-footer-logo strong {
+        color: #ffffff;
+        font-size: 23px;
+        letter-spacing: -.6px;
+    }
+
+    .hq-footer-about p {
+        max-width: 310px;
+        margin: 0;
+        color: #b5c3d6;
+        font-size: 14px;
+        line-height: 1.85;
+    }
+
+    .hq-footer-col h4 {
+        margin: 4px 0 20px;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .hq-footer-col a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        margin-bottom: 13px;
+        color: #b5c3d6;
+        font-size: 13px;
+        line-height: 1.6;
+        text-decoration: none;
+        transition: color .2s ease;
+    }
+
+    .hq-footer-col a:hover {
+        color: #ffffff;
+    }
+
+    .hq-footer-col a > i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 19px;
+        flex: 0 0 19px;
+        color: #86b5ff;
+        font-size: 14px;
+    }
+
+    /* Technologies */
+
+    .hq-footer-tools {
+        margin-top: 40px;
+        padding: 28px;
+        border: 1px solid #ffffff14;
+        border-radius: 20px;
+        background: #ffffff04;
+    }
+
+    .hq-footer-tools-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 25px;
+    }
+
+    .hq-footer-tools-symbol {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        border: 1px solid #86b5ff33;
+        border-radius: 13px;
+        background: #86b5ff12;
+        color: #94beff;
+    }
+
+    .hq-footer-tools-symbol svg {
+        display: block;
+        width: 23px;
+        height: 23px;
+    }
+
+    .hq-footer-tools-heading h3 {
+        margin: 0 0 6px;
+        color: #ffffff;
+        font-size: 19px;
+        line-height: 1.4;
+    }
+
+    .hq-footer-tools-heading p {
+        margin: 0;
+        color: #adbed4;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .hq-footer-tools-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .hq-footer-tool-group {
+        min-width: 0;
+        padding: 18px;
+        border: 1px solid #ffffff12;
+        border-radius: 14px;
+        background: #ffffff03;
+    }
+
+    .hq-footer-tool-group h4 {
+        margin: 0 0 14px;
+        color: #a9bdd8;
+        font-size: 10px;
+        font-weight: 750;
+        line-height: 1.5;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .hq-footer-tool-list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .hq-footer-tool {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 42px;
+        padding: 8px 11px;
+        border: 1px solid #ffffff17;
+        border-radius: 10px;
+        background: #14263e;
+        color: #edf3fc;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+        transition: background .2s ease, border-color .2s ease;
+    }
+
+    .hq-footer-tool:hover {
+        border-color: #86b5ff55;
+        background: #1b3251;
+    }
+
+    .hq-footer-tool img,
+    .hq-footer-tool svg {
+        display: block;
+        width: 23px;
+        height: 23px;
+        flex: 0 0 23px;
+        object-fit: contain;
+    }
+
+    .hq-footer-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 35px;
+        padding: 23px 0;
+        border-top: 1px solid #ffffff14;
+        color: #9baec7;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .hq-footer a:focus-visible {
+        outline: 3px solid #86b5ff;
+        outline-offset: 5px;
+        border-radius: 4px;
+    }
+
+    @media (max-width: 950px) {
+        .hq-footer-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 30px;
+        }
+
+        .hq-footer-tools-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 550px) {
+        .hq-footer {
+            padding-top: 38px;
+        }
+
+        .hq-footer .hq-container {
+            width: calc(100% - 32px);
+        }
+
+        .hq-footer-grid {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .hq-footer-col h4 {
+            margin-bottom: 14px;
+        }
+
+        .hq-footer-tools {
+            margin-top: 28px;
+            padding: 19px;
+            border-radius: 16px;
+        }
+
+        .hq-footer-tools-heading {
+            align-items: flex-start;
+        }
+
+        .hq-footer-tools-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hq-footer-bottom {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hq-footer * {
+            transition: none !important;
+        }
+    }
+</style>
+
 <footer class="hq-footer">
-
-
     <div class="hq-container">
-
-
         <div class="hq-footer-grid">
 
+            <!-- Présentation -->
 
             <div class="hq-footer-about">
-
-
                 <div class="hq-footer-logo">
-
-
                     <img
                         src="{% static 'images/logoHexa.png' %}"
-                        alt="HexaQuébec"
+                        alt="Logo HexaQuébec"
+                        width="52"
+                        height="52"
+                        loading="lazy"
                     >
 
-
-                    <strong>
-                        HexaQuébec
-                    </strong>
-
-
+                    <strong>HexaQuébec</strong>
                 </div>
 
-
                 <p>
-
-                    L’innovation au cœur
-                    du numérique québécois.
-
-                    Développement Web,
-                    mobile,
-                    intelligence artificielle,
-                    e-commerce
-                    et UI/UX.
-
+                    L’innovation au cœur du numérique québécois.
+                    Développement web, mobile, intelligence artificielle,
+                    e-commerce et design UI/UX.
                 </p>
-
-
             </div>
 
-
+            <!-- Navigation -->
 
             <div class="hq-footer-col">
+                <h4>Navigation</h4>
 
-
-                <h4>
-                    Navigation
-                </h4>
-
-
-                <a href="{% url 'home' %}">
-                    Accueil
-                </a>
-
-
-                <a href="{% url 'services' %}">
-                    Services
-                </a>
-
-
-                <a href="{% url 'portfolio' %}">
-                    Projets
-                </a>
-
-
-                <a href="{% url 'contact' %}">
-                    Contact
-                </a>
-
-
+                <a href="{% url 'home' %}">Accueil</a>
+                <a href="{% url 'services' %}">Services</a>
+                <a href="{% url 'portfolio' %}">Projets</a>
+                <a href="{% url 'contact' %}">Contact</a>
             </div>
 
-
+            <!-- Solutions -->
 
             <div class="hq-footer-col">
+                <h4>Solutions</h4>
 
-
-                <h4>
-                    Solutions
-                </h4>
-
-
-                <a href="#services">
-                    Développement Web
-                </a>
-
-
-                <a href="#services">
-                    Applications mobiles
-                </a>
-
-
-                <a href="#diam">
-                    Diam IA
-                </a>
-
+                <a href="#services">Développement web</a>
+                <a href="#services">Applications mobiles</a>
+                <a href="#diam">Diam IA</a>
 
                 <a href="{% url 'solutions_applications' %}">
-                    Solutions & tarifs
+                    Solutions et tarifs
                 </a>
-
-
             </div>
 
+            <!-- Accès -->
 
+            <div class="hq-footer-col">
+                <h4>Accès</h4>
 
-           
-<div class="hq-footer-col">
+                <a href="{% url 'client_login' %}">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i>
+                    <span>Espace client</span>
+                </a>
 
-    <h4>
-        Accès
-    </h4>
+                <a href="{% url 'space_stagiare' %}">
+                    <i class="fa-solid fa-user-graduate" aria-hidden="true"></i>
+                    <span>Espace de travail stagiaire</span>
+                </a>
 
-    <a href="{% url 'client_login' %}">
-        <i class="fa-solid fa-user"></i>
-        Espace client
-    </a>
-<a href="{% url 'space_stagiare' %}">
-    <i class="fa-solid fa-user-graduate"></i>
-    Espace de travail stagiaire
-</a>
-    <a href="{% url 'conference' %}">
-        <i class="fa-solid fa-video"></i>
-        Conférence
-    </a>
+                <a href="{% url 'conference' %}">
+                    <i class="fa-solid fa-video" aria-hidden="true"></i>
+                    <span>Conférence</span>
+                </a>
 
-    <a href="{% url 'a_propos' %}">
-        <i class="fa-solid fa-circle-info"></i>
-        À propos
-    </a>
+                <a href="{% url 'a_propos' %}">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                    <span>À propos</span>
+                </a>
 
-    <a href="{% url 'login_hexa' %}">
-        <i class="fa-solid fa-user-shield"></i>
-        Administration
-    </a>
-
-</div>
-
-
+                <a href="{% url 'login_hexa' %}">
+                    <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+                    <span>Administration</span>
+                </a>
+            </div>
         </div>
 
+        <!-- Technologies et outils -->
 
+        <section class="hq-footer-tools" aria-labelledby="footer-tools-title">
+            <div class="hq-footer-tools-heading">
+                <span class="hq-footer-tools-symbol" aria-hidden="true">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="m8 7-5 5 5 5"/>
+                        <path d="m16 7 5 5-5 5"/>
+                        <path d="m14 4-4 16"/>
+                    </svg>
+                </span>
+
+                <div>
+                    <h3 id="footer-tools-title">Nos technologies et outils</h3>
+                    <p>
+                        Les outils qui accompagnent la conception,
+                        le développement et la mise en ligne de nos projets.
+                    </p>
+                </div>
+            </div>
+
+            <div class="hq-footer-tools-grid">
+
+                <!-- Python et Django -->
+
+                <div class="hq-footer-tool-group">
+                    <h4>Développement web</h4>
+
+                    <ul class="hq-footer-tool-list">
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/python/FFD343"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Python</span>
+                        </li>
+
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/django/72D5AD"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Django</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- HTML, CSS et JavaScript -->
+
+                <div class="hq-footer-tool-group">
+                    <h4>Interfaces web</h4>
+
+                    <ul class="hq-footer-tool-list">
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/html5/E34F26"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>HTML</span>
+                        </li>
+
+                        <li class="hq-footer-tool">
+                            <svg viewBox="0 0 32 32" aria-hidden="true">
+                                <rect width="32" height="32" rx="7" fill="#2377D8"/>
+                                <text
+                                    x="16"
+                                    y="20"
+                                    fill="#ffffff"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    font-weight="700"
+                                    text-anchor="middle"
+                                >CSS</text>
+                            </svg>
+                            <span>CSS</span>
+                        </li>
+
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/javascript/F7DF1E"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>JavaScript</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Dart et Flutter -->
+
+                <div class="hq-footer-tool-group">
+                    <h4>Applications mobiles</h4>
+
+                    <ul class="hq-footer-tool-list">
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/dart/54C5F8"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Dart</span>
+                        </li>
+
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/flutter/54C5F8"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Flutter</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Figma -->
+
+                <div class="hq-footer-tool-group">
+                    <h4>Maquettes et design UI/UX</h4>
+
+                    <ul class="hq-footer-tool-list">
+                        <li class="hq-footer-tool">
+                            <svg viewBox="0 0 24 36" aria-hidden="true">
+                                <path
+                                    d="M6 36a6 6 0 0 0 6-6v-6H6a6 6 0 0 0 0 12Z"
+                                    fill="#0ACF83"
+                                />
+                                <path
+                                    d="M0 18a6 6 0 0 1 6-6h6v12H6a6 6 0 0 1-6-6Z"
+                                    fill="#A259FF"
+                                />
+                                <path
+                                    d="M0 6a6 6 0 0 1 6-6h6v12H6a6 6 0 0 1-6-6Z"
+                                    fill="#F24E1E"
+                                />
+                                <path
+                                    d="M12 0h6a6 6 0 0 1 0 12h-6Z"
+                                    fill="#FF7262"
+                                />
+                                <circle cx="18" cy="18" r="6" fill="#1ABCFE"/>
+                            </svg>
+
+                            <span>Figma</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Render et Namecheap -->
+
+                <div class="hq-footer-tool-group">
+                    <h4>Hébergement et noms de domaine</h4>
+
+                    <ul class="hq-footer-tool-list">
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/render/FFFFFF"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Render</span>
+                        </li>
+
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/namecheap/FF8255"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Namecheap</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- PostgreSQL et Cloudinary -->
+
+                <div class="hq-footer-tool-group">
+                    <h4>Base de données et stockage</h4>
+
+                    <ul class="hq-footer-tool-list">
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/postgresql/8DB9F0"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>PostgreSQL</span>
+                        </li>
+
+                        <li class="hq-footer-tool">
+                            <img
+                                src="https://cdn.simpleicons.org/cloudinary/91A6FF"
+                                alt=""
+                                width="23"
+                                height="23"
+                                loading="lazy"
+                            >
+                            <span>Cloudinary</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
         <div class="hq-footer-bottom">
-
-
             <span>
-
-                ©
-                <span id="currentYear"></span>
-
-                HexaQuébec —
-                Tous droits réservés.
-
+                © <span id="currentYear">{% now "Y" %}</span>
+                HexaQuébec — Tous droits réservés.
             </span>
 
-
             <span>
-
-                L’innovation au cœur
-                du numérique québécois.
-
+                L’innovation au cœur du numérique québécois.
             </span>
-
-
         </div>
-
-
     </div>
-
 </footer>
 
 
