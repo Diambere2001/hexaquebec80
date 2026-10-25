@@ -460,6 +460,23 @@ path(
     views.stagiaires_admin_formulaire,
     name="stagiaires_admin_modifier",
 ),
+   
+# =====================================================
+# HEXAQUÉBEC — LETTRES OFFICIELLES
+# =====================================================
+
+path(
+    "lettre-renvoie/",
+    views.lettre_renvoie,
+    name="lettre_renvoie"
+),
+
+path(
+    "verification-lettre/<str:reference>/",
+    views.verifier_lettre_renvoi,
+    name="verifier_lettre_renvoi"
+),
+
 
 ]
 

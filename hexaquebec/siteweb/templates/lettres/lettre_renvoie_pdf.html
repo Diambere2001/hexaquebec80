@@ -1,0 +1,1036 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+
+<title>HexaQuébec — {{ reference }}</title>
+
+<style>
+
+/* =====================================================
+   DOCUMENT OFFICIEL HEXAQUÉBEC — PDF A4
+===================================================== */
+
+@page {
+    size: A4;
+    margin: 15mm 17mm 16mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "DejaVu Sans", sans-serif;
+    color: #243c53;
+    background: #ffffff;
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+/* =====================================================
+   EN-TÊTE ET IDENTITÉ VISUELLE
+===================================================== */
+
+.top-decoration {
+    height: 7px;
+    background: #082e53;
+    margin: -15mm -17mm 0;
+}
+
+.top-gold {
+    height: 2px;
+    background: #cda45b;
+    margin: 0 -17mm 19mm;
+}
+
+.header {
+    display: table;
+    width: 100%;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d9e3ec;
+    page-break-inside: avoid;
+}
+
+.header-left,
+.header-right {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.header-left {
+    width: 65%;
+}
+
+.header-right {
+    width: 35%;
+    text-align: right;
+}
+
+.brand-row {
+    display: table;
+    width: 100%;
+}
+
+.brand-logo,
+.brand-content {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.brand-logo {
+    width: 77px;
+}
+
+.logo {
+    max-width: 68px;
+    max-height: 68px;
+    object-fit: contain;
+}
+
+.brand-name {
+    color: #082e53;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.brand-slogan {
+    color: #b58b48;
+    font-size: 8px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.brand-services {
+    color: #71859a;
+    font-size: 7px;
+    margin-top: 7px;
+    letter-spacing: .5px;
+}
+
+.header-address {
+    font-size: 8px;
+    line-height: 1.9;
+    color: #60768a;
+}
+
+.header-address strong {
+    display: block;
+    color: #092e52;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+/* =====================================================
+   RÉFÉRENCE ADMINISTRATIVE
+===================================================== */
+
+.admin-strip {
+    display: table;
+    width: 100%;
+    background: #f1f6fa;
+    border-left: 3px solid #cda45b;
+    margin-top: 18px;
+    padding: 12px 15px;
+    page-break-inside: avoid;
+}
+
+.admin-col {
+    display: table-cell;
+    width: 50%;
+    vertical-align: middle;
+}
+
+.admin-col:last-child {
+    text-align: right;
+}
+
+.admin-label {
+    color: #8598a9;
+    font-size: 7px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.admin-value {
+    display: block;
+    margin-top: 3px;
+    color: #113b5b;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* =====================================================
+   TITRE OFFICIEL
+===================================================== */
+
+.document-heading {
+    text-align: center;
+    margin: 27px 0 24px;
+    page-break-inside: avoid;
+}
+
+.document-category {
+    color: #b58b48;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.document-title {
+    margin: 10px 0;
+    color: #082e53;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.title-line {
+    background: #cda45b;
+    width: 55px;
+    height: 3px;
+    margin: 12px auto;
+}
+
+.document-subtitle {
+    color: #8294a5;
+    font-size: 8px;
+}
+
+/* =====================================================
+   INFORMATIONS DU DESTINATAIRE
+===================================================== */
+
+.recipient-card {
+    background: #f7fafc;
+    border: 1px solid #e0e8f0;
+    border-left: 4px solid #087c9e;
+    padding: 15px 18px;
+    margin-bottom: 24px;
+    page-break-inside: avoid;
+}
+
+.card-heading {
+    color: #0b4265;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.recipient-grid {
+    display: table;
+    width: 100%;
+}
+
+.recipient-column {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+.info-item {
+    margin-bottom: 9px;
+}
+
+.info-label {
+    display: block;
+    color: #8a9baa;
+    font-size: 7.5px;
+    margin-bottom: 2px;
+}
+
+.info-value {
+    display: block;
+    color: #153c59;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+/* =====================================================
+   CORPS DE LA LETTRE
+===================================================== */
+
+.letter-body {
+    font-size: 9.5px;
+    line-height: 1.85;
+    color: #344b60;
+    text-align: justify;
+}
+
+.letter-body p {
+    margin: 0 0 13px;
+}
+
+.letter-greeting {
+    color: #0b3657;
+    font-weight: bold;
+}
+
+.letter-body strong {
+    color: #0a3557;
+}
+
+/* =====================================================
+   MOTIF DE LA DÉCISION
+===================================================== */
+
+.reason-box {
+    margin: 20px 0;
+    background: #f9fbfd;
+    border: 1px solid #dce6ef;
+    border-left: 4px solid #0a789b;
+    border-radius: 4px;
+    padding: 16px 18px;
+    page-break-inside: avoid;
+}
+
+.reason-heading {
+    display: block;
+    color: #0a3c5f;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.reason-motif {
+    color: #243c52;
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 13px;
+}
+
+.reason-description {
+    color: #40566a;
+    font-size: 9px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   SIGNATURES VECTORIELLES
+===================================================== */
+
+.signature-section {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin-top: 30px;
+    page-break-inside: avoid;
+}
+
+.signature-column {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+.signature-column:first-child {
+    padding-right: 20px;
+}
+
+.signature-column:last-child {
+    padding-left: 20px;
+}
+
+.signature-title {
+    color: #0a3c60;
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.signature-area {
+    height: 60px;
+    position: relative;
+}
+
+.signature-svg {
+    display: block;
+    width: 170px;
+    max-width: 100%;
+    height: 58px;
+}
+
+.signature-line {
+    border-bottom: 1px solid #8296a8;
+    width: 100%;
+}
+
+.signature-name {
+    color: #0a3254;
+    font-weight: bold;
+    font-size: 9px;
+    margin-top: 8px;
+}
+
+.signature-role {
+    color: #71869a;
+    font-size: 8px;
+    margin-top: 3px;
+}
+
+.signature-note {
+    color: #98a8b6;
+    font-size: 7px;
+    margin-top: 6px;
+}
+
+/* =====================================================
+   VÉRIFICATION DOCUMENTAIRE
+===================================================== */
+
+.verification-panel {
+    display: table;
+    width: 100%;
+    background: #eef8f4;
+    border: 1px solid #d1e8dd;
+    padding: 12px 14px;
+    margin-top: 27px;
+    page-break-inside: avoid;
+}
+
+.verify-left,
+.verify-right {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.verify-left {
+    width: 70%;
+}
+
+.verify-right {
+    width: 30%;
+    text-align: right;
+}
+
+.verify-title {
+    color: #176d53;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.verify-description {
+    color: #618575;
+    font-size: 7px;
+    margin-top: 4px;
+}
+
+.verify-badge {
+    display: inline-block;
+    border: 1px solid #b9ddd0;
+    background: white;
+    color: #14785c;
+    padding: 6px 9px;
+    border-radius: 4px;
+    font-size: 7px;
+    font-weight: bold;
+}
+
+.verification-url {
+    font-size: 7px;
+    color: #527c90;
+    margin-top: 9px;
+    overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   PIED DE PAGE ADMINISTRATIF
+===================================================== */
+
+.footer {
+    border-top: 1px solid #dce5ed;
+    padding-top: 15px;
+    margin-top: 25px;
+    page-break-inside: avoid;
+}
+
+.footer-admin {
+    display: table;
+    width: 100%;
+}
+
+.footer-left,
+.footer-right {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.footer-left {
+    width: 65%;
+}
+
+.footer-right {
+    width: 35%;
+    text-align: right;
+}
+
+.footer-company {
+    color: #082e53;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.footer-services {
+    color: #8294a4;
+    font-size: 7px;
+    margin-top: 4px;
+}
+
+.footer-confidential {
+    color: #788c9f;
+    font-size: 7px;
+    font-weight: bold;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 9px;
+    border-top: 1px solid #edf1f4;
+    color: #9aa9b6;
+    font-size: 6.5px;
+    letter-spacing: .4px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- DÉCORATION SUPÉRIEURE -->
+
+<div class="top-decoration"></div>
+<div class="top-gold"></div>
+
+
+<!-- =========================================
+     EN-TÊTE HEXAQUÉBEC
+========================================== -->
+
+<div class="header">
+
+    <div class="header-left">
+
+        <div class="brand-row">
+
+            <div class="brand-logo">
+
+                <img
+                    src="{% static 'images/logoHexa.png' %}"
+                    class="logo"
+                    alt="HexaQuébec"
+                >
+
+            </div>
+
+
+            <div class="brand-content">
+
+                <div class="brand-name">
+                    HexaQuébec
+                </div>
+
+                <div class="brand-slogan">
+                    L'innovation au cœur du numérique québécois
+                </div>
+
+                <div class="brand-services">
+                    DÉVELOPPEMENT WEB • MOBILE • IA
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="header-address">
+
+            <strong>HEXAQUÉBEC</strong>
+
+            2186, rue Roussel<br>
+
+            Chicoutimi, Québec<br>
+
+            Saguenay–Lac-Saint-Jean, Canada
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     RÉFÉRENCE ADMINISTRATIVE
+========================================== -->
+
+<div class="admin-strip">
+
+    <div class="admin-col">
+
+        <div class="admin-label">
+            Référence officielle
+        </div>
+
+        <span class="admin-value">
+            {{ reference }}
+        </span>
+
+    </div>
+
+
+    <div class="admin-col">
+
+        <div class="admin-label">
+            Date d'émission
+        </div>
+
+        <span class="admin-value">
+            {{ date_document|date:"d/m/Y" }}
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     TITRE DU DOCUMENT
+========================================== -->
+
+<div class="document-heading">
+
+    <div class="document-category">
+        Document administratif officiel
+    </div>
+
+
+    <h1 class="document-title">
+
+        {% if lettre.type_personne == "stagiaire" %}
+
+            Avis de fin de stage
+
+        {% else %}
+
+            Avis de fin d'emploi
+
+        {% endif %}
+
+    </h1>
+
+
+    <div class="title-line"></div>
+
+
+    <div class="document-subtitle">
+        Émis par la direction technique de HexaQuébec
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     INFORMATIONS DU DESTINATAIRE
+========================================== -->
+
+<div class="recipient-card">
+
+    <div class="card-heading">
+        Informations du destinataire
+    </div>
+
+
+    <div class="recipient-grid">
+
+        <div class="recipient-column">
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Nom complet
+                </span>
+
+                <span class="info-value">
+                    {{ lettre.prenom }} {{ lettre.nom }}
+                </span>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Poste occupé
+                </span>
+
+                <span class="info-value">
+                    {{ lettre.poste }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="recipient-column">
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Statut
+                </span>
+
+                <span class="info-value">
+                    {{ lettre.get_type_personne_display }}
+                </span>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Date effective de fin
+                </span>
+
+                <span class="info-value">
+                    {{ lettre.date_fin|date:"d F Y" }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     CORPS DE LA LETTRE
+========================================== -->
+
+<div class="letter-body">
+
+    <p class="letter-greeting">
+        Madame, Monsieur,
+    </p>
+
+
+    <p>
+
+        Par la présente, la direction de HexaQuébec
+        vous informe officiellement de sa décision
+        de mettre fin à votre
+
+        {% if lettre.type_personne == "stagiaire" %}
+
+            stage
+
+        {% else %}
+
+            emploi
+
+        {% endif %}
+
+        au sein de notre entreprise, à compter du
+
+        <strong>
+            {{ lettre.date_fin|date:"d F Y" }}.
+        </strong>
+
+    </p>
+
+
+    <!-- MOTIF DE LA DÉCISION -->
+
+    <div class="reason-box">
+
+        <span class="reason-heading">
+            Motif de la décision
+        </span>
+
+        <div class="reason-motif">
+            {{ lettre.motif }}
+        </div>
+
+
+        <span class="reason-heading">
+            Explication de la décision
+        </span>
+
+        <div class="reason-description">
+            {{ lettre.explication|linebreaksbr }}
+        </div>
+
+    </div>
+
+
+    <p>
+
+        Cette décision vous est communiquée
+        officiellement afin de vous informer
+        de la fin de votre collaboration
+        avec HexaQuébec.
+
+    </p>
+
+
+    <p>
+
+        Nous vous remercions pour le temps consacré
+        à vos activités au sein de notre entreprise
+        et vous souhaitons une bonne continuation
+        dans vos projets professionnels et personnels.
+
+    </p>
+
+
+    <p>
+
+        Veuillez agréer, Madame, Monsieur,
+        l'expression de nos salutations distinguées.
+
+    </p>
+
+</div>
+
+
+<!-- =========================================
+     SIGNATURES OFFICIELLES
+========================================== -->
+
+<div class="signature-section">
+
+    <!-- SIGNATURE DU DIRECTEUR -->
+
+    <div class="signature-column">
+
+        <div class="signature-title">
+            Pour la direction de HexaQuébec
+        </div>
+
+
+        <div class="signature-area">
+
+            {% if signature_paths %}
+
+                <svg
+                    class="signature-svg"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 500 180"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+
+                    {% for path in signature_paths %}
+
+                        <path
+                            d="{{ path }}"
+                            fill="none"
+                            stroke="#092e52"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    {% endfor %}
+
+                </svg>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="signature-line"></div>
+
+
+        <div class="signature-name">
+            Dianbere Kamara
+        </div>
+
+
+        <div class="signature-role">
+            Directeur technique — HexaQuébec
+        </div>
+
+
+        <div class="signature-note">
+            Signature électronique du représentant autorisé
+        </div>
+
+    </div>
+
+
+    <!-- SIGNATURE DU DESTINATAIRE -->
+
+    <div class="signature-column">
+
+        <div class="signature-title">
+            Accusé de réception
+        </div>
+
+
+        <!-- ZONE VOLONTAIREMENT VIDE -->
+
+        <div class="signature-area"></div>
+
+
+        <div class="signature-line"></div>
+
+
+        <div class="signature-name">
+            {{ lettre.prenom }} {{ lettre.nom }}
+        </div>
+
+
+        <div class="signature-role">
+
+            {% if lettre.type_personne == "stagiaire" %}
+
+                Stagiaire
+
+            {% else %}
+
+                Employé(e)
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="signature-note">
+            Date de signature : __________________
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     VÉRIFICATION DOCUMENTAIRE
+========================================== -->
+
+<div class="verification-panel">
+
+    <div class="verify-left">
+
+        <div class="verify-title">
+            Contrôle d'authenticité documentaire
+        </div>
+
+
+        <div class="verify-description">
+
+            Document enregistré dans le système
+            administratif HexaQuébec.
+
+        </div>
+
+    </div>
+
+
+    <div class="verify-right">
+
+        <span class="verify-badge">
+            DIAM IA • HEXAQUÉBEC
+        </span>
+
+    </div>
+
+</div>
+
+
+<div class="verification-url">
+
+    <strong>
+        Vérification du document :
+    </strong>
+
+    {{ verification_url }}
+
+</div>
+
+
+<!-- =========================================
+     PIED DE PAGE ADMINISTRATIF
+========================================== -->
+
+<footer class="footer">
+
+    <div class="footer-admin">
+
+        <div class="footer-left">
+
+            <div class="footer-company">
+                HexaQuébec
+            </div>
+
+
+            <div class="footer-services">
+
+                Développement Web • Applications mobiles
+                • Intelligence artificielle
+
+            </div>
+
+
+            <div class="footer-services">
+
+                2186, rue Roussel — Chicoutimi, Québec
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-right">
+
+            <div class="footer-confidential">
+                DOCUMENT ADMINISTRATIF
+            </div>
+
+
+            <div class="footer-services">
+                Référence : {{ reference }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        HEXAQUÉBEC — L'INNOVATION AU CŒUR
+        DU NUMÉRIQUE QUÉBÉCOIS
+
+    </div>
+
+</footer>
+
+</body>
+</html>

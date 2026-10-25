@@ -12688,3 +12688,611 @@ def stagiaires_admin_conversation(request, pk):
             "peut_marquer_lu": peut_marquer_lu,
         },
     )
+
+
+
+
+
+
+
+import json
+import logging
+from datetime import date
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db import IntegrityError, transaction
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.dateparse import parse_date
+from django.utils.text import slugify
+
+from weasyprint import HTML
+
+from .models import LettreRenvoi
+
+
+logger = logging.getLogger(__name__)
+
+
+# ============================================================
+# HEXAQUÉBEC — VALIDATION DE LA SIGNATURE VECTORIELLE
+# ============================================================
+
+def valider_signature_vectorielle(signature_brute):
+    """
+    Reçoit les traits dessinés dans le formulaire.
+
+    Format :
+    [
+        [[12, 35], [18, 29], [27, 34]],
+        [[40, 60], [45, 55]]
+    ]
+
+    Retourne une liste de traits validés.
+    Aucune image PNG/JPG n'est utilisée.
+    """
+
+    if not signature_brute:
+        raise ValueError(
+            "Veuillez dessiner la signature du directeur."
+        )
+
+    # Limite la taille des données envoyées.
+    if len(signature_brute) > 200000:
+        raise ValueError(
+            "La signature est trop volumineuse."
+        )
+
+    try:
+        signature = json.loads(signature_brute)
+
+    except (json.JSONDecodeError, TypeError):
+        raise ValueError(
+            "Le format de la signature est invalide."
+        )
+
+    if not isinstance(signature, list):
+        raise ValueError(
+            "La signature doit contenir une liste de traits."
+        )
+
+    if not 1 <= len(signature) <= 100:
+        raise ValueError(
+            "Le nombre de traits est invalide."
+        )
+
+    total_points = 0
+    traits_valides = []
+
+    for trait in signature:
+
+        if not isinstance(trait, list):
+            raise ValueError(
+                "Un trait de signature est invalide."
+            )
+
+        if not 1 <= len(trait) <= 1500:
+            raise ValueError(
+                "Un trait comporte trop de points."
+            )
+
+        points_valides = []
+
+        for point in trait:
+
+            if (
+                not isinstance(point, list)
+                or len(point) != 2
+            ):
+                raise ValueError(
+                    "Coordonnées de signature invalides."
+                )
+
+            x, y = point
+
+            # bool est exclu même si Python le considère
+            # comme un sous-type de int.
+            if (
+                type(x) not in (int, float)
+                or type(y) not in (int, float)
+            ):
+                raise ValueError(
+                    "Les coordonnées doivent être numériques."
+                )
+
+            if not (0 <= x <= 500 and 0 <= y <= 180):
+                raise ValueError(
+                    "La signature dépasse la zone autorisée."
+                )
+
+            points_valides.append([
+                round(x, 2),
+                round(y, 2)
+            ])
+
+            total_points += 1
+
+            if total_points > 10000:
+                raise ValueError(
+                    "La signature contient trop de points."
+                )
+
+        traits_valides.append(points_valides)
+
+    return traits_valides
+
+
+# ============================================================
+# CONVERSION DES COORDONNÉES EN CHEMINS SVG
+# ============================================================
+
+def construire_chemins_svg(signature):
+    """
+    Convertit une signature JSON validée
+    en chemins SVG.
+
+    Exemple de résultat :
+    M 12 35 L 18 29 L 27 34
+
+    Ces chemins seront affichés directement dans
+    le PDF avec des éléments SVG.
+    """
+
+    chemins = []
+
+    if not isinstance(signature, list):
+        return chemins
+
+    for trait in signature:
+
+        if not isinstance(trait, list) or not trait:
+            continue
+
+        premier_point = trait[0]
+
+        x0, y0 = premier_point
+
+        # Début du chemin
+        chemin = f"M {x0} {y0}"
+
+        if len(trait) == 1:
+
+            # Petit trait visible pour un point isolé.
+            chemin += f" L {min(x0 + 0.1, 500)} {y0}"
+
+        else:
+
+            for point in trait[1:]:
+
+                x, y = point
+
+                chemin += f" L {x} {y}"
+
+        chemins.append(chemin)
+
+    return chemins
+
+
+# ============================================================
+# CRÉATION D'UNE LETTRE OFFICIELLE HEXAQUÉBEC
+# ============================================================
+
+@staff_member_required
+def lettre_renvoie(request):
+
+    template_formulaire = (
+        "lettres/lettre_renvoie.html"
+    )
+
+    template_pdf = (
+        "lettres/lettre_renvoie_pdf.html"
+    )
+
+    # --------------------------------------------------------
+    # AFFICHAGE DU FORMULAIRE
+    # --------------------------------------------------------
+
+    if request.method == "GET":
+
+        return render(
+            request,
+            template_formulaire,
+            {
+                "valeurs": {}
+            }
+        )
+
+    if request.method != "POST":
+
+        return HttpResponse(
+            "Méthode non autorisée.",
+            status=405
+        )
+
+    # --------------------------------------------------------
+    # RÉCUPÉRATION DES INFORMATIONS
+    # --------------------------------------------------------
+
+    champs = {
+
+        "type_personne": request.POST.get(
+            "type_personne", ""
+        ).strip(),
+
+        "prenom": request.POST.get(
+            "prenom", ""
+        ).strip(),
+
+        "nom": request.POST.get(
+            "nom", ""
+        ).strip(),
+
+        "poste": request.POST.get(
+            "poste", ""
+        ).strip(),
+
+        "motif": request.POST.get(
+            "motif", ""
+        ).strip(),
+
+        "explication": request.POST.get(
+            "explication", ""
+        ).strip(),
+
+    }
+
+    date_fin = parse_date(
+        request.POST.get("date_fin", "")
+    )
+
+    signature_brute = request.POST.get(
+        "signature_directeur", ""
+    )
+
+    # --------------------------------------------------------
+    # VALIDATION DES CHAMPS
+    # --------------------------------------------------------
+
+    erreur = None
+
+    if champs["type_personne"] not in [
+        "stagiaire",
+        "employe"
+    ]:
+
+        erreur = (
+            "Veuillez sélectionner stagiaire ou employé."
+        )
+
+    elif any(
+        not valeur
+        for valeur in champs.values()
+    ):
+
+        erreur = (
+            "Veuillez remplir tous les champs obligatoires."
+        )
+
+    elif len(champs["prenom"]) > 100:
+
+        erreur = "Le prénom est trop long."
+
+    elif len(champs["nom"]) > 100:
+
+        erreur = "Le nom est trop long."
+
+    elif len(champs["poste"]) > 150:
+
+        erreur = "Le poste indiqué est trop long."
+
+    elif len(champs["motif"]) > 250:
+
+        erreur = "Le motif indiqué est trop long."
+
+    elif len(champs["explication"]) < 20:
+
+        erreur = (
+            "Veuillez fournir une explication "
+            "d'au moins 20 caractères."
+        )
+
+    elif len(champs["explication"]) > 5000:
+
+        erreur = (
+            "L'explication est trop longue "
+            "(maximum 5 000 caractères)."
+        )
+
+    elif date_fin is None:
+
+        erreur = (
+            "Veuillez sélectionner une date valide."
+        )
+
+    # --------------------------------------------------------
+    # VALIDATION DE LA SIGNATURE
+    # --------------------------------------------------------
+
+    signature = []
+
+    if not erreur:
+
+        try:
+
+            signature = valider_signature_vectorielle(
+                signature_brute
+            )
+
+        except ValueError as exc:
+
+            erreur = str(exc)
+
+    # --------------------------------------------------------
+    # AFFICHAGE DES ERREURS
+    # --------------------------------------------------------
+
+    if erreur:
+
+        return render(
+            request,
+            template_formulaire,
+            {
+                "erreur": erreur,
+                "valeurs": request.POST,
+            },
+            status=400
+        )
+
+    # --------------------------------------------------------
+    # ENREGISTREMENT DE LA LETTRE
+    # --------------------------------------------------------
+
+    lettre = None
+
+    # On réessaie en cas de collision de référence unique.
+    for tentative in range(5):
+
+        try:
+
+            with transaction.atomic():
+
+                lettre = LettreRenvoi.objects.create(
+
+                    type_personne=champs["type_personne"],
+
+                    prenom=champs["prenom"],
+
+                    nom=champs["nom"],
+
+                    poste=champs["poste"],
+
+                    motif=champs["motif"],
+
+                    explication=champs["explication"],
+
+                    date_fin=date_fin,
+
+                    signature_directeur=signature,
+
+                )
+
+            break
+
+        except IntegrityError:
+
+            logger.warning(
+                "Collision possible de référence "
+                "lors de la création d'une lettre."
+            )
+
+    if lettre is None:
+
+        logger.error(
+            "Impossible de créer une référence unique "
+            "après cinq tentatives."
+        )
+
+        return render(
+            request,
+            template_formulaire,
+            {
+                "erreur": (
+                    "Impossible de générer le document "
+                    "pour le moment. Veuillez réessayer."
+                ),
+                "valeurs": request.POST,
+            },
+            status=503
+        )
+
+    # --------------------------------------------------------
+    # NUMÉRO DE RÉFÉRENCE
+    # --------------------------------------------------------
+
+    # Exemple : HQ-REN276389
+    reference = lettre.reference
+
+    # --------------------------------------------------------
+    # ADRESSE DE VÉRIFICATION
+    # --------------------------------------------------------
+
+    verification_url = request.build_absolute_uri(
+
+        reverse(
+
+            "verifier_lettre_renvoi",
+
+            args=[reference]
+
+        )
+
+    )
+
+    # --------------------------------------------------------
+    # SIGNATURE VECTORIELLE SVG
+    # --------------------------------------------------------
+
+    signature_paths = construire_chemins_svg(
+        signature
+    )
+
+    # --------------------------------------------------------
+    # PRÉPARATION DU DOCUMENT PDF
+    # --------------------------------------------------------
+
+    contexte_pdf = {
+
+        "lettre": lettre,
+
+        "reference": reference,
+
+        "verification_url": verification_url,
+
+        "date_document": date.today(),
+
+        "signature_paths": signature_paths,
+
+        "directeur_technique": "Dianbere Kamara",
+
+        "entreprise": "HexaQuébec",
+
+    }
+
+    html = render_to_string(
+
+        template_pdf,
+
+        contexte_pdf,
+
+        request=request
+
+    )
+
+    # --------------------------------------------------------
+    # GÉNÉRATION PDF AVEC WEASYPRINT
+    # --------------------------------------------------------
+
+    try:
+
+        pdf = HTML(
+
+            string=html,
+
+            base_url=request.build_absolute_uri("/")
+
+        ).write_pdf()
+
+    except Exception:
+
+        logger.exception(
+            "Erreur de génération du PDF pour %s",
+            reference
+        )
+
+        return render(
+            request,
+            template_formulaire,
+            {
+                "erreur": (
+                    "La lettre a été enregistrée, "
+                    f"mais le PDF {reference} n'a pas pu "
+                    "être généré. Contactez l'administration "
+                    "avant de créer une nouvelle lettre."
+                ),
+                "valeurs": request.POST,
+            },
+            status=500
+        )
+
+    # --------------------------------------------------------
+    # NOM DU FICHIER PDF
+    # --------------------------------------------------------
+
+    prenom_fichier = slugify(
+        lettre.prenom
+    )
+
+    nom_fichier = slugify(
+        lettre.nom
+    )
+
+    filename = (
+        f"HexaQuebec_{reference}_"
+        f"{prenom_fichier}_{nom_fichier}.pdf"
+    )
+
+    # --------------------------------------------------------
+    # TÉLÉCHARGEMENT
+    # --------------------------------------------------------
+
+    response = HttpResponse(
+
+        pdf,
+
+        content_type="application/pdf"
+
+    )
+
+    response["Content-Disposition"] = (
+        f'attachment; filename="{filename}"'
+    )
+
+    response["Content-Length"] = len(pdf)
+
+    return response
+
+
+# ============================================================
+# VÉRIFICATION DES LETTRES HEXAQUÉBEC
+# ============================================================
+
+def verifier_lettre_renvoi(request, reference):
+
+    # --------------------------------------------------------
+    # RECHERCHE PAR NUMÉRO UNIQUE
+    # --------------------------------------------------------
+
+    lettre = get_object_or_404(
+
+        LettreRenvoi,
+
+        reference=reference
+
+    )
+
+    # --------------------------------------------------------
+    # AFFICHAGE PUBLIC LIMITÉ
+    # --------------------------------------------------------
+
+    # Ne jamais afficher publiquement :
+    #
+    # - le motif du renvoi ;
+    # - l'explication détaillée ;
+    # - les coordonnées de la signature ;
+    # - les renseignements administratifs confidentiels.
+
+    contexte = {
+
+        "reference": lettre.reference,
+
+        "date_creation": lettre.date_creation,
+
+        "authentique": True,
+
+        "entreprise": "HexaQuébec",
+
+        "systeme": "Diam IA",
+
+    }
+
+    return render(
+
+        request,
+
+        "lettres/verification.html",
+
+        contexte
+
+    )

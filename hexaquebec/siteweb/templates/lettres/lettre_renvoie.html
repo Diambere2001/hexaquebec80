@@ -1,0 +1,1642 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* =====================================================
+   HEXAQUÉBEC — LETTRE OFFICIELLE
+===================================================== */
+
+.hql-page {
+    --navy: #082d53;
+    --cyan: #087da1;
+    --gold: #d7ac67;
+    --ink: #203d57;
+    --muted: #798da0;
+    --border: #e0e9f1;
+
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            #dceff5 0,
+            transparent 36%
+        ),
+        #f4f7fb;
+
+    padding: 42px 20px 80px;
+    color: var(--ink);
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.hql-page * {
+    box-sizing: border-box;
+}
+
+.hql-wrap {
+    max-width: 1120px;
+    margin: auto;
+}
+
+.hql-breadcrumb {
+    font-size: 12px;
+    color: #73889b;
+    margin-bottom: 18px;
+}
+
+.hql-breadcrumb i {
+    margin: 0 10px;
+    color: #b5c2cf;
+}
+
+/* HEADER */
+
+.hql-hero {
+    border-radius: 23px;
+    background:
+        linear-gradient(
+            120deg,
+            #061d39 0%,
+            #0a3e67 65%,
+            #08718b 100%
+        );
+
+    padding: 35px 40px;
+    color: white;
+    box-shadow: 0 17px 38px #082d5320;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hql-hero::after {
+    content: "";
+    position: absolute;
+    border: 1px solid #ffffff25;
+    border-radius: 50%;
+    width: 330px;
+    height: 330px;
+    right: -75px;
+    top: -160px;
+    pointer-events: none;
+}
+
+.hql-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.hql-brand img {
+    width: 67px;
+    height: 67px;
+    object-fit: contain;
+    background: white;
+    padding: 7px;
+    border-radius: 14px;
+}
+
+.hql-brand strong {
+    display: block;
+    font-size: 23px;
+}
+
+.hql-brand small {
+    font-size: 11px;
+    color: #b9d4e3;
+}
+
+.hql-hero h1 {
+    font-size: clamp(24px, 3vw, 35px);
+    margin: 31px 0 10px;
+    line-height: 1.22;
+    position: relative;
+    z-index: 1;
+}
+
+.hql-hero h1 span {
+    color: #f0c782;
+}
+
+.hql-hero p {
+    font-size: 13px;
+    color: #c0d8e7;
+    line-height: 1.75;
+    max-width: 690px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* LAYOUT */
+
+.hql-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 24px;
+    align-items: start;
+}
+
+.hql-card,
+.hql-side-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 19px;
+    box-shadow: 0 10px 30px #152f4810;
+}
+
+.hql-card {
+    overflow: hidden;
+}
+
+.hql-card-header {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 26px 30px;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.hql-card-header > i {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: #e7f4f8;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    color: var(--cyan);
+}
+
+.hql-card-header h2 {
+    font-size: 17px;
+    color: var(--navy);
+    margin: 0 0 4px;
+}
+
+.hql-card-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+}
+
+.hql-card-body {
+    padding: 30px;
+}
+
+/* SECTIONS */
+
+.hql-section {
+    margin-bottom: 26px;
+}
+
+.hql-heading {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 0 20px;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.hql-step {
+    background: #e6f3f9;
+    color: #0a789b;
+    border-radius: 8px;
+    width: 29px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+}
+
+.hql-separator {
+    height: 1px;
+    background: #e8eef4;
+    margin: 27px 0;
+}
+
+/* TYPE DE PERSONNE */
+
+.hql-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.hql-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.hql-option input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.hql-option-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    border: 1.5px solid #dce6ef;
+    border-radius: 13px;
+    min-height: 110px;
+    color: #587188;
+    font-size: 13px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.hql-option-box i {
+    font-size: 23px;
+}
+
+.hql-option input:checked + .hql-option-box {
+    border-color: var(--cyan);
+    background: #eaf7fb;
+    color: var(--cyan);
+}
+
+.hql-option input:focus-visible + .hql-option-box {
+    outline: 3px solid #79c5dd;
+    outline-offset: 2px;
+}
+
+/* FIELDS */
+
+.hql-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.hql-field {
+    margin-bottom: 19px;
+}
+
+.hql-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 9px;
+    color: #2b4b66;
+}
+
+.hql-required {
+    color: #cf5376;
+}
+
+.hql-input {
+    position: relative;
+}
+
+.hql-input i {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #95a8b9;
+    pointer-events: none;
+}
+
+.hql-field input,
+.hql-field select,
+.hql-field textarea {
+    display: block;
+    width: 100%;
+    font: inherit;
+    font-size: 13px;
+    border-radius: 11px;
+    border: 1px solid #d8e4ed;
+    background: #fbfcfe;
+    padding: 14px;
+    color: #243e58;
+}
+
+.hql-input input,
+.hql-input select {
+    padding-left: 41px;
+}
+
+.hql-field textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.7;
+}
+
+.hql-field input:focus,
+.hql-field select:focus,
+.hql-field textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    background: white;
+    box-shadow: 0 0 0 4px #087da116;
+}
+
+.hql-help {
+    font-size: 11px;
+    color: #8798aa;
+    line-height: 1.6;
+    margin: 7px 0 0;
+}
+
+/* SIGNATURE */
+
+.hql-sign-card {
+    border: 1px solid #dce8f1;
+    border-radius: 14px;
+    overflow: hidden;
+    background: white;
+}
+
+.hql-sign-head {
+    padding: 16px 19px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: #f5f9fc;
+}
+
+.hql-sign-head strong {
+    font-size: 13px;
+    color: var(--navy);
+    display: block;
+}
+
+.hql-sign-head small {
+    font-size: 11px;
+    color: var(--muted);
+    display: block;
+    margin-top: 4px;
+}
+
+.hql-chip {
+    border-radius: 50px;
+    background: #e5f6ed;
+    color: #14805a;
+    padding: 7px 10px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.hql-draw {
+    position: relative;
+    margin: 17px;
+    height: 174px;
+    border: 2px dashed #c9d9e7;
+    border-radius: 11px;
+    background: #fcfdff;
+    overflow: hidden;
+}
+
+.hql-draw canvas {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.hql-guide {
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: 24px;
+    text-align: center;
+    color: #b5c3d0;
+    border-top: 1px solid #dbe4ed;
+    padding-top: 8px;
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.hql-sign-foot {
+    border-top: 1px solid #e9eef3;
+    background: #f8fafc;
+    padding: 12px 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hql-sign-foot small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.hql-clear {
+    background: white;
+    border: 1px solid #d5e1eb;
+    color: #2e526b;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.hql-clear:hover {
+    background: #fff1f2;
+    color: #b52647;
+}
+
+.hql-recipient-note {
+    display: flex;
+    gap: 12px;
+    background: #f0f8fc;
+    border: 1px solid #dcebf3;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+
+.hql-recipient-note > i {
+    color: var(--cyan);
+    font-size: 21px;
+}
+
+.hql-recipient-note strong {
+    font-size: 12px;
+    color: var(--navy);
+}
+
+.hql-recipient-note p {
+    font-size: 11px;
+    color: #71879a;
+    line-height: 1.65;
+    margin: 5px 0 0;
+}
+
+/* BUTTON */
+
+.hql-submit {
+    border: 0;
+    border-radius: 12px;
+    width: 100%;
+    background:
+        linear-gradient(
+            105deg,
+            #082d53,
+            #08769a
+        );
+    color: white;
+    padding: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 20px #073e6429;
+}
+
+.hql-submit:hover {
+    filter: brightness(1.06);
+}
+
+.hql-note {
+    text-align: center;
+    color: #899cae;
+    font-size: 11px;
+    margin-top: 12px;
+}
+
+.hql-error {
+    background: #fff0f2;
+    border: 1px solid #fecdd3;
+    color: #a92040;
+    border-radius: 11px;
+    padding: 14px;
+    margin-bottom: 21px;
+    font-size: 12px;
+}
+
+/* SIDEBAR */
+
+.hql-side {
+    display: grid;
+    gap: 20px;
+}
+
+.hql-side-card {
+    padding: 23px;
+}
+
+.hql-side-title {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--navy);
+    margin-bottom: 19px;
+}
+
+.hql-side-title i {
+    color: var(--cyan);
+    margin-right: 8px;
+}
+
+.hql-paper {
+    padding: 18px 15px;
+    border: 1px solid #e1e8ef;
+    border-radius: 9px;
+    box-shadow: 0 9px 18px #102e4610;
+}
+
+.hql-paper-brand {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--navy);
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gold);
+}
+
+.hql-paper-brand small {
+    display: block;
+    color: #bb954d;
+    font-size: 7px;
+    font-weight: 500;
+    margin-top: 3px;
+}
+
+.hql-paper h4 {
+    text-align: center;
+    color: var(--navy);
+    font-size: 10px;
+    text-transform: uppercase;
+    margin: 24px 0;
+}
+
+.hql-line {
+    height: 5px;
+    background: #e8eff5;
+    border-radius: 3px;
+    margin: 9px 0;
+}
+
+.hql-line.short {
+    width: 66%;
+}
+
+.hql-line.medium {
+    width: 82%;
+}
+
+.hql-paper-sign {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.hql-paper-sign span {
+    flex: 1;
+    border-top: 1px solid #9aafc0;
+}
+
+.hql-paper-foot {
+    text-align: center;
+    margin-top: 25px;
+    border-top: 1px solid #e8edf3;
+    padding-top: 10px;
+    color: #128567;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.hql-feature {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: #5b7186;
+    line-height: 1.5;
+    margin: 15px 0;
+}
+
+.hql-feature i {
+    color: #11946a;
+    margin-top: 2px;
+}
+
+.hql-ai {
+    padding: 24px;
+    border-radius: 18px;
+    color: #d0e6f1;
+    background:
+        linear-gradient(
+            140deg,
+            #072b50,
+            #0b5b79
+        );
+}
+
+.hql-ai > i {
+    font-size: 24px;
+}
+
+.hql-ai h3 {
+    color: white;
+    margin: 14px 0 8px;
+    font-size: 17px;
+}
+
+.hql-ai p {
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.hql-ai-badge {
+    font-size: 10px;
+    color: #b5f0dd;
+    border: 1px solid #ffffff35;
+    border-radius: 30px;
+    padding: 8px 10px;
+    display: inline-block;
+    margin-top: 17px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+    .hql-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .hql-side {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hql-ai {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .hql-page {
+        padding: 18px 12px 60px;
+    }
+
+    .hql-hero {
+        padding: 25px 21px;
+    }
+
+    .hql-brand img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .hql-brand strong {
+        font-size: 19px;
+    }
+
+    .hql-card-header,
+    .hql-card-body {
+        padding: 21px;
+    }
+
+    .hql-grid,
+    .hql-side {
+        grid-template-columns: 1fr;
+    }
+
+    .hql-ai {
+        grid-column: auto;
+    }
+
+    .hql-sign-head,
+    .hql-sign-foot {
+        flex-wrap: wrap;
+    }
+
+    .hql-draw {
+        margin: 12px;
+        height: 158px;
+    }
+}
+</style>
+
+
+<main class="hql-page">
+
+<div class="hql-wrap">
+
+    <!-- NAVIGATION -->
+
+    <nav class="hql-breadcrumb" aria-label="Fil d'Ariane">
+        Administration
+        <i class="fa-solid fa-chevron-right"></i>
+        Documents officiels
+        <i class="fa-solid fa-chevron-right"></i>
+        <strong>Nouvelle lettre</strong>
+    </nav>
+
+
+    <!-- HEADER -->
+
+    <header class="hql-hero">
+
+        <div class="hql-brand">
+
+            <img
+                src="{% static 'images/logoHexa.png' %}"
+                alt="Logo HexaQuébec"
+            >
+
+            <div>
+                <strong>HexaQuébec</strong>
+                <small>
+                    L'innovation au cœur du numérique québécois
+                </small>
+            </div>
+
+        </div>
+
+        <h1>
+            Création de
+            <span>lettres officielles</span>
+        </h1>
+
+        <p>
+            Préparez un avis professionnel de fin d'emploi
+            ou de stage, signé directement dans le formulaire
+            et disponible au format PDF.
+        </p>
+
+    </header>
+
+
+    <div class="hql-layout">
+
+        <!-- FORMULAIRE -->
+
+        <div class="hql-card">
+
+            <div class="hql-card-header">
+
+                <i class="fa-solid fa-file-signature"></i>
+
+                <div>
+                    <h2>
+                        Nouvelle lettre de fin de collaboration
+                    </h2>
+
+                    <p>
+                        Complétez les informations et signez
+                        avant de télécharger.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="hql-card-body">
+
+                {% if erreur %}
+                <div class="hql-error" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {{ erreur }}
+                </div>
+                {% endif %}
+
+
+                <form id="hql-form" method="post">
+
+                    {% csrf_token %}
+
+                    <!-- SECTION 1 -->
+
+                    <section class="hql-section">
+
+                        <h3 class="hql-heading">
+                            <span class="hql-step">01</span>
+                            Type de collaboration
+                        </h3>
+
+                        <div class="hql-types">
+
+                            <label class="hql-option">
+
+                                <input
+                                    type="radio"
+                                    name="type_personne"
+                                    value="stagiaire"
+                                    required
+                                    {% if valeurs.type_personne == 'stagiaire' %}checked{% endif %}
+                                >
+
+                                <span class="hql-option-box">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                    Stagiaire
+                                </span>
+
+                            </label>
+
+
+                            <label class="hql-option">
+
+                                <input
+                                    type="radio"
+                                    name="type_personne"
+                                    value="employe"
+                                    required
+                                    {% if valeurs.type_personne == 'employe' %}checked{% endif %}
+                                >
+
+                                <span class="hql-option-box">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                    Employé(e)
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </section>
+
+
+                    <div class="hql-separator"></div>
+
+
+                    <!-- SECTION 2 -->
+
+                    <section class="hql-section">
+
+                        <h3 class="hql-heading">
+                            <span class="hql-step">02</span>
+                            Identification du destinataire
+                        </h3>
+
+                        <div class="hql-grid">
+
+                            <div class="hql-field">
+
+                                <label for="hql-prenom">
+                                    Prénom
+                                    <span class="hql-required">*</span>
+                                </label>
+
+                                <div class="hql-input">
+
+                                    <i class="fa-regular fa-user"></i>
+
+                                    <input
+                                        id="hql-prenom"
+                                        name="prenom"
+                                        maxlength="100"
+                                        autocomplete="given-name"
+                                        placeholder="Prénom"
+                                        value="{{ valeurs.prenom|default:'' }}"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="hql-field">
+
+                                <label for="hql-nom">
+                                    Nom
+                                    <span class="hql-required">*</span>
+                                </label>
+
+                                <div class="hql-input">
+
+                                    <i class="fa-regular fa-user"></i>
+
+                                    <input
+                                        id="hql-nom"
+                                        name="nom"
+                                        maxlength="100"
+                                        autocomplete="family-name"
+                                        placeholder="Nom de famille"
+                                        value="{{ valeurs.nom|default:'' }}"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="hql-field">
+
+                            <label for="hql-poste">
+                                Poste occupé
+                                <span class="hql-required">*</span>
+                            </label>
+
+                            <div class="hql-input">
+
+                                <i class="fa-solid fa-briefcase"></i>
+
+                                <input
+                                    id="hql-poste"
+                                    name="poste"
+                                    maxlength="150"
+                                    placeholder="Ex. Développeur Web, administration..."
+                                    value="{{ valeurs.poste|default:'' }}"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <div class="hql-separator"></div>
+
+
+                    <!-- SECTION 3 -->
+
+                    <section class="hql-section">
+
+                        <h3 class="hql-heading">
+                            <span class="hql-step">03</span>
+                            Motif et explication de la décision
+                        </h3>
+
+
+                        <div class="hql-field">
+
+                            <label for="hql-motif">
+                                Motif principal
+                                <span class="hql-required">*</span>
+                            </label>
+
+                            <div class="hql-input">
+
+                                <i class="fa-solid fa-list-check"></i>
+
+                                <select
+                                    id="hql-motif"
+                                    name="motif"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Sélectionner un motif
+                                    </option>
+
+                                    <option value="Attentes professionnelles non atteintes"
+                                        {% if valeurs.motif == 'Attentes professionnelles non atteintes' %}selected{% endif %}>
+                                        Attentes professionnelles non atteintes
+                                    </option>
+
+                                    <option value="Compétences insuffisantes pour le poste"
+                                        {% if valeurs.motif == 'Compétences insuffisantes pour le poste' %}selected{% endif %}>
+                                        Compétences insuffisantes pour le poste
+                                    </option>
+
+                                    <option value="Non-respect des engagements"
+                                        {% if valeurs.motif == 'Non-respect des engagements' %}selected{% endif %}>
+                                        Non-respect des engagements
+                                    </option>
+
+                                    <option value="Fin anticipée du stage"
+                                        {% if valeurs.motif == 'Fin anticipée du stage' %}selected{% endif %}>
+                                        Fin anticipée du stage
+                                    </option>
+
+                                    <option value="Autre motif"
+                                        {% if valeurs.motif == 'Autre motif' %}selected{% endif %}>
+                                        Autre motif
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="hql-field">
+
+                            <label for="hql-explication">
+                                Explication détaillée
+                                <span class="hql-required">*</span>
+                            </label>
+
+                            <textarea
+                                id="hql-explication"
+                                name="explication"
+                                rows="6"
+                                minlength="20"
+                                maxlength="5000"
+                                placeholder="Décrivez les faits précis et les raisons professionnelles, avec respect et objectivité."
+                                required
+                            >{{ valeurs.explication|default:'' }}</textarea>
+
+                            <p class="hql-help">
+                                Cette explication sera reproduite dans
+                                la lettre officielle.
+                            </p>
+
+                        </div>
+
+
+                        <div class="hql-field">
+
+                            <label for="hql-date">
+                                Date effective de fin
+                                <span class="hql-required">*</span>
+                            </label>
+
+                            <div class="hql-input">
+
+                                <i class="fa-regular fa-calendar"></i>
+
+                                <input
+                                    type="date"
+                                    id="hql-date"
+                                    name="date_fin"
+                                    value="{{ valeurs.date_fin|default:'' }}"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <div class="hql-separator"></div>
+
+
+                    <!-- SECTION 4 : SIGNATURE -->
+
+                    <section class="hql-section">
+
+                        <h3 class="hql-heading">
+                            <span class="hql-step">04</span>
+                            Signature électronique du directeur
+                        </h3>
+
+
+                        <div class="hql-sign-card">
+
+                            <div class="hql-sign-head">
+
+                                <div>
+                                    <strong>Dianbere Kamara</strong>
+
+                                    <small>
+                                        Directeur technique — HexaQuébec
+                                    </small>
+                                </div>
+
+                                <span class="hql-chip">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                    Signature dessinée
+                                </span>
+
+                            </div>
+
+
+                            <div class="hql-draw">
+
+                                <canvas
+                                    id="hql-signature-canvas"
+                                    tabindex="0"
+                                    aria-label="Dessiner la signature du directeur avec une souris, un stylet ou un doigt"
+                                ></canvas>
+
+                                <div class="hql-guide">
+                                    Dessinez votre signature dans cette zone
+                                </div>
+
+                            </div>
+
+
+                            <input
+                                type="hidden"
+                                name="signature_directeur"
+                                id="hql-signature-data"
+                            >
+
+
+                            <div class="hql-sign-foot">
+
+                                <small>
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    Souris, stylet ou doigt
+                                </small>
+
+                                <button
+                                    type="button"
+                                    id="hql-clear-signature"
+                                    class="hql-clear"
+                                >
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    Effacer
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="hql-recipient-note">
+
+                            <i class="fa-solid fa-file-signature"></i>
+
+                            <div>
+
+                                <strong>
+                                    Signature du stagiaire ou de l'employé
+                                </strong>
+
+                                <p>
+                                    Cette zone restera vide dans le PDF.
+                                    Le destinataire signera après réception
+                                    du document.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- SUBMIT -->
+
+                    <button
+                        class="hql-submit"
+                        type="submit"
+                    >
+                        <i class="fa-solid fa-file-pdf"></i>
+
+                        Générer et télécharger le PDF
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+
+                    <p class="hql-note">
+                        <i class="fa-solid fa-lock"></i>
+                        Document administratif confidentiel — HexaQuébec
+                    </p>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="hql-side">
+
+            <div class="hql-side-card">
+
+                <div class="hql-side-title">
+                    <i class="fa-regular fa-file-lines"></i>
+                    Aperçu du modèle PDF
+                </div>
+
+                <div class="hql-paper">
+
+                    <div class="hql-paper-brand">
+                        HexaQuébec
+
+                        <small>
+                            L'innovation au cœur du numérique québécois
+                        </small>
+                    </div>
+
+                    <h4>
+                        Avis officiel de fin de collaboration
+                    </h4>
+
+                    <div class="hql-line"></div>
+                    <div class="hql-line medium"></div>
+                    <div class="hql-line short"></div>
+                    <div class="hql-line"></div>
+                    <div class="hql-line medium"></div>
+
+                    <div class="hql-paper-sign">
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="hql-paper-foot">
+                        Référence documentaire unique
+                    </div>
+
+                </div>
+
+                <p class="hql-help" style="text-align:center">
+                    Illustration du format A4
+                </p>
+
+            </div>
+
+
+            <div class="hql-side-card">
+
+                <div class="hql-side-title">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Caractéristiques
+                </div>
+
+                <div class="hql-feature">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Document PDF A4 professionnel
+                </div>
+
+                <div class="hql-feature">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Référence aléatoire HQ-REN à six chiffres
+                </div>
+
+                <div class="hql-feature">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Signature vectorielle dessinée, sans PNG
+                </div>
+
+                <div class="hql-feature">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Espace de signature du destinataire vide
+                </div>
+
+            </div>
+
+
+            <div class="hql-ai">
+
+                <i class="fa-solid fa-brain"></i>
+
+                <h3>Diam IA</h3>
+
+                <p>
+                    Référence documentaire et contrôle
+                    d'authenticité par le système administratif
+                    HexaQuébec.
+                </p>
+
+                <span class="hql-ai-badge">
+                    Vérification documentaire
+                </span>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+</main>
+
+
+<!-- =====================================================
+     SIGNATURE VECTORIELLE
+===================================================== -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("hql-form");
+
+    const canvas = document.getElementById(
+        "hql-signature-canvas"
+    );
+
+    const field = document.getElementById(
+        "hql-signature-data"
+    );
+
+    const clearButton = document.getElementById(
+        "hql-clear-signature"
+    );
+
+    if (!form || !canvas || !field || !clearButton) {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    // Dimensions logiques utilisées dans le PDF SVG.
+    const BASE_WIDTH = 500;
+    const BASE_HEIGHT = 180;
+
+    let strokes = [];
+    let activeStroke = null;
+    let activePointer = null;
+
+
+    // -------------------------------------------------
+    // REDIMENSIONNEMENT
+    // -------------------------------------------------
+
+    function configureCanvas() {
+
+        const pixelRatio = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+
+        canvas.width = Math.max(
+            1,
+            Math.round(rect.width * pixelRatio)
+        );
+
+        canvas.height = Math.max(
+            1,
+            Math.round(rect.height * pixelRatio)
+        );
+
+        ctx.setTransform(
+            pixelRatio,
+            0,
+            0,
+            pixelRatio,
+            0,
+            0
+        );
+
+        redraw();
+    }
+
+
+    // -------------------------------------------------
+    // POSITION DU POINTEUR
+    // -------------------------------------------------
+
+    function pointFromEvent(event) {
+
+        const rect = canvas.getBoundingClientRect();
+
+        const x = (
+            event.clientX - rect.left
+        ) / rect.width * BASE_WIDTH;
+
+        const y = (
+            event.clientY - rect.top
+        ) / rect.height * BASE_HEIGHT;
+
+        return [
+            Math.max(
+                0,
+                Math.min(
+                    BASE_WIDTH,
+                    Math.round(x * 10) / 10
+                )
+            ),
+
+            Math.max(
+                0,
+                Math.min(
+                    BASE_HEIGHT,
+                    Math.round(y * 10) / 10
+                )
+            )
+        ];
+    }
+
+
+    // -------------------------------------------------
+    // REDESSINER LA SIGNATURE
+    // -------------------------------------------------
+
+    function redraw() {
+
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.strokeStyle = "#092e52";
+        ctx.fillStyle = "#092e52";
+
+        ctx.lineWidth = 2.5;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+
+        ctx.save();
+
+        ctx.scale(
+            w / BASE_WIDTH,
+            h / BASE_HEIGHT
+        );
+
+        for (const stroke of strokes) {
+
+            if (!stroke.length) {
+                continue;
+            }
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                stroke[0][0],
+                stroke[0][1]
+            );
+
+            if (stroke.length === 1) {
+
+                ctx.lineTo(
+                    stroke[0][0] + 0.01,
+                    stroke[0][1] + 0.01
+                );
+
+            } else {
+
+                for (
+                    let i = 1;
+                    i < stroke.length;
+                    i++
+                ) {
+
+                    ctx.lineTo(
+                        stroke[i][0],
+                        stroke[i][1]
+                    );
+
+                }
+            }
+
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+
+    // -------------------------------------------------
+    // DÉBUT DU DESSIN
+    // -------------------------------------------------
+
+    canvas.addEventListener(
+        "pointerdown",
+        function (event) {
+
+            if (activePointer !== null) {
+                return;
+            }
+
+            if (
+                event.pointerType === "mouse"
+                && event.button !== 0
+            ) {
+                return;
+            }
+
+            activePointer = event.pointerId;
+
+            activeStroke = [
+                pointFromEvent(event)
+            ];
+
+            strokes.push(activeStroke);
+
+            canvas.setPointerCapture(
+                event.pointerId
+            );
+
+            redraw();
+        }
+    );
+
+
+    // -------------------------------------------------
+    // DESSIN EN COURS
+    // -------------------------------------------------
+
+    canvas.addEventListener(
+        "pointermove",
+        function (event) {
+
+            if (
+                event.pointerId !== activePointer
+                || !activeStroke
+            ) {
+                return;
+            }
+
+            if (activeStroke.length >= 1500) {
+                return;
+            }
+
+            const point = pointFromEvent(event);
+
+            const previous = activeStroke[
+                activeStroke.length - 1
+            ];
+
+            if (
+                point[0] !== previous[0]
+                || point[1] !== previous[1]
+            ) {
+
+                activeStroke.push(point);
+                redraw();
+            }
+        }
+    );
+
+
+    // -------------------------------------------------
+    // FIN DU DESSIN
+    // -------------------------------------------------
+
+    function stopDrawing(event) {
+
+        if (event.pointerId !== activePointer) {
+            return;
+        }
+
+        activeStroke = null;
+        activePointer = null;
+    }
+
+    canvas.addEventListener(
+        "pointerup",
+        stopDrawing
+    );
+
+    canvas.addEventListener(
+        "pointercancel",
+        stopDrawing
+    );
+
+
+    // -------------------------------------------------
+    // EFFACER LA SIGNATURE
+    // -------------------------------------------------
+
+    clearButton.addEventListener(
+        "click",
+        function () {
+
+            strokes = [];
+
+            activeStroke = null;
+            activePointer = null;
+
+            field.value = "";
+
+            redraw();
+        }
+    );
+
+
+    // -------------------------------------------------
+    // ENVOYER AU SERVEUR DJANGO
+    // -------------------------------------------------
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            if (!strokes.length) {
+
+                event.preventDefault();
+
+                alert(
+                    "Veuillez dessiner la signature du directeur technique."
+                );
+
+                canvas.focus();
+                return;
+            }
+
+            // Enregistrer les coordonnées JSON.
+            // Aucune image PNG ou JPG.
+
+            field.value = JSON.stringify(strokes);
+        }
+    );
+
+
+    window.addEventListener(
+        "resize",
+        configureCanvas
+    );
+
+    configureCanvas();
+
+});
+</script>
+
+{% endblock %}
