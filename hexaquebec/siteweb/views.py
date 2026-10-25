@@ -12875,45 +12875,77 @@ def construire_chemins_svg(signature):
     return chemins
 
 
+
+from pathlib import Path
+from django.contrib.staticfiles import finders
+from django.conf import settings
 # ============================================================
 # CRÉATION D'UNE LETTRE OFFICIELLE HEXAQUÉBEC
+# ============================================================
+
+
+# ==========================================
+# LOGO HEXAQUÉBEC — LOCAL ET RENDER
+# ==========================================
+
+logo_path = finders.find("images/logoHexa.png")
+
+if not logo_path and settings.STATIC_ROOT:
+    chemin_collecte = (
+        Path(settings.STATIC_ROOT)
+        / "images"
+        / "logoHexa.png"
+    )
+
+    if chemin_collecte.is_file():
+        logo_path = str(chemin_collecte)
+
+logo_url = None
+
+if logo_path:
+    logo_url = Path(logo_path).resolve().as_uri()
+
+
+
+
+
+
+# ============================================================
+# HEXAQUÉBEC — CRÉATION DE LETTRE DE FIN D'EMPLOI OU DE STAGE
 # ============================================================
 
 @staff_member_required
 def lettre_renvoie(request):
 
-    template_formulaire = (
-        "lettres/lettre_renvoie.html"
-    )
+    template_formulaire = "lettres/lettre_renvoie.html"
+    template_pdf = "lettres/lettre_renvoie_pdf.html"
 
-    template_pdf = (
-        "lettres/lettre_renvoie_pdf.html"
-    )
-
-    # --------------------------------------------------------
-    # AFFICHAGE DU FORMULAIRE
-    # --------------------------------------------------------
+    # ========================================================
+    # 1. AFFICHAGE DU FORMULAIRE
+    # ========================================================
 
     if request.method == "GET":
 
         return render(
             request,
             template_formulaire,
-            {
-                "valeurs": {}
-            }
+            {"valeurs": {}}
         )
 
     if request.method != "POST":
 
-        return HttpResponse(
+        response = HttpResponse(
             "Méthode non autorisée.",
             status=405
         )
 
-    # --------------------------------------------------------
-    # RÉCUPÉRATION DES INFORMATIONS
-    # --------------------------------------------------------
+        response["Allow"] = "GET, POST"
+
+        return response
+
+    # ========================================================
+    # 2. RÉCUPÉRATION DES INFORMATIONS
+    # ========================================================
 
     champs = {
 
@@ -12951,9 +12983,9 @@ def lettre_renvoie(request):
         "signature_directeur", ""
     )
 
-    # --------------------------------------------------------
-    # VALIDATION DES CHAMPS
-    # --------------------------------------------------------
+    # ========================================================
+    # 3. VALIDATION DES INFORMATIONS
+    # ========================================================
 
     erreur = None
 
@@ -12967,8 +12999,7 @@ def lettre_renvoie(request):
         )
 
     elif any(
-        not valeur
-        for valeur in champs.values()
+        not valeur for valeur in champs.values()
     ):
 
         erreur = (
@@ -13011,9 +13042,9 @@ def lettre_renvoie(request):
             "Veuillez sélectionner une date valide."
         )
 
-    # --------------------------------------------------------
-    # VALIDATION DE LA SIGNATURE
-    # --------------------------------------------------------
+    # ========================================================
+    # 4. VALIDATION DE LA SIGNATURE VECTORIELLE
+    # ========================================================
 
     signature = []
 
@@ -13029,9 +13060,9 @@ def lettre_renvoie(request):
 
             erreur = str(exc)
 
-    # --------------------------------------------------------
-    # AFFICHAGE DES ERREURS
-    # --------------------------------------------------------
+    # ========================================================
+    # 5. AFFICHAGE DES ERREURS
+    # ========================================================
 
     if erreur:
 
@@ -13045,13 +13076,12 @@ def lettre_renvoie(request):
             status=400
         )
 
-    # --------------------------------------------------------
-    # ENREGISTREMENT DE LA LETTRE
-    # --------------------------------------------------------
+    # ========================================================
+    # 6. ENREGISTREMENT DE LA LETTRE
+    # ========================================================
 
     lettre = None
 
-    # On réessaie en cas de collision de référence unique.
     for tentative in range(5):
 
         try:
@@ -13080,18 +13110,25 @@ def lettre_renvoie(request):
 
             break
 
-        except IntegrityError:
+        except IntegrityError as exc:
+
+            # Une collision peut se produire si une autre lettre
+            # possède déjà le numéro aléatoire proposé.
+            # Ne pas masquer les autres erreurs de base de données.
+
+            if "reference" not in str(exc).lower():
+                raise
 
             logger.warning(
-                "Collision possible de référence "
-                "lors de la création d'une lettre."
+                "Collision de référence lors de la "
+                "création d'une lettre HexaQuébec."
             )
 
     if lettre is None:
 
         logger.error(
-            "Impossible de créer une référence unique "
-            "après cinq tentatives."
+            "Impossible de générer une référence "
+            "unique après cinq tentatives."
         )
 
         return render(
@@ -13107,40 +13144,100 @@ def lettre_renvoie(request):
             status=503
         )
 
-    # --------------------------------------------------------
-    # NUMÉRO DE RÉFÉRENCE
-    # --------------------------------------------------------
+    # ========================================================
+    # 7. NUMÉRO DE RÉFÉRENCE OFFICIEL
+    # ========================================================
 
     # Exemple : HQ-REN276389
+
     reference = lettre.reference
 
-    # --------------------------------------------------------
-    # ADRESSE DE VÉRIFICATION
-    # --------------------------------------------------------
+    # ========================================================
+    # 8. URL DE VÉRIFICATION
+    # ========================================================
 
     verification_url = request.build_absolute_uri(
 
         reverse(
-
             "verifier_lettre_renvoi",
-
             args=[reference]
-
         )
 
     )
 
-    # --------------------------------------------------------
-    # SIGNATURE VECTORIELLE SVG
-    # --------------------------------------------------------
+    # ========================================================
+    # 9. SIGNATURE VECTORIELLE SVG
+    # ========================================================
+
+    # Transforme les points dessinés en chemins SVG.
+    # Aucune image PNG ou JPG.
 
     signature_paths = construire_chemins_svg(
         signature
     )
 
-    # --------------------------------------------------------
-    # PRÉPARATION DU DOCUMENT PDF
-    # --------------------------------------------------------
+    # ========================================================
+    # 10. LOGO HEXAQUÉBEC — LOCAL ET RENDER
+    # ========================================================
+
+    logo_url = None
+
+    # Emplacement recherché :
+    # static/images/logoHexa.png
+
+    logo_path = finders.find(
+        "images/logoHexa.png"
+    )
+
+    # Si Django ne trouve pas le fichier source,
+    # on recherche dans STATIC_ROOT après collectstatic.
+
+    if not logo_path and settings.STATIC_ROOT:
+
+        chemin_collecte = (
+            Path(settings.STATIC_ROOT)
+            / "images"
+            / "logoHexa.png"
+        )
+
+        if chemin_collecte.is_file():
+
+            logo_path = str(chemin_collecte)
+
+    # Transformation en URL locale absolue.
+    # Exemple sur Render :
+    # file:///opt/render/project/src/static/images/logoHexa.png
+
+    if logo_path:
+
+        if isinstance(logo_path, (list, tuple)):
+            logo_path = logo_path[0] if logo_path else None
+
+        if logo_path:
+
+            chemin_logo = Path(logo_path).resolve()
+
+            if chemin_logo.is_file():
+
+                logo_url = chemin_logo.as_uri()
+
+            else:
+
+                logger.warning(
+                    "Logo HexaQuébec introuvable : %s",
+                    chemin_logo
+                )
+
+    else:
+
+        logger.warning(
+            "Impossible de trouver images/logoHexa.png "
+            "dans les fichiers statiques."
+        )
+
+    # ========================================================
+    # 11. CONTEXTE DU DOCUMENT PDF
+    # ========================================================
 
     contexte_pdf = {
 
@@ -13154,11 +13251,17 @@ def lettre_renvoie(request):
 
         "signature_paths": signature_paths,
 
+        "logo_url": logo_url,
+
         "directeur_technique": "Dianbere Kamara",
 
         "entreprise": "HexaQuébec",
 
     }
+
+    # ========================================================
+    # 12. GÉNÉRATION DU DOCUMENT HTML
+    # ========================================================
 
     html = render_to_string(
 
@@ -13170,9 +13273,9 @@ def lettre_renvoie(request):
 
     )
 
-    # --------------------------------------------------------
-    # GÉNÉRATION PDF AVEC WEASYPRINT
-    # --------------------------------------------------------
+    # ========================================================
+    # 13. GÉNÉRATION DU PDF AVEC WEASYPRINT
+    # ========================================================
 
     try:
 
@@ -13187,7 +13290,7 @@ def lettre_renvoie(request):
     except Exception:
 
         logger.exception(
-            "Erreur de génération du PDF pour %s",
+            "Erreur de génération PDF pour %s",
             reference
         )
 
@@ -13196,9 +13299,10 @@ def lettre_renvoie(request):
             template_formulaire,
             {
                 "erreur": (
-                    "La lettre a été enregistrée, "
-                    f"mais le PDF {reference} n'a pas pu "
-                    "être généré. Contactez l'administration "
+                    "La lettre a bien été enregistrée "
+                    f"sous la référence {reference}, "
+                    "mais la génération du PDF a échoué. "
+                    "Veuillez contacter l'administration "
                     "avant de créer une nouvelle lettre."
                 ),
                 "valeurs": request.POST,
@@ -13206,9 +13310,9 @@ def lettre_renvoie(request):
             status=500
         )
 
-    # --------------------------------------------------------
-    # NOM DU FICHIER PDF
-    # --------------------------------------------------------
+    # ========================================================
+    # 14. NOM DU DOCUMENT PDF
+    # ========================================================
 
     prenom_fichier = slugify(
         lettre.prenom
@@ -13223,9 +13327,9 @@ def lettre_renvoie(request):
         f"{prenom_fichier}_{nom_fichier}.pdf"
     )
 
-    # --------------------------------------------------------
-    # TÉLÉCHARGEMENT
-    # --------------------------------------------------------
+    # ========================================================
+    # 15. TÉLÉCHARGEMENT DU PDF
+    # ========================================================
 
     response = HttpResponse(
 
@@ -13242,6 +13346,7 @@ def lettre_renvoie(request):
     response["Content-Length"] = len(pdf)
 
     return response
+
 
 
 # ============================================================

@@ -523,23 +523,36 @@ body {
 <!-- =========================================
      EN-TÊTE HEXAQUÉBEC
 ========================================== -->
+<!-- =====================================================
+     EN-TÊTE OFFICIEL HEXAQUÉBEC
+===================================================== -->
 
 <div class="header">
+
+    <!-- LOGO ET IDENTITÉ -->
 
     <div class="header-left">
 
         <div class="brand-row">
 
+            <!-- LOGO HEXAQUÉBEC -->
+
+            {% if logo_url %}
+
             <div class="brand-logo">
 
                 <img
-                    src="{% static 'images/logoHexa.png' %}"
+                    src="{{ logo_url }}"
                     class="logo"
-                    alt="HexaQuébec"
+                    alt="Logo officiel HexaQuébec"
                 >
 
             </div>
 
+            {% endif %}
+
+
+            <!-- NOM ET SLOGAN -->
 
             <div class="brand-content">
 
@@ -562,11 +575,15 @@ body {
     </div>
 
 
+    <!-- ADRESSE ADMINISTRATIVE -->
+
     <div class="header-right">
 
         <div class="header-address">
 
-            <strong>HEXAQUÉBEC</strong>
+            <strong>
+                HEXAQUÉBEC
+            </strong>
 
             2186, rue Roussel<br>
 
@@ -579,7 +596,6 @@ body {
     </div>
 
 </div>
-
 
 <!-- =========================================
      RÉFÉRENCE ADMINISTRATIVE
