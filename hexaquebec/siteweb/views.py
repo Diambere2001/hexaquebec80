@@ -11023,7 +11023,7 @@ def lettre_pdf(
 
 
 
-
+from django.db import models
 
 
 def liste_lettres(request):
