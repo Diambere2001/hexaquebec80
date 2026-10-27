@@ -4869,12 +4869,600 @@ button:disabled{
 
 }
 
+
+
+/* =====================================================
+   HEXAQUÉBEC — INTRODUCTION PROFESSIONNELLE
+   ORDINATEUR • TABLETTE • MOBILE
+===================================================== */
+
+/* INTRODUCTION MASQUÉE PAR DÉFAUT */
+
+.hq-mobile-intro {
+    display: none;
+}
+
+/* =====================================================
+   ACTIVATION SUR TOUS LES APPAREILS
+===================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+
+    body.hq-intro-active {
+        overflow: hidden;
+    }
+
+    body.hq-intro-active .hq-mobile-intro {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        padding: 28px;
+
+        background:
+            radial-gradient(
+                circle at 50% 36%,
+                #104b75 0%,
+                #082c51 53%,
+                #051a34 100%
+            );
+
+        color: #ffffff;
+        text-align: center;
+
+        opacity: 1;
+        visibility: visible;
+
+        transition:
+            opacity .65s ease,
+            visibility .65s ease;
+    }
+
+    /* =================================================
+       CONTENEUR CENTRAL
+    ================================================= */
+
+    .hq-intro-stage {
+        position: relative;
+
+        width: 100%;
+        max-width: 420px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* =================================================
+       CERCLE AUTOUR DU LOGO
+    ================================================= */
+
+    .hq-intro-orbit {
+        position: relative;
+
+        width: 260px;
+        height: 260px;
+
+        display: grid;
+        place-items: center;
+
+        flex-shrink: 0;
+
+        transition:
+            opacity .4s ease;
+    }
+
+    /* CERCLE LUMINEUX EN ROTATION */
+
+    .hq-intro-orbit::before {
+        content: "";
+
+        position: absolute;
+        inset: 11px;
+
+        border-radius: 50%;
+        border: 3px solid rgba(255,255,255,.13);
+
+        border-top-color: #e0b36b;
+        border-right-color: #4dc8e3;
+        border-bottom-color: rgba(255,255,255,.15);
+
+        box-shadow:
+            0 0 35px rgba(11,178,214,.15),
+            inset 0 0 25px rgba(11,178,214,.07);
+
+        animation:
+            hqIntroRotation 2.4s linear infinite;
+    }
+
+    /* SECOND CERCLE DÉCORATIF */
+
+    .hq-intro-orbit::after {
+        content: "";
+
+        position: absolute;
+        inset: 30px;
+
+        border: 1px dashed rgba(255,255,255,.23);
+        border-radius: 50%;
+
+        pointer-events: none;
+    }
+
+    /* =================================================
+       LOGO HEXAQUÉBEC FIXE
+    ================================================= */
+
+    .hq-intro-logo {
+        position: relative;
+        z-index: 2;
+
+        width: 140px;
+        height: 140px;
+
+        object-fit: contain;
+
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 13px;
+
+        box-shadow:
+            0 16px 45px rgba(0,0,0,.3),
+            0 0 25px rgba(255,255,255,.10);
+
+        /* Le logo ne tourne pas */
+
+        transform: none;
+        animation: none;
+    }
+
+    /* =================================================
+       TRAIN EN ROTATION AUTOUR DU LOGO
+    ================================================= */
+
+    .hq-intro-train-track {
+        position: absolute;
+        inset: 0;
+
+        z-index: 3;
+        pointer-events: none;
+
+        animation:
+            hqIntroRotation 4s linear infinite;
+    }
+
+    .hq-intro-train {
+        position: absolute;
+
+        top: 3px;
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        font-size: 25px;
+        color: #eec87c;
+
+        filter:
+            drop-shadow(
+                0 0 9px rgba(237,179,95,.50)
+            );
+    }
+
+    /* =================================================
+       BARRE DE CHARGEMENT
+    ================================================= */
+
+    .hq-intro-progress {
+        width: min(250px, 75vw);
+        height: 4px;
+
+        margin-top: 27px;
+
+        background: rgba(255,255,255,.18);
+        border-radius: 10px;
+
+        overflow: hidden;
+    }
+
+    .hq-intro-progress span {
+        display: block;
+
+        width: 0;
+        height: 100%;
+
+        border-radius: inherit;
+
+        background:
+            linear-gradient(
+                90deg,
+                #26b8dc,
+                #e8bf78
+            );
+
+        box-shadow:
+            0 0 10px rgba(38,184,220,.35);
+
+        animation:
+            hqIntroProgress 10s linear forwards;
+    }
+
+    /* =================================================
+       TEXTE SOUS LE LOGO
+    ================================================= */
+
+    .hq-intro-loading {
+        margin-top: 17px;
+
+        color: #b4cde0;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        letter-spacing: .13em;
+        text-transform: uppercase;
+
+        text-align: center;
+
+        transition:
+            opacity .4s ease;
+    }
+
+    /* =================================================
+       PRÉSENTATION APRÈS 10 SECONDES
+    ================================================= */
+
+    .hq-intro-message {
+        position: absolute;
+
+        width: 100%;
+        max-width: 420px;
+
+        padding: 0 16px;
+
+        opacity: 0;
+        visibility: hidden;
+
+        transform: translateY(15px);
+
+        transition:
+            opacity .75s ease,
+            transform .75s ease,
+            visibility .75s ease;
+
+        pointer-events: none;
+    }
+
+    .hq-intro-message h2 {
+        font-family:
+            Manrope,
+            Inter,
+            sans-serif;
+
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.25;
+
+        margin: 0 0 15px;
+
+        color: #ffffff;
+        letter-spacing: -.5px;
+    }
+
+    .hq-intro-message p {
+        color: #d2e8f4;
+
+        font-size: 16px;
+        line-height: 1.8;
+
+        margin: 0;
+    }
+
+    /* =================================================
+       TRANSITION APRÈS 10 SECONDES
+    ================================================= */
+
+    body.hq-intro-message-visible .hq-intro-orbit,
+    body.hq-intro-message-visible .hq-intro-progress,
+    body.hq-intro-message-visible .hq-intro-loading {
+        opacity: 0;
+        transition: opacity .4s ease;
+    }
+
+    body.hq-intro-message-visible .hq-intro-message {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* =================================================
+       FERMETURE DE L'INTRODUCTION
+    ================================================= */
+
+    body.hq-intro-exit .hq-mobile-intro {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+/* =====================================================
+   ORDINATEUR
+===================================================== */
+
+@media (min-width: 1025px) {
+
+    .hq-intro-orbit {
+        width: 300px;
+        height: 300px;
+    }
+
+    .hq-intro-logo {
+        width: 160px;
+        height: 160px;
+        border-radius: 32px;
+        padding: 16px;
+    }
+
+    .hq-intro-train {
+        font-size: 29px;
+    }
+
+    .hq-intro-message {
+        max-width: 560px;
+    }
+
+    .hq-intro-message h2 {
+        font-size: 40px;
+    }
+
+    .hq-intro-message p {
+        font-size: 18px;
+    }
+
+    .hq-intro-progress {
+        width: 280px;
+    }
+}
+
+/* =====================================================
+   TABLETTE
+===================================================== */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+    .hq-intro-orbit {
+        width: 260px;
+        height: 260px;
+    }
+
+    .hq-intro-logo {
+        width: 140px;
+        height: 140px;
+    }
+
+    .hq-intro-train {
+        font-size: 25px;
+    }
+
+    .hq-intro-message h2 {
+        font-size: 32px;
+    }
+
+    .hq-intro-message p {
+        font-size: 16px;
+    }
+}
+
+/* =====================================================
+   TÉLÉPHONE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .hq-intro-stage {
+        max-width: 340px;
+    }
+
+    .hq-intro-orbit {
+        width: 230px;
+        height: 230px;
+    }
+
+    .hq-intro-logo {
+        width: 123px;
+        height: 123px;
+
+        border-radius: 25px;
+        padding: 12px;
+    }
+
+    .hq-intro-train {
+        font-size: 23px;
+    }
+
+    .hq-intro-progress {
+        width: min(230px, 75vw);
+        height: 3px;
+    }
+
+    .hq-intro-message {
+        max-width: 340px;
+    }
+
+    .hq-intro-message h2 {
+        font-size: 27px;
+    }
+
+    .hq-intro-message p {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .hq-intro-loading {
+        font-size: 11px;
+    }
+}
+
+/* =====================================================
+   PETITS TÉLÉPHONES
+===================================================== */
+
+@media (max-width: 360px) {
+
+    .hq-intro-orbit {
+        width: 200px;
+        height: 200px;
+    }
+
+    .hq-intro-logo {
+        width: 105px;
+        height: 105px;
+    }
+
+    .hq-intro-message h2 {
+        font-size: 24px;
+    }
+
+    .hq-intro-message p {
+        font-size: 13px;
+    }
+}
+
+/* =====================================================
+   ANIMATION DU TRAIN ET DU CERCLE
+===================================================== */
+
+@keyframes hqIntroRotation {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =====================================================
+   ANIMATION DE LA BARRE DE PROGRESSION
+===================================================== */
+
+@keyframes hqIntroProgress {
+
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+
 </style>
 
 </head>
 
 
 <body>
+
+<!-- =====================================================
+     INTRODUCTION MOBILE HEXAQUÉBEC
+===================================================== -->
+
+<div
+    class="hq-mobile-intro"
+    id="hqMobileIntro"
+    aria-label="Présentation HexaQuébec"
+>
+
+    <div class="hq-intro-stage">
+
+        <!-- LOGO ET TRAIN -->
+
+        <div
+            class="hq-intro-orbit"
+            aria-hidden="true"
+        >
+
+            <!-- LOGO HEXAQUÉBEC FIXE -->
+
+            <img
+                class="hq-intro-logo"
+                src="{% static 'images/logoHexa.png' %}"
+                alt=""
+                loading="eager"
+                fetchpriority="high"
+            >
+
+            <!-- TRAIN EN ROTATION -->
+
+            <div class="hq-intro-train-track">
+
+                <i class="fa-solid fa-train hq-intro-train"></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESSION -->
+
+        <div class="hq-intro-progress">
+            <span></span>
+        </div>
+
+
+        <div class="hq-intro-loading">
+            Bienvenue chez HexaQuébec
+        </div>
+
+
+        <!-- PRÉSENTATION DE L'ENTREPRISE -->
+
+        <div
+            class="hq-intro-message"
+            role="status"
+            aria-live="polite"
+        >
+
+            <h2>
+                HexaQuébec
+            </h2>
+
+            <p>
+                Entreprise de développement Web,
+                d'applications mobiles
+                et d'intégration de
+                l'intelligence artificielle.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ACTIVATION IMMÉDIATE SUR MOBILE -->
+
+<script>
+if (
+    window.matchMedia(
+        "(max-width: 767px) and (prefers-reduced-motion: no-preference)"
+    ).matches
+) {
+    document.body.classList.add("hq-intro-active");
+}
+</script>
 
 
 <div
@@ -9464,6 +10052,167 @@ if(projectForm){
 
 </script>
 
+
+<script>
+(function () {
+
+    // =====================================================
+    // HEXAQUÉBEC — ANIMATION D'OUVERTURE
+    // ORDINATEUR • TABLETTE • MOBILE
+    // =====================================================
+
+    const intro = document.getElementById(
+        "hqMobileIntro"
+    );
+
+    if (!intro) {
+        return;
+    }
+
+    // =====================================================
+    // ACTIVATION SUR TOUS LES APPAREILS
+    // =====================================================
+
+    const media = window.matchMedia(
+        "(prefers-reduced-motion: no-preference)"
+    );
+
+    // Ne pas afficher l'animation si les mouvements
+    // sont désactivés dans les paramètres de l'appareil.
+
+    if (!media.matches) {
+        intro.remove();
+        return;
+    }
+
+    document.body.classList.add(
+        "hq-intro-active"
+    );
+
+    // =====================================================
+    // PARAMÈTRES DE DURÉE
+    // =====================================================
+
+    const DUREE_LOGO = 10000;       // 10 secondes
+    const DUREE_MESSAGE = 2500;    // 2,5 secondes
+    const DUREE_TRANSITION = 700;  // 0,7 seconde
+
+    let finished = false;
+    let logoTimer = null;
+    let messageTimer = null;
+    let transitionTimer = null;
+
+    // =====================================================
+    // TERMINER L'INTRODUCTION
+    // =====================================================
+
+    function finishIntro() {
+
+        if (finished) {
+            return;
+        }
+
+        finished = true;
+
+        // Arrêter les minuteries encore actives.
+
+        window.clearTimeout(logoTimer);
+        window.clearTimeout(messageTimer);
+
+        // Animation de disparition.
+
+        document.body.classList.add(
+            "hq-intro-exit"
+        );
+
+        transitionTimer = window.setTimeout(
+            function () {
+
+                document.body.classList.remove(
+                    "hq-intro-active",
+                    "hq-intro-message-visible",
+                    "hq-intro-exit"
+                );
+
+                // Supprimer l'introduction du DOM.
+
+                intro.remove();
+
+            },
+            DUREE_TRANSITION
+        );
+    }
+
+    // =====================================================
+    // PREMIÈRE ÉTAPE — LOGO ET TRAIN
+    // 0 À 10 SECONDES
+    // =====================================================
+
+    logoTimer = window.setTimeout(
+        function () {
+
+            if (finished) {
+                return;
+            }
+
+            // Masquer progressivement le logo,
+            // le train et la barre de progression.
+
+            document.body.classList.add(
+                "hq-intro-message-visible"
+            );
+
+            // =================================================
+            // DEUXIÈME ÉTAPE — PRÉSENTATION HEXAQUÉBEC
+            // 10 À 12,5 SECONDES
+            // =================================================
+
+            messageTimer = window.setTimeout(
+                function () {
+
+                    finishIntro();
+
+                },
+                DUREE_MESSAGE
+            );
+
+        },
+        DUREE_LOGO
+    );
+
+    // =====================================================
+    // ACCESSIBILITÉ
+    // =====================================================
+
+    // Si l'utilisateur active la réduction des animations
+    // pendant le chargement, fermer l'introduction.
+
+    function handleMotionChange(event) {
+
+        if (!event.matches) {
+            finishIntro();
+        }
+
+    }
+
+    if (media.addEventListener) {
+
+        media.addEventListener(
+            "change",
+            handleMotionChange
+        );
+
+    } else if (media.addListener) {
+
+        // Compatibilité avec certains anciens navigateurs.
+
+        media.addListener(
+            handleMotionChange
+        );
+    }
+
+})();
+</script>
 
 </body>
 </html>
