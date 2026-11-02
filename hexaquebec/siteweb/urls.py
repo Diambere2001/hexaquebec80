@@ -476,7 +476,11 @@ path(
     views.verifier_lettre_renvoi,
     name="verifier_lettre_renvoi"
 ),
-
+path(
+    "carte-affaires/telecharger/",
+    views.telecharger_carte_affaires,
+    name="telecharger_carte_affaires"
+),
 
 ]
 

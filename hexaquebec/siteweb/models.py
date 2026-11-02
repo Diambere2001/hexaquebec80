@@ -2562,3 +2562,34 @@ class LettreRenvoi(models.Model):
             f"{self.reference} - "
             f"{self.prenom} {self.nom}"
         )
+
+
+
+from django.db import models
+
+
+class DemandeCarteAffaires(models.Model):
+
+    nom_complet = models.CharField(
+        max_length=150
+    )
+
+    telephone = models.CharField(
+        max_length=25
+    )
+
+    consentement = models.BooleanField(
+        default=False
+    )
+
+    date_demande = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        verbose_name = "Demande de carte d'affaires"
+        verbose_name_plural = "Demandes de cartes d'affaires"
+        ordering = ["-date_demande"]
+
+    def __str__(self):
+        return f"{self.nom_complet} — {self.telephone}"

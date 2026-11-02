@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+
+<title>Carte d'affaires officielle HexaQuébec</title>
+
+<style>
+
+/* =====================================================
+   HEXAQUÉBEC — CARTE D'AFFAIRES OFFICIELLE
+   PDF SUR UNE SEULE PAGE
+   DJANGO + WEASYPRINT
+===================================================== */
+
+@page {
+    size: 85.6mm 54mm;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 85.6mm;
+    height: 54mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "DejaVu Sans", sans-serif;
+}
+
+/* =====================================================
+   CARTE PRINCIPALE
+===================================================== */
+
+.card {
+    position: relative;
+    width: 85.6mm;
+    height: 54mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    background: linear-gradient(
+        145deg,
+        #031629 0%,
+        #061e38 55%,
+        #07375b 100%
+    );
+
+    color: #ffffff;
+    break-inside: avoid;
+}
+
+/* =====================================================
+   BANDE LUMINEUSE SUPÉRIEURE
+===================================================== */
+
+.top-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 85.6mm;
+    height: 1.3mm;
+
+    background: linear-gradient(
+        90deg,
+        #0874ce,
+        #00d3eb 70%,
+        #deb46f
+    );
+}
+
+/* =====================================================
+   DÉCORATIONS GÉOMÉTRIQUES
+===================================================== */
+
+.shape-one {
+    position: absolute;
+
+    width: 34mm;
+    height: 34mm;
+
+    top: 5mm;
+    right: -25mm;
+
+    border: .3mm solid rgba(0,213,235,.5);
+    border-radius: 9mm;
+
+    transform: rotate(35deg);
+}
+
+.shape-two {
+    position: absolute;
+
+    width: 26mm;
+    height: 26mm;
+
+    top: 10mm;
+    right: -20mm;
+
+    border: .25mm solid rgba(224,179,108,.65);
+    border-radius: 7mm;
+
+    transform: rotate(35deg);
+}
+
+.shape-three {
+    position: absolute;
+
+    width: 18mm;
+    height: 18mm;
+
+    top: 14mm;
+    right: -15mm;
+
+    border: .25mm solid rgba(0,213,235,.35);
+    border-radius: 5mm;
+
+    transform: rotate(35deg);
+}
+
+/* =====================================================
+   LOGO HEXAQUÉBEC
+===================================================== */
+
+.logo-box {
+    position: absolute;
+
+    top: 5mm;
+    left: 5mm;
+
+    width: 12mm;
+    height: 12mm;
+
+    padding: 1.2mm;
+
+    border-radius: 2.4mm;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+.logo {
+    width: 9.6mm;
+    height: 9.6mm;
+
+    object-fit: contain;
+}
+
+.logo-fallback {
+    color: #092e50;
+    font-size: 11pt;
+    font-weight: bold;
+    line-height: 9.6mm;
+}
+
+/* =====================================================
+   NOM ENTREPRISE ET SLOGAN
+===================================================== */
+
+.company {
+    position: absolute;
+
+    top: 5.3mm;
+    left: 19mm;
+    right: 4mm;
+
+    white-space: nowrap;
+}
+
+.company-name {
+    color: #ffffff;
+
+    font-size: 17pt;
+    font-weight: bold;
+
+    letter-spacing: -.5mm;
+    line-height: 1.2;
+}
+
+.company-name .cyan {
+    color: #00d5ec;
+}
+
+.slogan {
+    margin-top: 1.3mm;
+
+    color: #eab96b;
+
+    font-size: 5.3pt;
+    font-weight: bold;
+
+    white-space: nowrap;
+}
+
+/* =====================================================
+   LIGNE TURQUOISE
+===================================================== */
+
+.cyan-divider {
+    position: absolute;
+
+    left: 5mm;
+    top: 20mm;
+
+    width: 52mm;
+    height: .55mm;
+
+    background: linear-gradient(
+        90deg,
+        #0675cb,
+        #00d6ec
+    );
+}
+
+/* =====================================================
+   SERVICES HEXAQUÉBEC
+===================================================== */
+
+.services {
+    position: absolute;
+
+    left: 5mm;
+    right: 5mm;
+    top: 22.3mm;
+
+    color: #ffffff;
+}
+
+.services-line {
+    font-size: 6.6pt;
+    font-weight: bold;
+
+    line-height: 1.7;
+    white-space: nowrap;
+}
+
+.dot {
+    color: #00d7e8;
+    padding: 0 .7mm;
+}
+
+/* =====================================================
+   LIGNE DORÉE
+===================================================== */
+
+.gold-divider {
+    position: absolute;
+
+    top: 32.4mm;
+    left: 5mm;
+
+    width: 69mm;
+    height: .35mm;
+
+    background: #e1b66f;
+}
+
+/* =====================================================
+   COORDONNÉES HEXAQUÉBEC
+   POSITIONS FIXES = AUCUN DÉBORDEMENT
+===================================================== */
+
+.contact {
+    position: absolute;
+
+    left: 5mm;
+    right: 4mm;
+
+    height: 4mm;
+
+    color: #ffffff;
+}
+
+/* POSITIONS DES QUATRE LIGNES */
+
+.phone {
+    top: 34mm;
+}
+
+.website {
+    top: 38.4mm;
+}
+
+.email {
+    top: 42.8mm;
+}
+
+.address {
+    top: 47.2mm;
+}
+
+/* ICÔNES */
+
+.contact-icon {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 5mm;
+    height: 3.8mm;
+
+    color: #00d6e8;
+
+    font-size: 8pt;
+    font-weight: bold;
+
+    text-align: center;
+    line-height: 3.8mm;
+}
+
+/* INFORMATIONS */
+
+.contact-value {
+    position: absolute;
+
+    top: 0;
+    left: 7mm;
+    right: 0;
+
+    color: #ffffff;
+
+    font-size: 6.7pt;
+    font-weight: bold;
+
+    line-height: 3.8mm;
+
+    white-space: nowrap;
+}
+
+.address .contact-value {
+    font-size: 5.8pt;
+}
+
+/* =====================================================
+   BANDE INFÉRIEURE
+===================================================== */
+
+.bottom-line {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 85.6mm;
+    height: .65mm;
+
+    background: linear-gradient(
+        90deg,
+        #0b63ac,
+        #00cbe2,
+        #d9ac64
+    );
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     CARTE D'AFFAIRES HEXAQUÉBEC
+===================================================== -->
+
+<div class="card">
+
+    <!-- DÉCORATION -->
+
+    <div class="top-line"></div>
+
+    <div class="shape-one"></div>
+    <div class="shape-two"></div>
+    <div class="shape-three"></div>
+
+
+    <!-- ==========================================
+         LOGO OFFICIEL
+    ========================================== -->
+
+    <div class="logo-box">
+
+        {% if logo_url %}
+
+            <img
+                src="{{ logo_url }}"
+                alt="Logo HexaQuébec"
+                class="logo"
+            >
+
+        {% else %}
+
+            <div class="logo-fallback">
+                HQ
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ==========================================
+         IDENTITÉ DE L'ENTREPRISE
+    ========================================== -->
+
+    <div class="company">
+
+        <div class="company-name">
+            Hexa<span class="cyan">Québec</span>
+        </div>
+
+        <div class="slogan">
+            L'innovation au cœur du numérique québécois
+        </div>
+
+    </div>
+
+
+    <!-- LIGNE TURQUOISE -->
+
+    <div class="cyan-divider"></div>
+
+
+    <!-- ==========================================
+         SERVICES PROFESSIONNELS
+    ========================================== -->
+
+    <div class="services">
+
+        <div class="services-line">
+            Développement web
+            <span class="dot">•</span>
+            Applications mobiles
+        </div>
+
+        <div class="services-line">
+            Intelligence artificielle
+            <span class="dot">•</span>
+            E-commerce
+            <span class="dot">•</span>
+            UI/UX
+        </div>
+
+    </div>
+
+
+    <!-- LIGNE DORÉE -->
+
+    <div class="gold-divider"></div>
+
+
+    <!-- ==========================================
+         TÉLÉPHONE
+    ========================================== -->
+
+    <div class="contact phone">
+
+        <div class="contact-icon">
+            ☎
+        </div>
+
+        <div class="contact-value">
+            +1 514 467-7377
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         SITE WEB OFFICIEL
+    ========================================== -->
+
+    <div class="contact website">
+
+        <div class="contact-icon">
+            ◉
+        </div>
+
+        <div class="contact-value">
+            www.hexaquebec.com
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ADRESSE COURRIEL
+    ========================================== -->
+
+    <div class="contact email">
+
+        <div class="contact-icon">
+            @
+        </div>
+
+        <div class="contact-value">
+            hexaquebec80@gmail.com
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ADRESSE PROFESSIONNELLE
+    ========================================== -->
+
+    <div class="contact address">
+
+        <div class="contact-icon">
+            ◆
+        </div>
+
+        <div class="contact-value">
+            2186, rue Roussel · Chicoutimi, Saguenay (Québec)
+        </div>
+
+    </div>
+
+
+    <!-- BANDE INFÉRIEURE -->
+
+    <div class="bottom-line"></div>
+
+</div>
+
+</body>
+</html>

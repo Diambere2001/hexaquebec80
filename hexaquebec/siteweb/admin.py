@@ -2588,3 +2588,39 @@ class NotificationStagiairesAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+
+
+
+
+from django.contrib import admin
+from .models import DemandeCarteAffaires
+
+
+@admin.register(DemandeCarteAffaires)
+class DemandeCarteAffairesAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "nom_complet",
+        "telephone",
+        "consentement",
+        "date_demande",
+    )
+
+    search_fields = (
+        "nom_complet",
+        "telephone",
+    )
+
+    list_filter = (
+        "consentement",
+        "date_demande",
+    )
+
+    readonly_fields = (
+        "nom_complet",
+        "telephone",
+        "consentement",
+        "date_demande",
+    )

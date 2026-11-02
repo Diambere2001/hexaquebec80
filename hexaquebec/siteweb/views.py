@@ -13401,3 +13401,176 @@ def verifier_lettre_renvoi(request, reference):
         contexte
 
     )
+
+
+import re
+import logging
+
+from pathlib import Path
+
+from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
+
+from weasyprint import HTML
+
+from .models import DemandeCarteAffaires
+
+
+logger_carte = logging.getLogger(__name__)
+
+
+@require_POST
+def telecharger_carte_affaires(request):
+
+    nom_complet = " ".join(
+        request.POST.get("nom_complet", "").split()
+    )
+
+    telephone = request.POST.get(
+        "telephone", ""
+    ).strip()
+
+    consentement = (
+        request.POST.get("consentement") == "on"
+    )
+
+    # ---------------------------------------------
+    # VALIDATION
+    # ---------------------------------------------
+
+    if not 2 <= len(nom_complet) <= 150:
+        return JsonResponse(
+            {"erreur": "Veuillez saisir votre nom complet."},
+            status=400
+        )
+
+    if len(nom_complet.split()) < 2:
+        return JsonResponse(
+            {"erreur": "Indiquez votre prénom et votre nom."},
+            status=400
+        )
+
+    if not re.fullmatch(r"[+0-9()\-\s.]{7,25}", telephone):
+        return JsonResponse(
+            {"erreur": "Numéro de téléphone invalide."},
+            status=400
+        )
+
+    if len(re.sub(r"\D", "", telephone)) < 7:
+        return JsonResponse(
+            {"erreur": "Numéro de téléphone trop court."},
+            status=400
+        )
+
+    if not consentement:
+        return JsonResponse(
+            {
+                "erreur": (
+                    "Veuillez accepter l'enregistrement "
+                    "de vos informations."
+                )
+            },
+            status=400
+        )
+
+    # ---------------------------------------------
+    # LOGO HEXAQUÉBEC
+    # ---------------------------------------------
+
+    logo_path = finders.find("images/logoHexa.png")
+
+    if not logo_path and settings.STATIC_ROOT:
+        possible = (
+            Path(settings.STATIC_ROOT)
+            / "images"
+            / "logoHexa.png"
+        )
+        if possible.is_file():
+            logo_path = str(possible)
+
+    logo_url = None
+
+    if logo_path:
+        fichier = Path(logo_path).resolve()
+        if fichier.is_file():
+            logo_url = fichier.as_uri()
+
+    # ---------------------------------------------
+    # GÉNÉRATION DU PDF
+    # ---------------------------------------------
+
+    try:
+        html = render_to_string(
+            "cartes/carte_affaires_pdf.html",
+            {
+                "logo_url": logo_url,
+            },
+            request=request
+        )
+
+        pdf = HTML(
+            string=html,
+            base_url=request.build_absolute_uri("/")
+        ).write_pdf()
+
+    except Exception:
+        logger_carte.exception(
+            "Impossible de générer la carte HexaQuébec."
+        )
+
+        return JsonResponse(
+            {
+                "erreur": (
+                    "Impossible de générer la carte "
+                    "pour le moment."
+                )
+            },
+            status=500
+        )
+
+    # ---------------------------------------------
+    # ENREGISTREMENT DU VISITEUR
+    # ---------------------------------------------
+
+    try:
+        DemandeCarteAffaires.objects.create(
+            nom_complet=nom_complet,
+            telephone=telephone,
+            consentement=True
+        )
+
+    except Exception:
+        logger_carte.exception(
+            "Impossible d'enregistrer la demande."
+        )
+
+        return JsonResponse(
+            {
+                "erreur": (
+                    "L'enregistrement n'a pas réussi. "
+                    "Veuillez réessayer."
+                )
+            },
+            status=500
+        )
+
+    # ---------------------------------------------
+    # TÉLÉCHARGEMENT
+    # ---------------------------------------------
+
+    response = HttpResponse(
+        pdf,
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = (
+        'attachment; filename="Carte_Affaires_HexaQuebec.pdf"'
+    )
+
+    response["Content-Length"] = len(pdf)
+
+    return response

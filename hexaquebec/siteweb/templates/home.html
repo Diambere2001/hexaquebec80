@@ -5367,7 +5367,192 @@ button:disabled{
     }
 }
 
+.hq-diam-visual {
+    position: relative;
+}
 
+.hq-business-image-btn {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    padding: 13px 16px;
+    border: none;
+    border-radius: 12px;
+
+    background: #073d67;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+
+@media (max-width: 767px) {
+    .hq-business-image-btn {
+        left: 50%;
+        top: auto;
+        bottom: 65px;
+        transform: translateX(-50%);
+    }
+}
+
+/* FOND DE LA FENÊTRE */
+
+.hq-business-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483001;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+    background: rgba(5,20,38,.76);
+    backdrop-filter: blur(8px);
+}
+
+.hq-business-overlay.open {
+    display: flex;
+}
+
+/* FENÊTRE */
+
+.hq-business-modal {
+    position: relative;
+    width: min(100%, 475px);
+    max-height: 92vh;
+    overflow-y: auto;
+
+    background: #fff;
+    border-radius: 23px;
+    box-shadow: 0 25px 80px rgba(0,0,0,.3);
+}
+
+/* EN-TÊTE */
+
+.hq-business-head {
+    position: relative;
+    padding: 32px 28px;
+    background: linear-gradient(130deg,#062445,#086684);
+    color: white;
+}
+
+.hq-business-head h2 {
+    margin: 0 35px 9px 0;
+    color: white;
+    font-size: 23px;
+}
+
+.hq-business-head p {
+    color: #cde5f0;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* FERMER */
+
+.hq-business-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+
+    width: 35px;
+    height: 35px;
+
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.12);
+    color: white;
+    cursor: pointer;
+}
+
+/* FORMULAIRE */
+
+.hq-business-body {
+    padding: 28px;
+}
+
+.hq-business-field {
+    margin-bottom: 19px;
+}
+
+.hq-business-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #183e5a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.hq-business-field input {
+    width: 100%;
+    padding: 14px 15px;
+
+    border: 1px solid #d7e3ee;
+    border-radius: 11px;
+
+    background: #fafcfe;
+    color: #183e5a;
+}
+
+.hq-business-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    margin: 20px 0;
+
+    color: #526a80;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.hq-business-submit {
+    width: 100%;
+    padding: 16px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(110deg,#082e53,#087da1);
+    color: white;
+
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.hq-business-submit:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+/* MESSAGES D'ERREUR */
+
+.hq-business-error {
+    display: none;
+    margin-bottom: 15px;
+    padding: 12px;
+
+    border-radius: 9px;
+    background: #fff0f1;
+    color: #b42338;
+    font-size: 12px;
+}
+
+.hq-business-error.visible {
+    display: block;
+}
+
+body.hq-business-open {
+    overflow: hidden;
+}
 </style>
 
 </head>
@@ -6952,26 +7137,53 @@ if (
     <div class="hq-container hq-diam-grid">
 
 
-        <div class="hq-diam-visual hq-reveal from-left">
+<!-- ================================================
+     IMAGE DIAM IA ET CARTE D'AFFAIRES
+================================================ -->
+
+<div class="hq-diam-visual hq-reveal from-left">
+
+    <!-- BOUTON CARTE D'AFFAIRES -->
+
+    <button
+        type="button"
+        class="hq-business-image-btn"
+        id="hqBusinessOpen"
+        aria-label="Télécharger la carte d'affaires HexaQuébec"
+        title="Carte d'affaires HexaQuébec"
+    >
+        <i class="fa-regular fa-address-card"></i>
+
+        <span>
+            Carte d'affaires
+        </span>
+
+    </button>
 
 
-            <img
-                src="{% static 'images/diam.jpeg' %}"
-                class="hq-diam-image"
-                alt="Diam IA"
-            >
+    <!-- IMAGE DIAM IA -->
+
+    <img
+        src="{% static 'images/diam.jpeg' %}"
+        class="hq-diam-image"
+        alt="Assistant IA Diam"
+    >
 
 
-            <div class="hq-ai-status">
+    <!-- STATUT DIAM IA -->
 
-                <span class="hq-ai-pulse"></span>
+    <div class="hq-ai-status">
 
-                IA ACTIVE
+        <span class="hq-ai-pulse"></span>
 
-            </div>
+        IA ACTIVE
+
+    </div>
+
+</div>
 
 
-        </div>
+
 
 
 
@@ -8320,6 +8532,287 @@ if (
     id="hqToast"
 ></div>
 
+
+<!-- =====================================================
+     HEXAQUÉBEC — FORMULAIRE CARTE D'AFFAIRES
+===================================================== -->
+
+<div
+    class="hq-business-overlay"
+    id="hqBusinessOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="hqBusinessTitle"
+    aria-hidden="true"
+>
+
+    <div class="hq-business-modal">
+
+        <!-- EN-TÊTE -->
+
+        <div class="hq-business-head">
+
+            <button
+                type="button"
+                class="hq-business-close"
+                id="hqBusinessClose"
+                aria-label="Fermer la fenêtre"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h2 id="hqBusinessTitle">
+                Carte d'affaires HexaQuébec
+            </h2>
+
+            <p>
+                Téléchargez gratuitement notre carte
+                d'affaires numérique officielle.
+            </p>
+
+        </div>
+
+
+        <!-- FORMULAIRE -->
+
+        <div class="hq-business-body">
+
+            <div
+                id="hqBusinessError"
+                class="hq-business-error"
+                role="alert"
+            ></div>
+
+            <form
+                id="hqBusinessForm"
+                action="{% url 'telecharger_carte_affaires' %}"
+                method="post"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- NOM COMPLET -->
+
+                <div class="hq-business-field">
+
+                    <label for="hqBusinessName">
+                        Votre nom complet
+                    </label>
+
+                    <input
+                        type="text"
+                        name="nom_complet"
+                        id="hqBusinessName"
+                        maxlength="150"
+                        autocomplete="name"
+                        placeholder="Prénom et nom"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- NUMÉRO DE TÉLÉPHONE -->
+
+                <div class="hq-business-field">
+
+                    <label for="hqBusinessPhone">
+                        Numéro de téléphone
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="telephone"
+                        id="hqBusinessPhone"
+                        maxlength="25"
+                        autocomplete="tel"
+                        placeholder="+1 418 000 0000"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CONSENTEMENT -->
+
+                <label class="hq-business-consent">
+
+                    <input
+                        type="checkbox"
+                        name="consentement"
+                        required
+                    >
+
+                    <span>
+                        J'accepte que HexaQuébec enregistre
+                        mon nom et mon numéro de téléphone
+                        pour traiter ma demande de
+                        carte d'affaires.
+
+                        Ce consentement n'autorise pas
+                        l'envoi de messages publicitaires.
+                    </span>
+
+                </label>
+
+
+                <!-- TÉLÉCHARGEMENT -->
+
+                <button
+                    type="submit"
+                    class="hq-business-submit"
+                    id="hqBusinessSubmit"
+                >
+                    <i class="fa-solid fa-download"></i>
+
+                    Télécharger la carte PDF
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("hqBusinessOpen");
+    const closeBtn = document.getElementById("hqBusinessClose");
+    const overlay = document.getElementById("hqBusinessOverlay");
+    const form = document.getElementById("hqBusinessForm");
+    const submitBtn = document.getElementById("hqBusinessSubmit");
+    const errorBox = document.getElementById("hqBusinessError");
+
+    if (!openBtn || !closeBtn || !overlay || !form) {
+        return;
+    }
+
+    let previousFocus = null;
+
+    function openModal() {
+        previousFocus = document.activeElement;
+        overlay.classList.add("open");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.classList.add("hq-business-open");
+        document.getElementById("hqBusinessName").focus();
+    }
+
+    function closeModal() {
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("hq-business-open");
+        previousFocus?.focus();
+    }
+
+    openBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+
+    overlay.addEventListener("click", function (event) {
+        if (event.target === overlay) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (!overlay.classList.contains("open")) {
+            return;
+        }
+
+        if (event.key === "Escape") {
+            closeModal();
+        }
+
+        if (event.key === "Tab") {
+            const elements = Array.from(
+                overlay.querySelectorAll(
+                    'button:not(:disabled), input:not(:disabled)'
+                )
+            ).filter(el => el.getClientRects().length);
+
+            if (!elements.length) return;
+
+            const first = elements[0];
+            const last = elements[elements.length - 1];
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        }
+    });
+
+    form.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        if (!form.reportValidity()) return;
+
+        errorBox.classList.remove("visible");
+        errorBox.textContent = "";
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Génération en cours...";
+
+        try {
+
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: new FormData(form),
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                throw new Error(
+                    result.erreur || "Le téléchargement a échoué."
+                );
+            }
+
+            const blob = await response.blob();
+
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "Carte_Affaires_HexaQuebec.pdf";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 30000);
+
+            form.reset();
+            closeModal();
+
+        } catch (error) {
+
+            errorBox.textContent = error.message;
+            errorBox.classList.add("visible");
+
+        } finally {
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML =
+                '<i class="fa-solid fa-download"></i> Télécharger la carte PDF';
+
+        }
+
+    });
+
+});
+</script>
 
 
 <!-- =====================================================
@@ -10212,6 +10705,273 @@ if(projectForm){
     }
 
 })();
+</script>
+
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        // ============================================
+        // RÉCUPÉRATION DES ÉLÉMENTS
+        // ============================================
+
+        const openBtn = document.getElementById(
+            "hqBusinessOpen"
+        );
+
+        const closeBtn = document.getElementById(
+            "hqBusinessClose"
+        );
+
+        const overlay = document.getElementById(
+            "hqBusinessOverlay"
+        );
+
+        const form = document.getElementById(
+            "hqBusinessForm"
+        );
+
+        const submitBtn = document.getElementById(
+            "hqBusinessSubmit"
+        );
+
+        const errorBox = document.getElementById(
+            "hqBusinessError"
+        );
+
+        const nameInput = document.getElementById(
+            "hqBusinessName"
+        );
+
+        if (
+            !openBtn ||
+            !closeBtn ||
+            !overlay ||
+            !form ||
+            !submitBtn ||
+            !errorBox
+        ) {
+            return;
+        }
+
+        let previousFocus = null;
+
+        // ============================================
+        // OUVERTURE DU FORMULAIRE
+        // ============================================
+
+        function openModal() {
+
+            previousFocus = document.activeElement;
+
+            overlay.classList.add("open");
+
+            overlay.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+            document.body.classList.add(
+                "hq-business-open"
+            );
+
+            nameInput.focus();
+        }
+
+        // ============================================
+        // FERMETURE DU FORMULAIRE
+        // ============================================
+
+        function closeModal() {
+
+            overlay.classList.remove("open");
+
+            overlay.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            document.body.classList.remove(
+                "hq-business-open"
+            );
+
+            if (previousFocus) {
+                previousFocus.focus();
+            }
+        }
+
+        openBtn.addEventListener(
+            "click",
+            openModal
+        );
+
+        closeBtn.addEventListener(
+            "click",
+            closeModal
+        );
+
+        // FERMETURE EN CLIQUANT SUR LE FOND
+
+        overlay.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === overlay) {
+                    closeModal();
+                }
+
+            }
+        );
+
+        // FERMETURE AVEC ÉCHAP
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (!overlay.classList.contains("open")) {
+                    return;
+                }
+
+                if (event.key === "Escape") {
+                    closeModal();
+                    return;
+                }
+
+                if (event.key === "Tab") {
+
+                    const elements = Array.from(
+                        overlay.querySelectorAll(
+                            "button:not(:disabled), input:not(:disabled)"
+                        )
+                    ).filter(
+                        element => element.getClientRects().length
+                    );
+
+                    if (!elements.length) {
+                        return;
+                    }
+
+                    const first = elements[0];
+                    const last = elements[elements.length - 1];
+
+                    if (
+                        event.shiftKey &&
+                        document.activeElement === first
+                    ) {
+                        event.preventDefault();
+                        last.focus();
+                    } else if (
+                        !event.shiftKey &&
+                        document.activeElement === last
+                    ) {
+                        event.preventDefault();
+                        first.focus();
+                    }
+
+                }
+            }
+        );
+
+        // ============================================
+        // ENREGISTREMENT ET TÉLÉCHARGEMENT
+        // ============================================
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                if (!form.reportValidity()) {
+                    return;
+                }
+
+                errorBox.textContent = "";
+                errorBox.classList.remove("visible");
+
+                submitBtn.disabled = true;
+
+                submitBtn.textContent =
+                    "Génération en cours...";
+
+                try {
+
+                    const response = await fetch(
+                        form.action,
+                        {
+                            method: "POST",
+                            body: new FormData(form),
+                            credentials: "same-origin"
+                        }
+                    );
+
+                    if (!response.ok) {
+
+                        const result = await response
+                            .json()
+                            .catch(() => ({}));
+
+                        throw new Error(
+                            result.erreur ||
+                            "Le téléchargement a échoué."
+                        );
+                    }
+
+                    const blob = await response.blob();
+
+                    const url = URL.createObjectURL(blob);
+
+                    const link = document.createElement("a");
+
+                    link.href = url;
+
+                    link.download =
+                        "Carte_Affaires_HexaQuebec.pdf";
+
+                    document.body.appendChild(link);
+
+                    link.click();
+
+                    link.remove();
+
+                    window.setTimeout(
+                        function () {
+                            URL.revokeObjectURL(url);
+                        },
+                        30000
+                    );
+
+                    // RÉINITIALISER LE FORMULAIRE
+
+                    form.reset();
+
+                    // FERMER LA FENÊTRE
+
+                    closeModal();
+
+                } catch (error) {
+
+                    errorBox.textContent = error.message;
+
+                    errorBox.classList.add("visible");
+
+                } finally {
+
+                    submitBtn.disabled = false;
+
+                    submitBtn.innerHTML =
+                        '<i class="fa-solid fa-download"></i> ' +
+                        'Télécharger la carte PDF';
+
+                }
+
+            }
+        );
+
+    }
+);
 </script>
 
 </body>
