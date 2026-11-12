@@ -1,740 +1,1653 @@
-{% load static %}
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactez-nous | HexaQuébec</title>
 
-<title>Contact | HexaQuébec</title>
+    <meta name="description"
+          content="Contactez HexaQuébec pour votre projet web, mobile, intelligence artificielle ou boutique en ligne.">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png"
+          href="{% static 'images/logoHexa.png' %}">
 
-<style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+          rel="stylesheet">
 
-:root{
-    --bg:#071120;
-    --bg2:#0f1d35;
-    --gold:#e0c097;
-    --gold2:#c89b68;
-    --blue:#00bfff;
-    --white:#ffffff;
-    --muted:#aab6ca;
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          rel="stylesheet">
+
+    <style>
+        /* IDENTITÉ HEXAQUÉBEC */
+
+        :root {
+            --blue: #0768c9;
+            --blue-light: #0b84f3;
+            --cyan: #00b8d9;
+            --navy: #071a2f;
+            --navy-soft: #0b2948;
+            --white: #ffffff;
+            --bg: #f6f9fc;
+            --text: #17263a;
+            --muted: #687b8f;
+            --border: #e4edf5;
+            --green: #16a36a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            color: var(--text);
+            background: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .hq-container {
+            width: min(1180px, 92%);
+            margin: auto;
+        }
+
+        /* NAVIGATION */
+
+        .hq-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            height: 82px;
+            background: rgba(255,255,255,.95);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 25px rgba(7,26,47,.025);
+        }
+
+        .hq-nav-inner {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .hq-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .hq-brand-logo {
+            width: 51px;
+            height: 51px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .hq-brand-logo img {
+            width: 43px;
+            height: 43px;
+            object-fit: contain;
+        }
+
+        .hq-brand strong {
+            display: block;
+            font-family: "Manrope", sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .hq-brand small {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .hq-back {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            min-height: 45px;
+            padding: 0 19px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 800;
+            transition: .25s;
+        }
+
+        .hq-back i {
+            color: var(--blue);
+        }
+
+        .hq-back:hover {
+            color: var(--blue);
+            background: #eef7ff;
+        }
+
+        /* HERO */
+
+        .hq-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 85px 0 75px;
+            background:
+                radial-gradient(circle at 90% 10%,
+                    rgba(0,184,217,.12), transparent 30%),
+                radial-gradient(circle at 5% 85%,
+                    rgba(7,104,201,.09), transparent 30%),
+                linear-gradient(180deg, #fff, #f7fbff);
+        }
+
+        .hq-hero-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .hq-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 14px;
+            color: var(--blue);
+            background: #edf7ff;
+            border: 1px solid #d8ebfa;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .hq-hero h1 {
+            margin-top: 24px;
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(36px, 4.5vw, 62px);
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -2px;
+            color: var(--navy);
+        }
+
+        .hq-gradient {
+            background: linear-gradient(90deg,
+                var(--blue), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hq-hero p {
+            max-width: 580px;
+            margin-top: 23px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .hq-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .hq-btn {
+            min-height: 51px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 0 22px;
+            border: none;
+            border-radius: 13px;
+            font-size: 12px;
+            font-weight: 800;
+            transition: .3s;
+        }
+
+        .hq-btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg,
+                var(--blue), var(--cyan));
+            box-shadow: 0 13px 30px rgba(7,104,201,.20);
+        }
+
+        .hq-btn-primary:hover {
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 18px 35px rgba(7,104,201,.28);
+        }
+
+        .hq-btn-outline {
+            background: #fff;
+            color: var(--navy);
+            border: 1px solid var(--border);
+        }
+
+        .hq-btn-outline:hover {
+            color: var(--blue);
+            background: #f1f8ff;
+        }
+
+        /* LOGO ANIMÉ */
+
+        .hq-visual {
+            position: relative;
+            min-height: 340px;
+            display: grid;
+            place-items: center;
+        }
+
+        .hq-orbit {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                #fff 0 39%,
+                #f0f8fd 40% 68%,
+                transparent 69%
+            );
+        }
+
+        .hq-orbit::before,
+        .hq-orbit::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            border: 1px dashed rgba(7,104,201,.28);
+            animation: rotate 22s linear infinite;
+        }
+
+        .hq-orbit::before {
+            inset: 0;
+        }
+
+        .hq-orbit::after {
+            inset: 40px;
+            border-color: rgba(0,184,217,.35);
+            animation-duration: 16s;
+            animation-direction: reverse;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .hq-logo-core {
+            position: relative;
+            z-index: 2;
+            width: 145px;
+            height: 145px;
+            display: grid;
+            place-items: center;
+            background: #fff;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 65px rgba(7,51,89,.14);
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .hq-logo-core img {
+            width: 115px;
+            height: 115px;
+            object-fit: contain;
+        }
+
+        @keyframes float {
+            50% { transform: translateY(-10px); }
+        }
+
+        .hq-chip {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 15px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: 0 15px 35px rgba(12,51,85,.10);
+            color: var(--navy);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .hq-chip i {
+            color: var(--blue);
+        }
+
+        .hq-chip-one {
+            top: 25px;
+            left: 0;
+        }
+
+        .hq-chip-two {
+            right: 0;
+            bottom: 40px;
+        }
+
+        /* SECTION CONTACT */
+
+        .hq-contact-section {
+            padding: 90px 0 100px;
+            background: #fff;
+        }
+
+        .hq-heading {
+            max-width: 750px;
+            margin: 0 auto 45px;
+            text-align: center;
+        }
+
+        .hq-label {
+            color: var(--blue);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .hq-heading h2 {
+            margin-top: 13px;
+            font-family: "Manrope", sans-serif;
+            color: var(--navy);
+            font-size: clamp(29px, 3.3vw, 44px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .hq-heading p {
+            margin-top: 15px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.85;
+        }
+
+        .hq-contact-grid {
+            display: grid;
+            grid-template-columns: .82fr 1.18fr;
+            align-items: start;
+            gap: 25px;
+        }
+
+        .hq-info-panel,
+        .hq-form-panel {
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            background: #fff;
+            box-shadow: 0 12px 40px rgba(12,57,92,.05);
+            min-width: 0;
+        }
+
+        .hq-info-panel h3,
+        .hq-form-panel h3 {
+            font-family: "Manrope", sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .hq-panel-desc {
+            margin: 12px 0 26px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* COORDONNÉES */
+
+        .hq-info-item {
+            display: grid;
+            grid-template-columns: 48px minmax(0,1fr);
+            align-items: center;
+            gap: 13px;
+            padding: 19px 0;
+            border-bottom: 1px solid #edf2f6;
+        }
+
+        .hq-info-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: var(--blue);
+            background: #edf7ff;
+            font-size: 17px;
+        }
+
+        .hq-info-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .hq-info-value {
+            color: #344c63;
+            font-size: 13px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+            line-height: 1.65;
+        }
+
+        a.hq-info-value:hover {
+            color: var(--blue);
+            text-decoration: underline;
+        }
+
+        .hq-info-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+            padding: 17px;
+            color: #37617c;
+            background: #f0f8fd;
+            border-radius: 14px;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .hq-info-footer i {
+            color: var(--blue);
+            font-size: 19px;
+        }
+
+        /* FORMULAIRE */
+
+        .hq-form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .hq-form-icon {
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            color: var(--blue);
+            background: #edf7ff;
+            border-radius: 16px;
+            font-size: 21px;
+        }
+
+        .hq-form-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            margin-bottom: 22px;
+            border-radius: 999px;
+            color: #087b51;
+            background: #eaf9f3;
+            border: 1px solid #cdeedf;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .hq-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        .hq-fields-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 18px;
+        }
+
+        .hq-field {
+            margin-bottom: 21px;
+            min-width: 0;
+        }
+
+        .hq-field label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .hq-required {
+            color: var(--blue);
+        }
+
+        .hq-field-wrap {
+            position: relative;
+        }
+
+        .hq-field-icon {
+            position: absolute;
+            left: 16px;
+            top: 20px;
+            color: #8ca2b8;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .hq-input,
+        .hq-select,
+        .hq-textarea {
+            width: 100%;
+            min-width: 0;
+            border: 1px solid #dce7f0;
+            outline: none;
+            background: #fbfdff;
+            border-radius: 13px;
+            color: var(--navy);
+            font-size: 13px;
+            transition: .25s ease;
+        }
+
+        .hq-input,
+        .hq-select {
+            height: 53px;
+            padding: 0 16px 0 46px;
+        }
+
+        .hq-textarea {
+            min-height: 165px;
+            padding: 17px 17px 17px 46px;
+            resize: vertical;
+            line-height: 1.75;
+        }
+
+        .hq-input::placeholder,
+        .hq-textarea::placeholder {
+            color: #91a2b3;
+        }
+
+        .hq-input:focus,
+        .hq-select:focus,
+        .hq-textarea:focus {
+            background: #fff;
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 4px rgba(7,104,201,.09);
+        }
+
+        .hq-select {
+            cursor: pointer;
+        }
+
+        .hq-field-help {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .hq-form-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+            background: #f0f8fd;
+            border-radius: 12px;
+            color: #42647f;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .hq-form-note i {
+            margin-top: 3px;
+            color: var(--blue);
+        }
+
+        .hq-submit {
+            width: 100%;
+            min-height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 11px;
+            border: none;
+            border-radius: 13px;
+            color: #fff;
+            background: linear-gradient(135deg,
+                var(--blue), var(--cyan));
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 13px 30px rgba(7,104,201,.18);
+            transition: .3s;
+        }
+
+        .hq-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 17px 35px rgba(7,104,201,.25);
+        }
+
+        .hq-submit:disabled {
+            opacity: .65;
+            cursor: wait;
+            transform: none;
+        }
+
+        .hq-form-bottom {
+            margin-top: 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .hq-form-bottom i {
+            color: var(--green);
+            margin-right: 5px;
+        }
+
+        .hq-alert {
+            padding: 14px 17px;
+            margin-bottom: 23px;
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .hq-alert-success {
+            color: #087b51;
+            background: #eaf9f3;
+            border: 1px solid #cdeedf;
+        }
+
+        .hq-alert-error {
+            color: #b42318;
+            background: #fff0ef;
+            border: 1px solid #f5c7c2;
+        }
+
+        .hq-honeypot {
+            position: absolute !important;
+            left: -10000px !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+        }
+
+        /* ENGAGEMENTS */
+
+        .hq-trust {
+            padding: 35px 0;
+            background: #f8fbfe;
+            border-top: 1px solid var(--border);
+        }
+
+        .hq-trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0,1fr));
+            gap: 20px;
+        }
+
+        .hq-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hq-trust-icon {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: var(--blue);
+            background: #e7f4fd;
+        }
+
+        .hq-trust-item strong {
+            display: block;
+            font-size: 12px;
+            color: var(--navy);
+        }
+
+        .hq-trust-item span {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+
+        .hq-footer {
+            padding: 32px 0;
+            background: #fff;
+        }
+
+        .hq-footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .hq-footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .hq-footer-brand img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .hq-footer-brand strong {
+            color: var(--navy);
+            font-family: "Manrope", sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .hq-footer-brand small {
+            display: block;
+            margin-top: 4px;
+            font-size: 9px;
+            color: var(--muted);
+        }
+
+        .hq-footer-copy {
+            text-align: right;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        /* RESPONSIVE TABLETTE */
+
+        @media (max-width: 991px) {
+            .hq-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                text-align: center;
+            }
+
+            .hq-hero-copy {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hq-hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hq-hero-actions {
+                justify-content: center;
+            }
+
+            .hq-visual {
+                min-height: 280px;
+            }
+
+            .hq-contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hq-trust-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* RESPONSIVE TÉLÉPHONE */
+
+        @media (max-width: 600px) {
+            .hq-container {
+                width: calc(100% - 32px);
+            }
+
+            .hq-navbar {
+                height: 72px;
+            }
+
+            .hq-brand-logo {
+                width: 43px;
+                height: 43px;
+            }
+
+            .hq-brand-logo img {
+                width: 36px;
+                height: 36px;
+            }
+
+            .hq-brand strong {
+                font-size: 15px;
+            }
+
+            .hq-brand small {
+                font-size: 7px;
+            }
+
+            .hq-back {
+                width: 42px;
+                height: 42px;
+                min-height: 42px;
+                padding: 0;
+            }
+
+            .hq-back span {
+                display: none;
+            }
+
+            .hq-hero {
+                padding: 55px 0 42px;
+            }
+
+            .hq-hero h1 {
+                font-size: clamp(33px, 9vw, 44px);
+                letter-spacing: -1.5px;
+            }
+
+            .hq-hero p {
+                font-size: 13px;
+                line-height: 1.8;
+            }
+
+            .hq-hero-actions {
+                width: 100%;
+            }
+
+            .hq-hero-actions .hq-btn {
+                flex: 1 1 170px;
+            }
+
+            .hq-visual {
+                min-height: 250px;
+                margin-top: 10px;
+            }
+
+            .hq-orbit {
+                width: 225px;
+                height: 225px;
+            }
+
+            .hq-orbit::after {
+                inset: 29px;
+            }
+
+            .hq-logo-core {
+                width: 112px;
+                height: 112px;
+                border-radius: 23px;
+            }
+
+            .hq-logo-core img {
+                width: 90px;
+                height: 90px;
+            }
+
+            .hq-chip {
+                padding: 9px 10px;
+                font-size: 9px;
+            }
+
+            .hq-chip-one {
+                top: 8px;
+            }
+
+            .hq-chip-two {
+                bottom: 8px;
+            }
+
+            .hq-contact-section {
+                padding: 58px 0 65px;
+            }
+
+            .hq-heading {
+                margin-bottom: 30px;
+            }
+
+            .hq-heading h2 {
+                font-size: 30px;
+            }
+
+            .hq-heading p {
+                font-size: 12px;
+            }
+
+            .hq-info-panel,
+            .hq-form-panel {
+                padding: 25px 21px;
+                border-radius: 20px;
+            }
+
+            .hq-info-panel h3,
+            .hq-form-panel h3 {
+                font-size: 21px;
+            }
+
+            .hq-panel-desc {
+                font-size: 12px;
+            }
+
+            .hq-fields-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .hq-input,
+            .hq-select {
+                font-size: 16px;
+            }
+
+            .hq-textarea {
+                font-size: 16px;
+            }
+
+            .hq-footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hq-footer-copy {
+                text-align: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+
+/* Positionnement des trois services */
+
+.hq-chip-one {
+    top: 25px;
+    left: 0;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+.hq-chip-two {
+    right: 0;
+    bottom: 40px;
 }
 
-body{
-    font-family:'Poppins',sans-serif;
-    background:
-    radial-gradient(circle at top left, rgba(224,192,151,0.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(0,191,255,0.15), transparent 30%),
-    linear-gradient(135deg,var(--bg),var(--bg2));
-    min-height:100vh;
-    color:white;
-    overflow-x:hidden;
-    position:relative;
+.hq-chip-three {
+    top: 50%;
+    right: -12px;
+    transform: translateY(-50%);
 }
 
-.blur{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(90px);
-    z-index:0;
-}
+/* Adaptation téléphone */
 
-.blur1{
-    width:260px;
-    height:260px;
-    background:#00bfff25;
-    top:-80px;
-    left:-80px;
-}
+@media (max-width: 600px) {
 
-.blur2{
-    width:300px;
-    height:300px;
-    background:#e0c09720;
-    bottom:-120px;
-    right:-100px;
-}
+    .hq-chip-one {
+        top: 8px;
+        left: 0;
+    }
 
-.hero-contact{
-    position:relative;
-    min-height:60vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    overflow:hidden;
-    padding:80px 20px;
-}
+    .hq-chip-two {
+        right: 0;
+        bottom: 8px;
+    }
 
-.hero-contact::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-    linear-gradient(rgba(7,17,32,0.75), rgba(7,17,32,0.85)),
-    url("{% static 'images/contact-bg.png' %}") center/cover no-repeat;
-    animation:zoomBg 18s ease-in-out infinite alternate;
-    z-index:0;
-}
-
-@keyframes zoomBg{
-    0%{ transform:scale(1); }
-    100%{ transform:scale(1.12); }
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-    max-width:850px;
-}
-
-.hero-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:10px 18px;
-    border-radius:50px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.12);
-    color:var(--gold);
-    margin-bottom:25px;
-    backdrop-filter:blur(12px);
-    font-size:0.9rem;
-}
-
-.hero-title{
-    font-size:3.4rem;
-    font-weight:800;
-    line-height:1.2;
-    margin-bottom:20px;
-}
-
-.hero-title span{
-    background:linear-gradient(135deg,var(--gold),#fff0d6);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.hero-text{
-    color:var(--muted);
-    font-size:1.05rem;
-    line-height:1.8;
-    max-width:700px;
-    margin:auto;
-}
-
-.btn-back{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    margin-top:35px;
-    padding:14px 24px;
-    border-radius:15px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(224,192,151,0.25);
-    color:var(--gold);
-    text-decoration:none;
-    font-weight:600;
-    transition:0.35s ease;
-    backdrop-filter:blur(10px);
-}
-
-.btn-back:hover{
-    background:linear-gradient(135deg,var(--gold),var(--gold2));
-    color:#071120;
-    transform:translateY(-3px);
-    box-shadow:0 15px 30px rgba(224,192,151,0.3);
-}
-
-.contact-wrapper{
-    position:relative;
-    z-index:2;
-    padding:90px 20px;
-}
-
-.contact-box{
-    max-width:1200px;
-    margin:auto;
-}
-
-.contact-grid{
-    display:grid;
-    grid-template-columns:380px 1fr;
-    gap:35px;
-}
-
-.info-panel{
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:28px;
-    padding:35px;
-    backdrop-filter:blur(15px);
-    box-shadow:0 15px 40px rgba(0,0,0,0.25);
-}
-
-.info-title{
-    font-size:1.5rem;
-    font-weight:700;
-    margin-bottom:12px;
-}
-
-.info-text{
-    color:var(--muted);
-    margin-bottom:35px;
-    line-height:1.7;
-}
-
-.info-item{
-    display:flex;
-    align-items:flex-start;
-    gap:15px;
-    padding:18px;
-    border-radius:18px;
-    background:rgba(255,255,255,0.04);
-    margin-bottom:18px;
-    transition:0.35s;
-}
-
-.info-item:hover{
-    transform:translateY(-4px);
-    background:rgba(255,255,255,0.07);
-    border:1px solid rgba(224,192,151,0.15);
-}
-
-.info-icon{
-    min-width:55px;
-    height:55px;
-    border-radius:16px;
-    background:linear-gradient(135deg,var(--gold),var(--gold2));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#071120;
-    font-size:1.2rem;
-    box-shadow:0 10px 25px rgba(224,192,151,0.25);
-}
-
-.info-item h6{
-    margin-bottom:5px;
-    font-weight:600;
-}
-
-.info-item p{
-    margin:0;
-    color:var(--muted);
-    font-size:0.92rem;
-}
-
-.contact-form{
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:30px;
-    padding:40px;
-    backdrop-filter:blur(15px);
-    box-shadow:0 15px 40px rgba(0,0,0,0.25);
-}
-
-.form-title{
-    font-size:1.8rem;
-    font-weight:700;
-    margin-bottom:10px;
-}
-
-.form-subtitle{
-    color:var(--muted);
-    margin-bottom:35px;
-}
-
-.closed-box{
-    background:rgba(255,77,77,0.10);
-    border:1px solid rgba(255,77,77,0.35);
-    border-left:6px solid #ff4d4d;
-    border-radius:24px;
-    padding:30px;
-    margin-top:25px;
-    box-shadow:0 15px 35px rgba(255,77,77,0.12);
-}
-
-.closed-icon{
-    width:70px;
-    height:70px;
-    border-radius:20px;
-    background:linear-gradient(135deg,#ff4d4d,#c90000);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.7rem;
-    margin-bottom:22px;
-    box-shadow:0 15px 30px rgba(255,77,77,0.25);
-}
-
-.closed-box h3{
-    font-size:1.6rem;
-    font-weight:800;
-    margin-bottom:15px;
-}
-
-.closed-box p{
-    color:#dbe4f3;
-    line-height:1.8;
-    margin-bottom:14px;
-}
-
-.closed-box strong{
-    color:#fff;
-}
-
-.contact-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:15px;
-    margin-top:25px;
-}
-
-.btn-call,
-.btn-home{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:13px 20px;
-    border-radius:15px;
-    text-decoration:none;
-    font-weight:700;
-    transition:0.3s;
-}
-
-.btn-call{
-    background:linear-gradient(135deg,var(--blue),#39d2ff);
-    color:white;
-    box-shadow:0 12px 25px rgba(0,191,255,0.25);
-}
-
-.btn-home{
-    background:rgba(255,255,255,0.07);
-    border:1px solid rgba(255,255,255,0.12);
-    color:var(--gold);
-}
-
-.btn-call:hover,
-.btn-home:hover{
-    transform:translateY(-3px);
-}
-
-.input-group-custom{
-    position:relative;
-    margin-bottom:20px;
-}
-
-.input-group-custom i{
-    position:absolute;
-    top:50%;
-    left:18px;
-    transform:translateY(-50%);
-    color:#8ea0bc;
-    z-index:2;
-}
-
-.input-group-custom textarea + i{
-    top:24px;
-    transform:none;
-}
-
-.form-control{
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.08);
-    color:white;
-    border-radius:16px;
-    padding:16px 18px 16px 50px;
-    transition:0.3s;
-    font-size:0.95rem;
-}
-
-.form-control::placeholder{
-    color:#90a0b8;
-}
-
-.form-control:focus{
-    background:rgba(255,255,255,0.08);
-    border-color:rgba(0,191,255,0.5);
-    box-shadow:0 0 0 4px rgba(0,191,255,0.12);
-    color:white;
-}
-
-textarea.form-control{
-    min-height:150px;
-    resize:none;
-    padding-top:18px;
-}
-
-.btn-send{
-    width:100%;
-    border:none;
-    border-radius:18px;
-    padding:15px;
-    font-weight:700;
-    font-size:1rem;
-    background:linear-gradient(135deg,var(--blue),#39d2ff);
-    color:white;
-    transition:0.35s ease;
-    box-shadow:0 15px 30px rgba(0,191,255,0.25);
-}
-
-.btn-send:hover{
-    transform:translateY(-4px);
-    box-shadow:0 20px 35px rgba(0,191,255,0.4);
-}
-
-.toast-custom{
-    position:fixed;
-    top:25px;
-    right:25px;
-    background:linear-gradient(135deg,#00bfff,#39d2ff);
-    color:white;
-    padding:14px 20px;
-    border-radius:14px;
-    font-weight:600;
-    opacity:0;
-    transform:translateY(-20px);
-    transition:0.35s;
-    z-index:9999;
-    box-shadow:0 10px 30px rgba(0,191,255,0.35);
-}
-
-.toast-custom.show{
-    opacity:1;
-    transform:translateY(0);
-}
-
-.toast-custom.error{
-    background:linear-gradient(135deg,#ff4d4d,#ff0000);
-}
-
-@media(max-width:991px){
-    .contact-grid{
-        grid-template-columns:1fr;
+    .hq-chip-three {
+        top: 48%;
+        right: -5px;
+        transform: translateY(-50%);
     }
 }
 
-@media(max-width:768px){
-
-    .hero-title{
-        font-size:2.2rem;
-    }
-
-    .hero-text{
-        font-size:0.95rem;
-    }
-
-    .contact-form,
-    .info-panel{
-        padding:28px;
-    }
-
-    .contact-actions{
-        flex-direction:column;
-    }
-
-    .btn-call,
-    .btn-home{
-        width:100%;
-        justify-content:center;
-    }
-}
-
-</style>
+    </style>
 </head>
 
 <body>
 
-<div class="blur blur1"></div>
-<div class="blur blur2"></div>
+    <!-- NAVIGATION -->
 
-<div id="toast" class="toast-custom"></div>
+    <header class="hq-navbar">
+        <div class="hq-container hq-nav-inner">
 
-<section class="hero-contact">
+            <a href="{% url 'home' %}" class="hq-brand">
 
-    <div class="hero-content">
+                <div class="hq-brand-logo">
+                    <img src="{% static 'images/logoHexa.png' %}"
+                         alt="Logo HexaQuébec">
+                </div>
 
-        <div class="hero-badge">
-            <i class="fa-solid fa-headset"></i>
-            Support & Assistance
+                <div>
+                    <strong>HexaQuébec</strong>
+                    <small>L’innovation au cœur du numérique québécois.</small>
+                </div>
+
+            </a>
+
+            <a href="{% url 'home' %}" class="hq-back">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Retour à l'accueil</span>
+            </a>
+
         </div>
+    </header>
 
-        <h1 class="hero-title">
-            Contactez <span>HexaQuébec</span>
-        </h1>
+    <main>
 
-        <p class="hero-text">
-            Notre équipe accompagne les entreprises et les entrepreneurs
-            dans leurs projets numériques avec sérieux, professionnalisme
-            et transparence.
-        </p>
+        <!-- HERO -->
 
-        <a href="{% url 'home' %}" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Retour à l'accueil
-        </a>
+        <section class="hq-hero">
 
-    </div>
+            <div class="hq-container hq-hero-grid">
 
-</section>
+                <div class="hq-hero-copy">
 
-<section class="contact-wrapper">
-
-    <div class="contact-box">
-
-        <div class="contact-grid">
-
-            <div class="info-panel">
-
-                <h3 class="info-title">
-                    Informations
-                </h3>
-
-                <p class="info-text">
-                    Pour toute demande sérieuse, vous pouvez nous contacter
-                    directement par téléphone ou par email.
-                </p>
-
-                <div class="info-item">
-
-                    <div class="info-icon">
-                        <i class="fa-solid fa-location-dot"></i>
+                    <div class="hq-eyebrow">
+                        <i class="fa-solid fa-headset"></i>
+                        Contact & Assistance
                     </div>
 
-                    <div>
-                        <h6>Adresse</h6>
-                        <p>Québec, Canada</p>
-                    </div>
-
-                </div>
-
-                <div class="info-item">
-
-                    <div class="info-icon">
-                        <i class="fa-solid fa-phone"></i>
-                    </div>
-
-                    <div>
-                        <h6>Téléphone</h6>
-                        <p>+1 514 467 7377</p>
-                    </div>
-
-                </div>
-
-                <div class="info-item">
-
-                    <div class="info-icon">
-                        <i class="fa-solid fa-envelope"></i>
-                    </div>
-
-                    <div>
-                        <h6>Email</h6>
-                        <p>hexaquebec80@gmail.com</p>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="contact-form">
-
-                <h2 class="form-title">
-                    Formulaire de contact
-                </h2>
-
-                <p class="form-subtitle">
-                    Le formulaire est temporairement fermé pour limiter les messages inutiles.
-                </p>
-
-                <div class="closed-box">
-
-                    <div class="closed-icon">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-
-                    <h3>
-                        Formulaire temporairement indisponible
-                    </h3>
+                    <h1>
+                        Parlons de votre
+                        <span class="hq-gradient">
+                            prochain projet.
+                        </span>
+                    </h1>
 
                     <p>
-                        En raison d'un grand nombre de faux messages,
-                        d'adresses e-mail invalides et de demandes inutiles,
-                        nous sommes obligés de fermer temporairement cette page.
+                        Vous avez une idée, un projet numérique
+                        ou besoin d'un accompagnement technologique ?
+                        HexaQuébec accompagne les entreprises
+                        et entrepreneurs dans leurs projets
+                        web, mobile et intelligence artificielle.
                     </p>
 
-                    <p>
-                        Nous avons créé cette page pour communiquer avec des
-                        <strong>clients sérieux</strong> qui ont de vrais projets
-                        et souhaitent échanger avec notre équipe.
-                    </p>
+                    <div class="hq-hero-actions">
 
-                    <p>
-                        Pour une demande professionnelle, merci de nous contacter
-                        directement par téléphone ou par email avec des informations exactes.
-                    </p>
+                        <a href="#formulaire"
+                           class="hq-btn hq-btn-primary">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Envoyer un message
+                        </a>
 
-                    <div class="contact-actions">
-
-                        <a href="tel:+15144677377" class="btn-call">
+                        <a href="tel:+15144677377"
+                           class="hq-btn hq-btn-outline">
                             <i class="fa-solid fa-phone"></i>
                             Nous appeler
                         </a>
 
-                        <a href="{% url 'home' %}" class="btn-home">
-                            <i class="fa-solid fa-house"></i>
-                            Retour à l'accueil
-                        </a>
+                    </div>
+
+                </div>
+
+                <!-- LOGO ANIMÉ -->
+
+                <div class="hq-visual">
+
+                    <div class="hq-orbit">
+
+                        <div class="hq-logo-core">
+
+                            <img
+                                src="{% static 'images/logoHexa.png' %}"
+                                alt="HexaQuébec">
+
+                        </div>
+
+                    </div>
+
+                    
+<div class="hq-chip hq-chip-one">
+    <i class="fa-solid fa-code"></i>
+    Développement Web
+</div>
+
+<div class="hq-chip hq-chip-two">
+    <i class="fa-solid fa-brain"></i>
+    Intelligence Artificielle
+</div>
+
+<div class="hq-chip hq-chip-three">
+    <i class="fa-solid fa-mobile-screen-button"></i>
+    Développement Mobile
+</div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CONTACT -->
+
+        <section class="hq-contact-section" id="formulaire">
+
+            <div class="hq-container">
+
+                <div class="hq-heading">
+
+                    <div class="hq-label">
+                        Restons en contact
+                    </div>
+
+                    <h2>Notre équipe est à votre écoute.</h2>
+
+                    <p>
+                        Remplissez le formulaire pour nous présenter
+                        votre projet. Notre équipe pourra prendre
+                        connaissance de votre demande.
+                    </p>
+
+                </div>
+
+                <div class="hq-contact-grid">
+
+                    <!-- COORDONNÉES -->
+
+                    <aside class="hq-info-panel">
+
+                        <h3>Nos coordonnées</h3>
+
+                        <p class="hq-panel-desc">
+                            Vous préférez communiquer directement ?
+                            Retrouvez les informations officielles
+                            de HexaQuébec.
+                        </p>
+
+                        <div class="hq-info-item">
+
+                            <div class="hq-info-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+                            <div>
+                                <span class="hq-info-label">Localisation</span>
+                                <div class="hq-info-value">
+                                    Saguenay, Québec, Canada
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="hq-info-item">
+
+                            <div class="hq-info-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+
+                            <div>
+                                <span class="hq-info-label">Téléphone</span>
+                                <a href="tel:+15144677377"
+                                   class="hq-info-value">
+                                    +1 514 467 7377
+                                </a>
+                            </div>
+
+                        </div>
+
+                        <div class="hq-info-item">
+
+                            <div class="hq-info-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+
+                            <div>
+                                <span class="hq-info-label">Courriel</span>
+                                <a href="mailto:hexaquebec80@gmail.com"
+                                   class="hq-info-value">
+                                    hexaquebec80@gmail.com
+                                </a>
+                            </div>
+
+                        </div>
+
+                        <div class="hq-info-item">
+
+                            <div class="hq-info-icon">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+
+                            <div>
+                                <span class="hq-info-label">Site web</span>
+                                <a href="https://hexaquebec.com"
+                                   class="hq-info-value"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    www.hexaquebec.com
+                                </a>
+                            </div>
+
+                        </div>
+
+                        <div class="hq-info-footer">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>
+                                Vos renseignements seront utilisés
+                                pour traiter votre demande et
+                                communiquer avec vous.
+                            </span>
+                        </div>
+
+                    </aside>
+
+                    <!-- FORMULAIRE ACTIF -->
+
+                    <div class="hq-form-panel">
+
+                        <div class="hq-form-status">
+                            <span class="hq-status-dot"></span>
+                            Formulaire de contact disponible
+                        </div>
+
+                        <div class="hq-form-header">
+
+                            <div>
+                                <h3>Envoyez-nous un message</h3>
+
+                                <p class="hq-panel-desc">
+                                    Décrivez votre demande pour
+                                    que notre équipe puisse
+                                    mieux vous accompagner.
+                                </p>
+                            </div>
+
+                            <div class="hq-form-icon">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+
+                        </div>
+
+                        <!-- MESSAGES DJANGO -->
+
+                        {% if messages %}
+                            {% for notice in messages %}
+                                <div
+                                    class="hq-alert {% if 'success' in notice.tags %}hq-alert-success{% else %}hq-alert-error{% endif %}"
+                                    role="status">
+                                    {{ notice }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form
+                            id="hqContactForm"
+                            method="POST"
+                            action=""
+                            accept-charset="UTF-8">
+
+                            {% csrf_token %}
+
+                            <!-- ANTI-SPAM -->
+                            <div class="hq-honeypot"
+                                 aria-hidden="true">
+                                <label for="hqWebsite">Site internet</label>
+                                <input
+                                    type="text"
+                                    id="hqWebsite"
+                                    name="website"
+                                    autocomplete="off"
+                                    tabindex="-1">
+                            </div>
+
+                            <div class="hq-fields-row">
+
+                                <div class="hq-field">
+
+                                    <label for="hqNom">
+                                        Nom complet
+                                        <span class="hq-required">*</span>
+                                    </label>
+
+                                    <div class="hq-field-wrap">
+
+                                        <i class="fa-solid fa-user hq-field-icon"></i>
+
+                                        <input
+                                            class="hq-input"
+                                            type="text"
+                                            id="hqNom"
+                                            name="nom"
+                                            placeholder="Votre nom complet"
+                                            maxlength="120"
+                                            autocomplete="name"
+                                            value="{{ form_data.nom|default:'' }}"
+                                            required>
+                                    </div>
+
+                                </div>
+
+                                <div class="hq-field">
+
+                                    <label for="hqEmail">
+                                        Adresse courriel
+                                        <span class="hq-required">*</span>
+                                    </label>
+
+                                    <div class="hq-field-wrap">
+
+                                        <i class="fa-solid fa-envelope hq-field-icon"></i>
+
+                                        <input
+                                            class="hq-input"
+                                            type="email"
+                                            id="hqEmail"
+                                            name="email"
+                                            placeholder="exemple@email.com"
+                                            maxlength="254"
+                                            autocomplete="email"
+                                            value="{{ form_data.email|default:'' }}"
+                                            required>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="hq-fields-row">
+
+                                <div class="hq-field">
+
+                                    <label for="hqTelephone">
+                                        Téléphone (facultatif)
+                                    </label>
+
+                                    <div class="hq-field-wrap">
+
+                                        <i class="fa-solid fa-phone hq-field-icon"></i>
+
+                                        <input
+                                            class="hq-input"
+                                            type="tel"
+                                            id="hqTelephone"
+                                            name="telephone"
+                                            placeholder="+1 000 000 0000"
+                                            maxlength="35"
+                                            autocomplete="tel"
+                                            value="{{ form_data.telephone|default:'' }}">
+                                    </div>
+
+                                </div>
+
+                                <div class="hq-field">
+
+                                    <label for="hqSujet">
+                                        Type de demande
+                                        <span class="hq-required">*</span>
+                                    </label>
+
+                                    <div class="hq-field-wrap">
+
+                                        <i class="fa-solid fa-list hq-field-icon"></i>
+
+                                        <select
+                                            class="hq-select"
+                                            id="hqSujet"
+                                            name="sujet"
+                                            required>
+
+                                            <option value="">
+                                                Choisir un service
+                                            </option>
+
+                                            <option value="developpement_web" {% if form_data.sujet == 'developpement_web' %}selected{% endif %}>
+                                                Développement web
+                                            </option>
+
+                                            <option value="application_mobile" {% if form_data.sujet == 'application_mobile' %}selected{% endif %}>
+                                                Application mobile
+                                            </option>
+
+                                            <option value="intelligence_artificielle" {% if form_data.sujet == 'intelligence_artificielle' %}selected{% endif %}>
+                                                Intelligence artificielle
+                                            </option>
+
+                                            <option value="ecommerce" {% if form_data.sujet == 'ecommerce' %}selected{% endif %}>
+                                                Boutique en ligne
+                                            </option>
+
+                                            <option value="support" {% if form_data.sujet == 'support' %}selected{% endif %}>
+                                                Support technique
+                                            </option>
+
+                                            <option value="autre" {% if form_data.sujet == 'autre' %}selected{% endif %}>
+                                                Autre demande
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="hq-field">
+
+                                <label for="hqMessage">
+                                    Votre message
+                                    <span class="hq-required">*</span>
+                                </label>
+
+                                <div class="hq-field-wrap">
+
+                                    <i class="fa-solid fa-comment-dots hq-field-icon"></i>
+
+                                    <textarea
+                                        class="hq-textarea"
+                                        id="hqMessage"
+                                        name="message"
+                                        minlength="10"
+                                        maxlength="5000"
+                                        placeholder="Présentez votre projet, vos besoins et les informations utiles..."
+                                        required>{{ form_data.message|default:'' }}</textarea>
+                                </div>
+
+                                <small class="hq-field-help">
+                                    Minimum 10 caractères. Maximum 5 000 caractères.
+                                </small>
+
+                            </div>
+
+                            <div class="hq-form-note">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                <span>
+                                    Merci de fournir des renseignements
+                                    exacts afin de faciliter le traitement
+                                    de votre demande.
+                                </span>
+
+                            </div>
+
+                            <button
+                                type="submit"
+                                id="hqSubmit"
+                                class="hq-submit">
+
+                                <i class="fa-solid fa-paper-plane"></i>
+
+                                <span>Envoyer mon message</span>
+
+                            </button>
+
+                            <div class="hq-form-bottom">
+                                <i class="fa-solid fa-lock"></i>
+                                Envoi sécurisé par HTTPS lorsque le site
+                                est servi avec un certificat valide.
+                            </div>
+
+                        </form>
 
                     </div>
 
                 </div>
 
-                <!--
-                FORMULAIRE DÉSACTIVÉ TEMPORAIREMENT
+            </div>
 
-                <form method="POST">
+        </section>
 
-                    {% csrf_token %}
+        <!-- ENGAGEMENTS -->
 
-                    <div class="input-group-custom">
+        <section class="hq-trust">
 
-                        <i class="fa-solid fa-user"></i>
+            <div class="hq-container hq-trust-grid">
 
-                        <input type="text"
-                               name="nom"
-                               class="form-control"
-                               placeholder="Nom complet"
-                               required>
+                <div class="hq-trust-item">
 
+                    <div class="hq-trust-icon">
+                        <i class="fa-solid fa-user-tie"></i>
                     </div>
 
-                    <div class="input-group-custom">
-
-                        <i class="fa-solid fa-envelope"></i>
-
-                        <input type="email"
-                               name="email"
-                               class="form-control"
-                               placeholder="Adresse email"
-                               required>
-
+                    <div>
+                        <strong>Accompagnement professionnel</strong>
+                        <span>Des solutions adaptées à vos besoins.</span>
                     </div>
 
-                    <div class="input-group-custom">
+                </div>
 
-                        <i class="fa-solid fa-phone"></i>
+                <div class="hq-trust-item">
 
-                        <input type="text"
-                               name="telephone"
-                               class="form-control"
-                               placeholder="Téléphone"
-                               required>
-
+                    <div class="hq-trust-icon">
+                        <i class="fa-solid fa-laptop-code"></i>
                     </div>
 
-                    <div class="input-group-custom">
-
-                        <i class="fa-solid fa-comment"></i>
-
-                        <textarea name="message"
-                                  class="form-control"
-                                  placeholder="Votre message..."
-                                  required></textarea>
-
+                    <div>
+                        <strong>Expertise numérique</strong>
+                        <span>Web, mobile et intelligence artificielle.</span>
                     </div>
 
-                    <button type="submit" class="btn-send">
+                </div>
 
-                        <i class="fa-solid fa-paper-plane me-2"></i>
+                <div class="hq-trust-item">
 
-                        Envoyer le message
+                    <div class="hq-trust-icon">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
 
-                    </button>
+                    <div>
+                        <strong>Relation de confiance</strong>
+                        <span>Écoute, sérieux et transparence.</span>
+                    </div>
 
-                </form>
-                -->
+                </div>
 
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer class="hq-footer">
+
+        <div class="hq-container hq-footer-inner">
+
+            <div class="hq-footer-brand">
+
+                <img
+                    src="{% static 'images/logoHexa.png' %}"
+                    alt="HexaQuébec">
+
+                <div>
+                    <strong>HexaQuébec</strong>
+                    <small>
+                        L’innovation au cœur du numérique québécois.
+                    </small>
+                </div>
+
+            </div>
+
+            <div class="hq-footer-copy">
+                © {% now "Y" %} HexaQuébec.
+                Tous droits réservés.
+                <div>Saguenay, Québec, Canada</div>
             </div>
 
         </div>
 
-    </div>
+    </footer>
 
-</section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-<script>
+            const form = document.getElementById("hqContactForm");
+            const button = document.getElementById("hqSubmit");
 
-/*
-SCRIPT DÉSACTIVÉ CAR LE FORMULAIRE EST FERMÉ TEMPORAIREMENT
+            if (!form || !button) return;
 
-const form = document.querySelector("form");
-const toast = document.getElementById("toast");
+            form.addEventListener("submit", function (event) {
 
-function showToast(message,type="success"){
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    form.reportValidity();
+                    return;
+                }
 
-    toast.innerHTML = message;
+                button.disabled = true;
 
-    toast.classList.add("show");
+                button.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i>' +
+                    '<span>Envoi en cours...</span>';
 
-    if(type === "error"){
-        toast.classList.add("error");
-    }
+                // Le navigateur transmet ensuite le formulaire à Django.
+            });
 
-    setTimeout(()=>{
-
-        toast.classList.remove("show");
-        toast.classList.remove("error");
-
-    },3000);
-}
-
-form.addEventListener("submit",function(e){
-
-    let valid = true;
-
-    form.querySelectorAll("input, textarea").forEach(field=>{
-
-        if(!field.value.trim()){
-
-            valid = false;
-            field.style.border = "1px solid #ff4d4d";
-
-        }else{
-
-            field.style.border = "";
-
-        }
-
-    });
-
-    if(!valid){
-
-        e.preventDefault();
-
-        showToast("⚠️ Tous les champs sont obligatoires","error");
-
-    }else{
-
-        showToast("✅ Message envoyé avec succès");
-
-    }
-
-});
-*/
-
-</script>
+        });
+    </script>
 
 </body>
 </html>
